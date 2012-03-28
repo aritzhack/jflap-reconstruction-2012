@@ -1,12 +1,14 @@
 package model.formaldef;
 
+import errors.BooleanWrapper;
+
 /**
  * A generic interface used to enforce all essential components
  * of a formal definition.
  * @author Julian Genkins
  *
  */
-public abstract class FormalDefinitionComponent implements Describable {
+public interface FormalDefinitionComponent extends Describable {
 
 	
 	/**
@@ -17,13 +19,12 @@ public abstract class FormalDefinitionComponent implements Describable {
 	public abstract Character getCharacterAbbr();
 	
 	
-	@Override
-	public boolean equals(Object o) {
-		return o.getClass().isAssignableFrom(this.getClass()) ||
-				this.getClass().isAssignableFrom(o.getClass());
-	}
-	
-	@Override
-	public abstract String toString();
+	/**
+	 * Checks to see if this {@link FormalDefinitionComponent} has
+	 * been constructed to "completion" i.e. is functional
+	 * 
+	 * @return true or false and a descriptive reason why not
+	 */
+	public abstract BooleanWrapper isComplete();
 	
 }
