@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
-import model.formaldef.alphabets.AlphabetActionType;
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.AlphabetActionType;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 import errors.BooleanWrapper;
 

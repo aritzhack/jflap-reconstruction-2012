@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
+import model.formaldef.components.alphabets.Alphabet;
 
 
 

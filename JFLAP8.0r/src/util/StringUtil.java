@@ -2,7 +2,7 @@ package util;
 
 import java.util.Iterator;
 
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 public class StringUtil {
 

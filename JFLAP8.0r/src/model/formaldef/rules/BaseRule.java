@@ -7,20 +7,20 @@ import java.util.List;
 import errors.BooleanWrapper;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
-import model.formaldef.symbols.Symbol;
-import model.formaldef.symbols.SymbolHelper;
+import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.alphabets.symbols.SymbolHelper;
 
 
 
 
-public class BaseRule extends SymbolRule<FormalDefinition, Alphabet> {
+public class BaseRule extends SymbolRule<FormalDefinition<?,?>, Alphabet> {
 
 	//TODO: This seems silly...is there a better way to check for "can change" than basically 
 		//changing without CHANGING the symbol?
 	
 	@Override
-	public BooleanWrapper canModify(FormalDefinition parent, Alphabet a,
+	public BooleanWrapper canModify(FormalDefinition<?,?> parent, Alphabet a,
 			Symbol oldSymbol, Symbol newSymbol) {
 		BooleanWrapper canModify = parent.removeSymbol(a.getClass(), oldSymbol);
 		if (canModify.isTrue()) {
@@ -32,7 +32,7 @@ public class BaseRule extends SymbolRule<FormalDefinition, Alphabet> {
 	}
 
 	@Override
-	public BooleanWrapper canRemove(FormalDefinition parent, Alphabet a,
+	public BooleanWrapper canRemove(FormalDefinition<?,?> parent, Alphabet a,
 			Symbol oldSymbol) {
 		return BooleanWrapper.combineWrappers(
 				new BooleanWrapper(!a.isEmpty(),
@@ -43,7 +43,7 @@ public class BaseRule extends SymbolRule<FormalDefinition, Alphabet> {
 	}
 
 	@Override
-	public BooleanWrapper canAdd(FormalDefinition parent, Alphabet a,
+	public BooleanWrapper canAdd(FormalDefinition<?,?> parent, Alphabet a,
 			Symbol newSymbol) {
 		if (newSymbol.length() <= 0)
 			return new BooleanWrapper(false, "You may not add a symbol of no length.");

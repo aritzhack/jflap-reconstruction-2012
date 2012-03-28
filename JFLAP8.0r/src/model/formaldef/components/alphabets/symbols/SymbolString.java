@@ -1,4 +1,4 @@
-package model.formaldef.symbols;
+package model.formaldef.components.alphabets.symbols;
 
 
 import java.lang.reflect.Array;
@@ -16,7 +16,7 @@ import universe.Universe;
 import util.StringUtil;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
+import model.formaldef.components.alphabets.Alphabet;
 
 
 
@@ -167,7 +167,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public static SymbolString createFromString(String in,
-			FormalDefinition def) {
+			FormalDefinition<?,?> def) {
 		return createFromString(in, def.getAlphabets().toArray(new Alphabet[0]));
 		
 	}

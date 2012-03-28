@@ -1,19 +1,18 @@
-package model.formaldef.alphabets.specific;
+package model.formaldef.components.alphabets.specific;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import model.formaldef.alphabets.Alphabet;
+
+import javax.swing.JOptionPane;
 
 
 
-
-public class TerminalAlphabet extends Alphabet {
-
+public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 
 	@Override
 	public String getName() {
-		return "Terminals";
+		return "Tape Alphabet";
 	}
 
 	@Override
@@ -30,9 +29,10 @@ public class TerminalAlphabet extends Alphabet {
 
 	@Override
 	public String getSymbolName() {
-		return "Terminal";
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-
 	
+
+
 }

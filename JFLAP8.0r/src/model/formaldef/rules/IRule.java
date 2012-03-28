@@ -2,8 +2,8 @@ package model.formaldef.rules;
 
 import errors.BooleanWrapper;
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 

@@ -1,6 +1,6 @@
-package model.formaldef.alphabets.specific;
+package model.formaldef.components.alphabets.specific;
 
-import model.formaldef.alphabets.Alphabet;
+import model.formaldef.components.alphabets.Alphabet;
 
 
 public class OutputAlphabet extends Alphabet{

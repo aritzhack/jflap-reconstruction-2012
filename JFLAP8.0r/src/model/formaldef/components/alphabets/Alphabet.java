@@ -1,4 +1,4 @@
-package model.formaldef.alphabets;
+package model.formaldef.components.alphabets;
 
 
 import java.lang.reflect.Array;
@@ -17,9 +17,9 @@ import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 
-import model.formaldef.FormalDefinitionComponent;
-import model.formaldef.alphabets.grouping.GroupingPair;
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.grouping.GroupingPair;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 
