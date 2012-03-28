@@ -1,18 +1,16 @@
-package model.formaldef.alphabets.specific;
+package model.formaldef.components.alphabets.specific;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-import javax.swing.JOptionPane;
+import errors.BooleanWrapper;
+import model.formaldef.components.alphabets.Alphabet;
 
 
 
-public class TapeAlphabet extends model.formaldef.alphabets.Alphabet{
+public class VariableAlphabet extends Alphabet{
+
 
 	@Override
 	public String getName() {
-		return "Tape Alphabet";
+		return "Variables";
 	}
 
 	@Override
@@ -29,10 +27,9 @@ public class TapeAlphabet extends model.formaldef.alphabets.Alphabet{
 
 	@Override
 	public String getSymbolName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Variable";
 	}
+
+
 	
-
-
 }

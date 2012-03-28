@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import errors.BooleanWrapper;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.alphabets.Alphabet;
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 
 
-public class GroupingRule extends SymbolRule<FormalDefinition, Alphabet> {
+public class GroupingRule extends SymbolRule<FormalDefinition<?,?>, Alphabet> {
 
-	private ArrayList<String> getAllGrouping(FormalDefinition def){
+	private ArrayList<String> getAllGrouping(FormalDefinition<?,?> def){
 		ArrayList<String> chars = new ArrayList<String>();
 		
 		for(Alphabet a: def.getAlphabets()){

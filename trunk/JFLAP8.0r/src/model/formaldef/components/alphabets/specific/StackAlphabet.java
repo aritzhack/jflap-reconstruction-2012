@@ -1,16 +1,15 @@
-package model.formaldef.alphabets.specific;
+package model.formaldef.components.alphabets.specific;
+
+import model.formaldef.components.alphabets.Alphabet;
 
 
-import javax.swing.JOptionPane;
 
-import model.formaldef.alphabets.Alphabet;
+public class StackAlphabet extends Alphabet{
 
-
-public class InputAlphabet extends Alphabet{
 
 	@Override
 	public String getName() {
-		return "Input Alphabet";
+		return "Stack Alphabet";
 	}
 
 	@Override
@@ -30,5 +29,6 @@ public class InputAlphabet extends Alphabet{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 }

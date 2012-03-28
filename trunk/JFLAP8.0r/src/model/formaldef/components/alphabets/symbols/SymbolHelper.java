@@ -1,4 +1,4 @@
-package model.formaldef.symbols;
+package model.formaldef.components.alphabets.symbols;
 
 
 import java.util.HashSet;

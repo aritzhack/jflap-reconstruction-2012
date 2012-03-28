@@ -1,4 +1,4 @@
-package model.formaldef.symbols;
+package model.formaldef.components.alphabets.symbols;
 
 
 public interface ISymbol {

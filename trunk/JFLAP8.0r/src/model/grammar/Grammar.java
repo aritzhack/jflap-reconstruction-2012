@@ -1,8 +1,8 @@
 package model.grammar;
 
 import model.formaldef.FormalDefinition;
-import model.formaldef.FormalDefinitionComponent;
-import model.formaldef.alphabets.Alphabet;
+import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 
 public class Grammar extends FormalDefinition {
 
@@ -19,7 +19,7 @@ public class Grammar extends FormalDefinition {
 	}
 
 	@Override
-	public void setComponents(FormalDefinitionComponent[] components) {
+	public void setAuxilliaryComponents(FormalDefinitionComponent[] components) {
 		// TODO Auto-generated method stub
 
 	}

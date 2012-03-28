@@ -1,16 +1,19 @@
-package model.formaldef.alphabets.specific;
+package model.formaldef.components.alphabets.specific;
 
-import errors.BooleanWrapper;
-import model.formaldef.alphabets.Alphabet;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.formaldef.components.alphabets.Alphabet;
 
 
 
-public class VariableAlphabet extends Alphabet{
+
+public class TerminalAlphabet extends Alphabet {
 
 
 	@Override
 	public String getName() {
-		return "Variables";
+		return "Terminals";
 	}
 
 	@Override
@@ -27,7 +30,7 @@ public class VariableAlphabet extends Alphabet{
 
 	@Override
 	public String getSymbolName() {
-		return "Variable";
+		return "Terminal";
 	}
 
 

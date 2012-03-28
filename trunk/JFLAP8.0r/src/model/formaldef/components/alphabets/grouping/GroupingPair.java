@@ -1,4 +1,4 @@
-package model.formaldef.alphabets.grouping;
+package model.formaldef.components.alphabets.grouping;
 
 public class GroupingPair {
 

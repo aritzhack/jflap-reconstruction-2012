@@ -1,4 +1,4 @@
-package model.formaldef.alphabets.grouping;
+package model.formaldef.components.alphabets.grouping;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 

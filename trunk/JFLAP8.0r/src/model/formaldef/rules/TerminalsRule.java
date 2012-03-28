@@ -1,8 +1,8 @@
 package model.formaldef.rules;
 
 import errors.BooleanWrapper;
-import model.formaldef.alphabets.specific.TerminalAlphabet;
-import model.formaldef.symbols.Symbol;
+import model.formaldef.components.alphabets.specific.TerminalAlphabet;
+import model.formaldef.components.alphabets.symbols.Symbol;
 import model.grammar.Grammar;
 
 

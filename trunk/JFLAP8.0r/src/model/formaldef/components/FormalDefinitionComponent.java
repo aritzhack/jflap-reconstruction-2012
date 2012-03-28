@@ -1,5 +1,6 @@
-package model.formaldef;
+package model.formaldef.components;
 
+import model.formaldef.Describable;
 import errors.BooleanWrapper;
 
 /**
@@ -8,7 +9,7 @@ import errors.BooleanWrapper;
  * @author Julian Genkins
  *
  */
-public interface FormalDefinitionComponent extends Describable {
+public interface FormalDefinitionComponent extends Describable, Cloneable{
 
 	
 	/**
@@ -16,7 +17,7 @@ public interface FormalDefinitionComponent extends Describable {
 	 * associated with a single character abbreviation.
 	 * @return the single {@link Character} abbr
 	 */
-	public abstract Character getCharacterAbbr();
+	public Character getCharacterAbbr();
 	
 	
 	/**
@@ -25,6 +26,12 @@ public interface FormalDefinitionComponent extends Describable {
 	 * 
 	 * @return true or false and a descriptive reason why not
 	 */
-	public abstract BooleanWrapper isComplete();
-	
+	public BooleanWrapper isComplete();
+
+	/**
+	 * Creates an exact clone of this {@link FormalDefinitionComponent}
+	 * 
+	 * @return the clone
+	 */
+	public FormalDefinitionComponent clone();
 }
