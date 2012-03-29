@@ -10,7 +10,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.functionset.function.LanguageFunction;
 
-public abstract class FunctionSet extends TreeSet<LanguageFunction> implements FormalDefinitionComponent,
+public abstract class FunctionSet<T extends LanguageFunction> extends TreeSet<T> implements FormalDefinitionComponent,
 																				UsesSymbols{
 
 	@Override
@@ -33,5 +33,16 @@ public abstract class FunctionSet extends TreeSet<LanguageFunction> implements F
 		}
 		return used;
 	}
+	
+	
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		boolean result = false;
+		for (LanguageFunction f: this){
+			result = f.purgeOfSymbol(s) || result;
+		}
+		return result;
+	}
+	
 	
 }

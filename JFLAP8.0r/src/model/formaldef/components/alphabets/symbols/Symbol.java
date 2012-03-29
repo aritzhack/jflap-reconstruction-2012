@@ -37,10 +37,6 @@ public class Symbol implements Comparable<Symbol>, Cloneable{
 	}
 
 	
-	public String getName(){
-		return this.getClass().getSimpleName();
-	}
-	
 	@Override
 	public boolean equals(Object o){
 		return this.getString().equals(((Symbol) o).getString());
@@ -61,7 +57,7 @@ public class Symbol implements Comparable<Symbol>, Cloneable{
 	public Symbol clone() {
 		
 		try {
-			Symbol s = (Symbol) this.getClass().getConstructors()[0].newInstance(this.getString());
+			Symbol s = (Symbol) this.getClass().getConstructor(String.class).newInstance(this.getString());
 			return s;
 		} catch (Exception e) {
 			e.printStackTrace();

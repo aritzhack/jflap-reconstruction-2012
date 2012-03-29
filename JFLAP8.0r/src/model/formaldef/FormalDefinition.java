@@ -37,12 +37,9 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 	private S myFunctionSet;
 
 
-	public FormalDefinition(T langAlph, 
-			S functions,
-			FormalDefinitionComponent ... components) {
+	public FormalDefinition(T langAlph, S functions) {
 		myLanguageAlphabet = langAlph;
 		myFunctionSet = functions;
-		setAuxilliaryComponents(components);
 	}
 
 	public String toNtupleString(){
@@ -125,7 +122,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return doGenericAction(AlphabetActionType.MODIFY, type, oldSymbol, newSymbol);
 	}
 
-	public BooleanWrapper removeSymbol(Class<? extends Alphabet> class1, Symbol newSymbol){
+	public BooleanWrapper removeSymbolFromAlphabet(Class<? extends Alphabet> class1, Symbol newSymbol){
 		return doGenericAction(AlphabetActionType.REMOVE, class1, newSymbol);
 	}
 
@@ -158,27 +155,28 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 				this.getFunctionSet()};
 	}
 
-	private T getLanguageAlphabet() {
+	public T getLanguageAlphabet() {
 		return myLanguageAlphabet;
 	}
 
-	private S getFunctionSet() {
+	public S getFunctionSet() {
 		return myFunctionSet;
 	}
 
 	public BooleanWrapper purgeAndRemoveSymbol(Class<? extends Alphabet> cls, Symbol symbol){
 		return BooleanWrapper.combineWrappers(
-				purgeSymbol(cls, symbol), 
-				removeSymbol(cls, symbol));
+				purgeOfSymbol(symbol), 
+				removeSymbolFromAlphabet(cls, symbol));
 	}
 
 	public Set<Symbol> getUnusedSymbols() {
 		Set<Symbol> symbols = this.getAllSymbolsInAlphabets();
-		symbols.removeAll(this.getSymbolsUsed());
+		symbols.removeAll(this.getUniqueSymbolsUsed());
 		return symbols;
 	}
 
-	public Collection<Symbol> getSymbolsUsed() {
+	@Override
+	public Set<Symbol> getUniqueSymbolsUsed() {
 		TreeSet<Symbol> used = new TreeSet<Symbol>();
 		
 		for (FormalDefinitionComponent f: this.getComponents()){
@@ -189,20 +187,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return used;
 	}
 
-	public FormalDefinition alphabetAloneCopy(){
-		try {
-			FormalDefinition fd = (FormalDefinition) getClass().newInstance();
-			for (Alphabet alph: getAlphabets()){
-
-				for (Symbol s: alph){
-					fd.addSymbol(alph.getClass(), s.clone());
-				}
-			}
-			return fd;
-		} catch (Exception e) {
-			throw new AlphabetException("Formal Definition clone failed.");
-		}
-	}
+	public abstract FormalDefinition<T,S> alphabetAloneCopy();
 
 //	public BooleanWrapper importAlphabetsFrom(FormalDefinition imp) {
 //		if (!this.getClass().isAssignableFrom(imp.getClass())){
@@ -246,9 +231,15 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return symbols;
 	}
 
-	public abstract BooleanWrapper purgeSymbol(Class<? extends Alphabet> cls, Symbol s);
-
-	public abstract void setAuxilliaryComponents(FormalDefinitionComponent[] components);
-
+	@Override
+	public boolean purgeOfSymbol(Symbol s){
+		boolean result = false;
+		for (FormalDefinitionComponent f: this.getComponents()){
+			if (f instanceof UsesSymbols)
+				result = ((UsesSymbols) f).purgeOfSymbol(s) || result;
+		}
+		
+		return result;
+	}
 
 }
