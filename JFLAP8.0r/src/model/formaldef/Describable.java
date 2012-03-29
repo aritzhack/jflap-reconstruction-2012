@@ -9,7 +9,7 @@ public interface Describable {
 	 * 
 	 * @return {@link String} name of this component
 	 */
-	public abstract String getName();
+	public abstract String getDescriptionName();
 
 	/**
 	 * Provides a simple text description of this component,

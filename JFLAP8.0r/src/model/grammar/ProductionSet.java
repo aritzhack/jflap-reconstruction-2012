@@ -1,7 +1,6 @@
-package model.formaldef.components.functionset;
+package model.grammar;
 
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.functionset.function.Production;
+import model.formaldef.components.functionset.FunctionSet;
 
 public class ProductionSet extends FunctionSet<Production> {
 
@@ -11,7 +10,7 @@ public class ProductionSet extends FunctionSet<Production> {
 	}
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Production Rules";
 	}
 

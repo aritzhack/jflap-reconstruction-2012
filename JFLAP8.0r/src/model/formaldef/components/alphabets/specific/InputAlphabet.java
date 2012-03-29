@@ -9,7 +9,7 @@ import model.formaldef.components.alphabets.Alphabet;
 public class InputAlphabet extends Alphabet{
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Input Alphabet";
 	}
 

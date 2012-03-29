@@ -1,4 +1,4 @@
-package model.formaldef.components.functionset.function;
+package model.grammar;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -15,6 +15,7 @@ import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.alphabets.symbols.Terminal;
 import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.functionset.function.LanguageFunction;
 
 public class Production implements LanguageFunction, Comparable<Production>, JFLAPResources{
 

@@ -17,7 +17,7 @@ public class BottomOfStackSymbol extends SpecialSymbol {
 	}
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Bottom of Stack Symbol";
 	}
 

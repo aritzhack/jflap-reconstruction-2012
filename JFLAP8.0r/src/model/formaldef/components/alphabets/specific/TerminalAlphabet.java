@@ -14,7 +14,7 @@ public class TerminalAlphabet extends Alphabet {
 
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Terminals";
 	}
 

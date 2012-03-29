@@ -9,7 +9,7 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.specific.TerminalAlphabet;
 import model.formaldef.components.alphabets.specific.VariableAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.functionset.ProductionSet;
+import model.formaldef.components.alphabets.symbols.Variable;
 import model.formaldef.components.symbols.StartVariable;
 
 /**
@@ -28,23 +28,35 @@ import model.formaldef.components.symbols.StartVariable;
 public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 
 	private VariableAlphabet myVariableAlphabet;
+	
 	private StartVariable myStartVariable;
 
-	public Grammar(TerminalAlphabet langAlph,
-					VariableAlphabet varAlph,
+	/**
+	 * Creates a {@link Grammar}with all of the necessary components.
+	 * @param terminals = the initial {@link TerminalAlphabet}
+	 * @param variables = the initial {@link VariableAlphabet}
+	 * @param functions = set of {@link Production} rules
+	 * @param startVar = the {@link StartVariable} of this grammar
+	 */
+	public Grammar(TerminalAlphabet terminals,
+					VariableAlphabet variables,
 					ProductionSet functions,
 					StartVariable startVar) {
-		super(langAlph, functions);
-		myVariableAlphabet = varAlph;
+		super(terminals, functions);
+		myVariableAlphabet = variables;
 		myStartVariable = startVar;
 	}
 
+	/**
+	 * Retrieves the {@link VariableAlphabet} of this grammar
+	 * @return
+	 */
 	public VariableAlphabet getVariableAlphabet() {
 		return myVariableAlphabet;
 	}
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Grammar";
 	}
 
@@ -54,16 +66,30 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 		return "Hey look, its a Grammar!";
 	}
 
+	/**
+	 * Returns the {@link TerminalAlphabet} of this grammar. The
+	 * {@link Alphabet} returned is identical to that of the 
+	 * {@link Alphabet.getLanguageAlphabet()} method.
+	 * @return
+	 */
 	public TerminalAlphabet getTerminalAlphabet() {
 		return super.getLanguageAlphabet();
 	}
 	
+	/**
+	 * Returns the start vairable for this grammar
+	 * @return
+	 */
 	public StartVariable getStartVariable(){
 		return myStartVariable;
 	}
 	
-	public void setStartVariable(Symbol s){
-		myStartVariable.setString(s.getString());
+	/**
+	 * Sets the StartVariable to the {@link Variable} v;
+	 * @param s
+	 */
+	public void setStartVariable(Variable v){
+		myStartVariable.setString(v.getString());
 	}
 
 	@Override
@@ -73,5 +99,26 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 							new ProductionSet(),
 							new StartVariable());
 	}
+	
+	/**
+	 * Returns the set of products in the from of a {@link ProductionSet} object.
+	 * Calling this methods is equivalent to calling <code>getFunctionSet()</code>.
+	 * 
+	 * @return
+	 */
+	public ProductionSet getProductionSet(){
+		return super.getFunctionSet();
+	}
+
+	@Override
+	public FormalDefinitionComponent[] getComponents() {
+		return new FormalDefinitionComponent[]{
+									this.getTerminalAlphabet(), 
+									this.getVariableAlphabet(),
+									this.getProductionSet(),
+									this.getStartVariable()};
+	}
+	
+	
 
 }

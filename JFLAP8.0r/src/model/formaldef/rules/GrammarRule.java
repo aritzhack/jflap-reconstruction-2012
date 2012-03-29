@@ -23,7 +23,7 @@ public abstract class GrammarRule<S extends Grammar, T extends Alphabet> extends
 			if (s != null)
 				return new BooleanWrapper(false, "Without grouping, the " + this.getName() + 
 						" set cannot share characters with any symbol in the " + 
-						alph.getName() +", and " + string + " has \'" + c + "\' in common with " + s.toString());
+						alph.getDescriptionName() +", and " + string + " has \'" + c + "\' in common with " + s.toString());
 		}
 		return new BooleanWrapper(true, "Symbol " + string + " can be added sucessfully");
 	}
@@ -36,7 +36,7 @@ public abstract class GrammarRule<S extends Grammar, T extends Alphabet> extends
 			string = string.substring(1, string.length());
 		}
 		return new BooleanWrapper(!a.containsSymbolWithString(string), "You may not add a symbol to " + this.getName() + 
-				 " which has String identical to a symbol in the " + a.getName());
+				 " which has String identical to a symbol in the " + a.getDescriptionName());
 	}
 	
 	public BooleanWrapper checkValid(Alphabet alph, Symbol newSymbol) {

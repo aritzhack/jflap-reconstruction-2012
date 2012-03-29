@@ -38,7 +38,7 @@ public class BaseRule extends SymbolRule<FormalDefinition<?,?>, Alphabet> {
 				new BooleanWrapper(!a.isEmpty(),
 						"The " + this.toString() +" is empty, you may not remove symbols from it"),
 				new BooleanWrapper(a.contains(oldSymbol), 
-						"This " + a.getName() + " does not contain " + "the symbol " + oldSymbol.getString()));
+						"This " + a.getDescriptionName() + " does not contain " + "the symbol " + oldSymbol.getString()));
 
 	}
 
@@ -49,18 +49,18 @@ public class BaseRule extends SymbolRule<FormalDefinition<?,?>, Alphabet> {
 			return new BooleanWrapper(false, "You may not add a symbol of no length.");
 		for (Character c: parent.getDisallowedCharacters()){
 			if (newSymbol.containsCharacters(c))
-				return new BooleanWrapper(false, "The character " + c + " is disallowed for this " + a.getName() +
+				return new BooleanWrapper(false, "The character " + c + " is disallowed for this " + a.getDescriptionName() +
 						". For more information on allowability rules, " +
 						            "go to the Rules option in the Help Menu.");
 		}
 		for(Symbol s: a){
 			if (areTooSimilar(newSymbol, s))
 				return new BooleanWrapper(false, "The " + newSymbol.getString() + " is not allowed because " +
-						"it is too similar to the - " + s.getString() + " -  in the " + a.getName() + ". "+ 
+						"it is too similar to the - " + s.getString() + " -  in the " + a.getDescriptionName() + ". "+ 
 						"For more information on allowability rules, " +
 						            "go to the Rules option in the Help Menu.");
 		}
-		return new BooleanWrapper(true, "Symbol " + newSymbol.getString() + " can be added to the " + a.getName() +" sucessfully");
+		return new BooleanWrapper(true, "Symbol " + newSymbol.getString() + " can be added to the " + a.getDescriptionName() +" sucessfully");
 	}
 
 	protected boolean areTooSimilar(Symbol s1, Symbol s2) {

@@ -31,7 +31,7 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 	}
 	
 	public String toString() {
-		return this.getName() + ": " + super.toString();
+		return this.getDescriptionName() + ": " + super.toString();
 	}
 
 	@Override

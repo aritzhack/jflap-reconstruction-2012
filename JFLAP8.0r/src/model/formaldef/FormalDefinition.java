@@ -43,7 +43,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 	}
 
 	public String toNtupleString(){
-		String out = this.getName() + " = ( ";
+		String out = this.getDescriptionName() + " = ( ";
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
 			out += comp.getCharacterAbbr() + ", ";
@@ -150,6 +150,15 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return alphs;
 	}
 
+	/**
+	 * Retrieves all of the {@link FormalDefinitionComponent}s in order
+	 * as they should be in the n-tuple of this {@link FormalDefinition}.
+	 * THIS METHOD MUST BE OVERRIDDEN UPON CHANGING THE COMPONENTS IN THE
+	 * FORMAL DEFINTION, I.E. SUBCLASSING.
+	 * 
+	 * @return all of the {@link FormalDefinitionComponent} in this 
+	 * 											{@link FormalDefinition}.
+	 */
 	public FormalDefinitionComponent[] getComponents(){
 		return new FormalDefinitionComponent[]{this.getLanguageAlphabet(),
 				this.getFunctionSet()};

@@ -14,6 +14,8 @@ import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import model.grammar.ArrowIcon;
+
 
 
 
@@ -29,7 +31,7 @@ public interface JFLAPResources {
 							   EPSILON = "\u03B5",
 							   LAMBDA_CODE = "u03BB",
 							   EPSILON_CODE = "u03B5";
-	public static final XMLFileChooser CHOOSER = new XMLFileChooser();	
+//	public static final XMLFileChooser CHOOSER = new XMLFileChooser();	
 	
 	//STATE CONSTANTS//
 	/** The default radius of a state. */
@@ -45,9 +47,9 @@ public interface JFLAPResources {
 	/** The length of the arrow head edges. */
 	public static double ARROW_LENGTH = 15;
 	
-	public static final ColoredStroke HIGHLIGHT_STROKE = new ColoredStroke(6.0f, new Color(255, 0,0, 128));
+//	public static final ColoredStroke HIGHLIGHT_STROKE = new ColoredStroke(6.0f, new Color(255, 0,0, 128));
 	
-	public static final ColoredStroke THIN_HIGHLIGHT_STROKE = new ColoredStroke(3.0f, new Color(255, 0,0, 128));
+//	public static final ColoredStroke THIN_HIGHLIGHT_STROKE = new ColoredStroke(3.0f, new Color(255, 0,0, 128));
 	/** The number of characters to draw in each step. */
 	public static final int CHARS_PER_STEP = 4;
 	/**Radius of the transition control point**/
@@ -70,11 +72,12 @@ public interface JFLAPResources {
 	public static final Color DEFAULT_STATE_COLOR = new Color(255, 255, 150);
 	public static final Color STATE_SELECTED_COLOR = new Color(100, 200, 200);
 	public static final int EDITOR_CELL_WIDTH = 60;
-	public static final Note BASE_NOTE = new Note("Edit me");
+//	public static final Note BASE_NOTE = new Note("Edit me");
 	public static final int EDITOR_CELL_HEIGHT = 17;
 	public static final String TAB_CHANGED = "TAB_CHANGED";
 	public static final int CONFIGURATION_PADDING = 5;
 	public static final int INITAL_LOOP_HEIGHT = 40;
+	public static final String DEFAULT_STATE_NAME_PREFIX = "q";
 	
 	
 }
