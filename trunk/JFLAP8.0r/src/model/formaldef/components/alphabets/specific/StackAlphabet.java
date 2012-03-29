@@ -8,7 +8,7 @@ public class StackAlphabet extends Alphabet{
 
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Stack Alphabet";
 	}
 

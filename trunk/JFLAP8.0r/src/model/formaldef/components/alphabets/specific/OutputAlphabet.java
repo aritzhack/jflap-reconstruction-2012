@@ -7,7 +7,7 @@ public class OutputAlphabet extends Alphabet{
 
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Output Alphabet";
 	}
 

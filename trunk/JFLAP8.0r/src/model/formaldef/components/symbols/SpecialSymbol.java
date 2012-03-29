@@ -20,7 +20,7 @@ public abstract class SpecialSymbol extends Symbol implements FormalDefinitionCo
 	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(!this.toString().isEmpty(),
-						"The " + this.getName() + "must be set before you can continue");
+						"The " + this.getDescriptionName() + "must be set before you can continue");
 	}
 
 	@Override

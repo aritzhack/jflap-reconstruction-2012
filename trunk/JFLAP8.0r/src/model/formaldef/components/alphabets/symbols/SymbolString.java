@@ -13,7 +13,7 @@ import java.util.TreeSet;
 import javax.swing.JOptionPane;
 
 import universe.Universe;
-import util.StringUtil;
+import util.UtilFunctions;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
@@ -111,7 +111,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public String toString(){
-		return StringUtil.createDelimitedString(this, 
+		return UtilFunctions.createDelimitedString(this, 
 				Universe.curProfile.getSymbolStringDelimiter());
 	}
 

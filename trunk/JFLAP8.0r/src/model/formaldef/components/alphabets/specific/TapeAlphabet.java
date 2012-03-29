@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Tape Alphabet";
 	}
 

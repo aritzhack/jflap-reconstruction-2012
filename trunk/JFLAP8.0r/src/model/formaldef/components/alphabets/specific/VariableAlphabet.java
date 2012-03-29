@@ -12,7 +12,7 @@ public class VariableAlphabet extends Alphabet{
 
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Variables";
 	}
 

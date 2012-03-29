@@ -20,7 +20,7 @@ public class StartVariable extends SpecialSymbol implements FormalDefinitionComp
 	}
 
 	@Override
-	public String getName() {
+	public String getDescriptionName() {
 		return "Start Variable";
 	}
 
