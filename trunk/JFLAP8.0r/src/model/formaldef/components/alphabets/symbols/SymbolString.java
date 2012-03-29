@@ -16,13 +16,14 @@ import universe.Universe;
 import util.StringUtil;
 
 import model.formaldef.FormalDefinition;
+import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 
 
 
 
 
-public class SymbolString extends LinkedList<Symbol> implements Comparable<SymbolString> {
+public class SymbolString extends LinkedList<Symbol> implements Comparable<SymbolString>, UsesSymbols {
 
 	public SymbolString(String in, FormalDefinition def){
 		super();
@@ -166,6 +167,28 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		
 	}
 
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		boolean result = false;
+		while (this.contains(s)){
+			result = this.remove(s) || result;
+		}
+		return result;
+	}
+
+	public Symbol replace(int i, Symbol write) {
+		Symbol replaced = null;
+		if ((replaced = this.remove(i)) != null){
+			this.add(i, write);
+		}
+		return replaced;
+	}
+
+	@Override
+	public Set<Symbol> getUniqueSymbolsUsed() {
+		return new TreeSet<Symbol>(this);
+	}
+
 	public static SymbolString createFromString(String in,
 			FormalDefinition<?,?> def) {
 		return createFromString(in, def.getAlphabets().toArray(new Alphabet[0]));
@@ -215,18 +238,6 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	
 	public static boolean canBeParsed(String input, Alphabet ... alphs) {
 		return createFromString(input, alphs).stringLength() == input.length();
-	}
-
-	public void purgeOf(Symbol s) {
-		while (this.remove(s));
-	}
-
-	public Symbol replace(int i, Symbol write) {
-		Symbol replaced = null;
-		if ((replaced = this.remove(i)) != null){
-			this.add(i, write);
-		}
-		return replaced;
 	}
 
 

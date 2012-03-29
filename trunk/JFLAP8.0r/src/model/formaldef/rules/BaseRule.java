@@ -22,7 +22,7 @@ public class BaseRule extends SymbolRule<FormalDefinition<?,?>, Alphabet> {
 	@Override
 	public BooleanWrapper canModify(FormalDefinition<?,?> parent, Alphabet a,
 			Symbol oldSymbol, Symbol newSymbol) {
-		BooleanWrapper canModify = parent.removeSymbol(a.getClass(), oldSymbol);
+		BooleanWrapper canModify = parent.removeSymbolFromAlphabet(a.getClass(), oldSymbol);
 		if (canModify.isTrue()) {
 			canModify = this.canAdd(parent, a, newSymbol);
 			parent.addSymbol(a.getClass(), oldSymbol);
