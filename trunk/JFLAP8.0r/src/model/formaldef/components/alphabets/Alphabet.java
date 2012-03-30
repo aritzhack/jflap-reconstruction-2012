@@ -20,18 +20,54 @@ import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.rules.AlphabetRule;
+import model.formaldef.rules.BaseRule;
+import model.formaldef.rules.GroupingRule;
 
 
 
 public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefinitionComponent{
 	
 	
+	private Set<AlphabetRule> myRules;
+	
 	public Alphabet(){
-		myGrouping = new GroupingPair();
+		myRules = new TreeSet<AlphabetRule>();
+		this.addRules(new BaseRule());
 	}
 	
 	public String toString() {
 		return this.getDescriptionName() + ": " + super.toString();
+	}
+
+	@Override
+	public boolean add(Symbol s) {
+			this.checkRules(AlphabetActionType.ADD, s);
+		return super.add(s);
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends Symbol> symbols) {
+		boolean added = false;
+		for (Symbol s: symbols){
+			added = this.add(s) || added;
+		}
+		return added;
+	}
+
+	@Override
+	public boolean remove(Object s) {
+			this.checkRules(AlphabetActionType.REMOVE, (Symbol) s);
+		return super.remove(s);
+	}
+
+	@Override
+	public boolean removeAll(Collection<? extends Object> symbols) {
+		boolean removed = false;
+		for (Object s: symbols){
+			removed = this.remove((Symbol) s) || removed;
+		}
+		return removed;
 	}
 
 	@Override
@@ -113,6 +149,8 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 			Alphabet alph = this.getClass().newInstance();
 			for (Symbol s: this)
 				alph.add((Symbol) s.clone());
+			for (AlphabetRule rule: this.getRules())
+				alph.addRules(rule);
 			return alph;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -148,6 +186,20 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 		return strings;
 	}
 
+	public <T extends GroupingRule> GroupingRule getRuleOfClass(Class<T> clz) {
+		for (AlphabetRule rule : this.getRules()){
+			if (rule.getClass().isAssignableFrom(clz))
+				return clz.cast(rule);
+		}
+		return null;
+	}
+	
+	public abstract String getSymbolName();
+
+	public AlphabetRule[] getRules() {
+		return myRules.toArray(new AlphabetRule[0]);
+	}
+
 	@Override
 	public int hashCode() {
 		int hash = 1;
@@ -157,30 +209,32 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 		return (1+hash);
 	}
 
-	public abstract String getSymbolName();
-	
-	
-
-	
-	//**************************************************//
-	//***************    GROUPING     ******************//
-	//**************************************************//
-	
-	private GroupingPair myGrouping;
-
-
-	public void setGrouping(GroupingPair gp) {
-		myGrouping = gp;
+	public boolean removeRule(AlphabetRule rule){
+		return myRules.remove(rule);
 	}
 
-
-	public GroupingPair getGrouping() {
-		return myGrouping;
+	public boolean addRules(AlphabetRule ... rules){
+		return myRules.addAll(Arrays.asList(rules));
 	}
 
-
-	public boolean usingGrouping() {
-		return myGrouping.isUsable();
+	private void checkRules(AlphabetActionType type, Symbol ... symbols) throws AlphabetException{
+			for (AlphabetRule rule : myRules){
+				BooleanWrapper bw = new BooleanWrapper(true);
+				switch (type){
+				case ADD: 
+					bw = rule.canAdd(this, symbols[0]); break;
+				case REMOVE:
+					bw = rule.canRemove(this, symbols[0]); break;
+				case MODIFY:
+					bw = rule.canModify(this, symbols[0], symbols[1]); break;
+				}
+				
+				if (bw.isFalse())
+					throw new AlphabetException(bw.getMessage());
+				
+			}
 	}
+	
+	
 
 }

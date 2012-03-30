@@ -3,26 +3,22 @@ package model.formaldef.components.alphabets.grouping;
 public class GroupingPair {
 
 	
-	private String OPEN, CLOSE;
+	private Character OPEN, CLOSE;
 
-	public GroupingPair(String open, String close){
+	public GroupingPair(Character open, Character close){
 		OPEN = open;
 		CLOSE = close;
 	}
 
-	public GroupingPair(char open, char close) {
-		this(Character.toString(open), Character.toString(close));
-	}
-
 	public GroupingPair() {
-		this("", "");
+		this(null, null);
 	}
 
-	public String getOpenGroup() {
+	public Character getOpenGroup() {
 		return OPEN;
 	}
 
-	public String getCloseGroup() {
+	public Character getCloseGroup() {
 		return CLOSE;
 	}
 
@@ -39,7 +35,7 @@ public class GroupingPair {
 	}
 
 	public boolean isUsable() {
-		return !OPEN.isEmpty() && !CLOSE.isEmpty();
+		return OPEN != null && CLOSE != null;
 	}
 
 	public String creatGroupedString(String string) {

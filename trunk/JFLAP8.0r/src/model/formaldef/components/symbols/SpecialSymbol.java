@@ -8,6 +8,7 @@ import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.symbols.Symbol;
+import model.grammar.StartVariable;
 
 public abstract class SpecialSymbol extends Symbol implements FormalDefinitionComponent, UsesSymbols {
 

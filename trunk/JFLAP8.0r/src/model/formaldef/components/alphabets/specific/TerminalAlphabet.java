@@ -20,8 +20,7 @@ public class TerminalAlphabet extends Alphabet {
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return 'T';
 	}
 
 	@Override

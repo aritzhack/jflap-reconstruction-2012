@@ -34,4 +34,5 @@ public interface FormalDefinitionComponent extends Describable, Cloneable{
 	 * @return the clone
 	 */
 	public FormalDefinitionComponent clone();
+	
 }

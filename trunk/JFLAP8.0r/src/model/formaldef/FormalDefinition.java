@@ -1,29 +1,17 @@
 package model.formaldef;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.swing.JOptionPane;
-
-
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.alphabets.AlphabetActionType;
-import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.rules.JFLAPRulebook;
-
+import model.formaldef.rules.DisallowedCharacterRule;
 import errors.BooleanWrapper;
 
 
@@ -40,23 +28,24 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 	public FormalDefinition(T langAlph, S functions) {
 		myLanguageAlphabet = langAlph;
 		myFunctionSet = functions;
+		myLanguageAlphabet.addRules(new DisallowedCharacterRule(this));
 	}
 
 	public String toNtupleString(){
-		String out = this.getDescriptionName() + " = ( ";
+		String out = this.getDescriptionName() + " = (";
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
 			out += comp.getCharacterAbbr() + ", ";
 		}
-		out += ")";
-		out.replaceAll(", )", " )");
+		
+		out = out.substring(0,out.length()-2)+")";
 
 		return out;
 	}
 
 	@Override
 	public String toString() {
-		String out = this.toNtupleString();
+		String out = this.toNtupleString() + "\n";
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
 			out += "\t" + comp.toString() + "\n";
@@ -96,35 +85,6 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return incomplete.toArray(new BooleanWrapper[0]);
 	}
 
-	private BooleanWrapper doGenericAction(AlphabetActionType action,
-			Class<? extends Alphabet> type, Symbol ... symbols) {
-		Alphabet a = this.getComponentOfClass(type);
-		if (a == null){
-			throw new AlphabetException("No alphabet of the type " + type + " exists in this " + this.getClass());
-		}
-		BooleanWrapper bw = JFLAPRulebook.checkRules(action, this, a, symbols);
-		if (bw.isTrue()){
-			switch (action){
-			case ADD: a.add(symbols[0]); break;
-			case MODIFY: a.modify(symbols[0], symbols[1]); break;
-			case REMOVE: a.remove(symbols[0]); break;
-			default: throw new AlphabetException("No action specified");
-			}
-		}
-		return bw;
-	}
-
-	public BooleanWrapper addSymbol(Class<? extends Alphabet> type, Symbol newSymbol){
-		return doGenericAction(AlphabetActionType.ADD, type, newSymbol);
-	}
-
-	public BooleanWrapper modifySymbol(Class<? extends Alphabet> type, Symbol oldSymbol, Symbol newSymbol){
-		return doGenericAction(AlphabetActionType.MODIFY, type, oldSymbol, newSymbol);
-	}
-
-	public BooleanWrapper removeSymbolFromAlphabet(Class<? extends Alphabet> class1, Symbol newSymbol){
-		return doGenericAction(AlphabetActionType.REMOVE, class1, newSymbol);
-	}
 
 	/**
 	 * Retrieves all of the characters disallowed in this formal definition.
@@ -172,10 +132,21 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return myFunctionSet;
 	}
 
-	public BooleanWrapper purgeAndRemoveSymbol(Class<? extends Alphabet> cls, Symbol symbol){
-		return BooleanWrapper.combineWrappers(
-				purgeOfSymbol(symbol), 
-				removeSymbolFromAlphabet(cls, symbol));
+	public boolean purgeAndRemoveSymbol(Symbol symbol){
+		
+		boolean purged = purgeOfSymbol(symbol);
+		boolean removed = removeSymbolFromAlphabets(symbol);
+		
+		return purged || removed;
+	}
+
+	private boolean removeSymbolFromAlphabets(Symbol symbol) {
+		boolean removed = false; 
+		for (Alphabet a: this.getAlphabets()){
+			removed = a.remove(symbol) || removed;
+		}
+		
+		return removed;
 	}
 
 	public Set<Symbol> getUnusedSymbols() {

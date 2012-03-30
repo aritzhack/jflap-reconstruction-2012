@@ -4,23 +4,25 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
+import errors.BooleanWrapper;
+
+import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 
 
-public abstract class SymbolRule<T extends FormalDefinition, S extends Alphabet> implements IRule<T, S> {
+public abstract class AlphabetRule<S extends Alphabet> implements Describable{
+	
+	public abstract BooleanWrapper canModify(S a, Symbol oldSymbol, Symbol newSymbol);
+
+	public abstract BooleanWrapper canRemove(S a, Symbol oldSymbol);
+
+	public abstract BooleanWrapper canAdd(S a, Symbol newSymbol);
 	
 	
-	public boolean shouldBeApplied(T parent, S a){
-		boolean b=  this.getApplicableAlphType().isAssignableFrom(a.getClass()) &&
-				this.getApplicableDefType().isAssignableFrom(parent.getClass());
-		return b;
-	}
-	
-	public abstract String getName();
-
 	public Class<Alphabet> getApplicableAlphType(){
 		return (Class<Alphabet>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	}
@@ -30,6 +32,6 @@ public abstract class SymbolRule<T extends FormalDefinition, S extends Alphabet>
 	}
 	
 	public String toString(){
-		return this.getName() + ": " + this.getDescription();
+		return this.getDescriptionName() + ": " + this.getDescription();
 	}
 }

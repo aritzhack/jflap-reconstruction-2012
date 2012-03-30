@@ -1,4 +1,4 @@
-package model.formaldef.components.symbols;
+package model.grammar;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -8,6 +8,7 @@ import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.SpecialSymbol;
 
 public class StartVariable extends SpecialSymbol implements FormalDefinitionComponent, UsesSymbols {
 
@@ -33,7 +34,10 @@ public class StartVariable extends SpecialSymbol implements FormalDefinitionComp
 	public Character getCharacterAbbr() {
 		return 'S';
 	}
-
 	
+	@Override
+	public String toString() {
+		return getDescriptionName() + ": " + super.toString();
+	}
 	
 }
