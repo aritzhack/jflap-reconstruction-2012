@@ -18,9 +18,10 @@ public abstract class IdenticalSymbolRule<T extends Alphabet> extends AlphabetRu
 		
 		SymbolConflict conflict = findConflict(newSymbol);
 		
-		boolean canModify = conflict == null || conflict.symbol.equals(oldSymbol);
-		
-		return new BooleanWrapper(canModify, "The symbol " + oldSymbol + " cannot be modified to " + 
+		if (conflict == null || conflict.symbol.equals(oldSymbol))
+			return new BooleanWrapper(true);
+			
+		return new BooleanWrapper(false, "The symbol " + oldSymbol + " cannot be modified to " + 
 												newSymbol + " because the latter is too " +
 												"similar to the symbol " + conflict.symbol + " in the " + 
 												conflict.alphabet.getDescriptionName() + ".");
@@ -35,11 +36,13 @@ public abstract class IdenticalSymbolRule<T extends Alphabet> extends AlphabetRu
 	public BooleanWrapper canAdd(T a, Symbol newSymbol) {
 		
 		SymbolConflict conflict = findConflict(newSymbol);
-		return new BooleanWrapper(conflict == null, 
+		if (conflict != null)
+			return new BooleanWrapper(conflict == null, 
 									"The symbol " + newSymbol + " cannot be added to the " + 
 									a.getDescriptionName() + " because it is too " +
 									"similar to the symbol " + conflict.symbol + " in the " + 
 									conflict.alphabet.getDescriptionName() + ".");
+		return new BooleanWrapper(true);
 	}
 
 	private SymbolConflict findConflict(Symbol newSymbol) {

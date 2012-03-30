@@ -23,8 +23,8 @@ public class DisallowedCharacterRule extends FormalDefinitionUsingRule<Alphabet,
 		String chars = this.getAssociatedDefiniton().getDisallowedCharacters().toString();
 		
 		return "Prevents the characters disallowed by " + 
-						this.getAssociatedDefiniton().getDescriptionName() + ":" + "\n" +
-						chars + "\n" + "from being in any symbol in this Alphabet." ;
+						this.getAssociatedDefiniton().getDescriptionName() + ": " +
+						chars + " from being in any symbol in this Alphabet." ;
 	}
 
 

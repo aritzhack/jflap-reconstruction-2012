@@ -25,11 +25,11 @@ public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {
 		
 		boolean correct = string.length() > 2 && 
 							string.indexOf(this.getOpenGroup()) == 0 && 
-							string.indexOf(this.getCloseGroup()) == string.length()-1;
+							string.lastIndexOf(this.getCloseGroup()) == string.length()-1;
 		
 			return new BooleanWrapper(correct, "The Variable " + string + 
-												" does not contain the necessary\n"+ 
-												"grouping characters " + this.getGroupingPair().toString() + " flanking the symbol.");
+												" does not contain the necessary "+ 
+												"grouping characters " + this.getGroupingPair().toShortString() + " flanking the symbol.");
 	}
 
 
@@ -76,7 +76,7 @@ public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {
 
 	@Override
 	public String getDescriptionName() {
-		return "Variables Rule";
+		return "Variable Grouping Rule";
 	}
 
 

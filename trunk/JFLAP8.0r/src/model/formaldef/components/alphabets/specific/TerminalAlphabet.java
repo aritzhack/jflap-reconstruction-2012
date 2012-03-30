@@ -25,8 +25,7 @@ public class TerminalAlphabet extends Alphabet {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The terminal alphabet.";
 	}
 
 	@Override

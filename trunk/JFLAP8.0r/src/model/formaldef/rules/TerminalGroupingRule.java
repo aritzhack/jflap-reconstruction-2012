@@ -19,7 +19,7 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 
 	@Override
 	public String getDescription() {
-		return "This rule prevents any symbols from being added to the terminal alphabet if" +
+		return "This rule prevents any symbols from being added to the terminal alphabet if " +
 				"they contain any characters used for group in the Variable Alphabet.";
 	}
 
@@ -31,7 +31,7 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 
 	@Override
 	public BooleanWrapper canAdd(TerminalAlphabet a, Symbol newSymbol) {
-		return new BooleanWrapper(containsGrouping(newSymbol), 
+		return new BooleanWrapper(!containsGrouping(newSymbol), 
 									"A Terminal cannot contain the characters currently " +
 									"used for grouping in the Variable Alphabet - " + this.getGroupingPair());
 	}
