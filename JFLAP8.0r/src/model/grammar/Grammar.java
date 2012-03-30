@@ -6,11 +6,18 @@ import errors.BooleanWrapper;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.specific.TerminalAlphabet;
 import model.formaldef.components.alphabets.specific.VariableAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.Variable;
-import model.formaldef.components.symbols.StartVariable;
+import model.formaldef.rules.AlphabetRule;
+import model.formaldef.rules.DisallowedCharacterRule;
+import model.formaldef.rules.GroupingRule;
+import model.formaldef.rules.TerminalGroupingRule;
+import model.formaldef.rules.TermsVersusVarsIdenticalRule;
+import model.formaldef.rules.VariableGroupingRule;
+import model.formaldef.rules.VarsVersusTermsIdenticalRule;
 
 /**
  * An object representing the formal 4-tuple that represents
@@ -30,7 +37,7 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	private VariableAlphabet myVariableAlphabet;
 	
 	private StartVariable myStartVariable;
-
+	
 	/**
 	 * Creates a {@link Grammar}with all of the necessary components.
 	 * @param terminals = the initial {@link TerminalAlphabet}
@@ -45,13 +52,47 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 		super(terminals, functions);
 		myVariableAlphabet = variables;
 		myStartVariable = startVar;
+		setUpRules();
+	}
+	
+	public Grammar(){
+		this(new TerminalAlphabet(),
+				new VariableAlphabet(),
+				new ProductionSet(),
+				new StartVariable());
+	}
+
+	private void setUpRules() {
+		DisallowedCharacterRule disallowed = new DisallowedCharacterRule(this);
+		this.getVariables().addRules(disallowed, new VarsVersusTermsIdenticalRule(getTerminals()));
+		this.getTerminals().addRules(disallowed, new TermsVersusVarsIdenticalRule(getVariables()));
+	}
+
+	private void addGroupingPairRules(GroupingPair gp) {
+		if (gp == null) return;
+		
+		this.getVariables().addRules(new VariableGroupingRule(gp));
+		this.getTerminals().addRules(new TerminalGroupingRule(gp));
+		
+	}
+
+	private void clearGroupingPairRules() {
+		GroupingRule varsRule = this.getVariables().getRuleOfClass(GroupingRule.class);
+		GroupingRule termsRule = this.getTerminals().getRuleOfClass(GroupingRule.class);
+		this.getVariables().removeRule(varsRule);
+		this.getTerminals().removeRule(termsRule);
+	}
+
+	public void setGrouping(GroupingPair gp) {
+		clearGroupingPairRules();
+		addGroupingPairRules(gp);
 	}
 
 	/**
 	 * Retrieves the {@link VariableAlphabet} of this grammar
 	 * @return
 	 */
-	public VariableAlphabet getVariableAlphabet() {
+	public VariableAlphabet getVariables() {
 		return myVariableAlphabet;
 	}
 
@@ -72,12 +113,12 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * {@link Alphabet.getLanguageAlphabet()} method.
 	 * @return
 	 */
-	public TerminalAlphabet getTerminalAlphabet() {
+	public TerminalAlphabet getTerminals() {
 		return super.getLanguageAlphabet();
 	}
 	
 	/**
-	 * Returns the start vairable for this grammar
+	 * Returns the start variable for this grammar
 	 * @return
 	 */
 	public StartVariable getStartVariable(){
@@ -94,8 +135,8 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 
 	@Override
 	public FormalDefinition<TerminalAlphabet, ProductionSet> alphabetAloneCopy() {
-		return new Grammar(this.getTerminalAlphabet(), 
-							this.getVariableAlphabet(),
+		return new Grammar(this.getTerminals(), 
+							this.getVariables(),
 							new ProductionSet(),
 							new StartVariable());
 	}
@@ -113,8 +154,8 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	@Override
 	public FormalDefinitionComponent[] getComponents() {
 		return new FormalDefinitionComponent[]{
-									this.getTerminalAlphabet(), 
-									this.getVariableAlphabet(),
+									this.getVariables(),
+									this.getTerminals(), 
 									this.getProductionSet(),
 									this.getStartVariable()};
 	}

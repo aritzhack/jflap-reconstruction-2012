@@ -42,6 +42,8 @@ public class StartState extends State implements FormalDefinitionComponent {
 	}
 	
 	
+	
+
 	public void setTo(State start){
 		this.setName(start.getName());
 		this.setID(start.getID());
@@ -54,5 +56,10 @@ public class StartState extends State implements FormalDefinitionComponent {
 		this.setID(-1);
 		this.setLocation(null);
 		
+	}
+	
+	@Override
+	public String toString() {
+		return getDescriptionName() + ": "+ (this.getID() == -1 ? "" : this.getName());
 	}
 }

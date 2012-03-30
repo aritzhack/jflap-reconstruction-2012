@@ -6,20 +6,18 @@ public class TransitionFunctionSet extends FunctionSet<Transition> {
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return "\u03B4".charAt(0);
 	}
 
 	@Override
 	public String getDescriptionName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Transitions";
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The set of transition functions which" +
+					"define the language.";
 	}
 
 }

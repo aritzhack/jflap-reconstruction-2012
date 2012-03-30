@@ -15,8 +15,7 @@ public class InputAlphabet extends Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return "\u03A3".charAt(0);
 	}
 
 	@Override

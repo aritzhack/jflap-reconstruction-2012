@@ -5,6 +5,8 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.Terminal;
 import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.rules.AlphabetRule;
+import model.formaldef.rules.GroupingRule;
 
 
 
@@ -18,14 +20,12 @@ public class VariableAlphabet extends Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return 'V';
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The Variable alphabet.";
 	}
 
 	@Override
@@ -37,5 +37,5 @@ public class VariableAlphabet extends Alphabet{
 	public boolean add(Symbol e) {
 		return super.add(new Variable(e.getString()));
 	}
-	
+
 }

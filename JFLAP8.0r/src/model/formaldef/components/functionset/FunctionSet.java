@@ -44,5 +44,11 @@ public abstract class FunctionSet<T extends LanguageFunction> extends TreeSet<T>
 		return result;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return this.getDescriptionName() + ": " + super.toString();
+	}
+	
 	
 }
