@@ -79,8 +79,10 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	private void clearGroupingPairRules() {
 		GroupingRule varsRule = this.getVariables().getRuleOfClass(GroupingRule.class);
 		GroupingRule termsRule = this.getTerminals().getRuleOfClass(GroupingRule.class);
-		this.getVariables().removeRule(varsRule);
-		this.getTerminals().removeRule(termsRule);
+		if (varsRule != null)
+			this.getVariables().removeRule(varsRule);
+		if (termsRule != null)
+			this.getTerminals().removeRule(termsRule);
 	}
 
 	public void setGrouping(GroupingPair gp) {

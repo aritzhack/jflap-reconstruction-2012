@@ -14,7 +14,7 @@ import model.formaldef.components.alphabets.symbols.Symbol;
 
 
 
-public abstract class AlphabetRule<S extends Alphabet> implements Describable{
+public abstract class AlphabetRule<S extends Alphabet> implements Describable, Comparable<AlphabetRule<S>>{
 	
 	public abstract BooleanWrapper canModify(S a, Symbol oldSymbol, Symbol newSymbol);
 
@@ -34,4 +34,11 @@ public abstract class AlphabetRule<S extends Alphabet> implements Describable{
 	public String toString(){
 		return this.getDescriptionName() + ": " + this.getDescription();
 	}
+
+	@Override
+	public int compareTo(AlphabetRule<S> o) {
+		return this.getDescriptionName().compareTo(o.getDescriptionName());
+	}
+	
+	
 }

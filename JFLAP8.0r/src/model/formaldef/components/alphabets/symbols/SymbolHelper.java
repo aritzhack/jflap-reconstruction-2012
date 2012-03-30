@@ -58,10 +58,10 @@ public class SymbolHelper {
 
 		public static boolean containsCharacters(String string, char ... chars) {
 			for (char c: chars){
-				if (string.indexOf(c) < 0)
-					return false;
+				if (string.indexOf(c) >= 0)
+					return true;
 			}
-			return true;
+			return false;
 		}
 
 		public static <T extends Symbol> T trim(T s1, int i) {
