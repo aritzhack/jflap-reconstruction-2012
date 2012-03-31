@@ -1,4 +1,4 @@
-package model.automata.accepters;
+package model.automata.acceptors;
 
 import model.automata.Automaton;
 import model.automata.StartState;
@@ -8,11 +8,11 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.specific.InputAlphabet;
 
-public abstract class Accepter extends Automaton {
+public abstract class Acceptor extends Automaton {
 
 	private FinalStateSet myFinalStates;
 
-	public Accepter(StateSet states, 
+	public Acceptor(StateSet states, 
 					InputAlphabet langAlph,
 					TransitionFunctionSet functions, 
 					StartState start,

@@ -1,4 +1,4 @@
-package model.automata.accepters;
+package model.automata.acceptors;
 
 import errors.BooleanWrapper;
 import model.automata.StateSet;

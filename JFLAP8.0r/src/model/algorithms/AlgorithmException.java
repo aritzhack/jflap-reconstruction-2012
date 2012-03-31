@@ -1,4 +1,4 @@
-package model.automata.algorithms;
+package model.algorithms;
 
 public class AlgorithmException extends RuntimeException {
 

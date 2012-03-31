@@ -1,4 +1,4 @@
-package model.automata.accepters.fsa;
+package model.automata.acceptors.fsa;
 
 import java.util.Set;
 

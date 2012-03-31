@@ -3,8 +3,8 @@ package test;
 import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionFunctionSet;
-import model.automata.accepters.FinalStateSet;
-import model.automata.accepters.fsa.FiniteStateAutomaton;
+import model.automata.acceptors.FinalStateSet;
+import model.automata.acceptors.fsa.FiniteStateAutomaton;
 import model.formaldef.components.alphabets.specific.InputAlphabet;
 import model.formaldef.components.functionset.FunctionSet;
 
