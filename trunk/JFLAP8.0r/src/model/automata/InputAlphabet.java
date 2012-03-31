@@ -1,4 +1,4 @@
-package model.formaldef.components.alphabets.specific;
+package model.automata;
 
 
 import javax.swing.JOptionPane;
@@ -20,14 +20,12 @@ public class InputAlphabet extends Alphabet{
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The Input alphabet for all automata.";
 	}
 
 	@Override
 	public String getSymbolName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Input Symbol";
 	}
 
 }

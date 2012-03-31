@@ -17,7 +17,7 @@ public class StartVariable extends SpecialSymbol implements FormalDefinitionComp
 	}
 
 	public StartVariable() {
-		this("");
+		super();
 	}
 
 	@Override

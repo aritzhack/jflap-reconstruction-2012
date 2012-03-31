@@ -2,7 +2,7 @@ package model.automata;
 
 import model.formaldef.components.functionset.FunctionSet;
 
-public class TransitionFunctionSet extends FunctionSet<Transition> {
+public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> {
 
 	@Override
 	public Character getCharacterAbbr() {
@@ -17,7 +17,7 @@ public class TransitionFunctionSet extends FunctionSet<Transition> {
 	@Override
 	public String getDescription() {
 		return "The set of transition functions which" +
-					"define the language.";
+					" define the language.";
 	}
 
 }

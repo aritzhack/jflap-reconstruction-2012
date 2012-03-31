@@ -1,4 +1,4 @@
-package model.formaldef.components.alphabets.specific;
+package model.grammar;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -189,7 +189,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 							getConstructor(SymbolString.class, SymbolString.class).
 								newInstance(myLHS.clone(), myRHS.clone());
 		} catch (Exception e) {
-			throw new AlphabetException("Error cloneing Production");
+			throw new AlphabetException("Error cloning Production");
 		}
 	}
 
@@ -234,6 +234,17 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		Set<Symbol> used = myLHS.getUniqueSymbolsUsed();
 		used.addAll(myRHS.getUniqueSymbolsUsed());
 		return used;
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "Production Rule";
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

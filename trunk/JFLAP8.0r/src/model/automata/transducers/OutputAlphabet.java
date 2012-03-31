@@ -1,18 +1,14 @@
-package model.formaldef.components.alphabets.specific;
+package model.automata.transducers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-import javax.swing.JOptionPane;
+import model.formaldef.components.alphabets.Alphabet;
 
 
+public class OutputAlphabet extends Alphabet{
 
-public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 
 	@Override
 	public String getDescriptionName() {
-		return "Tape Alphabet";
+		return "Output Alphabet";
 	}
 
 	@Override
@@ -32,7 +28,5 @@ public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-
 
 }

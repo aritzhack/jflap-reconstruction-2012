@@ -1,14 +1,15 @@
-package model.formaldef.components.alphabets.specific;
+package model.automata.acceptors.pda;
 
 import model.formaldef.components.alphabets.Alphabet;
 
 
-public class OutputAlphabet extends Alphabet{
+
+public class StackAlphabet extends Alphabet{
 
 
 	@Override
 	public String getDescriptionName() {
-		return "Output Alphabet";
+		return "Stack Alphabet";
 	}
 
 	@Override
@@ -28,5 +29,6 @@ public class OutputAlphabet extends Alphabet{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
 
 }

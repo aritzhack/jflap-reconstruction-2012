@@ -3,36 +3,40 @@ package model.automata.transducers;
 import java.lang.reflect.InvocationTargetException;
 
 import model.automata.Automaton;
+import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionFunctionSet;
+import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.specific.InputAlphabet;
-import model.formaldef.components.alphabets.specific.OutputAlphabet;
 
-public abstract class Transducer extends Automaton {
+public abstract class Transducer<T extends OutputFunction> extends Automaton<FiniteStateTransition> {
 
 	private OutputAlphabet myOutputAlphabet;
+	private OutputFunctionSet<T> myOutputFunctions;
 
 	public Transducer(StateSet states, 
 					InputAlphabet langAlph,
 					OutputAlphabet outputAlph,
-					TransitionFunctionSet functions, 
-					StartState start) {
+					TransitionFunctionSet<FiniteStateTransition> functions, 
+					StartState start,
+					OutputFunctionSet<T> outputFunctions) {
 		super(states, langAlph, functions, start);
 		myOutputAlphabet = outputAlph;
+		myOutputFunctions = outputFunctions;
 	}
 
 	@Override
-	public FormalDefinition<InputAlphabet, TransitionFunctionSet> alphabetAloneCopy() {
+	public FormalDefinition<InputAlphabet, TransitionFunctionSet<FiniteStateTransition>> alphabetAloneCopy() {
+		Class<Transducer> clz = (Class<Transducer>) this.getClass();
 		try {
-			return (FormalDefinition<InputAlphabet, TransitionFunctionSet>) 
-					this.getClass().getConstructors()[0].newInstance(new StartState(),
-																	this.getInputAlphabet(),
-																	this.getOutputAlphabet(),
-																	new TransitionFunctionSet(),
-																	new StartState());
+					return clz.cast(clz.getConstructors()[0].newInstance(new StartState(),
+																			this.getInputAlphabet(),
+																			this.getOutputAlphabet(),
+																			new TransitionFunctionSet<FiniteStateTransition>(),
+																			new StartState(),
+																			new OutputFunctionSet<T>()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -42,13 +46,18 @@ public abstract class Transducer extends Automaton {
 		return myOutputAlphabet;
 	}
 	
+	public OutputFunctionSet<T> getOutputFunctionSet(){
+		return myOutputFunctions;
+	}
+	
 	@Override
 	public FormalDefinitionComponent[] getComponents() {
 		return new FormalDefinitionComponent[]{this.getStates(),
 											this.getInputAlphabet(),
 											this.getOutputAlphabet(),
 											this.getTransitions(),
-											this.getStartState()};
+											this.getStartState(),
+											this.getOutputFunctionSet()};
 	}
 
 }

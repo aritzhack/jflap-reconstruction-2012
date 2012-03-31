@@ -4,13 +4,13 @@ import errors.BooleanWrapper;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.alphabets.specific.TerminalAlphabet;
-import model.formaldef.components.alphabets.specific.VariableAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.rules.AlphabetRule;
 import model.grammar.Grammar;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
+import model.grammar.TerminalAlphabet;
+import model.grammar.VariableAlphabet;
 
 public class GrammarTest {
 

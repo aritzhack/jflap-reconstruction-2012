@@ -18,6 +18,10 @@ public abstract class SpecialSymbol extends Symbol implements FormalDefinitionCo
 		super(s);
 	}
 
+	public SpecialSymbol() {
+		super("");
+	}
+
 	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(!this.toString().isEmpty(),

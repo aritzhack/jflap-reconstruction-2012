@@ -2,9 +2,12 @@ package model.automata;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.util.Set;
 
 
 
+import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.functionset.function.LanguageFunction;
 
 /**
@@ -19,8 +22,7 @@ import model.formaldef.components.functionset.function.LanguageFunction;
  * @author Thomas Finley, Henry Qin
  */
 
-public abstract class Transition<T extends TransitionLabel> implements LanguageFunction, 
-																		Comparable<Transition<T>>{
+public abstract class Transition implements LanguageFunction, Comparable<Transition>{
 
 	/** The states this transition goes between. */
 	private State myFrom;
@@ -28,7 +30,11 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	/** The states this transition goes between. */
 	private State  myTo;
 
-	private T myLabel;
+	/** 
+	 * the string of symbols that allows some input
+	 * to move along this transition
+	 */
+	private SymbolString myInput;
 
 	/**
 	 * Instantiates a new <CODE>Transition</CODE>.
@@ -37,32 +43,21 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	 *            the state this transition is from
 	 * @param to
 	 *            the state this transition moves to
+	 * @param input
+	 * 			  the input to move along this transition
 	 */
-	public Transition(State from, State to, T label) {
+	public Transition(State from, State to, SymbolString input) {
 		this.myFrom = from;
 		this.myTo = to;
-		this.setLabel(label);
+		setInput(input);
 	}
 
-	public Transition(State from, State to){
-		myFrom = from;
-		myTo = to;
-		this.setLabel(createEmptyLabel()); 
+	public SymbolString getInput(){
+		return myInput;
 	}
-
-	private T createEmptyLabel() {
-		try {
-			return (T) this.getLabelClass().newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-
-
-	private Class<?> getLabelClass() {
-		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	
+	public void setInput(SymbolString input){
+		myInput = input;
 	}
 
 	/**
@@ -72,14 +67,12 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	 * @return a copy of this transition as described
 	 */
 	@Override
-	public Transition<T> clone() {
+	public Transition clone(){
 		try{
-			Constructor constr = this.getClass().getConstructor(State.class, 
-					State.class,
-					this.getLabelClass());
-			return (Transition<T>) constr.newInstance(getFromState(), getToState(), this.getLabel().clone());
-		} catch (Exception e){
-			throw new RuntimeException(e);
+		Constructor cons = this.getClass().getConstructor(State.class, State.class, SymbolString.class);
+		return (Transition) cons.newInstance(this.getFromState(), this.getToState(), this.getInput());
+		}catch (Exception e){
+			throw new AutomatonException(e);
 		}
 	}
 
@@ -116,25 +109,6 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 		this.myTo = newTo;
 	}
 
-	/**
-	 * Returns the label for this transition.
-	 */
-	public T getLabel() {
-		return myLabel;
-	}
-
-	/**
-	 * Sets the label for this transition.
-	 * 
-	 * @param myLabel2
-	 *            the new label for this transition
-	 * @throws IllegalArgumentException
-	 *             if the label contains any "bad" characters, i.e., not
-	 *             alphanumeric
-	 */
-	public void setLabel(T label) {
-		myLabel = label;
-	}
 
 
 	/**
@@ -147,7 +121,7 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	@Override
 	public String toString() {
 		return "[" + getFromState().toString() + "] -> ["
-				+ getToState().toString() + "]" + ": \"" + getLabel() + "\"";
+				+ getToState().toString() + "]" + " Input: " + this.getInput();
 	}
 
 	/**
@@ -159,13 +133,8 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	 *         otherwise
 	 */
 	@Override
-	public boolean equals(Object object) {
-		try {
-			Transition t = (Transition) object;
-			return myFrom.equals(t.getFromState()) && myTo.equals(t.getToState()) && this.getLabel().equals(t.getLabel());
-		} catch (ClassCastException e) {
-			return false;
-		}
+	public boolean equals(Object o) {
+		return this.compareTo((Transition) o) == 0;
 	}
 
 	/**
@@ -175,7 +144,7 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	 */
 	@Override
 	public int hashCode() {
-		return myFrom.hashCode() ^ myTo.hashCode() ^ this.getLabel().hashCode();
+		return myFrom.hashCode() ^ myTo.hashCode();
 	}
 
 	public boolean isLoop() {
@@ -183,9 +152,23 @@ public abstract class Transition<T extends TransitionLabel> implements LanguageF
 	}
 
 
+	
 	@Override
-	public int compareTo(Transition<T> o) {
-		return this.getLabel().compareTo(o.getLabel());
+	public Set<Symbol> getUniqueSymbolsUsed() {
+		return getInput().getUniqueSymbolsUsed();
+	}
+
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		return getInput().purgeOfSymbol(s);
+	}
+
+	@Override
+	public int compareTo(Transition o) {
+		int compare = this.getFromState().compareTo(o.getFromState());
+		if (compare == 0)
+			compare = this.getToState().compareTo(o.getToState());
+		return compare;
 	}
 
 }

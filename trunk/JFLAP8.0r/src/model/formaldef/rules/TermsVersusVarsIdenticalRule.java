@@ -1,7 +1,7 @@
 package model.formaldef.rules;
 
-import model.formaldef.components.alphabets.specific.TerminalAlphabet;
-import model.formaldef.components.alphabets.specific.VariableAlphabet;
+import model.grammar.TerminalAlphabet;
+import model.grammar.VariableAlphabet;
 
 public class TermsVersusVarsIdenticalRule extends IndividualIdenticalSymbolRule<TerminalAlphabet, VariableAlphabet> {
 
