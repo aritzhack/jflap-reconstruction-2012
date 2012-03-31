@@ -1,4 +1,4 @@
-package model.automata.outputters;
+package model.automata.transducers;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,11 +11,11 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.specific.InputAlphabet;
 import model.formaldef.components.alphabets.specific.OutputAlphabet;
 
-public abstract class Outputter extends Automaton {
+public abstract class Transducer extends Automaton {
 
 	private OutputAlphabet myOutputAlphabet;
 
-	public Outputter(StateSet states, 
+	public Transducer(StateSet states, 
 					InputAlphabet langAlph,
 					OutputAlphabet outputAlph,
 					TransitionFunctionSet functions, 

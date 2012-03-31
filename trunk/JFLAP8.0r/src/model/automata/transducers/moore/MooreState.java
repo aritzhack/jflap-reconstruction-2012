@@ -1,4 +1,4 @@
-package model.automata.outputters.moore;
+package model.automata.transducers.moore;
 
 import java.awt.Graphics;
 import java.awt.Point;

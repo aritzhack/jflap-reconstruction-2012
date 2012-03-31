@@ -1,4 +1,4 @@
-package model.automata.algorithms;
+package model.algorithms;
 
 import java.util.LinkedList;
 

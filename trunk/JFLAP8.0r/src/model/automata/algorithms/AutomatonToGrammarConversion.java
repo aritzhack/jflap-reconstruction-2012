@@ -1,5 +1,6 @@
 package model.automata.algorithms;
 
+import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.Terminal;
