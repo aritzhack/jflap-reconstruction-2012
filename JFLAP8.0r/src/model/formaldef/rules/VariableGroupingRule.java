@@ -2,9 +2,9 @@ package model.formaldef.rules;
 
 import errors.BooleanWrapper;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.alphabets.specific.VariableAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.grammar.Grammar;
+import model.grammar.VariableAlphabet;
 
 
 public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {

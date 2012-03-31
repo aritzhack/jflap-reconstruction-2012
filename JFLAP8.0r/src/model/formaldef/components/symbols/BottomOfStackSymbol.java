@@ -5,6 +5,10 @@ public class BottomOfStackSymbol extends SpecialSymbol {
 	public BottomOfStackSymbol(String s) {
 		super(s);
 	}
+	
+	public BottomOfStackSymbol() {
+		super();
+	}
 
 	@Override
 	public Character getCharacterAbbr() {

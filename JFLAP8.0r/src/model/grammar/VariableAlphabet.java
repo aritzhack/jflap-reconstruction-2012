@@ -1,4 +1,4 @@
-package model.formaldef.components.alphabets.specific;
+package model.grammar;
 
 import errors.BooleanWrapper;
 import model.formaldef.components.alphabets.Alphabet;

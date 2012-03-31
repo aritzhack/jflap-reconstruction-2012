@@ -1,15 +1,18 @@
-package model.formaldef.components.alphabets.specific;
+package model.automata.turing;
 
-import model.formaldef.components.alphabets.Alphabet;
+import java.util.ArrayList;
+import java.util.List;
+
+
+import javax.swing.JOptionPane;
 
 
 
-public class StackAlphabet extends Alphabet{
-
+public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 
 	@Override
 	public String getDescriptionName() {
-		return "Stack Alphabet";
+		return "Tape Alphabet";
 	}
 
 	@Override
@@ -30,5 +33,6 @@ public class StackAlphabet extends Alphabet{
 		return null;
 	}
 	
+
 
 }
