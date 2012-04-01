@@ -27,9 +27,10 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 							FinalStateSet finalStates) {
 		super(states, langAlph, functions, start, finalStates);
 		
-		setBlankSymbol(blank);
+	
 		myTapeAlphabet = tapeAlph;
 		this.getInputAlphabet().addRules(new TuringMachineRule(this));
+		setBlankSymbol(blank);
 	}
 	
 
@@ -41,15 +42,14 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "A turing machine!";
 	}
 
 	@Override
 	public TuringMachine alphabetAloneCopy() {
 		return new TuringMachine(new StateSet(),
 									this.getTapeAlphabet(), 
-									new BlankSymbol(), 
+									this.getBlankSymbol(), 
 									(TuringMachineInputAlphabet) this.getInputAlphabet(), 
 									new TransitionFunctionSet<TuringMachineTransition>(), 
 									new StartState(), 
@@ -65,7 +65,9 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	public void setBlankSymbol(BlankSymbol blank) {
+		this.getTapeAlphabet().remove(myBlank);
 		this.myBlank = blank;
+		this.getTapeAlphabet().add(myBlank);
 	}
 
 

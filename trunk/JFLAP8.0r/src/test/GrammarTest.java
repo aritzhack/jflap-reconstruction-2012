@@ -28,7 +28,7 @@ public class GrammarTest {
 									var);
 		
 		System.out.println(g + "\n");
-		g.setGrouping(new GroupingPair('(',')'));
+		g.setVariableGrouping(new GroupingPair('(',')'));
 		System.out.println(createRuleString(g.getVariables())+ "\n");
 		System.out.println(createRuleString(g.getTerminals())+ "\n");
 		

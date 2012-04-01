@@ -9,7 +9,7 @@ import model.formaldef.components.alphabets.symbols.Symbol;
 public class UtilFunctions {
 
 	public static String createDelimitedString(Iterable iterable, String delimiter){
-		Iterator<Symbol> iter = iterable.iterator();
+		Iterator iter = iterable.iterator();
 		String string = "";
 		while (iter.hasNext()){
 			string += iter.next().toString();
