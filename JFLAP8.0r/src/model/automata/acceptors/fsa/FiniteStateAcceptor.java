@@ -9,9 +9,9 @@ import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public class FiniteStateAutomaton extends Acceptor<FiniteStateTransition> {
+public class FiniteStateAcceptor extends Acceptor<FiniteStateTransition> {
 
-	public FiniteStateAutomaton(StateSet states, 
+	public FiniteStateAcceptor(StateSet states, 
 									InputAlphabet langAlph,
 									TransitionFunctionSet<FiniteStateTransition> functions, 
 									StartState start,
@@ -30,8 +30,8 @@ public class FiniteStateAutomaton extends Acceptor<FiniteStateTransition> {
 	}
 
 	@Override
-	public FiniteStateAutomaton alphabetAloneCopy() {
-		return new FiniteStateAutomaton(new StateSet(), 
+	public FiniteStateAcceptor alphabetAloneCopy() {
+		return new FiniteStateAcceptor(new StateSet(), 
 						this.getInputAlphabet(), 
 						new TransitionFunctionSet<FiniteStateTransition>(), 
 						new StartState(), 

@@ -12,7 +12,7 @@ public interface SteppableAlgorithm extends Describable {
 	 * 
 	 * @return
 	 */
-	public boolean step();
+	public boolean step() throws AlgorithmException;
 	
 	
 	/**
@@ -20,7 +20,7 @@ public interface SteppableAlgorithm extends Describable {
 	 * 
 	 * @return true if the reset is successful
 	 */
-	public boolean reset();
+	public boolean reset() throws AlgorithmException;
 	
 	
 	

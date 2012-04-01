@@ -41,7 +41,7 @@ public class SpecialSymbolFactory {
 			}
 		}
 		
-		return new GroupingPair(' ',' ');
+		return null;
 	}
 	
 	public static Symbol getReccomendedBotOfStackSymbol(Collection<Character> invalid){

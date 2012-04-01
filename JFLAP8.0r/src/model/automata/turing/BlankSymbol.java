@@ -7,12 +7,6 @@ import model.formaldef.components.symbols.SpecialSymbol;
 
 public class BlankSymbol extends SpecialSymbol {
 
-	
-	
-	public BlankSymbol() {
-		super();
-	}
-
 	public BlankSymbol(String s) {
 		super(s);
 	}
