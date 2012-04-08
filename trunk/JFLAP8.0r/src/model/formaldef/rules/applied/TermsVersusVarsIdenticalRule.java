@@ -1,5 +1,6 @@
-package model.formaldef.rules;
+package model.formaldef.rules.applied;
 
+import model.formaldef.rules.IndividualIdenticalSymbolRule;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 

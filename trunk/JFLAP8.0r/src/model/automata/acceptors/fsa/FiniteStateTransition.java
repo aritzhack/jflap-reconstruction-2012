@@ -25,4 +25,9 @@ public class FiniteStateTransition extends Transition {
 				" This includes Finite State Acceptors (FSA), Moore Machines, and Mealy Machines.";
 	}
 
+	@Override
+	public String toString() {
+		return this.getFromState().getName() + "---" + this.getInput() + "--->" + this.getToState().getName();
+	}
+	
 }

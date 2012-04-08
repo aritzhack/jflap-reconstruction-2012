@@ -105,17 +105,9 @@ public class State implements JFLAPResources, Comparable<State>{
 		return myLabel;
 	}
 
-	/**
-	 * Returns a string representation of this object. The string representation
-	 * contains the ID and the point of the state. If the ID is <CODE>5</CODE>
-	 * and the point object is at <CODE>(50,80)</CODE>, then the string
-	 * representation will be </CODE>"q_5 at (50,80)"</CODE>
-	 */
 	@Override
 	public String toString() {
-		return this.getName() + ", ID: "+ Integer.toString(getID()) + 
-				" at " + getLocation().toString() + 
-				" label: " + getLabel();
+		return this.getName();
 	}
 
 	public boolean equals(State s){

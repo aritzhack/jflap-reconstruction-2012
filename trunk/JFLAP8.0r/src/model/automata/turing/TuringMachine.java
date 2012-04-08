@@ -10,7 +10,7 @@ import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.rules.TuringMachineRule;
+import model.formaldef.rules.applied.TuringMachineRule;
 
 public class TuringMachine extends Acceptor<TuringMachineTransition> {
 

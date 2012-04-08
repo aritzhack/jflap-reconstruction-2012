@@ -8,7 +8,6 @@ import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.symbols.BottomOfStackSymbol;
 
 public class PushdownAutomaton extends Acceptor<PDATransition> {
 
@@ -25,6 +24,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		super(states, inputAlph, functions, start, finalStates);
 		myStackAlphabet = stackAlph;
 		myBottomOfStackSymbol = bottom;
+		myStackAlphabet.add(bottom);
 	}
 	
 	@Override

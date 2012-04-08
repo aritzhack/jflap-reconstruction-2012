@@ -111,7 +111,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public String toString(){
-		return UtilFunctions.createDelimitedString(this, 
+		return this.isEmpty() ? Universe.curProfile.getEmptyString() : UtilFunctions.createDelimitedString(this, 
 				Universe.curProfile.getSymbolStringDelimiter());
 	}
 

@@ -21,8 +21,8 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.rules.AlphabetRule;
-import model.formaldef.rules.BaseRule;
 import model.formaldef.rules.GroupingRule;
+import model.formaldef.rules.applied.BaseRule;
 
 
 
@@ -36,10 +36,6 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 		this.addRules(new BaseRule());
 	}
 	
-	public String toString() {
-		return this.getDescriptionName() + ": " + super.toString();
-	}
-
 	@Override
 	public boolean add(Symbol s) {
 			this.checkRules(AlphabetActionType.ADD, s);

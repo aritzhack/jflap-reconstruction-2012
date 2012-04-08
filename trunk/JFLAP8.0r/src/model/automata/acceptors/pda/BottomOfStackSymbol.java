@@ -1,4 +1,6 @@
-package model.formaldef.components.symbols;
+package model.automata.acceptors.pda;
+
+import model.formaldef.components.symbols.SpecialSymbol;
 
 public class BottomOfStackSymbol extends SpecialSymbol {
 
@@ -24,5 +26,5 @@ public class BottomOfStackSymbol extends SpecialSymbol {
 	public String getDescriptionName() {
 		return "Bottom of Stack Symbol";
 	}
-
+	
 }

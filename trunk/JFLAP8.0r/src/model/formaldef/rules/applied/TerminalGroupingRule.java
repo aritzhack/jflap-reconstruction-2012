@@ -1,8 +1,9 @@
-package model.formaldef.rules;
+package model.formaldef.rules.applied;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.rules.GroupingRule;
 import model.grammar.TerminalAlphabet;
 import errors.BooleanWrapper;
 

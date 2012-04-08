@@ -154,7 +154,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return the hashcode for this production
 	 */
 	public int hashCode() {
-		return myRHS.hashCode() ^ myLHS.hashCode();
+		return myRHS.hashCode() * myLHS.hashCode();
 	}
 
 	/**
@@ -171,6 +171,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * 
 	 * @return a string representation of the production object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getLHS());

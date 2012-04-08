@@ -1,4 +1,4 @@
-package model.automata.algorithms;
+package model.algorithms.conversion.autotogram;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import model.automata.Transition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
 import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.alphabets.symbols.Terminal;
 import model.formaldef.components.alphabets.symbols.Variable;
 import model.grammar.Grammar;
@@ -32,12 +33,6 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	private T myAutomaton;
 
 	/**
-	 * The list of all {@link VariableMapping} that need to be
-	 * mapped to a variable before the algorithm can proceed
-	 */
-	private Set<S> allMappings;
-	
-	/**
 	 * The {@link Map} of {@link VariableMapping} to {@link Variable}
 	 * that have already been added.
 	 */
@@ -53,11 +48,14 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	
 	public AutomatonToGrammarConversion(T automaton) throws AlgorithmException{
 		myAutomaton = automaton;
-		allMappings = getAllNecessaryMappings(myAutomaton);
-		BooleanWrapper bw = checkOfProperForm(automaton);
-		if (bw.isFalse())
-			throw new AlgorithmException(bw.getMessage());
-		if (this.reset())
+		BooleanWrapper[] bw = automaton.isComplete();
+		if (bw.length > 0){
+			throw new AlgorithmException(bw);
+		}
+		bw = checkOfProperForm(automaton);
+		if (bw.length > 0)
+			throw new AlgorithmException(bw);
+		if (!this.reset())
 			throw new AlgorithmException("There an error occured with the initialization " +
 											"of the converted Grammar.");
 	}
@@ -89,8 +87,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 			return doFinalSteps();
 		}
 
-		throw new AlgorithmException("The conversion is complete and can no longer " +
-											"be stepped into.");
+		return false;
 		
 	}
 
@@ -116,12 +113,13 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 
 	public boolean convertAndAddTransition(E trans) {
 		Production[] p = this.convertTransition(trans);
+		myConvertedTransitions.add(trans);
 		return this.getConvertedGrammar().getProductionSet().addAll(Arrays.asList(p));
 	}
 
 	public boolean doAllAutomaticVariableMappings(){
 		for (S mapping: this.getUnmappedMappings()){
-			Variable auto = new Variable(mapping.createDefaultVariableString());
+			Variable auto = new Variable(mapping.toString());
 			BooleanWrapper bw = this.addMapping(mapping, auto);
 			if (bw.isFalse())
 				throw new AlgorithmException(bw.getMessage());
@@ -142,6 +140,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		boolean added = myConvertedGrammar.getVariables().add(var);
 		
 		if (added && isStartMapping(mapping)){
+//			System.out.println("|" + myConvertedGrammar.getStartVariable().getString() + "|");
 			if(myConvertedGrammar.getStartVariable().isComplete().isTrue())
 				throw new AlgorithmException("A Start Variable mapping has already been added " +
 						"to the Converted grammar.");
@@ -181,37 +180,58 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		return true;
 	}
 
-	public S[] getUnmappedMappings(){
-		HashSet<S> all = new HashSet<S>(allMappings);
+	public Set<S> getUnmappedMappings(){
+		Set<S> all = getAllNecessaryMappings();
 		all.removeAll(this.myMappedVariables.keySet());
-		return (S[]) all.toArray();
+		return all;
 	}
 
-	public E[] getUnconvertedTransitions(){
+	public Set<E> getUnconvertedTransitions(){
 		HashSet<E> all = new HashSet<E>(this.getAutomaton().getTransitions());
 		all.removeAll(this.myConvertedTransitions);
-		return (E[]) all.toArray();
+		return all;
 	}
 	
-	
-	
 	public boolean allTransitionsConverted() {
-		return getUnconvertedTransitions().length == 0;
+		return getUnconvertedTransitions().isEmpty();
 	}
 
 	public  boolean variableMappingsComplete(){
-		return this.getUnmappedMappings().length == 0;
+		return this.getUnmappedMappings().isEmpty();
+	}
+	
+	public Variable getVarForMapping(S mapping){
+		return myMappedVariables.get(mapping);
 	}
 
+	protected SymbolString convertToTerminals(SymbolString input) {
+		SymbolString terms = new SymbolString();
+		
+		for (Symbol s : input){
+			terms.add(new Terminal(s.toString()));
+		}
+		
+		
+		return terms;
+	}
+	
+	
 	public abstract boolean doFinalSteps();
 
 	public abstract boolean isStartMapping(S mapping);
 
 	public abstract Production[] convertTransition(E trans);
 
-	public abstract Set<S> getAllNecessaryMappings(T automaton);
+	public abstract Set<S> getAllNecessaryMappings();
 
-	public abstract BooleanWrapper checkOfProperForm(T automaton);
+	/**
+	 * Checks to see if the automaton to be converted is
+	 * of the proper form for this algorithm. <code>isComplete()</code>
+	 * has already been checked in the constructor.
+	 * @param automaton
+	 * @return
+	 */
+	public abstract BooleanWrapper[] checkOfProperForm(T automaton);
 
 
 }
