@@ -10,12 +10,12 @@ import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.Variable;
 import model.formaldef.rules.AlphabetRule;
-import model.formaldef.rules.DisallowedCharacterRule;
 import model.formaldef.rules.GroupingRule;
-import model.formaldef.rules.TerminalGroupingRule;
-import model.formaldef.rules.TermsVersusVarsIdenticalRule;
-import model.formaldef.rules.VariableGroupingRule;
-import model.formaldef.rules.VarsVersusTermsIdenticalRule;
+import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.formaldef.rules.applied.TerminalGroupingRule;
+import model.formaldef.rules.applied.TermsVersusVarsIdenticalRule;
+import model.formaldef.rules.applied.VariableGroupingRule;
+import model.formaldef.rules.applied.VarsVersusTermsIdenticalRule;
 
 /**
  * An object representing the formal 4-tuple that represents

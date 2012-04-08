@@ -1,5 +1,7 @@
 package model.algorithms;
 
+import errors.BooleanWrapper;
+
 public class AlgorithmException extends RuntimeException {
 
 	public AlgorithmException() {
@@ -16,6 +18,10 @@ public class AlgorithmException extends RuntimeException {
 
 	public AlgorithmException(Throwable arg0) {
 		super(arg0);
+	}
+
+	public AlgorithmException(BooleanWrapper ... bw) {
+		super(BooleanWrapper.createErrorLog(bw));
 	}
 
 }

@@ -1,6 +1,7 @@
-package model.formaldef.rules;
+package model.formaldef.rules.applied;
 
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.rules.IndividualIdenticalSymbolRule;
 
 public class SelfIdenticalRule<T extends Alphabet> extends IndividualIdenticalSymbolRule<T, T> {
 

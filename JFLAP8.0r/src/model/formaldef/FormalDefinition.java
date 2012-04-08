@@ -11,7 +11,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.rules.DisallowedCharacterRule;
+import model.formaldef.rules.applied.DisallowedCharacterRule;
 import errors.BooleanWrapper;
 
 
@@ -48,7 +48,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		String out = this.toNtupleString() + "\n";
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
-			out += "\t" + comp.toString() + "\n";
+			out += "\t" + comp.getDescriptionName() + ": " + comp.toString() + "\n";
 		}
 
 		return out;

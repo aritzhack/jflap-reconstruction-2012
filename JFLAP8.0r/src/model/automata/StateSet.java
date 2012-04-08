@@ -34,9 +34,4 @@ public class StateSet extends TreeSet<State> implements
 	public StateSet clone() {
 		return (StateSet) super.clone();
 	}
-	
-	@Override
-	public String toString() {
-		return this.getDescriptionName() + ": " + super.toString();
-	}
 }

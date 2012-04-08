@@ -27,8 +27,8 @@ public class StartState extends State implements FormalDefinitionComponent {
 
 	@Override
 	public BooleanWrapper isComplete() {
-		return new BooleanWrapper(this.getID() > 0,
-									"The Automaton requires a StartState.");
+		return new BooleanWrapper(this.getID() >= 0,
+									"The Automaton requires a Start State.");
 	}
 
 	@Override
@@ -60,6 +60,6 @@ public class StartState extends State implements FormalDefinitionComponent {
 	
 	@Override
 	public String toString() {
-		return getDescriptionName() + ": "+ (this.getID() == -1 ? "" : this.getName());
+		return (this.getID() == -1 ? "" : this.getName());
 	}
 }

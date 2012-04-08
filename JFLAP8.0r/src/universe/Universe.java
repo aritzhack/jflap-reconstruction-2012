@@ -4,7 +4,7 @@ import universe.profile.Profile;
 
 public class Universe {
 
-	public static Profile curProfile;
+	public static Profile curProfile = new Profile();
 	
 	
 }

@@ -23,7 +23,7 @@ public class SpecialSymbolFactory {
 	static {
 		GROUPINGS = new TreeMap<Integer, GroupingPair>();
 		BOTTOM_OF_STACK = new TreeMap<Integer, Symbol>();
-		ResourceBundle rb = ResourceBundle.getBundle("jflap.model.formaldef.grouping.special");
+		ResourceBundle rb = ResourceBundle.getBundle("model.formaldef.components.alphabets.grouping.special");
 		for (String key: rb.keySet()){
 			String groups = rb.getString(key);
 			if (key.startsWith("grouping"))
