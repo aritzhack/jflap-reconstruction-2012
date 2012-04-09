@@ -35,9 +35,4 @@ public class StartVariable extends SpecialSymbol implements FormalDefinitionComp
 		return 'S';
 	}
 	
-	@Override
-	public String toString() {
-		return getDescriptionName() + ": " + super.toString();
-	}
-	
 }

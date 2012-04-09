@@ -7,8 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
+import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
+import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLR;
+import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -25,6 +29,8 @@ import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.transform.GrammarTransformAlgorithm;
+import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
 import util.UtilFunctions;
 
@@ -58,10 +64,10 @@ public class PDATest {
 			pda.getStackAlphabet().add(new Symbol(Character.toString(i)));
 		}
 		
-		State q0 = new State("Z0", 0, null);
-		State q1 = new State("Z1", 1, null);
-		State q2 = new State("Z2", 2, null);
-		State q3 = new State("Z3", 3, null);
+		State q0 = new State("Z0", 0);
+		State q1 = new State("Z1", 1);
+		State q2 = new State("Z2", 2);
+		State q3 = new State("Z3", 3);
 
 		pda.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
 		pda.getStartState().setTo(q0);
@@ -71,11 +77,11 @@ public class PDATest {
 		Symbol B = new Symbol("b");
 		
 		
-		PDATransition t0 = new PDATransition(q0, q1, new SymbolString(A), bos, new SymbolString(A,bos));
-		PDATransition t1 = new PDATransition(q1, q1, new SymbolString(A), A, new SymbolString(A,A));
-		PDATransition t2 = new PDATransition(q1, q2, new SymbolString(B), A, new SymbolString());
-		PDATransition t3 = new PDATransition(q2, q2, new SymbolString(B), A, new SymbolString());
-		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), bos, new SymbolString());
+		PDATransition t0 = new PDATransition(q0, q1, new SymbolString(A), new SymbolString(bos), new SymbolString(A,bos));
+		PDATransition t1 = new PDATransition(q1, q1, new SymbolString(A), new SymbolString(A), new SymbolString(A,A));
+		PDATransition t2 = new PDATransition(q1, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
+		PDATransition t3 = new PDATransition(q2, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
+		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), new SymbolString(bos), new SymbolString());
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 
@@ -85,15 +91,42 @@ public class PDATest {
 		
 		ErrPrintln("");
 		
-		PDAtoCFGConverter converter = new PDAtoCFGConverter(pda);
+		//convert PDA to CFG
+		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
 		while (converter.step());
 		
-		Grammar CFG = converter.getConvertedGrammar();
+		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
 		
 		OutPrintln(CFG.toString());
+		System.out.println("@@@@@@@@@@@@@@@@");
+		//remove useless productions
+		converter = new UselessProductionRemover(CFG);
+		converter.stepToCompletion();
 		
+		CFG = ((GrammarTransformAlgorithm) converter).getTransformedGrammar();
+		OutPrintln("No Useless productions: \n" + CFG.toString());
+		
+		//Now trim
+		CFG.trimAlphabets();
+		OutPrintln("Alphabets Trimmed: \n" + CFG.toString());
+		
+		//TYPE TEST
 		OutPrintln(Arrays.toString(GrammarType.getType(CFG)));
+		
+		converter = new CFGtoPDAConverterLL(CFG);
+		while (converter.step()){
+		}
+		pda = ((CFGtoPDAConverterLL) converter).getConvertedAutomaton();
+		
+		OutPrintln("LL CONVERTED:\n" + pda.toString());
 
+		
+		converter = new CFGtoPDAConverterLR(CFG);
+		while (converter.step()){
+		}
+		pda = ((CFGtoPDAConverterLR) converter).getConvertedAutomaton();
+		
+		OutPrintln("LR CONVERTED:\n" + pda.toString());
 
 	}
 

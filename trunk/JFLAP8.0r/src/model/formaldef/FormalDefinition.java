@@ -61,7 +61,14 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		}
 		return null;
 	}
-
+	
+	public void trimAlphabets(){
+		Set<Symbol> used = this.getUniqueSymbolsUsed();
+		for (Alphabet a: this.getAlphabets()){
+			a.retainAll(used);
+		}
+	}
+	
 	@Override
 	public FormalDefinition clone() {
 		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();

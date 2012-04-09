@@ -47,7 +47,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	public <T extends Symbol> Set<T> getSymbolsOfClass(Class<T> clazz) {
 		Set<T> results = new TreeSet<T>();
 		for (Symbol s: this){
-			if (s.getClass().isAssignableFrom(clazz))
+			if (clazz.isAssignableFrom(s.getClass()))
 				results.add((T) s);
 		}
 		

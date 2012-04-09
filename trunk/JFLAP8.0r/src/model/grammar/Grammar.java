@@ -17,6 +17,7 @@ import model.formaldef.rules.applied.TerminalGroupingRule;
 import model.formaldef.rules.applied.TermsVersusVarsIdenticalRule;
 import model.formaldef.rules.applied.VariableGroupingRule;
 import model.formaldef.rules.applied.VarsVersusTermsIdenticalRule;
+import model.grammar.typetest.GrammarType;
 
 /**
  * An object representing the formal 4-tuple that represents
@@ -130,8 +131,8 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * Sets the StartVariable to the {@link Variable} v;
 	 * @param s
 	 */
-	public void setStartVariable(Variable v){
-		myStartVariable.setString(v.getString());
+	public void setStartVariable(Symbol s){
+		myStartVariable.setString(s.getString());
 	}
 
 	@Override
@@ -169,6 +170,24 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 */
 	public boolean usingGrouping() {
 		return this.getVariables().getRuleOfClass(GroupingRule.class) != null;
+	}
+
+	public boolean isType(GrammarType type) {
+		GrammarType[] myTypes = GrammarType.getType(this);
+		for (GrammarType gt : myTypes){
+			if (gt == type)
+				return true;
+		}
+		return false;
+	}
+
+	public Production[] getStartProductions() {
+		ProductionSet startProds = new ProductionSet();
+		for (Production p : this.getProductionSet()){
+			if (p.isStartProduction(this.getStartVariable()))
+					startProds.add(p);
+		}
+		return startProds.toArray(new Production[0]);
 	}
 	
 	

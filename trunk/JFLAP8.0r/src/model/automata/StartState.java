@@ -7,12 +7,12 @@ import model.formaldef.components.FormalDefinitionComponent;
 
 public class StartState extends State implements FormalDefinitionComponent {
 
-	public StartState(String name, int id, Point location) {
-		super(name, id, location);
+	public StartState(String name, int id) {
+		super(name, id);
 	}
 
 	public StartState() {
-		this(null, -1, null);
+		this(null, -1);
 	}
 
 	@Override
@@ -47,14 +47,12 @@ public class StartState extends State implements FormalDefinitionComponent {
 	public void setTo(State start){
 		this.setName(start.getName());
 		this.setID(start.getID());
-		this.setLocation(start.getLocation());
 	}
 	
 	
 	public void clear(){
 		this.setName(null);
 		this.setID(-1);
-		this.setLocation(null);
 		
 	}
 	

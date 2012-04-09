@@ -15,13 +15,11 @@ public class State implements JFLAPResources, Comparable<State>{
 
 	private int myID;
 
-	private Point myLocation;
 
 
-	public State(String name, int id, Point location){
+	public State(String name, int id){
 		myName = name;
 		myID = id;
-		myLocation = location;
 	}
 
 	/**
@@ -48,26 +46,6 @@ public class State implements JFLAPResources, Comparable<State>{
 		return myName;
 	}
 
-	/**
-	 * Returns the point this state is centered on in the canvas.
-	 * 
-	 * @see #setLocation(Point)
-	 * @return the point this state is centered on in the canvas
-	 */
-	public Point getLocation() {
-		return myLocation;
-	}
-
-	/**
-	 * Sets the point for this state.
-	 * 
-	 * @param point
-	 *            the point this state is moving to
-	 * @see #getLocation()
-	 */
-	public void setLocation(Point point) {
-		this.myLocation = point;
-	}
 
 	public int getID(){
 		return myID;
@@ -80,8 +58,8 @@ public class State implements JFLAPResources, Comparable<State>{
 	@Override 
 	public State clone(){
 		try{
-			Constructor c = this.getClass().getConstructor(String.class, int.class, Point.class);
-			State s = (State) c.newInstance(this.getName(), this.getID(), this.getLocation());
+			Constructor c = this.getClass().getConstructor(String.class, int.class);
+			State s = (State) c.newInstance(this.getName(), this.getID());
 			s.setLabel(this.getLabel());
 			return s;
 		}catch(Exception e){

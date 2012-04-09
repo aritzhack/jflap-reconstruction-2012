@@ -54,10 +54,10 @@ public class FSATest {
 			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
 		}
 		
-		State q0 = new State("moo", 0, null);
-		State q1 = new State("mar", 1, null);
-		State q2 = new State("doo", 2, null);
-		State q3 = new State("eat", 3, null);
+		State q0 = new State("moo", 0);
+		State q1 = new State("mar", 1);
+		State q2 = new State("doo", 2);
+		State q3 = new State("eat", 3);
 
 		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
 		fsa.getStartState().setTo(q0);
@@ -91,8 +91,7 @@ public class FSATest {
 		
 		//CONVERT RIGHT-LINEAR to FSA
 		converter = new RGtoFSAConverter(RG);
-		while (converter.step()){
-		}
+		converter.stepToCompletion();
 		fsa = ((RGtoFSAConverter) converter).getConvertedAutomaton();
 		OutPrintln(fsa.toString());
 	}

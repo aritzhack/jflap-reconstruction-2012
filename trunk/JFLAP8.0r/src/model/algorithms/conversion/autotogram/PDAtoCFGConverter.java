@@ -1,11 +1,14 @@
 package model.algorithms.conversion.autotogram;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
+import model.algorithms.AlgorithmStep;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
@@ -14,9 +17,15 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.alphabets.symbols.Variable;
+import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.transform.UselessProductionRemover;
 
 public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAutomaton,PDAVariableMapping, PDATransition>{
+
+	private ThinProductions myThinningStep;
+
+
 
 	public PDAtoCFGConverter(PushdownAutomaton automaton)
 			throws AlgorithmException {
@@ -51,7 +60,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		State from = trans.getFromState();
 		State to = trans.getToState();
 
-		Symbol pop = trans.getPop();
+		Symbol pop = trans.getPop().getFirst();
 		
 		SymbolString input = convertToTerminals(trans.getInput());
 		SymbolString push = trans.getPush();
@@ -59,7 +68,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		PDAVariableMapping map;
 		
 		if (push.isEmpty()){
-			rhs.add(pop);
+			rhs.addAll(input);
 			map = new PDAVariableMapping(from, pop, to);
 			Variable var = this.getVarForMapping(map);
 			lhs.add(var);
@@ -77,10 +86,10 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 				var1 = this.getVarForMapping(map);
 				lhs.add(var1);
 				
-				map = new PDAVariableMapping(to, push.get(1), ql);
+				map = new PDAVariableMapping(to, push.get(0), ql);
 				var1 = this.getVarForMapping(map);
 				
-				map = new PDAVariableMapping(to, push.get(1), ql);
+				map = new PDAVariableMapping(ql, push.get(1), qk);
 				var2 = this.getVarForMapping(map);
 				
 				rhs.addAll(input);
@@ -122,7 +131,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		
 		for (PDATransition trans : pda.getTransitions()){
 		
-			if (trans.getPop().length() == 0)
+			if (trans.getPop().isEmpty() || trans.getPop().size() > 1)
 				errors.add(new BooleanWrapper(false, 
 						"Every transition must pop 1 symbol: " + trans.toString()));
 			if (trans.getInput().size() > 1)
@@ -143,6 +152,66 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		
 		
 		return errors.toArray(new BooleanWrapper[0]);
+	}
+
+	@Override
+	public AlgorithmStep[] initializeAllSteps() {
+		LinkedList<AlgorithmStep> steps = new LinkedList<AlgorithmStep>();
+		steps.addAll(Arrays.asList(super.initializeAllSteps()));
+		steps.add(myThinningStep = new ThinProductions());
+		return steps.toArray(new AlgorithmStep[0]);
+	}
+	
+	
+	
+	@Override
+	public Grammar getConvertedGrammar() {
+		if (myThinningStep.isComplete())
+			return myThinningStep.getThinnedGrammar();
+		return super.getConvertedGrammar();
+		
+	}
+
+
+
+	/**
+	 * Thins out the converted grammar based on the 
+	 * {@link UselessProductionRemover} algorithm.
+	 * This makes the resulting CFG far more manageable.
+	 * @author Julian
+	 *
+	 */
+	private class ThinProductions implements AlgorithmStep{
+
+		private UselessProductionRemover myUselessRemover;
+		
+		@Override
+		public String getDescriptionName() {
+			return "Remove useless productions.";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Thins out the productions, removing all that" +
+					"cannot derive a terminal.";
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			myUselessRemover = new UselessProductionRemover(getConvertedGrammar());
+			return myUselessRemover.stepToCompletion();
+		}
+
+		@Override
+		public boolean isComplete() {
+			return myUselessRemover != null &&
+					myUselessRemover.allProductionsChecked();
+		}
+		
+		public Grammar getThinnedGrammar(){
+			return myUselessRemover.getTransformedGrammar();
+		}
+		
 	}
 
 }

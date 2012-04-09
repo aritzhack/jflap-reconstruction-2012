@@ -10,6 +10,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import model.automata.acceptors.pda.BottomOfStackSymbol;
+import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 
 
@@ -44,11 +47,12 @@ public class SpecialSymbolFactory {
 		return null;
 	}
 	
-	public static Symbol getReccomendedBotOfStackSymbol(Collection<Character> invalid){
+	public static BottomOfStackSymbol getReccomendedBOSSymbol(StackAlphabet stackAlphabet){
+		Set<Character> invalid = stackAlphabet.getUniqueCharacters();
 		for (Integer key: BOTTOM_OF_STACK.keySet()){
 			Symbol  t = BOTTOM_OF_STACK.get(key);
-			if (!invalid.contains(t.toString())){
-				return t;
+			if (!invalid.contains(t.toString().charAt(0))){
+				return new BottomOfStackSymbol(t.getString());
 			}
 		}
 		
