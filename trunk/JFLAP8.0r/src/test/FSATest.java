@@ -9,7 +9,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import util.UtilFunctions;
+import model.algorithms.SteppableAlgorithm;
+import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
+import model.algorithms.conversion.autotogram.FSAVariableMapping;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
+import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
+import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -72,16 +77,24 @@ public class FSATest {
 
 		OutPrintln(fsa.toString());
 		
-		FSAtoRegGrammarConversion converter = new FSAtoRegGrammarConversion(fsa);
+		// CONVERT FSA TO GRAMMAR
+		SteppableAlgorithm converter = new FSAtoRegGrammarConversion(fsa);
 		while (converter.step());
 		
-		Grammar RG = converter.getConvertedGrammar();
+		Grammar RG = ((FSAtoRegGrammarConversion) converter).getConvertedGrammar();
 		
 		OutPrintln(RG.toString());
 		
+		//CHECK TYPE
 		OutPrintln(Arrays.toString(GrammarType.getType(RG)));
 
 		
+		//CONVERT RIGHT-LINEAR to FSA
+		converter = new RGtoFSAConverter(RG);
+		while (converter.step()){
+		}
+		fsa = ((RGtoFSAConverter) converter).getConvertedAutomaton();
+		OutPrintln(fsa.toString());
 	}
 
 	private static void OutPrintln(String s) {

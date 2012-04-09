@@ -27,6 +27,17 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		myStackAlphabet.add(bottom);
 	}
 	
+	public PushdownAutomaton() {
+		this(new StateSet(), 
+				new InputAlphabet(),
+				new StackAlphabet(),
+				new TransitionFunctionSet<PDATransition>(), 
+				new StartState(), 
+				new BottomOfStackSymbol(),
+				new FinalStateSet());
+		
+	}
+
 	@Override
 	public String getDescriptionName() {
 		return "Pushdown Automaton (PDA)";

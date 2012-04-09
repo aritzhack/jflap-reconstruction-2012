@@ -1,5 +1,6 @@
 package model.grammar;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import errors.BooleanWrapper;
@@ -87,7 +88,7 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 		clearGroupingPairRules();
 		addGroupingPairRules(gp);
 	}
-
+	
 	/**
 	 * Retrieves the {@link VariableAlphabet} of this grammar
 	 * @return
@@ -158,6 +159,16 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 									this.getTerminals(), 
 									this.getProductionSet(),
 									this.getStartVariable()};
+	}
+
+	/**
+	 * Returns true if and only if the variable alphabet has a grouping rule,
+	 * signifying that it is using a grouping pair!
+	 * 
+	 * @return
+	 */
+	public boolean usingGrouping() {
+		return this.getVariables().getRuleOfClass(GroupingRule.class) != null;
 	}
 	
 	

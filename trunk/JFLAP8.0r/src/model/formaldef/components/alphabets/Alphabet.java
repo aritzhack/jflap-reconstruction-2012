@@ -184,7 +184,7 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 
 	public <T extends GroupingRule> GroupingRule getRuleOfClass(Class<T> clz) {
 		for (AlphabetRule rule : this.getRules()){
-			if (rule.getClass().isAssignableFrom(clz))
+			if (clz.isAssignableFrom(rule.getClass()))
 				return clz.cast(rule);
 		}
 		return null;

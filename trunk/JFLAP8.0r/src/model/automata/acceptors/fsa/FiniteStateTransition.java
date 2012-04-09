@@ -27,7 +27,9 @@ public class FiniteStateTransition extends Transition {
 
 	@Override
 	public String toString() {
-		return this.getFromState().getName() + "---" + this.getInput() + "--->" + this.getToState().getName();
+		return this.getFromState().getName() + "---" + 
+								this.getInput() + "--->" + 
+									this.getToState().getName();
 	}
 	
 }

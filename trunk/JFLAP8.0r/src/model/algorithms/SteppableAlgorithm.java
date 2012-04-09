@@ -4,7 +4,26 @@ import java.util.LinkedList;
 
 import model.formaldef.Describable;
 
-public interface SteppableAlgorithm extends Describable {
+public abstract class SteppableAlgorithm implements Describable {
+
+	
+	private AlgorithmStep[] mySteps;
+
+
+	public SteppableAlgorithm() {
+		mySteps = initializeAllSteps();
+		
+	}
+	
+	
+	/**
+	 * Initialize the sequence of {@link AlgorithmStep} for this
+	 * {@link SteppableAlgorithm}
+	 * @return
+	 */
+	public abstract AlgorithmStep[] initializeAllSteps();
+
+
 
 	/**
 	 * Progresses this algorithm to the next step, and returns
@@ -12,7 +31,22 @@ public interface SteppableAlgorithm extends Describable {
 	 * 
 	 * @return
 	 */
-	public boolean step() throws AlgorithmException;
+	public boolean step() throws AlgorithmException{
+		AlgorithmStep current = getCurrentStep();
+		
+		if (current == null) return false;
+		
+		return current.execute();
+	}
+
+
+	public AlgorithmStep getCurrentStep() {
+		for (AlgorithmStep step : mySteps){
+			if (step.isComplete()) continue;
+			return step;
+		}
+		return null;
+	}
 	
 	
 	/**
@@ -20,7 +54,7 @@ public interface SteppableAlgorithm extends Describable {
 	 * 
 	 * @return true if the reset is successful
 	 */
-	public boolean reset() throws AlgorithmException;
+	public abstract boolean reset() throws AlgorithmException;
 	
 	
 	

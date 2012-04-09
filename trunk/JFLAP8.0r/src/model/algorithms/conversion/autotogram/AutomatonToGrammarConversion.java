@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import model.algorithms.AlgorithmException;
+import model.algorithms.AlgorithmStep;
 import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -21,7 +22,7 @@ import model.grammar.Production;
 import errors.BooleanWrapper;
 
 public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S extends VariableMapping, E extends Transition> 
-																			implements SteppableAlgorithm {
+																			extends SteppableAlgorithm {
 	/**
 	 * The {@link Grammar} that is being created from the {@link Automaton};
 	 */
@@ -66,29 +67,6 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	
 	public T getAutomaton(){
 		return myAutomaton;
-	}
-
-	@Override
-	public boolean step() throws AlgorithmException{
-		
-		//convert input alphabet
-		if (!inputAlphabetConverted()){
-			return convertInputAlphabet();
-		}
-		//do automatic variable mappings
-		else if(!variableMappingsComplete()){
-			return doAllAutomaticVariableMappings();
-		}
-		//convert all transitions
-		else if(!allTransitionsConverted()){
-			return convertRemainingTransitions();
-		}
-		else if(!isComplete()){
-			return doFinalSteps();
-		}
-
-		return false;
-		
 	}
 
 	/**
@@ -216,7 +194,13 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	}
 	
 	
-	public abstract boolean doFinalSteps();
+	
+	@Override
+	public AlgorithmStep[] initializeAllSteps() {
+		return new AlgorithmStep[]{new ConvertInputAlphabet(),
+									new MapAllVariables(),
+									new ConvertTransitions()};
+	}
 
 	public abstract boolean isStartMapping(S mapping);
 
@@ -233,5 +217,111 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	 */
 	public abstract BooleanWrapper[] checkOfProperForm(T automaton);
 
+	
+	
+	/////////////////////////////////////////////////
+	////////////// Algorithm Steps //////////////////
+	/////////////////////////////////////////////////
+	
+	/**
+	 * Converts the Input Alphabet of the Automaton
+	 * to the Terminal alphabet of the Grammar. First
+	 * step in the conversion algorithm
+	 * 
+	 * @author Julian
+	 *
+	 */
+	private class ConvertInputAlphabet implements AlgorithmStep{
+
+		@Override
+		public String getDescriptionName() {
+			return "Convert Input Alphabet";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Converts the Input Alphabet of the Automaton" +
+					" to the Terminal alphabet of the Grammar.";
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			return convertInputAlphabet();
+		}
+
+		@Override
+		public boolean isComplete() {
+			return inputAlphabetConverted();
+		}
+		
+	}
+	
+	/**
+	 * Create all variable mappings and then make sure those
+	 * are mapped to variables which will compose the grammar
+	 * variable alphabet. This will perform automatic variable
+	 * naming as determined by the specific converter.;
+	 * @author Julian
+	 *
+	 */
+	private class MapAllVariables implements AlgorithmStep{
+
+		@Override
+		public String getDescriptionName() {
+			return "Map all variables";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Create all variable mappings and then make sure those" +
+					" are mapped to variables which will compose the grammar" +
+					" variable alphabet.";
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			return doAllAutomaticVariableMappings();
+		}
+
+		@Override
+		public boolean isComplete() {
+			return doAllAutomaticVariableMappings();
+		}
+		
+	}
+	
+	/**
+	 * Converts all of the transitions in the associated
+	 * automaton into productions in this grammar. Depending
+	 * on the behavior of this algorithm, the transitions
+	 * will be transformed into the appropriate kind of production.
+	 * @author Julian
+	 *
+	 */
+	private class ConvertTransitions implements AlgorithmStep{
+
+		@Override
+		public String getDescriptionName() {
+			return "Covert Transitions to Productions.";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Converts all of the transition functions of" +
+					" the automaton to productions in the grammar.";
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			return convertRemainingTransitions();
+		}
+
+		@Override
+		public boolean isComplete() {
+			return allTransitionsConverted();
+		}
+		
+	}
+	
 
 }

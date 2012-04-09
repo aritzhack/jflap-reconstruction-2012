@@ -1,12 +1,17 @@
 package model.algorithms.conversion.autotogram;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
+import model.algorithms.AlgorithmStep;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -36,8 +41,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 		return "Converts a finite state automaton to a right-linear grammar.";
 	}
 
-	@Override
-	public boolean doFinalSteps() {
+	public boolean finishFinalStateProductions() {
 		boolean added = true;
 		for (State s: this.getAutomaton().getFinalStateSet()){
 			added &= addFinalStateProduction(s);
@@ -45,7 +49,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 		return added;
 	}
 
-	private boolean addFinalStateProduction(State s) {
+	public boolean addFinalStateProduction(State s) {
 		Variable v = this.getVarForMapping(new FSAVariableMapping(s));
 		SymbolString lhs = new SymbolString(v);
 		Production p = new Production(lhs, new SymbolString());
@@ -91,7 +95,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 		return super.isComplete() && allFinalStatesHandled();
 	}
 
-	private boolean allFinalStatesHandled() {
+	public boolean allFinalStatesHandled() {
 		Set<State> finalStates = new HashSet<State>(this.getAutomaton().getFinalStateSet());
 		finalStates.removeAll(finalStatesHandled);
 		return finalStates.isEmpty();
@@ -102,6 +106,57 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 		finalStatesHandled = new HashSet<State>();
 		return super.reset();
 	}
+	
+	
+	
 
+	/////////////////////////////////////////////////
+	////////////// Algorithm Steps //////////////////
+	/////////////////////////////////////////////////
+	
+	
+	@Override
+	public AlgorithmStep[] initializeAllSteps() {
+		List<AlgorithmStep> step = new ArrayList<AlgorithmStep>();
+		step.addAll(Arrays.asList(super.initializeAllSteps()));
+		step.add(new AddFinalStateProductions());
+		return step.toArray(new AlgorithmStep[0]);
+	}
+
+
+
+
+	/**
+	 * Creates productions for each final state in the grammar.
+	 * These productions are of the form:
+	 * 			A -> lambda 
+	 * Where A  is the variable mapped to the final state.
+	 * 	
+	 * @author Julian
+	 *
+	 */
+	private class AddFinalStateProductions implements AlgorithmStep{
+
+		@Override
+		public String getDescriptionName() {
+			return "Create Productions for Final States";
+		}
+
+		@Override
+		public String getDescription() {
+			return "Create lambda productions for each individual final state.";
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			return finishFinalStateProductions();
+		}
+
+		@Override
+		public boolean isComplete() {
+			return allFinalStatesHandled();
+		}
+		
+	}
 
 }
