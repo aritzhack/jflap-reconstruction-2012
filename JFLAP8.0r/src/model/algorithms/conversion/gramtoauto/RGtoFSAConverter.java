@@ -10,8 +10,11 @@ import java.util.TreeSet;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.automata.Automaton;
+import model.automata.StartState;
 import model.automata.State;
+import model.automata.StateSet;
 import model.automata.Transition;
+import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.formaldef.components.alphabets.symbols.Symbol;
@@ -20,6 +23,7 @@ import model.formaldef.components.alphabets.symbols.Variable;
 import model.formaldef.rules.GroupingRule;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.StartVariable;
 import model.grammar.typetest.GrammarType;
 
 public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcceptor, FiniteStateTransition> {
@@ -95,75 +99,62 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	}
 
 	@Override
-	public Set<State> createAutomaticStates() {
-		Set<State> states = new HashSet<State>();
-		int id = 0;
-		for (Symbol v: this.getGrammar().getVariables()){
-			
-			String name = createStateString((Variable) v);
-			State temp = new State(name, id, null);
-			states.add(temp);
-			id++;
-			//check and add star state;
-			if (v.equals(this.getGrammar().getStartVariable())){
-				this.getConvertedAutomaton().getStartState().setTo(temp);
-			}
-		}
-
-		return states;
+	public boolean doSetup() {
+		
+		StateSet states = this.getConvertedAutomaton().getStates();
+		StartState startState = this.getConvertedAutomaton().getStartState();
+		StartVariable startVar = this.getGrammar().getStartVariable();
+		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
+		
+		//do all non-final states
+		boolean success = setupStates(states, startState, startVar);
+		
+		//do final states
+		success &= setUpFinalStates(finalStates, 
+							states);
+		
+		
+		return success;
 	}
 
-	public boolean createAndAddFinalState(String name){
-		int id = this.getConvertedAutomaton().getStates().getNextID();
-		myFinalState = new State(name, id, null);
-		boolean added = this.getConvertedAutomaton().getStates().add(myFinalState)
-				&& this.getConvertedAutomaton().getFinalStateSet().add(myFinalState);
+	private boolean setupStates(StateSet states, 
+									StartState startState,
+									StartVariable startVar) {
+		for (Symbol v: this.getGrammar().getVariables()){
+			int id = states.getNextUnusedID();
+			String name = createStateString((Variable) v);
+			
+			State newState = new State(name, id);
+			
+			boolean added = states.add(newState);
+			
+			if (!added) return false;
+			
+			//if it is the start variable, set the corresponding
+				//state to start state
+			if (startVar.equals(v)){
+				startState.setTo(newState);
+			}
+			
+		}
+		
+		return true;
+	}
+
+	private boolean setUpFinalStates(FinalStateSet finalStates, StateSet states) {
+		int id = states.getNextUnusedID();
+		String name = DEFAULT_NAME + id;
+		myFinalState = new State(name, id);
+		boolean added = states.add(myFinalState)
+				&& finalStates.add(myFinalState);
 		return added;
 	}
-	
-	@Override
-	public AlgorithmStep[] initializeAllSteps() {
-		List<AlgorithmStep> steps = new ArrayList<AlgorithmStep>();
-		steps.addAll(Arrays.asList(super.initializeAllSteps()));
-		steps.add(2, new AddFinalState());
-		return steps.toArray(new AlgorithmStep[0]);
-	}
+
 	
 	@Override
 	public GrammarType[] getValidTypes() {
 		return new GrammarType[]{GrammarType.RIGHT_LINEAR};
 	}
 
-	/////////////////////////////////////////////////
-	////////////// Algorithm Steps //////////////////
-	/////////////////////////////////////////////////
-	
-	private class AddFinalState implements AlgorithmStep {
-
-		@Override
-		public String getDescriptionName() {
-			return "Add Final State";
-		}
-
-		@Override
-		public String getDescription() {
-			return "Adds a final state to this FSA. This is not linked" +
-					" to any variable.";
-		}
-
-		@Override
-		public boolean execute() throws AlgorithmException {
-			int id = getConvertedAutomaton().getStates().getNextID();
-			return createAndAddFinalState(DEFAULT_NAME + id);
-		}
-
-		@Override
-		public boolean isComplete() {
-			return getFinalState() != null;
-		}
-		
-		
-	}
-	
 	
 }

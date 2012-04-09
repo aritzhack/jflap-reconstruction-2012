@@ -11,9 +11,11 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
+import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.Terminal;
 import model.formaldef.components.alphabets.symbols.Variable;
@@ -60,15 +62,13 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 		return false;
 	}
 
-	public boolean convertTerminals() {
-		boolean converted = true;
-		for (Symbol s: this.getGrammar().getTerminals()){
-			converted = converted && getConvertedAutomaton().getInputAlphabet().add(new Symbol(s.getString()));
-		}
-		return converted;
+	public boolean convertAlphabets() {
+		Symbol[] terms = this.getGrammar().getTerminals().toArray(new Symbol[0]);
+		InputAlphabet inAlph = getConvertedAutomaton().getInputAlphabet();
+		return Alphabet.addCopiedSymbols(inAlph,terms);
 	}
 	
-	public boolean terminalAlphabetConverted() {
+	public boolean alphabetsConverted() {
 		return this.getGrammar().getTerminals().size() == 
 				this.getConvertedAutomaton().getInputAlphabet().size();
 	}
@@ -112,12 +112,6 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 		return getUnconvertedProductions().isEmpty();
 	}
 
-	public boolean createAndAddAutoStates(){
-		StateSet states = this.getConvertedAutomaton().getStates();
-		myAutoStates = this.createAutomaticStates();
-		return states.addAll(myAutoStates);
-	}
-	
 	public boolean autoStatesAdded() {
 		StateSet states = this.getConvertedAutomaton().getStates();
 		return myAutoStates != null && states.containsAll(myAutoStates);
@@ -126,8 +120,7 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
 		return new AlgorithmStep[]{
-				new ConvertTerminals(),
-				new AutoStateAddition(),
+				new ConvertAlphabets(),
 				new ConvertProductions()};
 	}
 
@@ -137,10 +130,12 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 		myAutomaton = createEmptyAutomaton();
 		myConvertedProductions = new ProductionSet();
 		
-		return false;
+		return doSetup();
 	}
 
 
+
+	public abstract boolean doSetup();
 
 	public abstract T createEmptyAutomaton();
 
@@ -150,8 +145,6 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	
 	public abstract S convertProduction(Production p);
 	
-	
-	public abstract Set<State> createAutomaticStates();
 	
 	
 	/////////////////////////////////////////////////
@@ -165,7 +158,7 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	 * @author Julian
 	 *
 	 */
-	private class ConvertTerminals implements AlgorithmStep{
+	private class ConvertAlphabets implements AlgorithmStep{
 
 		@Override
 		public String getDescriptionName() {
@@ -181,46 +174,16 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 
 		@Override
 		public boolean execute() throws AlgorithmException {
-			return convertTerminals();
+			return convertAlphabets();
 		}
 
 		@Override
 		public boolean isComplete() {
-			return terminalAlphabetConverted();
+			return alphabetsConverted();
 		}
 		
 	}
 
-	/**
-	 * Adds all states to the Automaton that must be there
-	 * at the onset of the algorithm.
-	 * @author Julian
-	 *
-	 */
-	private class AutoStateAddition implements AlgorithmStep{
-
-		@Override
-		public String getDescriptionName() {
-			return "Add Automatic States";
-		}
-
-		@Override
-		public String getDescription() {
-			return "Adds all states that must necessarily be a " +
-					"part of the automaton at the start of the algorithm.";
-		}
-
-		@Override
-		public boolean execute() throws AlgorithmException {
-			return createAndAddAutoStates();
-		}
-
-		@Override
-		public boolean isComplete() {
-			return autoStatesAdded();
-		}
-		
-	}
 	
 	/**
 	 * Converts all productions i nthe grammar into transition

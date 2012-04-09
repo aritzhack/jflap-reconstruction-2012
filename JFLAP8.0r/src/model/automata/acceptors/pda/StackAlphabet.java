@@ -14,20 +14,18 @@ public class StackAlphabet extends Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return '\u0393';
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The finite set of symbols that can be used " +
+				"on the PDA FIFO stack.";
 	}
 
 	@Override
 	public String getSymbolName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Stack Symbol";
 	}
 	
 

@@ -36,7 +36,7 @@ public class StateSet extends TreeSet<State> implements
 		return (StateSet) super.clone();
 	}
 
-	public int getNextID() {
+	public int getNextUnusedID() {
 		
 		int i = 0;
 		

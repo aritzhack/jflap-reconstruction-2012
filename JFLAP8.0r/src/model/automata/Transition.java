@@ -121,7 +121,7 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	@Override
 	public String toString() {
 		return "[" + getFromState().toString() + "] -> ["
-				+ getToState().toString() + "]" + " Input: " + this.getInput();
+				+ getToState().toString() + "] " + this.getInput();
 	}
 
 	/**

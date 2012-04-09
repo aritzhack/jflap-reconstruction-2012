@@ -48,6 +48,15 @@ public abstract class SteppableAlgorithm implements Describable {
 		return null;
 	}
 	
+	public boolean stepToCompletion(){
+		while (this.step());
+		return !this.isRunning();
+		
+	}
+	
+	public boolean isRunning(){
+		return this.getCurrentStep() != null;
+	}
 	
 	/**
 	 * Resets this algorithm to its original state.

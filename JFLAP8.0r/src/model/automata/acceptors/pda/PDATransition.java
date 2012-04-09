@@ -9,10 +9,10 @@ import model.formaldef.components.alphabets.symbols.SymbolString;
 
 public class PDATransition extends Transition {
 
-	private Symbol myPop;
+	private SymbolString myPop;
 	private SymbolString myPush;
 
-	public PDATransition(State from, State to, SymbolString input, Symbol pop, SymbolString push) {
+	public PDATransition(State from, State to, SymbolString input, SymbolString pop, SymbolString push) {
 		super(from, to, input);
 		setPop(pop);
 		setPush(push);
@@ -37,7 +37,7 @@ public class PDATransition extends Transition {
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		Set<Symbol> used = super.getUniqueSymbolsUsed();
-		used.add(this.getPop());
+		used.addAll(this.getPop());
 		used.addAll(this.getPush());
 		return used;
 	}
@@ -58,13 +58,13 @@ public class PDATransition extends Transition {
 
 
 
-	public Symbol getPop() {
+	public SymbolString getPop() {
 		return myPop;
 	}
 
 
 
-	public void setPop(Symbol pop) {
+	public void setPop(SymbolString pop) {
 		this.myPop = pop;
 	}
 
@@ -79,5 +79,39 @@ public class PDATransition extends Transition {
 	public void setPush(SymbolString push) {
 		this.myPush = push;
 	}
+
+	public SymbolString[] toArray(){
+		return new SymbolString[]{this.getInput(),
+									this.getPop(),
+									this.getPush()};
+	}
+	
+	@Override
+	public int compareTo(Transition o) {
+		int comp;
+		if ((comp = super.compareTo(o)) != 0) return comp;
+		
+		PDATransition other = (PDATransition) o;
+		
+		
+		SymbolString[] mine = this.toArray(),
+						yours = other.toArray();
+		
+		
+		for (int i = 0; i < mine.length; i++){
+			comp = mine[i].compareTo(yours[i]);
+			if (comp != 0) return comp;
+				
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + ", " + this.getPop() + "; " + this.getPush();
+	}
+	
+	
 
 }

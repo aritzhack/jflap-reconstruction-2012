@@ -17,6 +17,7 @@ import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 
+import model.automata.InputAlphabet;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.symbols.Symbol;
@@ -229,6 +230,15 @@ public abstract class Alphabet extends TreeSet<Symbol> implements FormalDefiniti
 					throw new AlphabetException(bw.getMessage());
 				
 			}
+	}
+
+	public static boolean addCopiedSymbols(Alphabet alph,
+			Symbol[] toAdd) {
+		boolean converted = true;
+		for (Symbol s: toAdd){
+			converted = converted && alph.add(new Symbol(s.getString()));
+		}
+		return converted;
 	}
 	
 	

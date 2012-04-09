@@ -194,9 +194,9 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		}
 	}
 
-	public boolean isStartProduction(Variable start) {
+	public boolean isStartProduction(StartVariable startVariable) {
 		if (this.getLHS().isEmpty()) return false;
-		return this.getLHS().getFirst() == start;
+		return this.getLHS().getFirst() == startVariable;
 //				&& this.getLHS().size() == 1;
 	}
 	
