@@ -19,6 +19,14 @@ public class FiniteStateAcceptor extends Acceptor<FiniteStateTransition> {
 		super(states, langAlph, functions, start, finalStates);
 	}
 
+	public FiniteStateAcceptor() {
+		this(new StateSet(),
+				new InputAlphabet(),
+				new TransitionFunctionSet<FiniteStateTransition>(),
+				new StartState(),
+				new FinalStateSet());
+	}
+
 	@Override
 	public String getDescriptionName() {
 		return "Finite State Automaton (FSA)";
