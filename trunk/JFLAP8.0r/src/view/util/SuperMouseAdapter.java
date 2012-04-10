@@ -52,7 +52,7 @@
  WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  ---------------------------------------------------------------------------*/
 
-package util;
+package view.util;
 
 import java.awt.event.*;
 

@@ -1,10 +1,10 @@
 package model.automata;
 
-import util.UtilFunctions;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
+import model.util.UtilFunctions;
 
 public abstract class Automaton <T extends Transition> extends FormalDefinition<InputAlphabet, TransitionFunctionSet<T>> {
 

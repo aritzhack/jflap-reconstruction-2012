@@ -68,7 +68,6 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		myFullDerivesTerminals = new ProductionSet();
 		for (Production p : this.getOriginalGrammar().getProductionSet()){
 			if(this.checkDerivesTerminals(p)){
-				System.out.println(p);
 				myFullDerivesTerminals.add(p);
 			}
 		}

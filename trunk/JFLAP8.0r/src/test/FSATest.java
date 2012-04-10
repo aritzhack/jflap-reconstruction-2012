@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import util.UtilFunctions;
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;
@@ -28,6 +27,7 @@ import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.functionset.FunctionSet;
 import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
+import model.util.UtilFunctions;
 
 public class FSATest {
 

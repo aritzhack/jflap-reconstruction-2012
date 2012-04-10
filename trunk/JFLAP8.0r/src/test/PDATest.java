@@ -25,6 +25,7 @@ import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
+import model.automata.simulate.PDASimulator;
 import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.alphabets.symbols.SymbolString;
@@ -32,7 +33,7 @@ import model.grammar.Grammar;
 import model.grammar.transform.GrammarTransformAlgorithm;
 import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
-import util.UtilFunctions;
+import model.util.UtilFunctions;
 
 public class PDATest {
 
@@ -91,6 +92,11 @@ public class PDATest {
 		
 		ErrPrintln("");
 		
+		//lets try some stuff...
+				PDASimulator sim = new PDASimulator(pda);
+				String in = "aaaaabbbbb";
+				OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
+		
 		//convert PDA to CFG
 		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
 		while (converter.step());
@@ -98,7 +104,6 @@ public class PDATest {
 		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
 		
 		OutPrintln(CFG.toString());
-		System.out.println("@@@@@@@@@@@@@@@@");
 		//remove useless productions
 		converter = new UselessProductionRemover(CFG);
 		converter.stepToCompletion();
@@ -121,12 +126,19 @@ public class PDATest {
 		OutPrintln("LL CONVERTED:\n" + pda.toString());
 
 		
+		sim = new PDASimulator(pda);
+		OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
+		
 		converter = new CFGtoPDAConverterLR(CFG);
 		while (converter.step()){
 		}
 		pda = ((CFGtoPDAConverterLR) converter).getConvertedAutomaton();
 		
 		OutPrintln("LR CONVERTED:\n" + pda.toString());
+		
+		sim = new PDASimulator(pda);
+		OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
+		
 
 	}
 

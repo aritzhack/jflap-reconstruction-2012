@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import util.JFLAPResources;
 
 
 import errors.BooleanWrapper;
@@ -16,6 +15,7 @@ import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.alphabets.symbols.Terminal;
 import model.formaldef.components.alphabets.symbols.Variable;
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.util.JFLAPResources;
 
 public class Production implements LanguageFunction, Comparable<Production>, JFLAPResources{
 
