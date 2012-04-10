@@ -1,4 +1,4 @@
-package util;
+package view.util;
 
 public interface IChanged {
 

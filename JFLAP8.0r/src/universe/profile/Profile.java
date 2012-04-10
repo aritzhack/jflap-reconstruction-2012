@@ -5,7 +5,7 @@ public class Profile {
     public static String EPSILON = "\u03B5";    // see MultipleSimulateAction
 	
 	public String getSymbolStringDelimiter() {
-		return "";
+		return " ";
 	}
 
 	public String getEmptyString() {

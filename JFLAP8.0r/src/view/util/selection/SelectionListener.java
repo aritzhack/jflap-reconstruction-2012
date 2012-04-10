@@ -1,12 +1,12 @@
-package util.selection;
+package view.util.selection;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
-import util.MouseClickAdapter;
-import util.SuperMouseAdapter;
+import view.util.MouseClickAdapter;
+import view.util.SuperMouseAdapter;
 
 
 public class SelectionListener<S extends JComponent, T extends ISelector> extends MouseClickAdapter<S> {

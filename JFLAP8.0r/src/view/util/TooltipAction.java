@@ -18,7 +18,7 @@
 
 
 
-package util;
+package view.util;
 
 import javax.swing.AbstractAction;
 

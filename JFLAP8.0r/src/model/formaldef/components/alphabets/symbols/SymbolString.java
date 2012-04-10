@@ -13,11 +13,11 @@ import java.util.TreeSet;
 import javax.swing.JOptionPane;
 
 import universe.Universe;
-import util.UtilFunctions;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
+import model.util.UtilFunctions;
 
 
 
@@ -78,7 +78,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public boolean startsWith(SymbolString label) {
-		return this.indexOfSubSymbolString(label) == 0;
+		return label.isEmpty() || this.indexOfSubSymbolString(label) == 0;
 	}
 
 	/**

@@ -21,7 +21,7 @@
 // I lifted this code directly from
 // http://www.codeguru.com/java/articles/122.shtml.
 // JMultiLineToolTip.java
-package util;
+package view.util;
 
 import java.awt.Dimension;
 import java.awt.Font;

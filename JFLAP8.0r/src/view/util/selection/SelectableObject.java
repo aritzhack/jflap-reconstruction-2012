@@ -1,4 +1,4 @@
-package util.selection;
+package view.util.selection;
 
 public abstract class SelectableObject implements ISelectable {
 

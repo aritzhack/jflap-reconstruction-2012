@@ -3,8 +3,9 @@ package model.automata;
 import java.awt.Point;
 import java.lang.reflect.Constructor;
 
+import model.util.JFLAPResources;
 
-import util.JFLAPResources;
+
 
 
 public class State implements JFLAPResources, Comparable<State>{
