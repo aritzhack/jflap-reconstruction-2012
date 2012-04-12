@@ -8,8 +8,8 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.AlphabetRule;
 import model.formaldef.rules.GroupingRule;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
@@ -32,12 +32,10 @@ import model.grammar.typetest.GrammarType;
  * @author Julian Genkins
  *
  */
-public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
+public class Grammar extends FormalDefinition{
 
-	private VariableAlphabet myVariableAlphabet;
-	
 	private StartVariable myStartVariable;
-	
+
 	/**
 	 * Creates a {@link Grammar}with all of the necessary components.
 	 * @param terminals = the initial {@link TerminalAlphabet}
@@ -45,19 +43,18 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * @param functions = set of {@link Production} rules
 	 * @param startVar = the {@link StartVariable} of this grammar
 	 */
-	public Grammar(TerminalAlphabet terminals,
-					VariableAlphabet variables,
+	public Grammar(VariableAlphabet variables,
+					TerminalAlphabet terminals,
 					ProductionSet functions,
 					StartVariable startVar) {
-		super(terminals, functions);
-		myVariableAlphabet = variables;
+		super(variables, terminals, functions, startVar);
 		myStartVariable = startVar;
 		setUpRules();
 	}
 	
 	public Grammar(){
-		this(new TerminalAlphabet(),
-				new VariableAlphabet(),
+		this(new VariableAlphabet(),
+				new TerminalAlphabet(),
 				new ProductionSet(),
 				new StartVariable());
 	}
@@ -95,7 +92,7 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * @return
 	 */
 	public VariableAlphabet getVariables() {
-		return myVariableAlphabet;
+		return getComponentOfClass(VariableAlphabet.class);
 	}
 
 	@Override
@@ -116,15 +113,15 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * @return
 	 */
 	public TerminalAlphabet getTerminals() {
-		return super.getLanguageAlphabet();
+		return getComponentOfClass(TerminalAlphabet.class);
 	}
 	
 	/**
 	 * Returns the start variable for this grammar
 	 * @return
 	 */
-	public StartVariable getStartVariable(){
-		return myStartVariable;
+	public Variable getStartVariable(){
+		return getComponentOfClass(StartVariable.class).toSymbolObject();
 	}
 	
 	/**
@@ -132,13 +129,13 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * @param s
 	 */
 	public void setStartVariable(Symbol s){
-		myStartVariable.setString(s.getString());
+		myStartVariable.setTo(s);
 	}
 
 	@Override
-	public FormalDefinition<TerminalAlphabet, ProductionSet> alphabetAloneCopy() {
-		return new Grammar(this.getTerminals(), 
-							this.getVariables(),
+	public FormalDefinition alphabetAloneCopy() {
+		return new Grammar(this.getVariables(),
+							this.getTerminals(), 
 							new ProductionSet(),
 							new StartVariable());
 	}
@@ -150,16 +147,7 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 	 * @return
 	 */
 	public ProductionSet getProductionSet(){
-		return super.getFunctionSet();
-	}
-
-	@Override
-	public FormalDefinitionComponent[] getComponents() {
-		return new FormalDefinitionComponent[]{
-									this.getVariables(),
-									this.getTerminals(), 
-									this.getProductionSet(),
-									this.getStartVariable()};
+		return getComponentOfClass(ProductionSet.class);
 	}
 
 	/**
@@ -189,7 +177,7 @@ public class Grammar extends FormalDefinition<TerminalAlphabet, ProductionSet> {
 		}
 		return startProds.toArray(new Production[0]);
 	}
-	
+
 	
 
 }

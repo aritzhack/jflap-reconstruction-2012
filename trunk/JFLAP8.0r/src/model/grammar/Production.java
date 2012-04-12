@@ -10,11 +10,11 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 
 import model.formaldef.components.alphabets.AlphabetException;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Terminal;
-import model.formaldef.components.alphabets.symbols.Variable;
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
 import model.util.JFLAPResources;
 
 public class Production implements LanguageFunction, Comparable<Production>, JFLAPResources{
@@ -194,9 +194,9 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		}
 	}
 
-	public boolean isStartProduction(StartVariable startVariable) {
+	public boolean isStartProduction(Variable variable) {
 		if (this.getLHS().isEmpty()) return false;
-		return this.getLHS().getFirst() == startVariable;
+		return this.getLHS().getFirst().equals(variable);
 //				&& this.getLHS().size() == 1;
 	}
 	
@@ -223,6 +223,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		return this.getRHS().purgeOfSymbol(s) || lhs;
 	}
 
+	
 	public Object[] toArray() {
 		return new Object[]{
 				this.getLHS().toString(),
@@ -246,6 +247,11 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Production copy() {
+		return new Production(this.getLHS().copy(), this.getRHS().copy());
 	}
 
 
