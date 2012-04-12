@@ -17,9 +17,9 @@ import model.automata.Transition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FiniteStateTransition;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.GroupingRule;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -103,7 +103,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 		
 		StateSet states = this.getConvertedAutomaton().getStates();
 		StartState startState = this.getConvertedAutomaton().getStartState();
-		StartVariable startVar = this.getGrammar().getStartVariable();
+		Variable startVar = this.getGrammar().getStartVariable();
 		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
 		
 		//do all non-final states
@@ -119,7 +119,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 
 	private boolean setupStates(StateSet states, 
 									StartState startState,
-									StartVariable startVar) {
+									Variable startVar) {
 		for (Symbol v: this.getGrammar().getVariables()){
 			int id = states.getNextUnusedID();
 			String name = createStateString((Variable) v);
