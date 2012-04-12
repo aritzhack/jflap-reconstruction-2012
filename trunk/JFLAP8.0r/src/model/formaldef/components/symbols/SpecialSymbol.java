@@ -1,5 +1,6 @@
 package model.formaldef.components.symbols;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -7,35 +8,57 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.symbols.Symbol;
 import model.grammar.StartVariable;
 
-public abstract class SpecialSymbol extends Symbol implements FormalDefinitionComponent, UsesSymbols {
+public abstract class SpecialSymbol extends FormalDefinitionComponent implements UsesSymbols {
 
-	
+	private Symbol mySymbol;
 	
 	public SpecialSymbol(String s) {
-		super(s);
+		this (new Symbol(s));
 	}
 
-	public SpecialSymbol() {
-		super("");
+	public SpecialSymbol(Symbol s) {
+		this.setTo(s);
+	}
+	
+	
+	public SpecialSymbol(){
+		this((Symbol) null);
 	}
 
+	public void setTo(Symbol s) {
+		mySymbol = s;
+		distributeChange(SPECIAL_SYMBOL_SET, mySymbol);
+	}
+
+	public Symbol toSymbolObject() {
+		return mySymbol;
+	}
+	
 	@Override
 	public BooleanWrapper isComplete() {
-		return new BooleanWrapper(!this.getString().isEmpty(),
+		return new BooleanWrapper(mySymbol != null,
 						"The " + this.getDescriptionName() + " must be set before you can continue");
+	}
+	
+	@Override
+	public String toString() {
+		return mySymbol == null ? "" : mySymbol.toString();
 	}
 
 	@Override
-	public StartVariable clone() {
-		return (StartVariable) super.clone();
+	public SpecialSymbol copy() {
+		try {
+			return this.getClass().getConstructor(String.class).newInstance(this.toString());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
 	}
 
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
-		return new TreeSet<Symbol>(Arrays.asList(new Symbol[]{this}));
+		return new TreeSet<Symbol>(Arrays.asList(new Symbol[]{mySymbol}));
 	}
 
 	@Override
@@ -48,7 +71,7 @@ public abstract class SpecialSymbol extends Symbol implements FormalDefinitionCo
 	}
 
 	public void clear() {
-		this.setString("");
+		this.setTo(null);
 	}
 	
 	
