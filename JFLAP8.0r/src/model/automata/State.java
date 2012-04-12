@@ -3,12 +3,14 @@ package model.automata;
 import java.awt.Point;
 import java.lang.reflect.Constructor;
 
+import util.Copyable;
+
 import model.util.JFLAPResources;
 
 
 
 
-public class State implements JFLAPResources, Comparable<State>{
+public class State implements JFLAPResources, Comparable<State>, Copyable{
 
 	private String myName;
 
@@ -57,7 +59,7 @@ public class State implements JFLAPResources, Comparable<State>{
 	}
 
 	@Override 
-	public State clone(){
+	public State copy(){
 		try{
 			Constructor c = this.getClass().getConstructor(String.class, int.class);
 			State s = (State) c.newInstance(this.getName(), this.getID());
