@@ -10,27 +10,27 @@ import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.TuringMachineRule;
 
 public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	private BlankSymbol myBlank;
-	private TapeAlphabet myTapeAlphabet;
+
+
 
 	public TuringMachine(StateSet states,
 							TapeAlphabet tapeAlph,
 							BlankSymbol blank,
-							TuringMachineInputAlphabet langAlph,
+							TuringMachineInputAlphabet inputAlph,
 							TransitionFunctionSet<TuringMachineTransition> functions,
 							StartState start,
 							FinalStateSet finalStates) {
-		super(states, langAlph, functions, start, finalStates);
-		
-	
-		myTapeAlphabet = tapeAlph;
+		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
+		myBlank = blank;
 		this.getInputAlphabet().addRules(new TuringMachineRule(this));
-		setBlankSymbol(blank);
+		setBlankSymbol(blank.toSymbolObject());
 	}
 	
 
@@ -49,7 +49,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	public TuringMachine alphabetAloneCopy() {
 		return new TuringMachine(new StateSet(),
 									this.getTapeAlphabet(), 
-									this.getBlankSymbol(), 
+									(BlankSymbol) myBlank.copy(), 
 									(TuringMachineInputAlphabet) this.getInputAlphabet(), 
 									new TransitionFunctionSet<TuringMachineTransition>(), 
 									new StartState(), 
@@ -58,37 +58,22 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 
-	public BlankSymbol getBlankSymbol() {
-		return myBlank;
+	public Symbol getBlankSymbol() {
+		return getComponentOfClass(BlankSymbol.class).toSymbolObject();
 	}
 
 
 
-	public void setBlankSymbol(BlankSymbol blank) {
-		this.getTapeAlphabet().remove(myBlank);
-		this.myBlank = blank;
-		this.getTapeAlphabet().add(myBlank);
+	public void setBlankSymbol(Symbol blank) {
+		this.getTapeAlphabet().remove(getBlankSymbol());
+		this.myBlank.setTo(blank);
+		this.getTapeAlphabet().add(blank);
 	}
 
 
 	public TapeAlphabet getTapeAlphabet() {
-		return myTapeAlphabet;
+		return getComponentOfClass(TapeAlphabet.class);
 	}
-
-
-
-	@Override
-	public FormalDefinitionComponent[] getComponents() {
-		return new FormalDefinitionComponent[]{this.getStates(),
-													this.getTapeAlphabet(),
-													this.getBlankSymbol(),
-													this.getInputAlphabet(),
-													this.getTransitions(),
-													this.getStartState(),
-													this.getFinalStateSet()};
-	}
-	
-	
 
 
 }
