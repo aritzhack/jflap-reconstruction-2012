@@ -4,31 +4,38 @@ import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import model.formaldef.components.ChangeTypes;
+import model.formaldef.components.ComponentChangeEvent;
+import model.formaldef.components.ComponentChangeListener;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.functionset.FunctionSet;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
 import errors.BooleanWrapper;
 
 
-public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet> implements Describable, 
-																								UsesSymbols{
+public abstract class FormalDefinition extends ChangingObject implements Describable, UsesSymbols, ChangeListener, ChangeTypes{
+
+	private LinkedList<FormalDefinitionComponent> myComponents;
 
 
-	private T myLanguageAlphabet;
-
-
-	private S myFunctionSet;
-
-
-	public FormalDefinition(T langAlph, S functions) {
-		myLanguageAlphabet = langAlph;
-		myFunctionSet = functions;
-		myLanguageAlphabet.addRules(new DisallowedCharacterRule(this));
+	public FormalDefinition(FormalDefinitionComponent ... comps) {
+		myComponents = new LinkedList<FormalDefinitionComponent>();
+		for (FormalDefinitionComponent comp : comps){
+			myComponents.add(comp);
+			comp.addListener(this);
+		}
+		for (Alphabet a: this.getAlphabets())
+			a.addRules(new DisallowedCharacterRule(this));
 	}
 
 	public String toNtupleString(){
@@ -73,7 +80,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 	public FormalDefinition clone() {
 		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
 		for (FormalDefinitionComponent comp : this.getComponents())
-			cloned.add(comp.clone());
+			cloned.add(comp.copy());
 
 		try {
 			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray(new FormalDefinition[0]));
@@ -127,33 +134,7 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 	 * 											{@link FormalDefinition}.
 	 */
 	public FormalDefinitionComponent[] getComponents(){
-		return new FormalDefinitionComponent[]{this.getLanguageAlphabet(),
-				this.getFunctionSet()};
-	}
-
-	public T getLanguageAlphabet() {
-		return myLanguageAlphabet;
-	}
-
-	public S getFunctionSet() {
-		return myFunctionSet;
-	}
-
-	public boolean purgeAndRemoveSymbol(Symbol symbol){
-		
-		boolean purged = purgeOfSymbol(symbol);
-		boolean removed = removeSymbolFromAlphabets(symbol);
-		
-		return purged || removed;
-	}
-
-	private boolean removeSymbolFromAlphabets(Symbol symbol) {
-		boolean removed = false; 
-		for (Alphabet a: this.getAlphabets()){
-			removed = a.remove(symbol) || removed;
-		}
-		
-		return removed;
+		return myComponents.toArray(new FormalDefinitionComponent[0]);
 	}
 
 	public Set<Symbol> getUnusedSymbols() {
@@ -174,42 +155,6 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return used;
 	}
 
-	public abstract FormalDefinition<T,S> alphabetAloneCopy();
-
-//	public BooleanWrapper importAlphabetsFrom(FormalDefinition imp) {
-//		if (!this.getClass().isAssignableFrom(imp.getClass())){
-//			return;
-//		}
-//		for (Alphabet a: myAlphabets){
-//			Alphabet other = imp.getAlphabetByClass(a.getClass());
-//
-//			//null check 
-//			if (other == null) continue;
-//
-//			//adjust grouping
-//			if (other instanceof IGrouping){
-//				if (!((IGrouping) a).getGrouping().equals( 
-//						((IGrouping) other).getGrouping())){
-//					int i = JOptionPane.showConfirmDialog(null, 
-//							"The imported alphabet uses different grouping than\n" +
-//									"selected for the current " + a.getName() +".\n" +
-//									"the grouping will be adjusted accordingly.",
-//									"Import issue", 
-//									JOptionPane.OK_CANCEL_OPTION);
-//					if (i == 1) return;
-//				}
-//
-//				//TODO: should there be an option shown here? For now, I will say NAY
-//				((IGrouping) a).setGrouping(((IGrouping) other).getGrouping());
-//			}
-//			//add all symbols
-//			for (Object s: other){
-//				a.add(((Symbol)s).clone());
-//			}
-//		}
-//
-//	}
-
 	public Set<Symbol> getAllSymbolsInAlphabets() {
 		Set<Symbol> symbols = new HashSet<Symbol>();
 		for (Alphabet alph: getAlphabets()){
@@ -229,4 +174,24 @@ public abstract class FormalDefinition<T extends Alphabet, S extends FunctionSet
 		return result;
 	}
 
+	public abstract FormalDefinition alphabetAloneCopy();
+
+	@Override
+	public void stateChanged(ChangeEvent event) {
+		this.componentChanged((ComponentChangeEvent) event);
+	}
+	
+	public void componentChanged(ComponentChangeEvent event){
+		for (Alphabet a: this.getAlphabets()){
+			if (event.comesFrom(a)){
+				switch (event.getType()){
+				case ITEM_REMOVED: 
+					this.purgeOfSymbol((Symbol) event.getArg(0));
+				
+				}
+			}
+		}
+		this.distributeChanged(event);
+	}
+	
 }
