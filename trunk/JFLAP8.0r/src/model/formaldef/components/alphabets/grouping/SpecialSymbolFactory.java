@@ -13,7 +13,7 @@ import java.util.TreeSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 
 
@@ -47,12 +47,12 @@ public class SpecialSymbolFactory {
 		return null;
 	}
 	
-	public static BottomOfStackSymbol getReccomendedBOSSymbol(StackAlphabet stackAlphabet){
+	public static Symbol getReccomendedBOSSymbol(StackAlphabet stackAlphabet){
 		Set<Character> invalid = stackAlphabet.getUniqueCharacters();
 		for (Integer key: BOTTOM_OF_STACK.keySet()){
 			Symbol  t = BOTTOM_OF_STACK.get(key);
 			if (!invalid.contains(t.toString().charAt(0))){
-				return new BottomOfStackSymbol(t.getString());
+				return new Symbol(t.getString());
 			}
 		}
 		
