@@ -4,8 +4,8 @@ import java.util.Set;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 
 public class FiniteStateTransition extends Transition {
 
@@ -30,6 +30,13 @@ public class FiniteStateTransition extends Transition {
 		return this.getFromState().getName() + "---" + 
 								this.getInput() + "--->" + 
 									this.getToState().getName();
+	}
+
+	@Override
+	public FiniteStateTransition copy() {
+		return new FiniteStateTransition(this.getFromState().copy(), 
+									this.getToState().copy(), 
+									this.getInput().copy());
 	}
 	
 }
