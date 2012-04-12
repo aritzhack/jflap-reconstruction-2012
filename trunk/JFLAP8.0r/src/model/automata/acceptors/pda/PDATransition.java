@@ -4,8 +4,8 @@ import java.util.Set;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 
 public class PDATransition extends Transition {
 
@@ -110,6 +110,17 @@ public class PDATransition extends Transition {
 	@Override
 	public String toString() {
 		return super.toString() + ", " + this.getPop() + "; " + this.getPush();
+	}
+
+
+
+	@Override
+	public PDATransition copy() {
+		return new PDATransition(this.getFromState().copy(), 
+									this.getToState().copy(), 
+									this.getInput().copy(),
+									this.getPop().copy(), 
+									this.getPush().copy());
 	}
 	
 	
