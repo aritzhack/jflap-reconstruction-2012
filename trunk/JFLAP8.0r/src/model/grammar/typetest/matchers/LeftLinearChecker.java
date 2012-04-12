@@ -1,8 +1,8 @@
 package model.grammar.typetest.matchers;
 
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Terminal;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
 
 public class LeftLinearChecker extends ContextFreeChecker {
 

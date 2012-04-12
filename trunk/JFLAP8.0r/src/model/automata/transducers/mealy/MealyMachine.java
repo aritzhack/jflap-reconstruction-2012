@@ -8,6 +8,7 @@ import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.Transducer;
+import model.formaldef.components.FormalDefinitionComponent;
 
 public class MealyMachine extends Transducer<MealyOutputFunction> {
 
@@ -30,5 +31,6 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

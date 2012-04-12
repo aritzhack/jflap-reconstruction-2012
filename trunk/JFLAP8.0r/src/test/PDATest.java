@@ -23,12 +23,13 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
+import model.automata.acceptors.pda.PDATransitionSet;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.automata.simulate.PDASimulator;
 import model.automata.turing.TapeAlphabet;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.transform.GrammarTransformAlgorithm;
 import model.grammar.transform.UselessProductionRemover;
@@ -44,7 +45,7 @@ public class PDATest {
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
 		StackAlphabet stack = new StackAlphabet();
-		TransitionFunctionSet<PDATransition> transitions = new TransitionFunctionSet<PDATransition>();
+		PDATransitionSet transitions = new PDATransitionSet();
 		StartState start = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
 		BottomOfStackSymbol bos = new BottomOfStackSymbol("z");
@@ -78,11 +79,13 @@ public class PDATest {
 		Symbol B = new Symbol("b");
 		
 		
-		PDATransition t0 = new PDATransition(q0, q1, new SymbolString(A), new SymbolString(bos), new SymbolString(A,bos));
+		PDATransition t0 = new PDATransition(q0, q1, new SymbolString(A), 
+				new SymbolString(bos.toSymbolObject()), new SymbolString(A,bos.toSymbolObject()));
 		PDATransition t1 = new PDATransition(q1, q1, new SymbolString(A), new SymbolString(A), new SymbolString(A,A));
 		PDATransition t2 = new PDATransition(q1, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
 		PDATransition t3 = new PDATransition(q2, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
-		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), new SymbolString(bos), new SymbolString());
+		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), 
+				new SymbolString(bos.toSymbolObject()), new SymbolString());
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 

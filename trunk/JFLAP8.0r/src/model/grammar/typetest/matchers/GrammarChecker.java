@@ -1,7 +1,7 @@
 package model.grammar.typetest.matchers;
 
 import model.formaldef.Describable;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 

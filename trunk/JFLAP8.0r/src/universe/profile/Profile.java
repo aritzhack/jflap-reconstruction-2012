@@ -1,15 +1,45 @@
 package universe.profile;
 
+import java.awt.event.InputEvent;
+
 public class Profile {
     public static String LAMBDA = "\u03BB";     // Jinghui Lim added stuff
     public static String EPSILON = "\u03B5";    // see MultipleSimulateAction
 	
+	/** The main mask for keystrokes in a menu. */
+	private static int MAIN_MENU_MASK;
+
 	public String getSymbolStringDelimiter() {
 		return " ";
 	}
 
 	public String getEmptyString() {
 		return LAMBDA;
+	}
+	
+	/**
+	 * Returns the main mask for menu items. The main mask is the mask of keys
+	 * that are held down to typically invoke a menu item. This varies from
+	 * platform to platform. On Windows it's the control key, and on everything
+	 * else (presumably either Mac OS or some other Unix based system) it's meta
+	 * (on the MacOS this is interpreted as the command key).
+	 * 
+	 * @return the main modifier for menu items
+	 */
+	public static int getMainMenuMask() {
+		return MAIN_MENU_MASK;
+	}
+
+	/**
+	 * Initializes the value for the main menu mask.
+	 */
+	private static void initMainMenuMask() {
+		String s = System.getProperty("os.name");
+		if ((s.lastIndexOf("Windows") != -1)
+				|| (s.lastIndexOf("windows") != -1))
+			MAIN_MENU_MASK = InputEvent.CTRL_MASK;
+		else
+			MAIN_MENU_MASK = InputEvent.META_MASK;
 	}
 
 }

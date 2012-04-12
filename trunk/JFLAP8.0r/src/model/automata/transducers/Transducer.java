@@ -13,8 +13,6 @@ import model.formaldef.components.FormalDefinitionComponent;
 
 public abstract class Transducer<T extends OutputFunction> extends Automaton<FiniteStateTransition> {
 
-	private OutputAlphabet myOutputAlphabet;
-	private OutputFunctionSet<T> myOutputFunctions;
 
 	public Transducer(StateSet states, 
 					InputAlphabet langAlph,
@@ -22,13 +20,11 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<Fin
 					TransitionFunctionSet<FiniteStateTransition> functions, 
 					StartState start,
 					OutputFunctionSet<T> outputFunctions) {
-		super(states, langAlph, functions, start);
-		myOutputAlphabet = outputAlph;
-		myOutputFunctions = outputFunctions;
+		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 
 	@Override
-	public FormalDefinition<InputAlphabet, TransitionFunctionSet<FiniteStateTransition>> alphabetAloneCopy() {
+	public Transducer alphabetAloneCopy() {
 		Class<Transducer> clz = (Class<Transducer>) this.getClass();
 		try {
 					return clz.cast(clz.getConstructors()[0].newInstance(new StartState(),
@@ -43,11 +39,11 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<Fin
 	}
 
 	public OutputAlphabet getOutputAlphabet() {
-		return myOutputAlphabet;
+		return this.getComponentOfClass(OutputAlphabet.class);
 	}
 	
 	public OutputFunctionSet<T> getOutputFunctionSet(){
-		return myOutputFunctions;
+		return this.getComponentOfClass(OutputFunctionSet.class);
 	}
 	
 	@Override

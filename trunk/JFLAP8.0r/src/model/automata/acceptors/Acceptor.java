@@ -13,27 +13,13 @@ public abstract class Acceptor<T extends Transition> extends Automaton<T> {
 
 	private FinalStateSet myFinalStates;
 
-	public Acceptor(StateSet states, 
-					InputAlphabet langAlph,
-					TransitionFunctionSet<T> functions, 
-					StartState start,
-					FinalStateSet finalStates) {
-		super(states, langAlph, functions, start);
-		
-		myFinalStates = finalStates;
+	public Acceptor(FormalDefinitionComponent ...comps) {
+		super(comps);
 	}
 	
 	public FinalStateSet getFinalStateSet(){
-		return myFinalStates;
+		return getComponentOfClass(FinalStateSet.class);
 	}
 	
-	@Override
-	public FormalDefinitionComponent[] getComponents() {
-			return new FormalDefinitionComponent[]{this.getStates(),
-												this.getInputAlphabet(),
-												this.getTransitions(),
-												this.getStartState(),
-												this.getFinalStateSet()};
-	}
 
 }

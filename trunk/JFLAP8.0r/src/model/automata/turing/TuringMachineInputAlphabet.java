@@ -4,7 +4,7 @@ import java.util.Set;
 
 import model.automata.InputAlphabet;
 import model.formaldef.UsesSymbols;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 public class TuringMachineInputAlphabet extends InputAlphabet implements UsesSymbols{
 
