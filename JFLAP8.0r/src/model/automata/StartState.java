@@ -5,15 +5,25 @@ import java.awt.Point;
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public class StartState extends State implements FormalDefinitionComponent {
+public class StartState extends FormalDefinitionComponent {
+
+	private State myState;
 
 	public StartState(String name, int id) {
-		super(name, id);
+		this(new State(name, id));
 	}
 
+	
+	
 	public StartState() {
-		this(null, -1);
+		this(null);
 	}
+
+	public StartState(State state) {
+		this.setTo(state);
+	}
+
+
 
 	@Override
 	public String getDescription() {
@@ -27,37 +37,42 @@ public class StartState extends State implements FormalDefinitionComponent {
 
 	@Override
 	public BooleanWrapper isComplete() {
-		return new BooleanWrapper(this.getID() >= 0,
+		return new BooleanWrapper(myState != null,
 									"The Automaton requires a Start State.");
 	}
 
-	@Override
-	public StartState clone() {
-		return (StartState) super.clone();
-	}
-
+	
 	@Override
 	public String getDescriptionName() {
 		return "Start State";
 	}
 	
 	
-	
-
 	public void setTo(State start){
-		this.setName(start.getName());
-		this.setID(start.getID());
+		myState = start;
+		this.distributeChange(START_STATE_CHANGED, myState);
 	}
 	
 	
 	public void clear(){
-		this.setName(null);
-		this.setID(-1);
-		
+		this.setTo(null);
 	}
 	
 	@Override
 	public String toString() {
-		return (this.getID() == -1 ? "" : this.getName());
+		return (this.isComplete().isTrue() ? myState.getName() : "");
+	}
+
+
+
+	@Override
+	public StartState copy() {
+		return new StartState(myState.copy());
+	}
+
+
+
+	public State toStateObject() {
+		return myState;
 	}
 }
