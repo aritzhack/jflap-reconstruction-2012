@@ -17,9 +17,9 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Terminal;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.TerminalAlphabet;
@@ -112,9 +112,9 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 		success &= finalStates.add(myFinalState);
 		
 		//Add all of these states to the automaton
-		BottomOfStackSymbol symbol = 
+		Symbol symbol = 
 				SpecialSymbolFactory.getReccomendedBOSSymbol(this.getConvertedAutomaton().getStackAlphabet());
-		this.getConvertedAutomaton().getBottomOfStackSymbol().setString(symbol.getString());
+		this.getConvertedAutomaton().setBottomOfStackSymbol(symbol);
 		
 		return success && this.setUpTransitions();
 	}

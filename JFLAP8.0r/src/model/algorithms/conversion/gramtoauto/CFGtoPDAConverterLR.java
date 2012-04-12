@@ -6,7 +6,9 @@ import model.automata.State;
 import model.automata.TransitionFunctionSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.StartVariable;
@@ -24,8 +26,8 @@ public class CFGtoPDAConverterLR extends CFGtoPDAConverter {
 
 	@Override
 	protected boolean setUpTransitions() {
-		BottomOfStackSymbol bos = this.getConvertedAutomaton().getBottomOfStackSymbol();
-		StartVariable start = this.getGrammar().getStartVariable();
+		Symbol bos = this.getConvertedAutomaton().getBottomOfStackSymbol();
+		Variable start = this.getGrammar().getStartVariable();
 		TransitionFunctionSet<PDATransition> transitions = this.getConvertedAutomaton().getTransitions();
 		
 		
