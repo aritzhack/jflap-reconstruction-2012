@@ -1,7 +1,7 @@
 package model.algorithms.conversion.autotogram;
 
 import model.automata.State;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 public class PDAVariableMapping extends VariableMapping {
 

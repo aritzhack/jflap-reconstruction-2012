@@ -14,9 +14,9 @@ import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.transform.UselessProductionRemover;
@@ -44,7 +44,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 
 	@Override
 	public boolean isStartMapping(PDAVariableMapping mapping) {
-		StartState s = this.getAutomaton().getStartState();
+		State s = this.getAutomaton().getStartState().toStateObject();
 		FinalStateSet fs = this.getAutomaton().getFinalStateSet();
 		Symbol bos = this.getAutomaton().getBottomOfStackSymbol();		
 		return mapping.getFirstState().equals(s) && 
@@ -95,7 +95,6 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 				rhs.addAll(input);
 				rhs.add(var1);
 				rhs.add(var2);
-				
 				productions.add(new Production(lhs, rhs));
 			}
 		}
@@ -141,7 +140,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 				errors.add(new BooleanWrapper(false, 
 							"A transition must push 2 or 0 symbols: " + trans.toString()));
 			if (pda.getFinalStateSet().contains(trans.getToState()) &&
-					(!trans.getPop().equals(pda.getBottomOfStackSymbol()) ||
+					(!trans.getPop().getFirst().equals(pda.getBottomOfStackSymbol()) ||
 							!trans.getInput().isEmpty()))
 				errors.add(new BooleanWrapper(false, 
 												"Upon entering a final state, the stack must be empty." +
