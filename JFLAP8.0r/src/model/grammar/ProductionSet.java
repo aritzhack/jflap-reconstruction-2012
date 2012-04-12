@@ -1,7 +1,7 @@
 package model.grammar;
 
-import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.functionset.FunctionSet;
+import model.formaldef.components.symbols.SymbolString;
 
 public class ProductionSet extends FunctionSet<Production> {
 
