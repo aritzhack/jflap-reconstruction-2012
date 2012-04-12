@@ -17,9 +17,9 @@ import model.automata.State;
 import model.automata.Transition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FiniteStateTransition;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
 
 public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<FiniteStateAcceptor, FSAVariableMapping, FiniteStateTransition> {
@@ -62,7 +62,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 	@Override
 	public boolean isStartMapping(FSAVariableMapping mapping) {
 		State s = mapping.getState();
-		return s.equals(this.getAutomaton().getStartState());
+		return s.equals(this.getAutomaton().getStartState().toStateObject());
 	}
 
 	@Override

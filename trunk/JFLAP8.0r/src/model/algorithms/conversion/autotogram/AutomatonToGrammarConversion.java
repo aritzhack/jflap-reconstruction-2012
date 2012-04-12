@@ -13,10 +13,10 @@ import model.automata.Automaton;
 import model.automata.Transition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Terminal;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import errors.BooleanWrapper;
@@ -119,9 +119,10 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		
 		if (added && isStartMapping(mapping)){
 //			System.out.println("|" + myConvertedGrammar.getStartVariable().getString() + "|");
-			if(myConvertedGrammar.getStartVariable().isComplete().isTrue())
+			if(myConvertedGrammar.getStartVariable() != null)
 				throw new AlgorithmException("A Start Variable mapping has already been added " +
 						"to the Converted grammar.");
+			System.out.println(var);
 			myConvertedGrammar.setStartVariable(var);
 		}
 		

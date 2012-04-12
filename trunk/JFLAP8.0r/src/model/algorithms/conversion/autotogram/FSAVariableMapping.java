@@ -1,7 +1,7 @@
 package model.algorithms.conversion.autotogram;
 
 import model.automata.State;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.SymbolString;
 
 public class FSAVariableMapping extends VariableMapping {
 
