@@ -3,7 +3,7 @@ package model.formaldef;
 import java.util.Set;
 
 
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 /**
  * A simple interface to give an object the quality of 
