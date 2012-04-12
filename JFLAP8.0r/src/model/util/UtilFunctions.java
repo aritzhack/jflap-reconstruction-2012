@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 public class UtilFunctions {
 
@@ -12,7 +12,7 @@ public class UtilFunctions {
 		Iterator iter = iterable.iterator();
 		String string = "";
 		while (iter.hasNext()){
-			string += iter.next().toString();
+			string += iter.next();
 			if (iter.hasNext()) 
 				string += delimiter;
 		}
@@ -21,11 +21,19 @@ public class UtilFunctions {
 	}
 	
 	
-	public static <T> T[] combineArrays(T[] array, T ... toAdd){
-		ArrayList<T> toReturn = new ArrayList<T>(Arrays.asList(array));
-		toReturn.addAll(Arrays.asList(toAdd));
-		return toReturn.toArray(array);
-	}
+	public static <T> T[] concatAll(T[] first, T[]... rest) {
+		  int totalLength = first.length;
+		  for (T[] array : rest) {
+		    totalLength += array.length;
+		  }
+		  T[] result = Arrays.copyOf(first, totalLength);
+		  int offset = first.length;
+		  for (T[] array : rest) {
+		    System.arraycopy(array, 0, result, offset, array.length);
+		    offset += array.length;
+		  }
+		  return result;
+		}
 	
 	
 }

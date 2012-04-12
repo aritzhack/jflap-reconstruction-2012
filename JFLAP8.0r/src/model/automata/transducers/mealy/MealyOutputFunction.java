@@ -2,7 +2,7 @@ package model.automata.transducers.mealy;
 
 import model.automata.State;
 import model.automata.transducers.OutputFunction;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.SymbolString;
 
 public class MealyOutputFunction extends OutputFunction {
 

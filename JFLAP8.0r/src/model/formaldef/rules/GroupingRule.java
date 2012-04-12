@@ -3,7 +3,7 @@ package model.formaldef.rules;
 import errors.BooleanWrapper;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 
 

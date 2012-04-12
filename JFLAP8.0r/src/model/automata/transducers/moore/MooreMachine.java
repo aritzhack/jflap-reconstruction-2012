@@ -8,6 +8,7 @@ import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.Transducer;
+import model.formaldef.components.FormalDefinitionComponent;
 
 public class MooreMachine extends Transducer<MooreOutputFunction> {
 
@@ -23,8 +24,7 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 
 	@Override
 	public String getDescriptionName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Moore Machine";
 	}
 
 	@Override
@@ -32,5 +32,6 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

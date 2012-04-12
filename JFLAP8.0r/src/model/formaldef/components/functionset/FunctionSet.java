@@ -1,5 +1,7 @@
 package model.formaldef.components.functionset;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -7,22 +9,18 @@ import errors.BooleanWrapper;
 
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.SetComponent;
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.formaldef.components.symbols.Symbol;
 
-public abstract class FunctionSet<T extends LanguageFunction> extends TreeSet<T> implements FormalDefinitionComponent,
-																				UsesSymbols{
+public abstract class FunctionSet<T extends LanguageFunction> extends SetComponent<T> implements UsesSymbols{
 
 	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(true);
 	}
 
-	@Override
-	public FormalDefinitionComponent clone() {
-		return (FormalDefinitionComponent) super.clone();
-	}
-	
+
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		

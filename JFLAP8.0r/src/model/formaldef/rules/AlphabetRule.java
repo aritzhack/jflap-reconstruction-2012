@@ -9,7 +9,7 @@ import errors.BooleanWrapper;
 import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 
 
 

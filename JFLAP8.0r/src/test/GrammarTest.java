@@ -4,7 +4,7 @@ import errors.BooleanWrapper;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.alphabets.symbols.Symbol;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.AlphabetRule;
 import model.grammar.Grammar;
 import model.grammar.ProductionSet;
@@ -22,8 +22,8 @@ public class GrammarTest {
 		VariableAlphabet vars = new VariableAlphabet();
 		ProductionSet prod = new ProductionSet();
 		StartVariable var = new StartVariable();
-		Grammar g  = new Grammar(terms,
-									vars, 
+		Grammar g  = new Grammar(vars,
+									terms,
 									prod, 
 									var);
 		

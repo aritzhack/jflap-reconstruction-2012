@@ -2,8 +2,8 @@ package model.automata.turing;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 
 public class TuringMachineTransition extends Transition {
 
@@ -49,14 +49,22 @@ public class TuringMachineTransition extends Transition {
 
 	@Override
 	public String getDescriptionName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Turing Machine Transition";
 	}
 
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public TuringMachineTransition copy() {
+		return new TuringMachineTransition(this.getFromState().copy(), 
+									this.getToState().copy(), 
+									this.getRead().copy(),
+									this.getWrite().copy(), 
+									this.getMove());
 	}
 
 }

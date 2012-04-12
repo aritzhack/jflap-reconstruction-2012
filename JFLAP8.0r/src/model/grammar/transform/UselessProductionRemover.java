@@ -9,9 +9,9 @@ import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
-import model.formaldef.components.alphabets.symbols.Variable;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
@@ -119,7 +119,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 
 	private boolean noStartProductionsDeriveTerms() {
-		StartVariable var = this.getOriginalGrammar().getStartVariable();
+		Variable var = this.getOriginalGrammar().getStartVariable();
 		return !myVarsDeriveTerms.contains(var);
 	}
 

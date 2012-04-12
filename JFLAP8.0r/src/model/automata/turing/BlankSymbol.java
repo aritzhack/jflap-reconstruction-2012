@@ -2,8 +2,8 @@ package model.automata.turing;
 
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.symbols.Symbol;
 import model.formaldef.components.symbols.SpecialSymbol;
+import model.formaldef.components.symbols.Symbol;
 
 public class BlankSymbol extends SpecialSymbol {
 

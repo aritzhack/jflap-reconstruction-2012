@@ -9,34 +9,36 @@ import model.automata.TransitionFunctionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
+import model.formaldef.components.symbols.Symbol;
 
 public class PushdownAutomaton extends Acceptor<PDATransition> {
 
-	private BottomOfStackSymbol myBottomOfStackSymbol;
-	private StackAlphabet myStackAlphabet;
+
+	private BottomOfStackSymbol myBotOfStackSymbol;
 
 	public PushdownAutomaton(StateSet states, 
 								InputAlphabet inputAlph,
 								StackAlphabet stackAlph,
-								TransitionFunctionSet<PDATransition> functions, 
+								PDATransitionSet functions, 
 								StartState start,
 								BottomOfStackSymbol bottom,
 								FinalStateSet finalStates) {
-		super(states, inputAlph, functions, start, finalStates);
-		myStackAlphabet = stackAlph;
-		myBottomOfStackSymbol = bottom;
-		myStackAlphabet.add(bottom);
+		super(states, inputAlph, stackAlph, functions, start, bottom, finalStates);
+		myBotOfStackSymbol = bottom;
+		setBottomOfStackSymbol(bottom.toSymbolObject());
+		
 	}
 	
 	public PushdownAutomaton() {
 		this(new StateSet(), 
 				new InputAlphabet(),
 				new StackAlphabet(),
-				new TransitionFunctionSet<PDATransition>(), 
+				new PDATransitionSet(), 
 				new StartState(), 
-				SpecialSymbolFactory.getReccomendedBOSSymbol(new StackAlphabet()),
+				new BottomOfStackSymbol(SpecialSymbolFactory.getReccomendedBOSSymbol(new StackAlphabet())),
 				new FinalStateSet());
 		
 	}
@@ -58,31 +60,43 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		return new PushdownAutomaton(new StateSet(),
 										this.getInputAlphabet(), 
 										this.getStackAlphabet(), 
-										new TransitionFunctionSet<PDATransition>(), 
+										new PDATransitionSet(), 
 										new StartState(), 
 										new BottomOfStackSymbol(), 
 										new FinalStateSet());
 	}
 
-	@Override
-	public FormalDefinitionComponent[] getComponents() {
-			return new FormalDefinitionComponent[]{this.getStates(),
-														this.getInputAlphabet(),
-														this.getStackAlphabet(),
-														this.getTransitions(),
-														this.getStartState(),
-														this.getBottomOfStackSymbol(),
-														this.getFinalStateSet()};
+	public Symbol getBottomOfStackSymbol() {
+		return this.getComponentOfClass(BottomOfStackSymbol.class).toSymbolObject();
 	}
-
-	public BottomOfStackSymbol getBottomOfStackSymbol() {
-		return myBottomOfStackSymbol;
+	
+	public void setBottomOfStackSymbol(Symbol s){
+		StackAlphabet stackALph = this.getStackAlphabet();
+		Symbol bos = this.getBottomOfStackSymbol();
+		if (bos != null && stackALph.contains(bos))
+			this.getStackAlphabet().remove(this.getBottomOfStackSymbol());
+		myBotOfStackSymbol.setTo(s);
+		this.getStackAlphabet().add(s);
 	}
 
 	public StackAlphabet getStackAlphabet() {
-		return myStackAlphabet;
+		return getComponentOfClass(StackAlphabet.class);
 	}
 
+	@Override
+	public PDATransitionSet getTransitions() {
+		return (PDATransitionSet) super.getTransitions();
+	}
+
+	@Override
+	public void componentChanged(ComponentChangeEvent event) {
+		
+		if (event.comesFrom(getStackAlphabet())){
+			this.getTransitions().purgeofStackSymbol((Symbol) event.getArg(0));
+		}
+		else super.componentChanged(event);
+	}
 	
 	
+
 }

@@ -1,11 +1,12 @@
 package model.automata.transducers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import model.automata.State;
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 
 public abstract class OutputFunction implements LanguageFunction {
 
@@ -35,4 +36,16 @@ public abstract class OutputFunction implements LanguageFunction {
 		return myOutput;
 	}
 
+	@Override
+	public OutputFunction copy() {
+		try {
+			return this.getClass().getConstructor(State.class, SymbolString.class).newInstance(myState.copy(),
+																								myOutput.copy());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
+	}
+
+	
+	
 }
