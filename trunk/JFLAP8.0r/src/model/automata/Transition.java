@@ -4,11 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
+import util.Copyable;
 
 
-import model.formaldef.components.alphabets.symbols.Symbol;
-import model.formaldef.components.alphabets.symbols.SymbolString;
+
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 
 /**
  * A <CODE>Transition</CODE> object is a simple abstract class representing a

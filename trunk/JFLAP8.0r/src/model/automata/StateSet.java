@@ -6,11 +6,10 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.SetComponent;
 
-public class StateSet extends TreeSet<State> implements
-		FormalDefinitionComponent {
+public class StateSet extends SetComponent<State> {
 
-	
 	@Override
 	public String getDescriptionName() {
 		return "Internal States";
@@ -33,7 +32,8 @@ public class StateSet extends TreeSet<State> implements
 
 	@Override
 	public StateSet clone() {
-		return (StateSet) super.clone();
+		StateSet clone = new StateSet();
+		return new StateSet();
 	}
 
 	public int getNextUnusedID() {
@@ -54,4 +54,5 @@ public class StateSet extends TreeSet<State> implements
 		
 		return null;
 	}
+	
 }
