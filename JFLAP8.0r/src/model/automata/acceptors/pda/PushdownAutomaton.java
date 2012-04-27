@@ -22,7 +22,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	public PushdownAutomaton(StateSet states, 
 								InputAlphabet inputAlph,
 								StackAlphabet stackAlph,
-								PDATransitionSet functions, 
+								TransitionFunctionSet<PDATransition> functions, 
 								StartState start,
 								BottomOfStackSymbol bottom,
 								FinalStateSet finalStates) {
@@ -36,7 +36,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		this(new StateSet(), 
 				new InputAlphabet(),
 				new StackAlphabet(),
-				new PDATransitionSet(), 
+				new TransitionFunctionSet<PDATransition>(), 
 				new StartState(), 
 				new BottomOfStackSymbol(SpecialSymbolFactory.getReccomendedBOSSymbol(new StackAlphabet())),
 				new FinalStateSet());
@@ -60,7 +60,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		return new PushdownAutomaton(new StateSet(),
 										this.getInputAlphabet(), 
 										this.getStackAlphabet(), 
-										new PDATransitionSet(), 
+										new TransitionFunctionSet<PDATransition>(), 
 										new StartState(), 
 										new BottomOfStackSymbol(), 
 										new FinalStateSet());
@@ -83,16 +83,20 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		return getComponentOfClass(StackAlphabet.class);
 	}
 
-	@Override
-	public PDATransitionSet getTransitions() {
-		return (PDATransitionSet) super.getTransitions();
+	public void purgeofStackSymbol(Symbol s){
+		for (PDATransition t: this.getTransitions()){
+			t.getPop().purgeOfSymbol(s);
+			t.getPush().purgeOfSymbol(s);
+		}
+		distributeChanged();
 	}
-
+	
+	
 	@Override
 	public void componentChanged(ComponentChangeEvent event) {
-		
-		if (event.comesFrom(getStackAlphabet())){
-			this.getTransitions().purgeofStackSymbol((Symbol) event.getArg(0));
+
+		if (event.comesFrom(getStackAlphabet()) && event.getType() == ITEM_REMOVED){
+			this.purgeofStackSymbol((Symbol) event.getArg(0));
 		}
 		else super.componentChanged(event);
 	}

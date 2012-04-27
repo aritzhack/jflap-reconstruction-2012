@@ -77,7 +77,7 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 
 	@Override
 	public boolean remove(Object trans){
-		if (!this.remove(trans)) return false;
+		if (!super.remove(trans)) return false;
 		transitionsFromStateMap.get(((T) trans).getFromState()).remove(trans);
 		transitionsToStateMap.get(((T) trans).getToState()).remove(trans);
 		return true;

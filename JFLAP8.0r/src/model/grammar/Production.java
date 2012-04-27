@@ -219,6 +219,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	}
 
 	public boolean purgeOfSymbol(Symbol s) {
+		System.out.println("Purging: " + s);
 		boolean lhs = this.getLHS().purgeOfSymbol(s); 
 		return this.getRHS().purgeOfSymbol(s) || lhs;
 	}

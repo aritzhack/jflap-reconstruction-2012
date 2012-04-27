@@ -81,10 +81,11 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 	}
 
 	
-	public void modify(Symbol oldSymbol, Symbol newSymbol) {
+	public boolean modify(Symbol oldSymbol, Symbol newSymbol) {
 		this.checkRules(AlphabetActionType.MODIFY, oldSymbol, newSymbol);
 		this.getByString(oldSymbol.toString()).setString(newSymbol.toString());
 		this.distributeChange(ALPH_SYMBOL_MODIFY, oldSymbol, newSymbol);
+		return true;
 	}
 
 	public boolean containsSymbolWithString(String... strings) {
