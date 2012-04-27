@@ -170,7 +170,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 			if (f instanceof UsesSymbols)
 				result = ((UsesSymbols) f).purgeOfSymbol(s) || result;
 		}
-		
+		this.distributeChanged();
 		return result;
 	}
 
@@ -191,7 +191,6 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 				}
 			}
 		}
-		this.distributeChanged(event);
 	}
 	
 }

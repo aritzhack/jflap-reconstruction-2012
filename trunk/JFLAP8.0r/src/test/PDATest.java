@@ -23,7 +23,6 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
-import model.automata.acceptors.pda.PDATransitionSet;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.automata.simulate.PDASimulator;
@@ -45,7 +44,7 @@ public class PDATest {
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
 		StackAlphabet stack = new StackAlphabet();
-		PDATransitionSet transitions = new PDATransitionSet();
+		TransitionFunctionSet<PDATransition> transitions = new TransitionFunctionSet<PDATransition>();
 		StartState start = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
 		BottomOfStackSymbol bos = new BottomOfStackSymbol("z");
@@ -142,7 +141,15 @@ public class PDATest {
 		sim = new PDASimulator(pda);
 		OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
 		
+		pda.getStackAlphabet().remove(new Symbol("a"));
+		
+		OutPrintln("\'a\' removed:\n" + pda.toString());
 
+
+		pda.getStates().remove(pda.getStates().getStateWithID(1));
+		
+		OutPrintln("[q1] removed:\n" + pda.toString());
+		
 	}
 
 	private static void OutPrintln(String s) {

@@ -46,7 +46,7 @@ public abstract class Automaton<T extends Transition> extends FormalDefinition{
 			transSet.removeAll(from);
 			transSet.removeAll(to);
 		}
-		else if (event.comesFrom(getInputAlphabet())){
+		else if (event.comesFrom(getInputAlphabet()) && event.getType() == ITEM_REMOVED){
 			this.getTransitions().purgeofInputSymbol((Symbol) event.getArg(0));
 		}
 		else super.componentChanged(event);

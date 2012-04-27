@@ -40,13 +40,13 @@ public class PDASimulator {
 	private boolean testInput(SymbolString input, 
 								State curr,
 								SymbolString stack) {
-		System.out.println("In: " + input);
-		System.out.println("State: " + curr);
-		System.out.println("Stack: " + stack + "\n");
+//		System.out.println("In: " + input);
+//		System.out.println("State: " + curr);
+//		System.out.println("Stack: " + stack + "\n");
 
 		
 		PDATransition[] trans = this.getNextTransitions(input, curr, stack);
-		System.out.println(Arrays.toString(trans));
+//		System.out.println(Arrays.toString(trans));
 		SymbolString subInput = input.isEmpty() ? input : input.subList(1);
 		
 		for (PDATransition t : trans){
