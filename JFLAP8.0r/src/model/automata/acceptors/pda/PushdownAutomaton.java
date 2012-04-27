@@ -11,8 +11,10 @@ import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.rules.applied.BottomOfStackSymbolRule;
 
 public class PushdownAutomaton extends Acceptor<PDATransition> {
 
@@ -27,6 +29,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 								BottomOfStackSymbol bottom,
 								FinalStateSet finalStates) {
 		super(states, inputAlph, stackAlph, functions, start, bottom, finalStates);
+		this.getStackAlphabet().addRules(new BottomOfStackSymbolRule(bottom));
 		myBotOfStackSymbol = bottom;
 		setBottomOfStackSymbol(bottom.toSymbolObject());
 		
@@ -72,11 +75,10 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	
 	public void setBottomOfStackSymbol(Symbol s){
 		StackAlphabet stackALph = this.getStackAlphabet();
-		Symbol bos = this.getBottomOfStackSymbol();
-		if (bos != null && stackALph.contains(bos))
-			this.getStackAlphabet().remove(this.getBottomOfStackSymbol());
+		if (!stackALph.contains(s))
+			throw new AlphabetException("The bottom of stack symbol must already " +
+											"be in the Stack Alphabet");
 		myBotOfStackSymbol.setTo(s);
-		this.getStackAlphabet().add(s);
 	}
 
 	public StackAlphabet getStackAlphabet() {
