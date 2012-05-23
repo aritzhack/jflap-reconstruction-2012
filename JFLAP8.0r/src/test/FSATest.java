@@ -60,7 +60,7 @@ public class FSATest {
 		State q3 = new State("eat", 3);
 
 		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
-		fsa.getStartState().setTo(q0);
+		fsa.setStartState(q0);
 		fsa.getFinalStateSet().add(q3);
 		
 		Symbol A = 	new Symbol("a");
