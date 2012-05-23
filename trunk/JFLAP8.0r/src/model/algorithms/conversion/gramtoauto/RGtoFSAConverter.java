@@ -102,7 +102,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	public boolean doSetup() {
 		
 		StateSet states = this.getConvertedAutomaton().getStates();
-		StartState startState = this.getConvertedAutomaton().getStartState();
+		State startState = this.getConvertedAutomaton().getStartState();
 		Variable startVar = this.getGrammar().getStartVariable();
 		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
 		
@@ -118,7 +118,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	}
 
 	private boolean setupStates(StateSet states, 
-									StartState startState,
+									State startState,
 									Variable startVar) {
 		for (Symbol v: this.getGrammar().getVariables()){
 			int id = states.getNextUnusedID();
@@ -133,7 +133,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 			//if it is the start variable, set the corresponding
 				//state to start state
 			if (startVar.equals(v)){
-				startState.setTo(newState);
+				this.getConvertedAutomaton().setStartState(newState);
 			}
 			
 		}

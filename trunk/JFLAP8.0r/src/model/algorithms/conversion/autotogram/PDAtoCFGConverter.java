@@ -44,7 +44,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 
 	@Override
 	public boolean isStartMapping(PDAVariableMapping mapping) {
-		State s = this.getAutomaton().getStartState().toStateObject();
+		State s = this.getAutomaton().getStartState();
 		FinalStateSet fs = this.getAutomaton().getFinalStateSet();
 		Symbol bos = this.getAutomaton().getBottomOfStackSymbol();		
 		return mapping.getFirstState().equals(s) && 

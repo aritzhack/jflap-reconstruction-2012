@@ -1,5 +1,6 @@
 package model.algorithms.conversion.gramtoauto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import model.automata.State;
@@ -13,6 +14,7 @@ import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.StartVariable;
+import model.grammar.TerminalAlphabet;
 
 public class CFGtoPDAConverterLL extends CFGtoPDAConverter {
 
@@ -58,10 +60,24 @@ public class CFGtoPDAConverterLL extends CFGtoPDAConverter {
 		transitions.add(toFinal);
 		
 		
-		PDATransition[] loops = createAllReduceLoops(this.getGrammar().getTerminals(), 
-													this.getMiddleState());
+		PDATransition[] loops = createAllReduceLoops();
 		
 		return transitions.addAll(Arrays.asList(loops));
+	}
+	
+
+	private PDATransition[] createAllReduceLoops(){
+		ArrayList<PDATransition> trans = new ArrayList<PDATransition>();
+		State middle = this.getMiddleState();
+		for (Symbol s: this.getGrammar().getTerminals()){
+			trans.add(new PDATransition(middle,
+										middle,
+										new SymbolString(s),
+										new SymbolString(s),
+										new SymbolString()));
+		}
+		
+		return trans.toArray(new PDATransition[0]);
 	}
 	
 

@@ -62,7 +62,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 	@Override
 	public boolean isStartMapping(FSAVariableMapping mapping) {
 		State s = mapping.getState();
-		return s.equals(this.getAutomaton().getStartState().toStateObject());
+		return s.equals(this.getAutomaton().getStartState());
 	}
 
 	@Override

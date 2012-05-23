@@ -97,10 +97,10 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 		boolean success = true;
 		
 		//set up start state;
-		StartState start = this.getConvertedAutomaton().getStartState();
 		myStartState = new State(null, stateSet.getNextUnusedID());
-		start.setTo(myStartState);
 		success &= stateSet.add(myStartState);
+		this.getConvertedAutomaton().setStartState(myStartState);
+
 		
 		myMiddleState = new State(null, stateSet.getNextUnusedID());
 		success &= stateSet.add(myMiddleState);
@@ -135,19 +135,4 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 
 	protected abstract boolean setUpTransitions();
 
-
-	public static PDATransition[] createAllReduceLoops(TerminalAlphabet terms, State focus){
-		ArrayList<PDATransition> trans = new ArrayList<PDATransition>();
-		
-		for (Symbol s: terms){
-			trans.add(new PDATransition(focus,
-											focus,
-											new SymbolString(s),
-											new SymbolString(s),
-											new SymbolString()));
-		}
-		
-		return trans.toArray(new PDATransition[0]);
-	}
-	
 }
