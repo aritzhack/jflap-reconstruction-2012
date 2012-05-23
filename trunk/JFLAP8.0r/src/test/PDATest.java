@@ -8,28 +8,25 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import model.algorithms.SteppableAlgorithm;
-import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLR;
-import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionFunctionSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
-import model.automata.simulate.PDASimulator;
-import model.automata.turing.TapeAlphabet;
+import model.automata.simulate.AutoSimulator;
+import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.transform.GrammarTransformAlgorithm;
 import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
@@ -47,7 +44,7 @@ public class PDATest {
 		TransitionFunctionSet<PDATransition> transitions = new TransitionFunctionSet<PDATransition>();
 		StartState start = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
-		BottomOfStackSymbol bos = new BottomOfStackSymbol("z");
+		BottomOfStackSymbol bos = new BottomOfStackSymbol();
 		PushdownAutomaton pda = new PushdownAutomaton(states, 
 														input, 
 														stack,
@@ -60,10 +57,12 @@ public class PDATest {
 		
 		ErrPrintln("");
 		
-		for (char i = 'a'; i <= 'y'; i++){
+		for (char i = 'a'; i <= 'z'; i++){
 			pda.getInputAlphabet().add(new Symbol(Character.toString(i)));
 			pda.getStackAlphabet().add(new Symbol(Character.toString(i)));
 		}
+		
+		pda.setBottomOfStackSymbol(new Symbol("z"));
 		
 		State q0 = new State("Z0", 0);
 		State q1 = new State("Z1", 1);
@@ -71,7 +70,7 @@ public class PDATest {
 		State q3 = new State("Z3", 3);
 
 		pda.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
-		pda.getStartState().setTo(q0);
+		pda.setStartState(q0);
 		pda.getFinalStateSet().add(q3);
 		
 		Symbol A = 	new Symbol("a");
@@ -95,9 +94,10 @@ public class PDATest {
 		ErrPrintln("");
 		
 		//lets try some stuff...
-				PDASimulator sim = new PDASimulator(pda);
-				String in = "aaaaabbbbb";
-				OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
+				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
+				String in = "aabb";
+				sim.beginSimulation(SymbolString.createFromString(in, pda));
+				OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//convert PDA to CFG
 		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
@@ -117,9 +117,17 @@ public class PDATest {
 		CFG.trimAlphabets();
 		OutPrintln("Alphabets Trimmed: \n" + CFG.toString());
 		
+		//test Brute Force Parsing
+		RestrictedBruteParser parser = new RestrictedBruteParser(CFG);
+		parser.init(SymbolString.createFromString(in, CFG));
+		parser.start();
+		OutPrintln("Parse string: " + in + "\n\t In Language? " + (parser.getAnswer() != null));
+	
+		
 		//TYPE TEST
 		OutPrintln(Arrays.toString(GrammarType.getType(CFG)));
 		
+		//Conversion to PDA - LL
 		converter = new CFGtoPDAConverterLL(CFG);
 		while (converter.step()){
 		}
@@ -127,10 +135,12 @@ public class PDATest {
 		
 		OutPrintln("LL CONVERTED:\n" + pda.toString());
 
+		//test LL converted PDA
+		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
+		sim.beginSimulation(SymbolString.createFromString(in, pda));
+		OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
-		sim = new PDASimulator(pda);
-		OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
-		
+		//Conversion to PDA - LR
 		converter = new CFGtoPDAConverterLR(CFG);
 		while (converter.step()){
 		}
@@ -138,14 +148,17 @@ public class PDATest {
 		
 		OutPrintln("LR CONVERTED:\n" + pda.toString());
 		
-		sim = new PDASimulator(pda);
-		OutPrintln("Run string: " + in + "\n\t In Language? " + sim.acceptsInput(in));
+		//test LR converted PDA
+		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
+		sim.beginSimulation(SymbolString.createFromString(in, pda));
+		OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
+		//test remove symbol
 		pda.getStackAlphabet().remove(new Symbol("a"));
 		
 		OutPrintln("\'a\' removed:\n" + pda.toString());
 
-
+		//test remove state
 		pda.getStates().remove(pda.getStates().getStateWithID(1));
 		
 		OutPrintln("[q1] removed:\n" + pda.toString());

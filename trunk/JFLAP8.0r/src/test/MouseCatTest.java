@@ -12,7 +12,8 @@ import javax.swing.JTextArea;
 
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.automata.simulate.PDASimulator;
+import model.automata.simulate.AutoSimulator;
+import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -46,12 +47,12 @@ public class MouseCatTest {
 		OutPrintln(pda.toString());
 		
 		//read input in from a test program, initialize simulator
-		String input = createInput();
-		PDASimulator sim = new PDASimulator(pda);
-		
+		SymbolString input = SymbolString.createFromString(createInput(),pda);
+		AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
+		sim.beginSimulation(input);
 		
 		//run simulator
-		boolean accepted = sim.acceptsInput(input);
+		boolean accepted = sim.getNextAccept() != null;
 		OutPrintln("Accepted: " + accepted);
 		
 		
