@@ -1,6 +1,8 @@
 package model.formaldef.components.alphabets;
 
-public class AlphabetException extends RuntimeException {
+import errors.JFLAPException;
+
+public class AlphabetException extends JFLAPException {
 	
 
 	public AlphabetException(String string) {
