@@ -1,8 +1,10 @@
 package model.automata;
 
+import java.awt.FontFormatException;
 import java.util.Set;
 
 import model.formaldef.FormalDefinition;
+import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -25,9 +27,18 @@ public abstract class Automaton<T extends Transition> extends FormalDefinition{
 		return getComponentOfClass(TransitionFunctionSet.class);
 	}
 
-	public StartState getStartState() {
-		return getComponentOfClass(StartState.class);
+	public State getStartState() {
+		return getComponentOfClass(StartState.class).toStateObject();
+	}
+	
+	public void setStartState(State s){
+		if (!this.getStates().contains(s)){
+			throw new FormalDefinitionException("The start state must already be " +
+					"a part of the state set of the automaton");
 		}
+		else
+			getComponentOfClass(StartState.class).setTo(s);
+	}
 
 	
 	public StateSet getStates() {

@@ -75,9 +75,10 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	
 	public void setBottomOfStackSymbol(Symbol s){
 		StackAlphabet stackALph = this.getStackAlphabet();
-		if (!stackALph.contains(s))
-			throw new AlphabetException("The bottom of stack symbol must already " +
-											"be in the Stack Alphabet");
+	
+		if (s != null && (!stackALph.contains(s) && !stackALph.add(s)))
+			return;
+		
 		myBotOfStackSymbol.setTo(s);
 	}
 

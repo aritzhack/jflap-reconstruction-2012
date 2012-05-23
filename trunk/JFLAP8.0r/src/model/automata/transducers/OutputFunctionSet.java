@@ -1,6 +1,8 @@
 package model.automata.transducers;
 
+import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.formaldef.components.functionset.FunctionSet;
+import model.formaldef.components.symbols.SymbolString;
 
 public class OutputFunctionSet<T extends OutputFunction> extends FunctionSet<T> {
 
@@ -17,6 +19,14 @@ public class OutputFunctionSet<T extends OutputFunction> extends FunctionSet<T> 
 	@Override
 	public String getDescription() {
 		return "The set of functions that determine the output of a transducer.";
+	}
+
+	public SymbolString getOuputForTransition(FiniteStateTransition trans) {
+		for (T func: this){
+			if (func.matches(trans))
+				return func.getOutput();
+		}
+		return null;
 	}
 
 }

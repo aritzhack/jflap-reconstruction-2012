@@ -1,6 +1,7 @@
 package model.automata;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 
 import util.Copyable;
@@ -18,11 +19,37 @@ public class State implements JFLAPResources, Comparable<State>, Copyable{
 
 	private int myID;
 
-
+	private Point myLocation;
 
 	public State(String name, int id){
-		myName = name;
-		myID = id;
+		this(name, id, new Point(0,0));
+	}
+
+	public State(String name, int id, Point point) {
+		setName(name);
+		setID(id);
+		setPoint(point);
+	}
+
+	/**
+	 * Returns the graphical location of this state
+	 * in the automaton transition graph.
+	 * 
+	 * @return
+	 */
+	public Point getPoint(){
+		return myLocation;
+	}
+	
+	/**
+	 * Sets the location of this state to the
+	 * passed in point. Only used in graphical
+	 * representation of the Automaton.
+	 * 
+	 * @param point
+	 */
+	public void setPoint(Point point) {
+		myLocation = point;
 	}
 
 	/**

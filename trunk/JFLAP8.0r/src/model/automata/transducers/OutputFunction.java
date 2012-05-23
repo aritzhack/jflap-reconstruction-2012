@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import model.automata.State;
+import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -46,6 +47,13 @@ public abstract class OutputFunction implements LanguageFunction {
 		} 
 	}
 
-	
+	/**
+	 * Checks to see if this output function is associated
+	 * with the transition passed in as an argument. This
+	 * is simply a helper method.
+	 * @param trans
+	 * @return
+	 */
+	public abstract boolean matches(FiniteStateTransition trans);
 	
 }
