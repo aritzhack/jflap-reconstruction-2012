@@ -12,7 +12,10 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
+
+
 import universe.Universe;
+import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 
 import model.formaldef.FormalDefinition;
@@ -68,6 +71,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 	
 	public int indexOfSubSymbolString(SymbolString o) {
+		if (o.isEmpty()) return 0;
 		for (int i = 0; i <= this.size()-o.size(); i++){
 			Boolean check = true;
 			for (int j = 0; j < o.size(); j++){
@@ -77,21 +81,26 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		}
 		return -1;
 	}
-
 	public boolean startsWith(SymbolString label) {
-		return label.isEmpty() || this.indexOfSubSymbolString(label) == 0;
+		return this.indexOfSubSymbolString(label) == 0;
 	}
 
 	/**
-	 * THIS IS NOT THE SAME AS this.toString().length in the case of an empty string
+	 * THIS IS NOT THE SAME AS this.toString().length 
+	 * in the case of an empty string or delimited string
 	 * @return
 	 */
 	public int stringLength() {
-		return this.isEmpty() ? 0 : this.toString().length();
+		int length = 0;
+		for (Symbol s: this){
+			length += s.length();
+		}
+		return length;
 	}
 
 	public boolean endsWith(SymbolString ss) {
-		return this.indexOfSubSymbolString(ss) + ss.size() == this.size();
+		int start = this.size()-ss.size();
+		return this.subList(start).equals(ss);
 	}
 
 	public boolean endsWith(Symbol s) {
@@ -112,8 +121,8 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public String toString(){
-		return this.isEmpty() ? Universe.curProfile.getEmptyString() : UtilFunctions.createDelimitedString(this, 
-				Universe.curProfile.getSymbolStringDelimiter());
+		return this.isEmpty() ? JFLAPPreferences.getEmptyStringSymbol() : UtilFunctions.createDelimitedString(this, 
+				JFLAPPreferences.getSymbolStringDelimiter());
 	}
 
 	public boolean equals(Object o){
@@ -183,14 +192,6 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		return result;
 	}
 
-	public Symbol replace(int i, Symbol write) {
-		Symbol replaced = null;
-		if ((replaced = this.remove(i)) != null){
-			this.add(i, write);
-		}
-		return replaced;
-	}
-
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		return new TreeSet<Symbol>(this);
@@ -204,21 +205,36 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	
 	public static SymbolString createFromString(String in,
 			Alphabet ... alphs) {
+
+		if (in == null ||in.length() == 0 || 
+				in == JFLAPPreferences.getEmptyStringSymbol()) 
+			return new SymbolString();
 		
-		String temp = "";
-		SymbolString symbols = new SymbolString();
-		if (in == null || in.isEmpty()) return symbols;
-		for (int i = 0; i < in.length(); i++){
-			temp += in.charAt(i);
+		in = removeDelimiters(in);
+		ArrayList<SymbolString> options = new ArrayList<SymbolString>();
+		
+		for (int i = in.length(); i > 0; i--){
+			SymbolString symbols = new SymbolString();
+			String temp = in.substring(0,i);
 			for (Alphabet alph: alphs){
 				if (alph.containsSymbolWithString(temp)){
 					symbols.add(alph.getByString(temp));
-					temp = "";
+					symbols.addAll(createFromString(in.substring(i), alphs));
 					break;
 				}
 			}
+			if(symbols.stringLength() == in.length()){
+				return symbols;
+			}
+			else if(!symbols.isEmpty())
+				options.add(symbols);
 		}
-		return symbols;
+		SymbolString max = new SymbolString();
+		for (SymbolString s: options){
+			if (max.stringLength() < s.stringLength())
+				max = s;
+		}
+		return max;
 	}
 	
 	public static boolean checkAndSpawnError(String error, String in, Alphabet ... alphs){
@@ -240,11 +256,44 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public static boolean canBeParsed(String input, FormalDefinition def) {
-		return createFromString(input, def).stringLength() == input.length();
+		return canBeParsed(input, def.getAlphabets().toArray(new Alphabet[0]));
 	}
 	
 	public static boolean canBeParsed(String input, Alphabet ... alphs) {
-		return createFromString(input, alphs).stringLength() == input.length();
+		return SymbolString.isEmpty(input) || 
+				removeDelimiters(createFromString(input, alphs).toString()).equals(removeDelimiters(input));
+	}
+
+	private static String removeDelimiters(String input) {
+		return input.replaceAll(JFLAPPreferences.getSymbolStringDelimiter(), "");
+	}
+
+	public static boolean isEmpty(String input) {
+		return input.length() == 0 || input.equals(JFLAPPreferences.getEmptyStringSymbol());
+	}
+
+	public void purgeOf(Symbol s) {
+		while (this.remove(s));
+	}
+
+	public Symbol replace(int i, Symbol write) {
+		Symbol replaced = null;
+		if ((replaced = this.remove(i)) != null){
+			this.add(i, write);
+		}
+		return replaced;
+	}
+
+	public int indexOf(SymbolString e, int cp) {
+		SymbolString temp = this.subList(cp);
+		return cp + temp.indexOf(e);
+	}
+
+	public boolean replace(int start, int end, SymbolString rhs) {
+		for(int i = start; i< end; i++){
+			this.remove(start);
+		}
+		return this.addAll(start, rhs);
 	}
 
 
