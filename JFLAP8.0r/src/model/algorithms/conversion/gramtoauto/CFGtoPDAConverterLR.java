@@ -1,5 +1,6 @@
 package model.algorithms.conversion.gramtoauto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import model.automata.State;
@@ -46,20 +47,33 @@ public class CFGtoPDAConverterLR extends CFGtoPDAConverter {
 		transitions.add(initial);
 		transitions.add(toFinal);
 		
-		PDATransition[] loops = createAllReduceLoops(this.getGrammar().getTerminals(), 
-													this.getStartState());
+		PDATransition[] loops = createAllPushLoops();
 		
 		return transitions.addAll(Arrays.asList(loops));
 	}
 
 	@Override
 	public PDATransition convertProduction(Production p) {
-		State focus = this.getMiddleState();
+		State start = this.getStartState();
 		SymbolString input = new SymbolString(),
 						pop = p.getRHS().reverse(),
 						push = p.getLHS();
 		
-		return new PDATransition(focus, focus, input, pop, push);
+		return new PDATransition(start, start, input, pop, push);
+	}
+	
+	private PDATransition[] createAllPushLoops(){
+		ArrayList<PDATransition> trans = new ArrayList<PDATransition>();
+		State start = this.getStartState();
+		for (Symbol s: this.getGrammar().getTerminals()){
+			trans.add(new PDATransition(start,
+										start,
+										new SymbolString(s),
+										new SymbolString(),
+										new SymbolString(s)));
+		}
+		
+		return trans.toArray(new PDATransition[0]);
 	}
 
 }
