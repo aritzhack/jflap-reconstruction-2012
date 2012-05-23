@@ -63,7 +63,9 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 		}
 		fromList.add(trans);
 		transitionsFromStateMap.put(trans.getFromState(), fromList);
-		
+		if (transitionsFromStateMap.get(trans.getToState()) == null){
+			transitionsFromStateMap.put(trans.getToState(), new TreeSet<T>());
+		}
 		
 		Set<T> toList = transitionsToStateMap.get(trans.getToState());
 		if (toList == null){
@@ -71,6 +73,9 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 		}
 		toList.add(trans);
 		transitionsToStateMap.put(trans.getToState(), toList);
+		if (transitionsToStateMap.get(trans.getFromState()) == null){
+			transitionsToStateMap.put(trans.getFromState(), new TreeSet<T>());
+		}
 		
 		return true;
 	}
@@ -78,8 +83,19 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 	@Override
 	public boolean remove(Object trans){
 		if (!super.remove(trans)) return false;
-		transitionsFromStateMap.get(((T) trans).getFromState()).remove(trans);
-		transitionsToStateMap.get(((T) trans).getToState()).remove(trans);
+		T t = (T) trans;
+		//update fromStateMap
+		transitionsFromStateMap.get(t.getFromState()).remove(t);
+		if (transitionsFromStateMap.get(t.getToState()).isEmpty()){
+			transitionsFromStateMap.remove(t.getToState());
+		}
+		
+		transitionsToStateMap.get(t.getToState()).remove(t);
+		if (transitionsToStateMap.get(t.getFromState()).isEmpty()){
+			transitionsToStateMap.remove(t.getFromState());
+		}
+		
+		
 		return true;
 	}
 

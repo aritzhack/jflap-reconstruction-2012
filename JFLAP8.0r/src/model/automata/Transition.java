@@ -1,10 +1,12 @@
 package model.automata;
 
+import java.awt.Point;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
 import util.Copyable;
+import util.GraphHelper;
 
 
 
@@ -38,6 +40,8 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	 */
 	private SymbolString myInput;
 
+	private Point myControlPoint;
+
 	/**
 	 * Instantiates a new <CODE>Transition</CODE>.
 	 * 
@@ -51,13 +55,26 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	public Transition(State from, State to, SymbolString input) {
 		this.myFrom = from;
 		this.myTo = to;
+		myControlPoint = GraphHelper.getCenterPoint(this);
 		setInput(input);
 	}
 
 	public SymbolString getInput(){
 		return myInput;
 	}
-	
+
+	public double getCtrlX(){
+		return myControlPoint.getX();
+	}
+
+	public double getCtrlY(){
+		return myControlPoint.getY();
+	}
+
+	public void translateCtrlPt(int dx, int dy){
+		myControlPoint.translate(dx, dy);
+	}
+
 	public void setInput(SymbolString input){
 		myInput = input;
 	}
@@ -71,8 +88,8 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	@Override
 	public Transition clone(){
 		try{
-		Constructor cons = this.getClass().getConstructor(State.class, State.class, SymbolString.class);
-		return (Transition) cons.newInstance(this.getFromState(), this.getToState(), this.getInput());
+			Constructor cons = this.getClass().getConstructor(State.class, State.class, SymbolString.class);
+			return (Transition) cons.newInstance(this.getFromState(), this.getToState(), this.getInput());
 		}catch (Exception e){
 			throw new AutomatonException(e);
 		}
@@ -112,6 +129,17 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	}
 
 
+	/**
+	 * Checks if this transition is a loop, i.e. if
+	 * its from state is the same as its to state
+	 * @return
+	 */
+	public boolean isLoop() {
+		return this.myTo.equals(myFrom);
+	}
+	
+	public abstract String getLabelText();
+	
 
 	/**
 	 * Returns a string representation of this object. The string returned is
@@ -122,8 +150,9 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	 */
 	@Override
 	public String toString() {
-		return "[" + getFromState().toString() + "] -> ["
-				+ getToState().toString() + "] " + this.getInput();
+		return this.getFromState().getName() + "---" + 
+								this.getLabelText() + "--->" + 
+									this.getToState().getName();
 	}
 
 	/**
@@ -149,12 +178,6 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 		return myFrom.hashCode() ^ myTo.hashCode();
 	}
 
-	public boolean isLoop() {
-		return this.myTo.equals(myFrom);
-	}
-
-
-	
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		return getInput().getUniqueSymbolsUsed();

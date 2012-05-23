@@ -9,7 +9,9 @@ import model.automata.StateSet;
 import model.automata.TransitionFunctionSet;
 import model.automata.acceptors.fsa.FiniteStateTransition;
 import model.formaldef.FormalDefinition;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.symbols.Symbol;
 
 public abstract class Transducer<T extends OutputFunction> extends Automaton<FiniteStateTransition> {
 
@@ -52,8 +54,20 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<Fin
 											this.getInputAlphabet(),
 											this.getOutputAlphabet(),
 											this.getTransitions(),
-											this.getStartState(),
+											new StartState(this.getStartState()),
 											this.getOutputFunctionSet()};
 	}
+
+	@Override
+	public void componentChanged(ComponentChangeEvent event) {
+		OutputAlphabet output = this.getOutputAlphabet();
+		if (event.comesFrom(output) && event.getType() == ITEM_REMOVED){
+			this.getOutputFunctionSet().purgeOfSymbol((Symbol) event.getArg(0));
+		}
+		else 
+			super.componentChanged(event);
+	}
+	
+	
 
 }

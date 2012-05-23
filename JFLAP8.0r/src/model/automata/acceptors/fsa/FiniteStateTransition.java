@@ -26,17 +26,15 @@ public class FiniteStateTransition extends Transition {
 	}
 
 	@Override
-	public String toString() {
-		return this.getFromState().getName() + "---" + 
-								this.getInput() + "--->" + 
-									this.getToState().getName();
-	}
-
-	@Override
 	public FiniteStateTransition copy() {
 		return new FiniteStateTransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
 									this.getInput().copy());
+	}
+
+	@Override
+	public String getLabelText() {
+		return this.getInput().toString();
 	}
 	
 }

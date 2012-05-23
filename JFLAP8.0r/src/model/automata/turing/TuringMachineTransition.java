@@ -54,8 +54,7 @@ public class TuringMachineTransition extends Transition {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The transition for a single tape turing machine";
 	}
 
 	@Override
@@ -65,6 +64,11 @@ public class TuringMachineTransition extends Transition {
 									this.getRead().copy(),
 									this.getWrite().copy(), 
 									this.getMove());
+	}
+
+	@Override
+	public String getLabelText() {
+		return this.getRead() + ";" + this.getWrite() + "," + this.getMove();
 	}
 
 }
