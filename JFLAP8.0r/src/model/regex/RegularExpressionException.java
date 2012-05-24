@@ -1,6 +1,8 @@
 package model.regex;
 
-public class RegularExpressionException extends RuntimeException {
+import errors.JFLAPException;
+
+public class RegularExpressionException extends JFLAPException {
 
 	public RegularExpressionException(String string) {
 		super(string);
