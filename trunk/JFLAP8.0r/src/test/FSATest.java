@@ -29,13 +29,11 @@ import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
 import model.util.UtilFunctions;
 
-public class FSATest {
+public class FSATest extends TestHarness{
 
 	
-	private static JTextArea myArea;
-
-	public static void main(String[] args) {
-		myArea = setUpDisplay();
+	@Override
+	public void runTest(){
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
 		TransitionFunctionSet transitions = new TransitionFunctionSet();
@@ -48,7 +46,7 @@ public class FSATest {
 															start, 
 															finalStates);
 
-		ErrPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n"));
+		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n"));
 		
 		for (char i = 'a'; i <= 'z'; i++){
 			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
@@ -75,7 +73,7 @@ public class FSATest {
 		
 		fsa.getTransitions().addAll((Arrays.asList(new FiniteStateTransition[]{t0,t1,t2,t3,t4})));
 
-		OutPrintln(fsa.toString());
+		outPrintln(fsa.toString());
 		
 		// CONVERT FSA TO GRAMMAR
 		SteppableAlgorithm converter = new FSAtoRegGrammarConversion(fsa);
@@ -83,38 +81,17 @@ public class FSATest {
 		
 		Grammar RG = ((FSAtoRegGrammarConversion) converter).getConvertedGrammar();
 		
-		OutPrintln(RG.toString());
+		outPrintln(RG.toString());
 		
 		//CHECK TYPE
-		OutPrintln(Arrays.toString(GrammarType.getType(RG)));
+		outPrintln(Arrays.toString(GrammarType.getType(RG)));
 
 		
 		//CONVERT RIGHT-LINEAR to FSA
 		converter = new RGtoFSAConverter(RG);
 		converter.stepToCompletion();
 		fsa = ((RGtoFSAConverter) converter).getConvertedAutomaton();
-		OutPrintln(fsa.toString());
+		outPrintln(fsa.toString());
 	}
 
-	private static void OutPrintln(String s) {
-		myArea.setForeground(Color.BLACK);
-		myArea.append(s + "\n");
-	}
-
-	private static void ErrPrintln(String str) {
-		myArea.setForeground(Color.red);
-		myArea.append(str +"\n");
-		
-	}
-
-	private static JTextArea setUpDisplay() {
-		JFrame frame = new JFrame("JFLAP Test Print!");
-		JTextArea area = new JTextArea();
-		JScrollPane panel = new JScrollPane(area);
-
-		frame.add(panel);
-		frame.pack();
-		frame.setVisible(true);
-		return area;
-	}
 }
