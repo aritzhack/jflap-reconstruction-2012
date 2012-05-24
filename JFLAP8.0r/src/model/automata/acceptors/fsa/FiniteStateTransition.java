@@ -14,6 +14,10 @@ public class FiniteStateTransition extends Transition {
 		super(from, to, input);
 	}
 
+	public FiniteStateTransition(State from, State to) {
+		this(from, to, new SymbolString());
+	}
+
 	@Override
 	public String getDescriptionName() {
 		return "Finite State Transition";

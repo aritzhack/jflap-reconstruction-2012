@@ -193,6 +193,8 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 		int compare = this.getFromState().compareTo(o.getFromState());
 		if (compare == 0)
 			compare = this.getToState().compareTo(o.getToState());
+		if (compare == 0)
+			compare = this.getInput().compareTo(o.getInput());
 		return compare;
 	}
 

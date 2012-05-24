@@ -3,6 +3,8 @@ package model.automata;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import universe.preferences.JFLAPPreferences;
+
 import errors.BooleanWrapper;
 
 import model.formaldef.components.FormalDefinitionComponent;
@@ -53,6 +55,13 @@ public class StateSet extends SetComponent<State> {
 		}
 		
 		return null;
+	}
+
+	public State createAndAddState() {
+		int id = this.getNextUnusedID();
+		State s = new State(JFLAPPreferences.getDefaultStateNameBase()+id, id);
+		this.add(s);
+		return s;
 	}
 	
 }
