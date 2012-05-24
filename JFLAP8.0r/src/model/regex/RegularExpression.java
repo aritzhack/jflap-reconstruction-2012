@@ -91,7 +91,6 @@ public class RegularExpression extends FormalDefinition {
 		}
 	
 		myRegEx = s;
-		JFLAPDebug.print(myRegEx);
 
 	}
 
@@ -102,7 +101,6 @@ public class RegularExpression extends FormalDefinition {
 	
 	public boolean matches(String in){
 		Pattern p = convertToPattern();
-		JFLAPDebug.print(p);
 		return p.matcher(in).matches();
 	}
 
@@ -126,7 +124,7 @@ public class RegularExpression extends FormalDefinition {
 	 */
 	public static String convertToStringPattern(RegularExpression regEx) {
 		OperatorAlphabet ops = regEx.getOperators();
-		SymbolString temp = new SymbolString(regEx.myRegEx);
+		SymbolString temp = regEx.getExpression();
 		temp.replaceAll(ops.getUnionOperator(),new Symbol("|"));
 		return temp.toNondelimitedString();
 
@@ -134,7 +132,7 @@ public class RegularExpression extends FormalDefinition {
 
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
-		SymbolString temp = new SymbolString(myRegEx);
+		SymbolString temp = getExpression();
 		temp.removeAll(myOperatorAlphabet);
 		return new TreeSet<Symbol>(temp);
 	}
@@ -164,6 +162,11 @@ public class RegularExpression extends FormalDefinition {
 			}
 		}
 		super.componentChanged(event);
+	}
+
+
+	public SymbolString getExpression() {
+		return new SymbolString(myRegEx);
 	}
 	
 }

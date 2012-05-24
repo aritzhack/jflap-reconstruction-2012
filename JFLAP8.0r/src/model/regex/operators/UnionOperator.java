@@ -2,10 +2,21 @@ package model.regex.operators;
 
 import model.formaldef.components.symbols.Symbol;
 
-public class UnionOperator extends Symbol {
+public class UnionOperator extends Operator {
 
-	public UnionOperator() {
-		super("+");
+	public UnionOperator(String union) {
+		super(union);
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "Union Operator";
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

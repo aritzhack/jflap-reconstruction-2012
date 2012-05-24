@@ -10,8 +10,7 @@ public class OpenGroup extends Operator {
 
 	@Override
 	public String getDescriptionName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Open Group";
 	}
 
 	@Override
