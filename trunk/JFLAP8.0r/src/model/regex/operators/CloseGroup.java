@@ -9,8 +9,7 @@ public class CloseGroup extends Operator {
 
 	@Override
 	public String getDescriptionName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Close Group";
 	}
 
 	@Override

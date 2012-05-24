@@ -16,7 +16,7 @@ public class OperatorAlphabet extends Alphabet {
 
 	public OperatorAlphabet(){
 		super();
-		myUnionOperator = new UnionOperator();
+		myUnionOperator = JFLAPPreferences.getUnionOperator();
 		myKleeneStar = new KleeneStar();
 		myOpenGroup = JFLAPPreferences.getCurrentRegExOpenGroup();
 		myCloseGroup = JFLAPPreferences.getCurrentRegExCloseGroup();
