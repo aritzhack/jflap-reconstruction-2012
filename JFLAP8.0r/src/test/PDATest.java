@@ -32,12 +32,10 @@ import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
 import model.util.UtilFunctions;
 
-public class PDATest {
+public class PDATest extends TestHarness{
 
-	private static JTextArea myArea;
-
-	public static void main(String[] args) {
-		myArea = setUpDisplay();
+	@Override
+	public void runTest(){
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
 		StackAlphabet stack = new StackAlphabet();
@@ -53,9 +51,9 @@ public class PDATest {
 														bos,
 														finalStates);
 
-		ErrPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
+		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
 		
-		ErrPrintln("");
+		errPrintln("");
 		
 		for (char i = 'a'; i <= 'z'; i++){
 			pda.getInputAlphabet().add(new Symbol(Character.toString(i)));
@@ -87,17 +85,17 @@ public class PDATest {
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 
-		OutPrintln(pda.toString());
+		outPrintln(pda.toString());
 		
-		ErrPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
+		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
 		
-		ErrPrintln("");
+		errPrintln("");
 		
 		//lets try some stuff...
 				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 				String in = "aabb";
 				sim.beginSimulation(SymbolString.createFromString(in, pda));
-				OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
+				outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//convert PDA to CFG
 		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
@@ -105,27 +103,27 @@ public class PDATest {
 		
 		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
 		
-		OutPrintln(CFG.toString());
+		outPrintln(CFG.toString());
 		//remove useless productions
 		converter = new UselessProductionRemover(CFG);
 		converter.stepToCompletion();
 		
 		CFG = ((GrammarTransformAlgorithm) converter).getTransformedGrammar();
-		OutPrintln("No Useless productions: \n" + CFG.toString());
+		outPrintln("No Useless productions: \n" + CFG.toString());
 		
 		//Now trim
 		CFG.trimAlphabets();
-		OutPrintln("Alphabets Trimmed: \n" + CFG.toString());
+		outPrintln("Alphabets Trimmed: \n" + CFG.toString());
 		
 		//test Brute Force Parsing
 		RestrictedBruteParser parser = new RestrictedBruteParser(CFG);
 		parser.init(SymbolString.createFromString(in, CFG));
 		parser.start();
-		OutPrintln("Parse string: " + in + "\n\t In Language? " + (parser.getAnswer() != null));
+		outPrintln("Parse string: " + in + "\n\t In Language? " + (parser.getAnswer() != null));
 	
 		
 		//TYPE TEST
-		OutPrintln(Arrays.toString(GrammarType.getType(CFG)));
+		outPrintln(Arrays.toString(GrammarType.getType(CFG)));
 		
 		//Conversion to PDA - LL
 		converter = new CFGtoPDAConverterLL(CFG);
@@ -133,12 +131,12 @@ public class PDATest {
 		}
 		pda = ((CFGtoPDAConverterLL) converter).getConvertedAutomaton();
 		
-		OutPrintln("LL CONVERTED:\n" + pda.toString());
+		outPrintln("LL CONVERTED:\n" + pda.toString());
 
 		//test LL converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 		sim.beginSimulation(SymbolString.createFromString(in, pda));
-		OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
+		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//Conversion to PDA - LR
 		converter = new CFGtoPDAConverterLR(CFG);
@@ -146,44 +144,24 @@ public class PDATest {
 		}
 		pda = ((CFGtoPDAConverterLR) converter).getConvertedAutomaton();
 		
-		OutPrintln("LR CONVERTED:\n" + pda.toString());
+		outPrintln("LR CONVERTED:\n" + pda.toString());
 		
 		//test LR converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 		sim.beginSimulation(SymbolString.createFromString(in, pda));
-		OutPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
+		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//test remove symbol
 		pda.getStackAlphabet().remove(new Symbol("a"));
 		
-		OutPrintln("\'a\' removed:\n" + pda.toString());
+		outPrintln("\'a\' removed:\n" + pda.toString());
 
 		//test remove state
 		pda.getStates().remove(pda.getStates().getStateWithID(1));
 		
-		OutPrintln("[q1] removed:\n" + pda.toString());
+		outPrintln("[q1] removed:\n" + pda.toString());
 		
 	}
 
-	private static void OutPrintln(String s) {
-		myArea.setForeground(Color.BLACK);
-		myArea.append(s + "\n");
-	}
-
-	private static void ErrPrintln(String str) {
-		myArea.setForeground(Color.red);
-		myArea.append(str +"\n");
-		
-	}
-
-	private static JTextArea setUpDisplay() {
-		JFrame frame = new JFrame("JFLAP Test Print!");
-		JTextArea area = new JTextArea();
-		JScrollPane panel = new JScrollPane(area);
-
-		frame.add(panel);
-		frame.pack();
-		frame.setVisible(true);
-		return area;
-	}
+	
 }
