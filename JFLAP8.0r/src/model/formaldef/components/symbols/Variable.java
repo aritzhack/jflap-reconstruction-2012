@@ -9,7 +9,7 @@ public class Variable extends Symbol {
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof Variable && super.equals(o);
+		return !(o instanceof Terminal) && super.equals(o);
 	}
 	
 	

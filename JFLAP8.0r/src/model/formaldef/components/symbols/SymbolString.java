@@ -14,13 +14,14 @@ import javax.swing.JOptionPane;
 
 
 
-import universe.Universe;
 import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
+import model.regex.OperatorAlphabet;
+import model.regex.operators.UnionOperator;
 import model.util.UtilFunctions;
 
 
@@ -104,7 +105,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public boolean endsWith(Symbol s) {
-		return this.getLast() == s;
+		return this.getLast().equals(s);
 	}
 
 	public SymbolString subList(int i) {
@@ -272,16 +273,13 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		return input.length() == 0 || input.equals(JFLAPPreferences.getEmptyStringSymbol());
 	}
 
-	public void purgeOf(Symbol s) {
-		while (this.remove(s));
+	public boolean replace(int i, Symbol ... replaceWith) {
+		return this.replace(i, new SymbolString(replaceWith));
+
 	}
 
-	public Symbol replace(int i, Symbol write) {
-		Symbol replaced = null;
-		if ((replaced = this.remove(i)) != null){
-			this.add(i, write);
-		}
-		return replaced;
+	public boolean replace(int i, SymbolString replaceWith) {
+		return this.replace(i,i+1, replaceWith);
 	}
 
 	public int indexOf(SymbolString e, int cp) {
@@ -290,10 +288,55 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public boolean replace(int start, int end, SymbolString rhs) {
+		
+		if (start < 0 || end > this.size() || end < start){
+			return false;
+		}
+		
 		for(int i = start; i< end; i++){
 			this.remove(start);
 		}
 		return this.addAll(start, rhs);
+	}
+	
+	public boolean replace(int start, int end, Symbol ... rhs) {
+		return this.replace(start, end, new SymbolString(rhs));
+	}
+
+	public boolean replaceAll(Symbol toReplace, Symbol ... replaceWith) {
+		return this.replaceAll(toReplace, new SymbolString(replaceWith));
+	}
+
+	public boolean replaceAll(Symbol toReplace, SymbolString replaceWith) {
+		boolean replaced = false;
+		for (int i = 0; i < this.size(); i++){
+			if(this.replace(toReplace, replaceWith)){
+					i += replaceWith.size()-1;
+					replaced = true;
+			}
+		}
+		return replaced;
+	}
+
+	private boolean replace(Symbol toReplace, SymbolString replaceWith) {
+		int index = this.indexOf(toReplace);
+		return replace(index, replaceWith);
+	}
+
+	public String toNondelimitedString() {
+		return UtilFunctions.createDelimitedString(this, "");
+	}
+
+	public boolean containsAny(Symbol ... symbols) {
+		for (Symbol s: symbols){
+			if (this.contains(s))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean startsWith(Symbol ... symbols) {
+		return this.startsWith(new SymbolString(symbols));
 	}
 
 
