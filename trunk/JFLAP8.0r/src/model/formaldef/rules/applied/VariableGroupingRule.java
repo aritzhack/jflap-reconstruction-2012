@@ -26,7 +26,7 @@ public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {
 		
 		boolean correct = string.length() > 2 && 
 							string.indexOf(this.getOpenGroup()) == 0 && 
-							string.lastIndexOf(this.getCloseGroup()) == string.length()-1;
+							string.indexOf(this.getCloseGroup()) == string.length()-1;
 		
 			return new BooleanWrapper(correct, "The Variable " + string + 
 												" does not contain the necessary "+ 
