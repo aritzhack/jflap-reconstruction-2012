@@ -12,7 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import universe.Universe;
+import universe.JFLAPUniverse;
 import view.JFLAPGUIResources;
 import view.JFLAPView;
 import action.windows.CloseButton;
@@ -96,7 +96,7 @@ public class JFLAPController extends JFrame {
 	public void closeActiveTab(boolean save) {
 		int i = this.closeTab(myTabbedPane.getSelectedIndex(), save);
 		if (i == -1){
-			Universe.deregisterController(this.getID());
+			JFLAPUniverse.unregisterController(this);
 			this.dispose();
 		}
 	}
