@@ -12,21 +12,23 @@ import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
+import model.algorithms.conversion.fatoregex.FSAtoRegularExpressionConverter;
 import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
 import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
+import model.regex.RegularExpression;
 import model.util.UtilFunctions;
 
 public class FSATest extends TestHarness{
@@ -36,7 +38,7 @@ public class FSATest extends TestHarness{
 	public void runTest(){
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
-		TransitionFunctionSet transitions = new TransitionFunctionSet();
+		TransitionSet transitions = new TransitionSet();
 		StartState start = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
 		
@@ -52,10 +54,10 @@ public class FSATest extends TestHarness{
 			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
 		}
 		
-		State q0 = new State("moo", 0);
+		State q0 = new State("start", 0);
 		State q1 = new State("mar", 1);
 		State q2 = new State("doo", 2);
-		State q3 = new State("eat", 3);
+		State q3 = new State("end", 3);
 
 		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
 		fsa.setStartState(q0);
@@ -65,14 +67,16 @@ public class FSATest extends TestHarness{
 		Symbol B = new Symbol("b");
 		
 		
-		FiniteStateTransition t0 = new FiniteStateTransition(q0, q1, new SymbolString(A));
-		FiniteStateTransition t1 = new FiniteStateTransition(q1, q1, new SymbolString(A));
-		FiniteStateTransition t2 = new FiniteStateTransition(q1, q2, new SymbolString(B));
-		FiniteStateTransition t3 = new FiniteStateTransition(q2, q2, new SymbolString(B));
-		FiniteStateTransition t4 = new FiniteStateTransition(q2, q3, new SymbolString(A));
+		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(A));
+		FSTransition t1 = new FSTransition(q1, q1, new SymbolString(A));
+		FSTransition t2 = new FSTransition(q1, q2, new SymbolString(B));
+		FSTransition t3 = new FSTransition(q2, q2, new SymbolString(B));
+		FSTransition t4 = new FSTransition(q2, q3, new SymbolString(A));
 		
-		fsa.getTransitions().addAll((Arrays.asList(new FiniteStateTransition[]{t0,t1,t2,t3,t4})));
+		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4})));
 
+		fsa.trimAlphabets();
+		
 		outPrintln(fsa.toString());
 		
 		// CONVERT FSA TO GRAMMAR
@@ -90,8 +94,15 @@ public class FSATest extends TestHarness{
 		//CONVERT RIGHT-LINEAR to FSA
 		converter = new RGtoFSAConverter(RG);
 		converter.stepToCompletion();
-		fsa = ((RGtoFSAConverter) converter).getConvertedAutomaton();
-		outPrintln(fsa.toString());
+		FiniteStateAcceptor converted = 
+				((RGtoFSAConverter) converter).getConvertedAutomaton();
+		outPrintln(converted.toString());
+		
+		//CONVERT FSA to RE
+		converter = new FSAtoRegularExpressionConverter(fsa);
+		converter.stepToCompletion();
+		RegularExpression regEx = ((FSAtoRegularExpressionConverter) converter).getResultingRegEx();
+		outPrintln(regEx.toString());
 	}
 
 }

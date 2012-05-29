@@ -15,7 +15,7 @@ import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
@@ -39,7 +39,7 @@ public class PDATest extends TestHarness{
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
 		StackAlphabet stack = new StackAlphabet();
-		TransitionFunctionSet<PDATransition> transitions = new TransitionFunctionSet<PDATransition>();
+		TransitionSet<PDATransition> transitions = new TransitionSet<PDATransition>();
 		StartState start = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
 		BottomOfStackSymbol bos = new BottomOfStackSymbol();
