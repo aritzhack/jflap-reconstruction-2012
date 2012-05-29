@@ -2,10 +2,13 @@ package model.automata.simulate.configurations;
 
 import java.util.LinkedList;
 
+import universe.preferences.JFLAPPreferences;
+
 import model.automata.State;
 import model.automata.simulate.Configuration;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineTransition;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class TMConfiguration extends Configuration<TuringMachine, TuringMachineTransition> {
@@ -28,22 +31,22 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 	}
 
 	@Override
-	protected int getNextPrimaryPosition(TMTransitionLabel label) {
+	protected int getNextPrimaryPosition(TuringMachineTransition label) {
 		//primary is not used
 		return 0;
 	}
 
 	@Override
-	protected Configuration<TuringMachine, TMTransitionLabel> createConfig(
+	protected Configuration<TuringMachine, TuringMachineTransition> createConfig(TuringMachine tm,
 			State s, int ppos, SymbolString primary, int[] positions,
 			SymbolString[] updatedClones) throws Exception {
-		return new TMConfiguration(s, positions, updatedClones);
+		return new TMConfiguration(tm, s, positions, updatedClones);
 	}
 
 	
 	
 	@Override
-	public LinkedList<Configuration<TuringMachine, TMTransitionLabel>> getNextConfigurations() {
+	public LinkedList<Configuration<TuringMachine, TuringMachineTransition>> getNextConfigurations() {
 		// TODO Auto-generated method stub
 		return super.getNextConfigurations();
 	}
@@ -67,9 +70,9 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 	}
 
 	@Override
-	protected boolean canMoveAlongTransition(Transition<TMTransitionLabel> trans) {
+	protected boolean canMoveAlongTransition(TuringMachineTransition trans) {
 		for (int i = 0; i < super.getNumOfSecondary(); i++){
-			if (!isValidMoveForTape(i, trans.getLabel().getReadForTape(i)))
+			if (!isValidMoveForTape(i, trans.getReadForTape(i)))
 				return false;
 		}
 		return true;
@@ -80,7 +83,7 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 		SymbolString tape = this.getStringForIndex(i);
 		Symbol read;
 		if (readString.isEmpty())
-			read = TuringMachine.createBlankSymbol();
+			read = this.getAutomaton().getBlankSymbol();
 		else 
 			read = readString.getFirst();
 		return tape.get(position).equals(read);
@@ -88,19 +91,19 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 
 	@Override
 	protected int getNextSecondaryPosition(int i,
-			Transition<TMTransitionLabel> trans) {
-		int move = trans.getLabel().getMoveForTape(i);
+			TuringMachineTransition trans) {
+		int move = trans.getMoveForTape(i);
 		return this.getPositionForIndex(i) + move;
 	}
 
 	@Override
 	protected SymbolString[] assembleUpdatedStrings(SymbolString[] clones,
-			Transition<TMTransitionLabel> trans) {
+			TuringMachineTransition trans) {
 		for (int i = 0; i < this.getNumOfSecondary(); i++){
-			SymbolString writeString = trans.getLabel().getWriteForTape(i);
+			SymbolString writeString = trans.getWriteForTape(i);
 			Symbol write;
 			if (writeString.isEmpty())
-				write = TuringMachine.createBlankSymbol();
+				write = this.getAutomaton().getBlankSymbol();
 			else
 				write = writeString.getFirst();
 			clones[i].replace(this.getPositionForIndex(i), write);
