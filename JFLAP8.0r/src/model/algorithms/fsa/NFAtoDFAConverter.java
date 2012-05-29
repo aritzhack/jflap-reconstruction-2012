@@ -55,19 +55,10 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		FSADeterminismChecker check = new FSADeterminismChecker();
 		if (check.isDeterministic(dfa))
 			errors.add(new BooleanWrapper(false,"This FSA is a DFA already!"));
-		if(!hasAllSingleSymbolInput(dfa))
+		if(!FiniteStateAcceptor.hasAllSingleSymbolInput(dfa))
 			errors.add(new BooleanWrapper(false, "The NFA to convert must have transitions " +
 					"with either 1 or 0 input symbols."));
 		return errors.toArray(new BooleanWrapper[0]);
-	}
-
-	private boolean hasAllSingleSymbolInput(FiniteStateAcceptor dfa) {
-		for (FSTransition trans : dfa.getTransitions()){
-			if (trans.getInput().size() > 1){
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override
