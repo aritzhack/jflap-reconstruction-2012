@@ -62,7 +62,7 @@ public class OperatorAlphabet extends Alphabet {
 		return 'O';
 	}
 
-	public Symbol getEmptySub() {
+	public EmptySub getEmptySub() {
 		return myEmptySub;
 	}
 
