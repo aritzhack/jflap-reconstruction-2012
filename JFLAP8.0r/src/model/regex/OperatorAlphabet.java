@@ -14,7 +14,7 @@ public class OperatorAlphabet extends Alphabet {
 	private OpenGroup myOpenGroup;
 	private KleeneStar myKleeneStar;
 	private CloseGroup myCloseGroup;
-	private Symbol myEmptySub;
+	private EmptySub myEmptySub;
 
 	public OperatorAlphabet(){
 		super();
