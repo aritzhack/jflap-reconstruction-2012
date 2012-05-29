@@ -25,6 +25,11 @@ public class FinalStateSet extends StateSet {
 		return new BooleanWrapper(!isEmpty(), 
 				"Your Automaton requires a " + this.getDescriptionName());
 	}
+	
+	@Override
+	public FinalStateSet copy() {
+		return (FinalStateSet) super.copy();
+	}
 
 	
 	

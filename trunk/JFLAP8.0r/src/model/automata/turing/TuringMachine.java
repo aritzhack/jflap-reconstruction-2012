@@ -4,7 +4,7 @@ import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
@@ -26,7 +26,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 							TapeAlphabet tapeAlph,
 							BlankSymbol blank,
 							TuringMachineInputAlphabet inputAlph,
-							TransitionFunctionSet<TuringMachineTransition> functions,
+							TransitionSet<TuringMachineTransition> functions,
 							StartState start,
 							FinalStateSet finalStates) {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
@@ -54,7 +54,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 									this.getTapeAlphabet(), 
 									(BlankSymbol) myBlank.copy(), 
 									(TuringMachineInputAlphabet) this.getInputAlphabet(), 
-									new TransitionFunctionSet<TuringMachineTransition>(), 
+									new TransitionSet<TuringMachineTransition>(), 
 									new StartState(), 
 									new FinalStateSet());
 	}

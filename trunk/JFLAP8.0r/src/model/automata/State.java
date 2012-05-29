@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 
+import debug.JFLAPDebug;
+
 import util.Copyable;
 
 import model.util.JFLAPResources;
@@ -115,11 +117,12 @@ public class State implements JFLAPResources, Comparable<State>, Copyable{
 
 	@Override
 	public String toString() {
-		return this.getName();
+		return this.getName() + "|id:" + this.getID();
 	}
 
-	public boolean equals(State s){
-		return this.compareTo(s) == 0;
+	@Override
+	public boolean equals(Object o){
+		return this.compareTo((State) o) == 0;
 	}
 
 	@Override
