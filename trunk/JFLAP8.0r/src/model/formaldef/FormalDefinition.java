@@ -12,6 +12,8 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import util.Copyable;
+
 import model.formaldef.components.ChangeTypes;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.ComponentChangeListener;
@@ -28,7 +30,8 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 																			UsesSymbols, 
 																			ChangeListener, 
 																			ChangeTypes,
-																			JFLAPConstants{
+																			JFLAPConstants,
+																			Copyable{
 
 	private LinkedList<FormalDefinitionComponent> myComponents;
 
@@ -82,13 +85,13 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	}
 
 	@Override
-	public FormalDefinition clone() {
+	public FormalDefinition copy() {
 		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
 		for (FormalDefinitionComponent comp : this.getComponents())
 			cloned.add(comp.copy());
 
 		try {
-			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray(new FormalDefinition[0]));
+			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray(new FormalDefinitionComponent[0]));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 

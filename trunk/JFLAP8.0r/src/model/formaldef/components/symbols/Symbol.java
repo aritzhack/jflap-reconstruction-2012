@@ -4,6 +4,8 @@ package model.formaldef.components.symbols;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import model.regex.EmptySub;
+
 import util.Copyable;
 
 public class Symbol implements Comparable<Symbol>, Copyable{
@@ -14,6 +16,17 @@ public class Symbol implements Comparable<Symbol>, Copyable{
 		myString = s;
 	}
 	
+	/**
+	 * Returns the string associated with this symbol. In
+	 * speacial cases, this may not be used for the actual
+	 * toString representation. Therefore, be aware that 
+	 * comparisions/internal usage of the {@link Symbol}
+	 * class should use this method.
+	 * 
+	 * @see EmptySub
+	 * 
+	 * @return
+	 */
 	public String getString(){
 		return myString;
 	}
@@ -50,7 +63,7 @@ public class Symbol implements Comparable<Symbol>, Copyable{
 		return this.getString().compareTo(o.getString());
 	}
 
-
+	@Override
 	public String toString(){
 		return this.getString();
 	}
