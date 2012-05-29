@@ -4,11 +4,15 @@ import java.security.AllPermission;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import errors.BooleanWrapper;
+
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
+import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
@@ -23,13 +27,11 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.typetest.GrammarType;
+import model.util.UtilFunctions;
 
 public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends Transition> 
-																		extends SteppableAlgorithm {
+																		extends FormalDefinitionAlgorithm<Grammar> {
 
-	
-	private Grammar myGrammar;
-	
 	
 	private T myAutomaton;
 	
@@ -41,25 +43,24 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 
 	
 	public GrammarToAutomatonConverter(Grammar g){
-		setGrammar(g);
+		super(g);
 	}
 	
-	public void setGrammar(Grammar g) {
-		if (!canConvert(g))
-			throw new AlgorithmException("Cannot convert a grammar of" +
-					"type " + GrammarType.getType(g) + " with " + this.getClass().getName());
-		myGrammar= g;
-		reset();
-	}
-
-	public boolean canConvert(Grammar g) {
+	@Override
+	public BooleanWrapper[] checkOfProperForm(Grammar g) {
+		
+		List<GrammarType> valid = Arrays.asList(this.getValidTypes());
 		
 		for (GrammarType gt: GrammarType.getType(g)){
-			if (Arrays.asList(this.getValidTypes()).contains(gt))
-					return true;
+			if (valid.contains(gt))
+					return new BooleanWrapper[0];
 		}
 		
-		return false;
+		BooleanWrapper error = new BooleanWrapper(false, "The grammar must be of one of " +
+				"the following forms for the " + this.getDescriptionName() + ": " +
+				UtilFunctions.createDelimitedString(valid, ","));
+		
+		return new BooleanWrapper[]{error};
 	}
 
 	public boolean convertAlphabets() {
@@ -75,7 +76,7 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	
 	
 	public Grammar getGrammar() {
-		return myGrammar;
+		return super.getOriginalDefinition();
 	}
 
 	public T getConvertedAutomaton() {

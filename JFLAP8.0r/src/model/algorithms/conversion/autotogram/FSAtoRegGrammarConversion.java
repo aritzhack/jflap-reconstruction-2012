@@ -16,13 +16,13 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
 
-public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<FiniteStateAcceptor, FSAVariableMapping, FiniteStateTransition> {
+public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<FiniteStateAcceptor, FSAVariableMapping, FSTransition> {
 
 	private Set<State> finalStatesHandled;
 
@@ -66,7 +66,7 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 	}
 
 	@Override
-	public Production[] convertTransition(FiniteStateTransition trans) {
+	public Production[] convertTransition(FSTransition trans) {
 		FSAVariableMapping from = new FSAVariableMapping(trans.getFromState());
 		FSAVariableMapping to = new FSAVariableMapping(trans.getToState());
 		SymbolString lhs = new SymbolString(this.getVarForMapping(from));

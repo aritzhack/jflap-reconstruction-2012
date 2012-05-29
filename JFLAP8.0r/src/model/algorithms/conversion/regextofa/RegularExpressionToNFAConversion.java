@@ -6,9 +6,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import debug.JFLAPDebug;
+import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
+import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.regextofa.deexpressionifying.ConcatDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.GroupingDeX;
@@ -18,31 +20,31 @@ import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.symbols.Symbol;
+import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 
-public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
+public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<RegularExpression> {
 
-	private RegularExpression myRegEx;
 	private GeneralizedTransitionGraph myGTG;
-	private List<FiniteStateTransition> myExpressionTransitions;
-	private List<FiniteStateTransition> myRemainingLambaTransitions;
+	private List<FSTransition> myExpressionTransitions;
+	private List<FSTransition> myRemainingLambaTransitions;
 	private List<DeExpressionifier> myDeExpressionifiers;
 
 	public RegularExpressionToNFAConversion(RegularExpression re) {
-		myRegEx = re;
+		super(re);
 		initDeExpressionifiers();
 		reset();
 	}
 	
 	private void initDeExpressionifiers() {
 		myDeExpressionifiers = new ArrayList<DeExpressionifier>();
-		OperatorAlphabet ops = myRegEx.getOperators();
+		OperatorAlphabet ops = getRE().getOperators();
 		myDeExpressionifiers.add(new KleeneStarDeX(ops));
 		myDeExpressionifiers.add(new GroupingDeX(ops));
 		myDeExpressionifiers.add(new UnionDeX(ops));
@@ -55,6 +57,10 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 		return "RE to NFA converter";
 	}
 
+	public RegularExpression getRE(){
+		return super.getOriginalDefinition();
+	}
+	
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
@@ -63,32 +69,40 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		return new AlgorithmStep[]{new DeExpressionifyStep()};
+		return new AlgorithmStep[]{new BeginDeExpressionifyStep(),
+				new CompleteDeExpressionifyStep()};
 	}
 
 	@Override
 	public boolean reset() throws AlgorithmException {
-		myGTG = new GeneralizedTransitionGraph(myRegEx);
-		myRemainingLambaTransitions = new ArrayList<FiniteStateTransition>();
+		myGTG = new GeneralizedTransitionGraph(this.getRE());
+		myRemainingLambaTransitions = new ArrayList<FSTransition>();
 		updateExpressionTransitions();
 		return true;
 	}
 	
+	////// Algorithm Steps //////
+	
+	@Override
+	public BooleanWrapper[] checkOfProperForm(RegularExpression fd) {
+		return new BooleanWrapper[0];
+	}
+
 	private void updateExpressionTransitions() {
-		myExpressionTransitions = new ArrayList<FiniteStateTransition>();
-		for (FiniteStateTransition t: myGTG.getTransitions()){
+		myExpressionTransitions = new ArrayList<FSTransition>();
+		for (FSTransition t: myGTG.getTransitions()){
 			if (isExpressionTransition(t))
 				myExpressionTransitions.add(t);
 		}
 	}
 
-	private boolean isExpressionTransition(FiniteStateTransition t) {
-		return t.getInput().containsAny(myRegEx.getOperators().toArray(new Symbol[0]));
+	private boolean isExpressionTransition(FSTransition t) {
+		return t.getInput().containsAny(this.getRE().getOperators().toArray(new Symbol[0]));
 	}
 
 	
 	public void addLambdaTransition(State from, State to){
-		for(FiniteStateTransition trans: myRemainingLambaTransitions){
+		for(FSTransition trans: myRemainingLambaTransitions){
 			if (trans.getFromState().equals(from) &&
 					trans.getToState().equals(to)){
 				myGTG.getTransitions().add(trans);
@@ -106,7 +120,7 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 		myRemainingLambaTransitions.clear();
 	}
 
-	public void beginDeExpressionify(FiniteStateTransition t) {
+	public void beginDeExpressionify(FSTransition t) {
 		checkCanBeginDeExpressionify(t);
 		
 		for (DeExpressionifier dex: myDeExpressionifiers){
@@ -121,7 +135,7 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 		
 	}
 
-	private void checkCanBeginDeExpressionify(FiniteStateTransition t) {
+	private void checkCanBeginDeExpressionify(FSTransition t) {
 		if (this.isDeExpressingifying())
 			throw new AlgorithmException("You are already de-Expressionizing an expression.");
 		else if (!myExpressionTransitions.contains(t)){
@@ -135,7 +149,7 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 		return !myRemainingLambaTransitions.isEmpty();
 	}
 
-	public List<FiniteStateTransition> getExpressionTransitions() {
+	public List<FSTransition> getExpressionTransitions() {
 		return myExpressionTransitions;
 	}
 	
@@ -150,11 +164,11 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 	
 	////// Algorithm Steps //////
 	
-	private class DeExpressionifyStep implements AlgorithmStep{
+	private class BeginDeExpressionifyStep implements AlgorithmStep{
 
 		@Override
 		public String getDescriptionName() {
-			return "DeExpressionify";
+			return "Begin DeExpressionify";
 		}
 
 		@Override
@@ -166,23 +180,45 @@ public class RegularExpressionToNFAConversion extends SteppableAlgorithm {
 		@Override
 		public boolean execute() throws AlgorithmException {
 
-			if (isDeExpressingifying()){
-				addAllRemainingLambdaTransitions();
-			}
-			else{
-				if (getExpressionTransitions().isEmpty()) return false;
-				FiniteStateTransition t = getExpressionTransitions().get(0);
-				beginDeExpressionify(t);
-			}
+			FSTransition t = getExpressionTransitions().get(0);
+			beginDeExpressionify(t);
 			
 			return true;
 		}
 
 		@Override
 		public boolean isComplete() {
-			return getExpressionTransitions().isEmpty() && !isDeExpressingifying();
+			return getExpressionTransitions().isEmpty() || 
+					isDeExpressingifying();
 		}
 		
 	}
 
+	private class CompleteDeExpressionifyStep implements AlgorithmStep{
+		@Override
+		public String getDescriptionName() {
+			return "Complete DeExpressionify";
+		}
+
+		@Override
+		public String getDescription() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+
+			addAllRemainingLambdaTransitions();
+			
+			return true;
+		}
+
+		@Override
+		public boolean isComplete() {
+			return !isDeExpressingifying();
+		}
+		
+	}
+	
 }

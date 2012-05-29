@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
 import model.formaldef.components.symbols.Symbol;
@@ -41,7 +41,7 @@ public class CFGtoPDAConverterLL extends CFGtoPDAConverter {
 	protected boolean setUpTransitions() {
 		Symbol bos = this.getConvertedAutomaton().getBottomOfStackSymbol();
 		Variable start = this.getGrammar().getStartVariable();
-		TransitionFunctionSet<PDATransition> transitions = this.getConvertedAutomaton().getTransitions();
+		TransitionSet<PDATransition> transitions = this.getConvertedAutomaton().getTransitions();
 		
 		
 		PDATransition initial = new PDATransition(getStartState(),

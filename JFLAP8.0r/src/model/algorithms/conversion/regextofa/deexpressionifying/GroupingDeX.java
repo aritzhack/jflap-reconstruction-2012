@@ -8,10 +8,10 @@ import debug.JFLAPDebug;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.conversion.regextofa.DeExpressionifier;
-import model.algorithms.conversion.regextofa.GeneralizedTransitionGraph;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
@@ -27,13 +27,13 @@ public class GroupingDeX extends DeExpressionifier {
 	}
 
 	@Override
-	public List<FiniteStateTransition> adjustTransitionSet(
-			FiniteStateTransition trans, GeneralizedTransitionGraph gtg) {
+	public List<FSTransition> adjustTransitionSet(
+			FSTransition trans, GeneralizedTransitionGraph gtg) {
 		//May need to grab transition from GTG, not sure if the assumption that
 		//trans is already in the gtg will always hold true.
 		SymbolString input = trans.getInput();
 		trans.setInput(input.subList(1,input.size()-1));
-		return new ArrayList<FiniteStateTransition>();
+		return new ArrayList<FSTransition>();
 	}
 
 	@Override
