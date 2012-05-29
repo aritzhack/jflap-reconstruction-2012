@@ -45,6 +45,15 @@ public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 						new StartState(), 
 						new FinalStateSet());
 	}
+
+	public static boolean hasAllSingleSymbolInput(FiniteStateAcceptor dfa) {
+		for (FSTransition trans : dfa.getTransitions()){
+			if (trans.getInput().size() > 1){
+				return false;
+			}
+		}
+		return true;
+	}
 	
 
 }

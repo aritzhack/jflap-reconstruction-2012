@@ -40,5 +40,6 @@ public class FSTransition extends Transition {
 	public String getLabelText() {
 		return this.getInput().toString();
 	}
+
 	
 }
