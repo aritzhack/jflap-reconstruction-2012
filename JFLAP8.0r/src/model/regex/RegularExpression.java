@@ -6,9 +6,11 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import debug.JFLAPDebug;
+import errors.BooleanWrapper;
 
 import model.automata.InputAlphabet;
 import model.formaldef.FormalDefinition;
+import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -73,8 +75,7 @@ public class RegularExpression extends FormalDefinition {
 	}
 	
 
-	public void setTo(SymbolString s) {
-		
+	public synchronized void setTo(SymbolString s) {
 		//check all symbols - maybe be redundant if called with setTo(String)
 		if (!myGrammar.getTerminals().containsAll(s)){
 			throw new RegularExpressionException("The input string must contain symbols " +
@@ -83,15 +84,87 @@ public class RegularExpression extends FormalDefinition {
 		}
 			
 		//check syntax
-		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
-		parser.init(s);
-		parser.start();
-		if (parser.getAnswer() == null){
-			throw new RegularExpressionException("The input string is not formatted correctly.");
+//		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
+//		parser.init(s);
+//		parser.start();
+		BooleanWrapper format = correctFormat(s);
+		if (format.isFalse()){
+			throw new RegularExpressionException(format.getMessage());
 		}
 	
 		myRegEx = s;
 
+	}
+
+	/**
+	 * A temporary solution to the inefficiency of the Brute parser
+	 * and non-optimized expression grammar.
+	 * 
+	 * @param exp
+	 * @return true if the exp is properly formatted
+	 */
+	private BooleanWrapper correctFormat(SymbolString exp){
+		if (exp.size() == 0)
+			return new BooleanWrapper(false,
+					"The expression must be nonempty.");
+		if (!isGroupingBalanced(exp))
+			return new BooleanWrapper(false,
+					"The parentheses are unbalanced!");
+		
+		Symbol star = myOperatorAlphabet.getKleeneStar();
+		Symbol open = myOperatorAlphabet.getOpenGroup();
+		Symbol close = myOperatorAlphabet.getCloseGroup();
+		Symbol union = myOperatorAlphabet.getUnionOperator();
+		Symbol empty = myOperatorAlphabet.getEmptySub();
+		BooleanWrapper poorFormat = new BooleanWrapper(false,
+				"Operators are poorly formatted.");
+		
+		Symbol c = exp.getFirst();
+		if (c.equals(star))
+			return poorFormat;
+		
+		Symbol p = c;
+		for (int i = 1; i < exp.size(); i++) {
+			c = exp.get(i);
+			
+			if (c.equals(union) && i == exp.size()-1){
+				return poorFormat;
+			}
+			else if((c.equals(star) || c.equals(empty)) &&
+						(p.equals(open)|| p.equals(union))){
+				return poorFormat;
+			}
+			else if(c.equals(empty) ){
+				if (i == exp.size() - 1)
+					continue;
+				p = exp.get(i+1);
+				if (!(p.equals(close) || p.equals(union) || p.equals(star)))
+					return new BooleanWrapper(false,
+							"Lambda character must not cat with anything else.");
+			}
+			p=c;
+		}
+		return new BooleanWrapper(true);
+	}
+	
+	/**
+	 * Checks if the parentheses are balanced in a string.
+	 * 
+	 * @param string
+	 *            the string to check
+	 * @return if the parentheses are balanced
+	 */
+	private boolean isGroupingBalanced(SymbolString exp) {
+		int count = 0;
+		for (int i = 0; i < exp.size(); i++) {
+			if (exp.get(i).equals(myOperatorAlphabet.getOpenGroup()))
+				count++;
+			else if (exp.get(i).equals(myOperatorAlphabet.getCloseGroup()))
+				count--;
+			if (count < 0)
+				return false;
+		}
+		return count == 0;
 	}
 
 
@@ -169,4 +242,26 @@ public class RegularExpression extends FormalDefinition {
 		return new SymbolString(myRegEx);
 	}
 	
+	@Override
+	public BooleanWrapper[] isComplete() {
+		
+		BooleanWrapper[] comp = super.isComplete();
+		
+		if (comp.length == 0){
+			BooleanWrapper bw = new BooleanWrapper(derivesSomething(), 
+					"This regular Expression does not derive any strings.");
+			if (bw.isFalse())
+				comp = new BooleanWrapper[]{bw};
+		}
+
+		
+		return comp;
+	}
+
+
+	private boolean derivesSomething() {
+		SymbolString exp = new SymbolString(getExpression());
+		exp.removeAll(getOperators());
+		return !exp.isEmpty();
+	}
 }

@@ -2,6 +2,7 @@ package model.regex;
 
 import universe.preferences.JFLAPPreferences;
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.symbols.Symbol;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.KleeneStar;
 import model.regex.operators.OpenGroup;
@@ -13,6 +14,7 @@ public class OperatorAlphabet extends Alphabet {
 	private OpenGroup myOpenGroup;
 	private KleeneStar myKleeneStar;
 	private CloseGroup myCloseGroup;
+	private Symbol myEmptySub;
 
 	public OperatorAlphabet(){
 		super();
@@ -20,7 +22,8 @@ public class OperatorAlphabet extends Alphabet {
 		myKleeneStar = new KleeneStar();
 		myOpenGroup = JFLAPPreferences.getCurrentRegExOpenGroup();
 		myCloseGroup = JFLAPPreferences.getCurrentRegExCloseGroup();
-		this.addAll(myUnionOperator, myKleeneStar, myOpenGroup, myCloseGroup);
+		myEmptySub = JFLAPPreferences.getRegExSubForEmptyString();
+		this.addAll(myUnionOperator, myKleeneStar, myOpenGroup, myCloseGroup, myEmptySub);
 	}
 	
 	public OpenGroup getOpenGroup(){
@@ -57,6 +60,10 @@ public class OperatorAlphabet extends Alphabet {
 	@Override
 	public Character getCharacterAbbr() {
 		return 'O';
+	}
+
+	public Symbol getEmptySub() {
+		return myEmptySub;
 	}
 
 }
