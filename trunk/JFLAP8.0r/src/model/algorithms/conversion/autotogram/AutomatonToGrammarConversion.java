@@ -8,6 +8,7 @@ import java.util.Set;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
+import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -22,17 +23,12 @@ import model.grammar.Production;
 import errors.BooleanWrapper;
 
 public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S extends VariableMapping, E extends Transition> 
-																			extends SteppableAlgorithm {
+																			extends FormalDefinitionAlgorithm<T> {
 	/**
 	 * The {@link Grammar} that is being created from the {@link Automaton};
 	 */
 	private Grammar myConvertedGrammar;
 	
-	/**
-	 * The {@link Automaton} being converted to a {@link Grammar}
-	 */
-	private T myAutomaton;
-
 	/**
 	 * The {@link Map} of {@link VariableMapping} to {@link Variable}
 	 * that have already been added.
@@ -48,7 +44,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	
 	
 	public AutomatonToGrammarConversion(T automaton) throws AlgorithmException{
-		myAutomaton = automaton;
+		super(automaton);
 		BooleanWrapper[] bw = automaton.isComplete();
 		if (bw.length > 0){
 			throw new AlgorithmException(bw);
@@ -66,7 +62,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	}
 	
 	public T getAutomaton(){
-		return myAutomaton;
+		return getOriginalDefinition();
 	}
 
 	/**
@@ -132,21 +128,21 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 
 	public boolean convertInputAlphabet() {
 		boolean converted = true;
-		for (Symbol s: myAutomaton.getInputAlphabet()){
+		for (Symbol s: getAutomaton().getInputAlphabet()){
 			converted = converted && myConvertedGrammar.getTerminals().add(new Terminal(s.toString()));
 		}
 		return converted;
 	}
 
 	public boolean inputAlphabetConverted() {
-		return myConvertedGrammar.getTerminals().size() == myAutomaton.getInputAlphabet().size();
+		return myConvertedGrammar.getTerminals().size() == getAutomaton().getInputAlphabet().size();
 	}
 
 	@Override
 	public boolean reset() throws AlgorithmException{
 		myConvertedGrammar = new Grammar();
 		
-		GroupingPair gp = SpecialSymbolFactory.getBestGrouping(myAutomaton.getInputAlphabet());
+		GroupingPair gp = SpecialSymbolFactory.getBestGrouping(getAutomaton().getInputAlphabet());
 		
 		if (gp == null) 
 			return false;
@@ -209,16 +205,6 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 
 	public abstract Set<S> getAllNecessaryMappings();
 
-	/**
-	 * Checks to see if the automaton to be converted is
-	 * of the proper form for this algorithm. <code>isComplete()</code>
-	 * has already been checked in the constructor.
-	 * @param automaton
-	 * @return
-	 */
-	public abstract BooleanWrapper[] checkOfProperForm(T automaton);
-
-	
 	
 	/////////////////////////////////////////////////
 	////////////// Algorithm Steps //////////////////

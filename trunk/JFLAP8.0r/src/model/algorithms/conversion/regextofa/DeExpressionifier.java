@@ -3,10 +3,11 @@ package model.algorithms.conversion.regextofa;
 import java.util.List;
 
 import model.algorithms.AlgorithmException;
-import model.automata.TransitionFunctionSet;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.TransitionSet;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 
 /**
@@ -34,7 +35,7 @@ public abstract class DeExpressionifier {
 	 * @param trans
 	 * @return
 	 */
-	public boolean isApplicable(FiniteStateTransition trans){
+	public boolean isApplicable(FSTransition trans){
 		SymbolString input = trans.getInput();
 		SymbolString first = this.getFirstOperand(input);
 		return isApplicable(first, input.subList(first.size()));
@@ -60,8 +61,8 @@ public abstract class DeExpressionifier {
 	 * @param transSet
 	 * @return
 	 */
-	public abstract List<FiniteStateTransition> adjustTransitionSet(
-											FiniteStateTransition trans,
+	public abstract List<FSTransition> adjustTransitionSet(
+											FSTransition trans,
 											GeneralizedTransitionGraph gtg);
 	
 	
