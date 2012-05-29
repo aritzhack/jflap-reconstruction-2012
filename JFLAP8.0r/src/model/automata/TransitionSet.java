@@ -45,12 +45,17 @@ public class TransitionSet<T extends Transition> extends FunctionSet<T> {
 	}
 
 	public Set<T> getTransitionsFromState(State from) {
-		return new TreeSet<T>(transitionsFromStateMap.get(from));
+		Set<T> desired = transitionsFromStateMap.get(from);
+		if (desired == null)
+			return new TreeSet<T>();		
+		return new TreeSet<T>(desired);
 	}
 
 	public Set<T> getTransitionsToState(State to) {
-		return new TreeSet<T>(transitionsToStateMap.get(to));
-	}
+		Set<T> desired = transitionsToStateMap.get(to);
+		if (desired == null)
+			return new TreeSet<T>();		
+		return new TreeSet<T>(desired);	}
 
 	public Set<T> getTransitionsFromStateToState(State from, State to) {
 		TreeSet<T> toreturn = new TreeSet<T>(getTransitionsFromState(from));

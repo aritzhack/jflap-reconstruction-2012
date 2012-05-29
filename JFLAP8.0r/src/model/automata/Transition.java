@@ -140,6 +140,17 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	
 	public abstract String getLabelText();
 	
+	/**
+	 * Checks to see if this transition has a lambda input
+	 * component. subclasses should override this method
+	 * if the definition of a lambda transition is different,
+	 * specifically in the case of closure.
+	 * 
+	 * @return
+	 */
+	public boolean isLambdaTransition() {
+		return this.getInput().isEmpty();
+	}
 
 	/**
 	 * Returns a string representation of this object. The string returned is
