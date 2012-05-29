@@ -106,11 +106,11 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		FSTransition t3 = transitions.getTransitionsFromStateToState(end, end).iterator().next();
 		
 		SymbolString exp = new SymbolString(t2.getInput());
-		if (!isEmptyTransition(t1)){
+		if (!isEmptySetTransition(t1)){
 			exp.addAll(0,star(t1.getInput()));
 		}
 		
-		if (!isEmptyTransition(t3)){
+		if (!isEmptySetTransition(t3)){
 			exp.addAll(star(t3.getInput()));
 		}
 		myRegEx.setTo(exp);
@@ -257,14 +257,14 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		
 		FSTransition test = (FSTransition) pk.toArray()[0];
 
-		if (isEmptyTransition(test))
+		if (isEmptySetTransition(test))
 			return false;
 		
 		return true;
 		
 	}
 
-	private boolean isEmptyTransition(FSTransition test) {
+	private boolean isEmptySetTransition(FSTransition test) {
 		return isEmpty(test.getInput());
 	}
 
@@ -380,8 +380,12 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		SymbolString regexLabel = new SymbolString();
 		Symbol union = myRegEx.getOperators().getUnionOperator();
 		for (FSTransition t: fromTo){
-			if (isEmptyTransition(t)) continue;
+			if (isEmptySetTransition(t)) 
+				continue;
 			regexLabel.add(union);
+			
+			if (isLambdaTransition(t))
+				regexLabel.add(myRegEx.getOperators().getEmptySub());
 			regexLabel.addAll(t.getInput());
 		}
 
@@ -392,6 +396,10 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 				regexLabel);
 
 		return transSet.add(collapsed);
+	}
+
+	private boolean isLambdaTransition(FSTransition t) {
+		return t.getInput().isEmpty();
 	}
 
 	private void removeCollapse(FSTransition trans) {
