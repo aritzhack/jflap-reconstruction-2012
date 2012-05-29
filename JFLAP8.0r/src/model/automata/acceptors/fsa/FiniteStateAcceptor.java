@@ -3,17 +3,17 @@ package model.automata.acceptors.fsa;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public class FiniteStateAcceptor extends Acceptor<FiniteStateTransition> {
+public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 
 	public FiniteStateAcceptor(StateSet states, 
 									InputAlphabet langAlph,
-									TransitionFunctionSet<FiniteStateTransition> functions, 
+									TransitionSet<FSTransition> functions, 
 									StartState start,
 									FinalStateSet finalStates) {
 		super(states, langAlph, functions, start, finalStates);
@@ -22,7 +22,7 @@ public class FiniteStateAcceptor extends Acceptor<FiniteStateTransition> {
 	public FiniteStateAcceptor() {
 		this(new StateSet(),
 				new InputAlphabet(),
-				new TransitionFunctionSet<FiniteStateTransition>(),
+				new TransitionSet<FSTransition>(),
 				new StartState(),
 				new FinalStateSet());
 	}
@@ -41,7 +41,7 @@ public class FiniteStateAcceptor extends Acceptor<FiniteStateTransition> {
 	public FiniteStateAcceptor alphabetAloneCopy() {
 		return new FiniteStateAcceptor(new StateSet(), 
 						this.getInputAlphabet(), 
-						new TransitionFunctionSet<FiniteStateTransition>(), 
+						new TransitionSet<FSTransition>(), 
 						new StartState(), 
 						new FinalStateSet());
 	}

@@ -6,24 +6,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import debug.JFLAPDebug;
 
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 
-public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> {
+public class TransitionSet<T extends Transition> extends FunctionSet<T> {
 
-	private HashMap<State, Set<T>> transitionsFromStateMap;
-
-
-	private HashMap<State, Set<T>> transitionsToStateMap;
+	private TreeMap<State, Set<T>> transitionsFromStateMap;
 
 
-	public TransitionFunctionSet(){
-		transitionsFromStateMap = new HashMap<State, Set<T>>();
-		transitionsToStateMap = new HashMap<State, Set<T>>();
+	private TreeMap<State, Set<T>> transitionsToStateMap;
+
+
+	public TransitionSet(){
+		transitionsFromStateMap = new TreeMap<State, Set<T>>();
+		transitionsToStateMap = new TreeMap<State, Set<T>>();
 	}
 
 	@Override
@@ -59,6 +61,8 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 	@Override
 	public boolean add(T trans){
 		if (!super.add(trans)) return false;
+		
+		
 		Set<T> fromList = transitionsFromStateMap.get(trans.getFromState());
 		if (fromList == null){
 			fromList = new TreeSet<T>();
@@ -87,13 +91,24 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 		if (!super.remove(trans)) return false;
 		T t = (T) trans;
 		//update fromStateMap
-		transitionsFromStateMap.get(t.getFromState()).remove(t);
-		if (transitionsFromStateMap.get(t.getToState()).isEmpty()){
-			transitionsFromStateMap.remove(t.getToState());
-		}
+		Set<T> fromFromSet = transitionsFromStateMap.get(t.getFromState());
+		Set<T> toToSet = transitionsToStateMap.get(t.getToState());
 		
-		transitionsToStateMap.get(t.getToState()).remove(t);
-		if (transitionsToStateMap.get(t.getFromState()).isEmpty()){
+		fromFromSet.remove(t);
+		toToSet.remove(t);
+		
+//		JFLAPDebug.print(t.getToState(),6);
+//		JFLAPDebug.print(transitionsFromStateMap,1);
+
+		if (transitionsFromStateMap.get(t.getToState()).isEmpty() &&
+				toToSet.isEmpty()){
+			transitionsFromStateMap.remove(t.getToState());
+			transitionsToStateMap.remove(t.getToState());
+		}
+
+		if (transitionsToStateMap.get(t.getFromState()).isEmpty() &&
+				fromFromSet.isEmpty()){
+			transitionsFromStateMap.remove(t.getFromState());
 			transitionsToStateMap.remove(t.getFromState());
 		}
 		
@@ -114,5 +129,20 @@ public class TransitionFunctionSet<T extends Transition> extends FunctionSet<T> 
 		transitionsToStateMap.clear();
 	}
 
+	@Override
+	public TransitionSet<T> copy() {
+		return (TransitionSet<T>) super.copy();
+	}
+
+	/**
+	 * Removes all transitions with a from or to state corresponding
+	 * to the parameter.
+	 * 
+	 * @param s
+	 */
+	public void removeForState(State s) {
+		this.removeAll(this.getTransitionsFromState(s));
+		this.removeAll(this.getTransitionsToState(s));
+	}
 
 }

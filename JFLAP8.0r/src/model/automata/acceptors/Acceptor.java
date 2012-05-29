@@ -6,7 +6,7 @@ import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 

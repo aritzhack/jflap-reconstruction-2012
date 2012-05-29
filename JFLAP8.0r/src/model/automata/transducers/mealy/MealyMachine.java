@@ -3,8 +3,8 @@ package model.automata.transducers.mealy;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.TransitionSet;
+import model.automata.acceptors.fsa.FSTransition;
 import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.Transducer;
@@ -15,7 +15,7 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 	public MealyMachine(StateSet states, 
 			InputAlphabet langAlph,
 			OutputAlphabet outputAlph,
-			TransitionFunctionSet<FiniteStateTransition> functions,
+			TransitionSet<FSTransition> functions,
 			StartState start,
 			OutputFunctionSet<MealyOutputFunction> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);

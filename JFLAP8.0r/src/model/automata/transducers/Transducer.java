@@ -6,20 +6,20 @@ import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.TransitionSet;
+import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.symbols.Symbol;
 
-public abstract class Transducer<T extends OutputFunction> extends Automaton<FiniteStateTransition> {
+public abstract class Transducer<T extends OutputFunction> extends Automaton<FSTransition> {
 
 
 	public Transducer(StateSet states, 
 					InputAlphabet langAlph,
 					OutputAlphabet outputAlph,
-					TransitionFunctionSet<FiniteStateTransition> functions, 
+					TransitionSet<FSTransition> functions, 
 					StartState start,
 					OutputFunctionSet<T> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
@@ -32,7 +32,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<Fin
 					return clz.cast(clz.getConstructors()[0].newInstance(new StartState(),
 																			this.getInputAlphabet(),
 																			this.getOutputAlphabet(),
-																			new TransitionFunctionSet<FiniteStateTransition>(),
+																			new TransitionSet<FSTransition>(),
 																			new StartState(),
 																			new OutputFunctionSet<T>()));
 		} catch (Exception e) {

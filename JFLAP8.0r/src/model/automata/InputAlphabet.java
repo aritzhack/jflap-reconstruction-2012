@@ -3,6 +3,7 @@ package model.automata;
 
 import javax.swing.JOptionPane;
 
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 
 
@@ -26,6 +27,11 @@ public class InputAlphabet extends Alphabet{
 	@Override
 	public String getSymbolName() {
 		return "Input Symbol";
+	}
+	
+	@Override
+	public InputAlphabet copy() {
+		return (InputAlphabet) super.copy();
 	}
 
 }

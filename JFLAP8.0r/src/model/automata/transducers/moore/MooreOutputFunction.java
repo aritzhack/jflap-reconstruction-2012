@@ -1,7 +1,7 @@
 package model.automata.transducers.moore;
 
 import model.automata.State;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.automata.transducers.OutputFunction;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -25,7 +25,7 @@ public class MooreOutputFunction extends OutputFunction {
 	}
 
 	@Override
-	public boolean matches(FiniteStateTransition trans) {
+	public boolean matches(FSTransition trans) {
 		return trans.getToState().equals(this.getState());
 	}
 

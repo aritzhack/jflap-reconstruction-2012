@@ -6,14 +6,14 @@ import java.util.LinkedList;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.automata.acceptors.fsa.FiniteStateTransition;
+import model.automata.acceptors.fsa.FSTransition;
 import model.automata.transducers.OutputFunction;
 import model.automata.transducers.Transducer;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public abstract class InputOutputConfiguration<S extends Transducer<T>, T extends OutputFunction> 
-							extends SingleSecondaryConfiguration<S, FiniteStateTransition> {
+							extends SingleSecondaryConfiguration<S, FSTransition> {
 
 	public InputOutputConfiguration(S a, State s, int pos, SymbolString input,
 			SymbolString output) {
@@ -36,18 +36,18 @@ public abstract class InputOutputConfiguration<S extends Transducer<T>, T extend
 	}
 
 	@Override
-	protected int getPositionChange(FiniteStateTransition trans) {
+	protected int getPositionChange(FSTransition trans) {
 		return getOutputForTransition(trans).size();
 	}
 
 	private SymbolString getOutputForTransition(
-			FiniteStateTransition trans){
+			FSTransition trans){
 		return this.getAutomaton().getOutputFunctionSet().getOuputForTransition(trans);
 	}
 
 	@Override
 	protected SymbolString createUpdatedSecondary(SymbolString secClone,
-			FiniteStateTransition trans) {
+			FSTransition trans) {
 		return secClone.concat(getOutputForTransition(trans));
 	}
 

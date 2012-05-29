@@ -5,7 +5,7 @@ import java.util.HashSet;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
@@ -24,7 +24,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	public PushdownAutomaton(StateSet states, 
 								InputAlphabet inputAlph,
 								StackAlphabet stackAlph,
-								TransitionFunctionSet<PDATransition> functions, 
+								TransitionSet<PDATransition> functions, 
 								StartState start,
 								BottomOfStackSymbol bottom,
 								FinalStateSet finalStates) {
@@ -39,7 +39,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		this(new StateSet(), 
 				new InputAlphabet(),
 				new StackAlphabet(),
-				new TransitionFunctionSet<PDATransition>(), 
+				new TransitionSet<PDATransition>(), 
 				new StartState(), 
 				new BottomOfStackSymbol(SpecialSymbolFactory.getReccomendedBOSSymbol(new StackAlphabet())),
 				new FinalStateSet());
@@ -63,7 +63,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		return new PushdownAutomaton(new StateSet(),
 										this.getInputAlphabet(), 
 										this.getStackAlphabet(), 
-										new TransitionFunctionSet<PDATransition>(), 
+										new TransitionSet<PDATransition>(), 
 										new StartState(), 
 										new BottomOfStackSymbol(), 
 										new FinalStateSet());

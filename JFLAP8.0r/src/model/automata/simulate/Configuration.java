@@ -8,7 +8,7 @@ import java.util.List;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
-import model.automata.TransitionFunctionSet;
+import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -43,7 +43,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 
 	private LinkedList<T> findValidTransitions() {
 		LinkedList<T> valid = new LinkedList<T>();
-		TransitionFunctionSet<T>  transitions = this.getAutomaton().getTransitions();
+		TransitionSet<T>  transitions = this.getAutomaton().getTransitions();
 		if (!this.shouldFindValidTransitions()||
 				!checkAndDoBlock()) 
 			return valid;

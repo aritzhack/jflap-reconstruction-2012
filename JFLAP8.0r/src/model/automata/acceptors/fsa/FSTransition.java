@@ -7,14 +7,14 @@ import model.automata.Transition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class FiniteStateTransition extends Transition {
+public class FSTransition extends Transition {
 
 	
-	public FiniteStateTransition(State from, State to, SymbolString input) {
+	public FSTransition(State from, State to, SymbolString input) {
 		super(from, to, input);
 	}
 
-	public FiniteStateTransition(State from, State to) {
+	public FSTransition(State from, State to) {
 		this(from, to, new SymbolString());
 	}
 
@@ -30,8 +30,8 @@ public class FiniteStateTransition extends Transition {
 	}
 
 	@Override
-	public FiniteStateTransition copy() {
-		return new FiniteStateTransition(this.getFromState().copy(), 
+	public FSTransition copy() {
+		return new FSTransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
 									this.getInput().copy());
 	}

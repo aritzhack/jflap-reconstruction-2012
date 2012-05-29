@@ -64,4 +64,9 @@ public class StateSet extends SetComponent<State> {
 		return s;
 	}
 	
+	@Override
+	public StateSet copy() {
+		return (StateSet) super.copy();
+	}
+	
 }
