@@ -20,10 +20,15 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.util.JFLAPConstants;
 import errors.BooleanWrapper;
 
 
-public abstract class FormalDefinition extends ChangingObject implements Describable, UsesSymbols, ChangeListener, ChangeTypes{
+public abstract class FormalDefinition extends ChangingObject implements Describable, 
+																			UsesSymbols, 
+																			ChangeListener, 
+																			ChangeTypes,
+																			JFLAPConstants{
 
 	private LinkedList<FormalDefinitionComponent> myComponents;
 
@@ -44,7 +49,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		for (FormalDefinitionComponent comp : this.getComponents()){
 			out += comp.getCharacterAbbr() + ", ";
 		}
-		
+
 		out = out.substring(0,out.length()-2)+")";
 
 		return out;
@@ -68,14 +73,14 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 		return null;
 	}
-	
+
 	public void trimAlphabets(){
 		Set<Symbol> used = this.getUniqueSymbolsUsed();
 		for (Alphabet a: this.getAlphabets()){
 			a.retainAll(used);
 		}
 	}
-	
+
 	@Override
 	public FormalDefinition clone() {
 		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
@@ -146,7 +151,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		TreeSet<Symbol> used = new TreeSet<Symbol>();
-		
+
 		for (FormalDefinitionComponent f: this.getComponents()){
 			if (f instanceof UsesSymbols)
 				used.addAll(((UsesSymbols) f).getUniqueSymbolsUsed());
@@ -180,17 +185,17 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	public void stateChanged(ChangeEvent event) {
 		this.componentChanged((ComponentChangeEvent) event);
 	}
-	
+
 	public void componentChanged(ComponentChangeEvent event){
 		for (Alphabet a: this.getAlphabets()){
 			if (event.comesFrom(a)){
 				switch (event.getType()){
 				case ITEM_REMOVED: 
 					this.purgeOfSymbol((Symbol) event.getArg(0));
-				
+
 				}
 			}
 		}
 	}
-	
+
 }
