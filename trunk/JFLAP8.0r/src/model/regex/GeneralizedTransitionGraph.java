@@ -1,0 +1,82 @@
+package model.regex;
+
+import model.automata.InputAlphabet;
+import model.automata.StartState;
+import model.automata.State;
+import model.automata.StateSet;
+import model.automata.TransitionSet;
+import model.automata.acceptors.FinalStateSet;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.acceptors.fsa.FSTransition;
+import model.formaldef.components.symbols.SymbolString;
+
+public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
+
+	private RegularExpression myRegEx;
+
+	public GeneralizedTransitionGraph(RegularExpression regex) {
+		myRegEx = regex;
+		this.getInputAlphabet().addAll(myRegEx.getInputAlphabet());
+		this.getInputAlphabet().addAll(myRegEx.getOperators());
+		this.getInputAlphabet().add(EMPTY_SET_SYMBOL);
+		State start = this.getStates().createAndAddState();
+		State end = this.getStates().createAndAddState();
+
+		this.setStartState(start);
+		this.getFinalStateSet().add(end);
+
+		FSTransition trans = new FSTransition(start, 
+				end, 
+				myRegEx.getExpression());
+		this.getTransitions().add(trans);
+	}
+
+	public GeneralizedTransitionGraph(FiniteStateAcceptor fa) {
+		super(fa.getStates().copy(),
+				fa.getInputAlphabet().copy(),
+				fa.getTransitions().copy(),
+				new StartState(),
+				fa.getFinalStateSet().copy());
+		this.setStartState(fa.getStartState().copy());
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "Generalized Transition Graph";
+	}
+
+	public FiniteStateAcceptor createNFAFromGTG(){
+		StateSet states = (StateSet) this.getStates().copy();
+		InputAlphabet inputAlph = (InputAlphabet) myRegEx.getInputAlphabet().copy();
+		TransitionSet<FSTransition> transitions = 
+				(TransitionSet<FSTransition>) this.getTransitions().copy();
+		
+		for (FSTransition t: transitions){
+			if (isLambaTransition(t)){
+				t.setInput(new SymbolString());
+			}
+		}
+		
+		StartState start = new StartState(stateHelper(states, 
+				this.getStartState().getID()));
+		FinalStateSet finalStates = new FinalStateSet();
+		for (State s: this.getFinalStateSet()){
+			finalStates.add(stateHelper(states, s.getID()));
+		}
+		FiniteStateAcceptor nfa = new FiniteStateAcceptor(states, 
+				inputAlph, 
+				transitions, 
+				start, 
+				finalStates);
+
+		return nfa;
+	}
+
+	private boolean isLambaTransition(FSTransition t) {
+		return t.getInput().contains(myRegEx.getOperators().getEmptySub());
+	}
+
+	public State stateHelper(StateSet states, int id) {
+		return states.getStateWithID(id);
+	}
+}
