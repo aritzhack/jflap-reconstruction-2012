@@ -3,16 +3,16 @@ package model.algorithms;
 import java.util.LinkedList;
 
 import model.formaldef.Describable;
+import model.util.JFLAPConstants;
 
-public abstract class SteppableAlgorithm implements Describable {
+public abstract class SteppableAlgorithm implements Describable, JFLAPConstants {
 
 	
 	private AlgorithmStep[] mySteps;
 
-
+	
 	public SteppableAlgorithm() {
 		mySteps = initializeAllSteps();
-		
 	}
 	
 	
