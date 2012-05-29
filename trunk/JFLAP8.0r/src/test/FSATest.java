@@ -12,9 +12,11 @@ import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
-import model.algorithms.conversion.fatoregex.FSAtoRegularExpressionConverter;
 import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
 import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
+import model.algorithms.fsa.AddTrapStateAlgorithm;
+import model.algorithms.fsa.FSAtoRegularExpressionConverter;
+import model.algorithms.fsa.NFAtoDFAConverter;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -54,10 +56,10 @@ public class FSATest extends TestHarness{
 			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
 		}
 		
-		State q0 = new State("start", 0);
-		State q1 = new State("mar", 1);
-		State q2 = new State("doo", 2);
-		State q3 = new State("end", 3);
+		State q0 = new State("q0", 0);
+		State q1 = new State("q1", 1);
+		State q2 = new State("q2", 2);
+		State q3 = new State("q3", 3);
 
 		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
 		fsa.setStartState(q0);
@@ -68,12 +70,15 @@ public class FSATest extends TestHarness{
 		
 		
 		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(A));
+		FSTransition t5 = new FSTransition(q1, q0, new SymbolString(B));
+		FSTransition t7 = new FSTransition(q0,q1, new SymbolString());
 		FSTransition t1 = new FSTransition(q1, q1, new SymbolString(A));
+		FSTransition t6 = new FSTransition(q1, q1, new SymbolString(B));
 		FSTransition t2 = new FSTransition(q1, q2, new SymbolString(B));
 		FSTransition t3 = new FSTransition(q2, q2, new SymbolString(B));
 		FSTransition t4 = new FSTransition(q2, q3, new SymbolString(A));
 		
-		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4})));
+		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4,t5, t6, t7})));
 
 		fsa.trimAlphabets();
 		
@@ -103,6 +108,20 @@ public class FSATest extends TestHarness{
 		converter.stepToCompletion();
 		RegularExpression regEx = ((FSAtoRegularExpressionConverter) converter).getResultingRegEx();
 		outPrintln(regEx.toString());
+		
+		//CONVERT NFA to DFA
+		converter = new NFAtoDFAConverter(fsa);
+		System.out.println("WTF?");
+		converter.stepToCompletion();
+		FiniteStateAcceptor dfa = ((NFAtoDFAConverter) converter).getDFA();
+		outPrintln("DFA from NFA: \n" + dfa.toString());
+		
+		//Add trap state
+		converter = new AddTrapStateAlgorithm(dfa);
+		converter.stepToCompletion();
+		dfa = ((AddTrapStateAlgorithm) converter).getDFAWithTrapState();
+		outPrintln("DFA with Trap State: \n" + dfa.toString());
+
 	}
 
 }
