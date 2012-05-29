@@ -121,8 +121,13 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	
 	private SymbolString star(SymbolString input) {
 		OperatorAlphabet alph = myRegEx.getOperators();
-		input.addFirst(alph.getOpenGroup());
-		input.addLast(alph.getCloseGroup());
+		Symbol open = alph.getOpenGroup();
+		Symbol close = alph.getCloseGroup();
+		if (input.size() > 1 && !(input.startsWith(open) && 
+				input.endsWith(close))){
+			input.addFirst(alph.getOpenGroup());
+			input.addLast(alph.getCloseGroup());
+		}
 		input.add(alph.getKleeneStar());
 		
 		return input;
@@ -356,7 +361,7 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 	private boolean collapseAllTransitions() {
 		if (myCollapseList.isEmpty()) return false;
-		for (FSTransition trans : myCollapseList ){
+		for (FSTransition trans : myCollapseList.toArray(new FSTransition[0]) ){
 			this.collapseTransitionsOn(trans);
 		}
 		return true;
@@ -390,6 +395,8 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		}
 
 		regexLabel = regexLabel.subList(1);
+		regexLabel.addFirst(myRegEx.getOperators().getOpenGroup());
+		regexLabel.add(myRegEx.getOperators().getCloseGroup());
 
 		FSTransition collapsed = new FSTransition(trans.getFromState(), 
 				trans.getToState(),
