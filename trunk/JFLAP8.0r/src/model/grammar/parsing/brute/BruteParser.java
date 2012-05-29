@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.formaldef.components.symbols.SymbolString;
@@ -94,7 +96,7 @@ public abstract class BruteParser extends BaseParser {
 			return false;
 		parseThread = new Thread() {
 			public void run() {
-				while (parseThread != null)
+				while (isActive())
 					parse();
 			}
 		};
@@ -289,6 +291,7 @@ public abstract class BruteParser extends BaseParser {
 		List<ParseNode> pos = getPossibilities(node.getDerivation());
 		beingConsideredNodes = 0;
 		Iterator<ParseNode> it = pos.iterator();
+
 		while (it.hasNext()) {
 			ParseNode pNode = (ParseNode) it.next();
 			if (!alreadyAdded.add(pNode.getDerivation()))

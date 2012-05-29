@@ -38,7 +38,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		myRHS = rhs;
 	}
 
-	public Production(Symbol lhs, Symbol rhs) {
+	public Production(Symbol lhs, Symbol ... rhs) {
 		this(new SymbolString(lhs), new SymbolString(rhs));
 	}
 
@@ -219,7 +219,6 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	}
 
 	public boolean purgeOfSymbol(Symbol s) {
-		System.out.println("Purging: " + s);
 		boolean lhs = this.getLHS().purgeOfSymbol(s); 
 		return this.getRHS().purgeOfSymbol(s) || lhs;
 	}
