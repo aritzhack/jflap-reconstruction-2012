@@ -71,4 +71,19 @@ public class TuringMachineTransition extends Transition {
 		return this.getRead() + ";" + this.getWrite() + "," + this.getMove();
 	}
 
+	public SymbolString getReadForTape(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getMoveForTape(int i) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public SymbolString getWriteForTape(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
