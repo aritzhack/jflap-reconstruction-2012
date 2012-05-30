@@ -55,5 +55,10 @@ public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 		return true;
 	}
 	
+	@Override
+	public FiniteStateAcceptor copy() {
+		return (FiniteStateAcceptor) super.copy();
+	}
+	
 
 }
