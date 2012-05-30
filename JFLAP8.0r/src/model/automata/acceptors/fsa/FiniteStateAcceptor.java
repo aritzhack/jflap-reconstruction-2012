@@ -57,7 +57,11 @@ public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 	
 	@Override
 	public FiniteStateAcceptor copy() {
-		return (FiniteStateAcceptor) super.copy();
+		return new FiniteStateAcceptor(this.getStates().copy(),
+				this.getInputAlphabet().copy(),
+				this.getTransitions().copy(),
+				new StartState(this.getStartState().copy()),
+				this.getFinalStateSet().copy());
 	}
 	
 

@@ -143,7 +143,6 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 				break;
 			}
 		}
-		JFLAPDebug.print(s);
 		return s;
 	}
 
@@ -183,7 +182,6 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 	private void createAndAddInitialState() {
 		State NFAstart = getNFA().getStartState();
 		TreeSet<State> closure = ClosureHelper.takeClosure(NFAstart, getNFA());
-		JFLAPDebug.print(closure);
 		State DFAstart = createAndAddDFAState(closure.toArray(new State[0]));
 		this.myDFA.setStartState(DFAstart);
 	}

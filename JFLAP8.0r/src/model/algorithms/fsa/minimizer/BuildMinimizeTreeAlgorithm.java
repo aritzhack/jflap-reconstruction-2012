@@ -41,7 +41,7 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.fsa.AddTrapStateAlgorithm;
-import model.algorithms.fsa.InacessableStateRemover;
+import model.algorithms.fsa.InacessibleStateRemover;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.StateSet;
@@ -66,7 +66,7 @@ public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<Finite
 	@Override
 	public BooleanWrapper[] checkOfProperForm(FiniteStateAcceptor dfa) {
 		List<BooleanWrapper> errors = new ArrayList<BooleanWrapper>();
-		if (InacessableStateRemover.hasUnreachableStates(dfa)){
+		if (InacessibleStateRemover.hasUnreachableStates(dfa)){
 			errors.add(new BooleanWrapper(false,
 					"The DFA must have all unreachable states removed before " +
 					"a minimization tree can be constructed."));
@@ -100,8 +100,7 @@ public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<Finite
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AlgorithmStep[]{new SplitArbitraryNodeStep()};
 	}
 
 	public FiniteStateAcceptor getDFA(){

@@ -2,6 +2,8 @@ package model.algorithms;
 
 import java.util.LinkedList;
 
+import debug.JFLAPDebug;
+
 import model.formaldef.Describable;
 import model.util.JFLAPConstants;
 
@@ -32,10 +34,10 @@ public abstract class SteppableAlgorithm implements Describable, JFLAPConstants 
 	 * @return
 	 */
 	public boolean step() throws AlgorithmException{
+
 		AlgorithmStep current = getCurrentStep();
 		
 		if (current == null) return false;
-		
 		return current.execute();
 	}
 

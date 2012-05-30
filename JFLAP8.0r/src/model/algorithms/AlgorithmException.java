@@ -1,8 +1,9 @@
 package model.algorithms;
 
 import errors.BooleanWrapper;
+import errors.JFLAPException;
 
-public class AlgorithmException extends RuntimeException {
+public class AlgorithmException extends JFLAPException {
 
 	public AlgorithmException() {
 		super();

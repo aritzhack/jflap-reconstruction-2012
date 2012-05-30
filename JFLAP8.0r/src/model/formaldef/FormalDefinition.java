@@ -63,7 +63,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		String out = this.toNtupleString() + "\n";
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
-			out += "\t" + comp.getDescriptionName() + ": " + comp.toString() + "\n";
+			out += "\t" + comp.toString() + "\n";
 		}
 
 		return out;
@@ -89,9 +89,9 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
 		for (FormalDefinitionComponent comp : this.getComponents())
 			cloned.add(comp.copy());
-
+		cloned.trimToSize();
 		try {
-			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray(new FormalDefinitionComponent[0]));
+			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} 

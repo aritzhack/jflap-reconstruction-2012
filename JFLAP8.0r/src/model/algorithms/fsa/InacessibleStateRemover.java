@@ -15,13 +15,13 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
 
-public class InacessableStateRemover extends FormalDefinitionAlgorithm<Automaton> {
+public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton> {
 
 	private Automaton myNewAutomaton;
 	private Set<State> myInaccessible;
 
-	public InacessableStateRemover(Automaton fd) {
-		super(fd);
+	public InacessibleStateRemover(Automaton m) {
+		super(m);
 	}
 
 	@Override
@@ -37,8 +37,7 @@ public class InacessableStateRemover extends FormalDefinitionAlgorithm<Automaton
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AlgorithmStep[]{new RemoveNextInaccesibleState()};
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class InacessableStateRemover extends FormalDefinitionAlgorithm<Automaton
 		return getOriginalDefinition();
 	}
 
-	public Automaton getNewAutomaton(){
+	public Automaton getAdjustedAutomaton(){
 		return myNewAutomaton;
 	}
 

@@ -60,7 +60,7 @@ public class StartState extends FormalDefinitionComponent {
 	
 	@Override
 	public String toString() {
-		return (this.isComplete().isTrue() ? myState.getName() : "");
+		return getDescriptionName() +": " + (this.isComplete().isTrue() ? myState.getName() : "");
 	}
 
 
