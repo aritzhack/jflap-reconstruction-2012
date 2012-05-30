@@ -44,7 +44,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	
 	@Override
 	public String toString() {
-		return mySymbol == null ? "" : mySymbol.toString();
+		return this.getDescriptionName() + ": " + (mySymbol == null ? "" : mySymbol.toString());
 	}
 
 	@Override

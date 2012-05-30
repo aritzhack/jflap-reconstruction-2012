@@ -128,7 +128,7 @@ public abstract class SetComponent<T extends Copyable> extends FormalDefinitionC
 
 	@Override
 	public String toString() {
-		return myComponents.toString();
+		return this.getDescriptionName() + ": " + myComponents.toString();
 	}
 
 	@Override

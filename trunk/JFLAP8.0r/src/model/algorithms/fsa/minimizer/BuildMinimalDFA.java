@@ -10,6 +10,7 @@ import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
+import model.algorithms.SteppableAlgorithm;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
@@ -17,7 +18,7 @@ import model.automata.acceptors.fsa.FSTransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
 
-public class BuildMinimalDFA extends FormalDefinitionAlgorithm<FiniteStateAcceptor> {
+public class BuildMinimalDFA extends SteppableAlgorithm {
 
 	private MinimizeTreeModel myTreeModel;
 	private FiniteStateAcceptor myMinimalDFA;
@@ -25,8 +26,8 @@ public class BuildMinimalDFA extends FormalDefinitionAlgorithm<FiniteStateAccept
 	private Set<FSTransition> myTransitionsNeeded;
 
 	public BuildMinimalDFA(MinimizeTreeModel model) {
-		super(model.getDFA());
 		myTreeModel = model;
+		reset();
 	}
 
 	@Override
@@ -38,11 +39,6 @@ public class BuildMinimalDFA extends FormalDefinitionAlgorithm<FiniteStateAccept
 	public String getDescription() {
 		return "Use a minimize tree and the equivalence groups " +
 				"it defines to construct a minmized DFA.";
-	}
-
-	@Override
-	public BooleanWrapper[] checkOfProperForm(FiniteStateAcceptor fd) {
-		return new BooleanWrapper[0];
 	}
 
 	@Override
@@ -78,7 +74,7 @@ public class BuildMinimalDFA extends FormalDefinitionAlgorithm<FiniteStateAccept
 	}
 
 	public FiniteStateAcceptor getOriginalDFA(){
-		return super.getOriginalDefinition();
+		return myTreeModel.getDFA();
 	}
 	
 	public boolean addTransitionToDFA(FSTransition trans){

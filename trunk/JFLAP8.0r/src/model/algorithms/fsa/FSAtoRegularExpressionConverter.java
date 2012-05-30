@@ -36,7 +36,6 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	private RegularExpression myRegEx;
 	private List<FSTransition> newLambdaTransitions;
 	private List<FSTransition> myCollapseList;
-	private List<FSTransition> myEmptyTransitionsNeeded;
 	public List<State> myStatesToCollapse;
 
 
@@ -70,7 +69,6 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		myGTG = new GeneralizedTransitionGraph(getFA());
 		newLambdaTransitions = new ArrayList<FSTransition>();
 		myCollapseList = getTransitionCollapseList();
-		myEmptyTransitionsNeeded = getEmptyTransitionsNeeded();
 		myStatesToCollapse = getStatesToCollapse();
 		return true;
 	}
@@ -113,8 +111,8 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		if (!isEmptySetTransition(t3)){
 			exp.addAll(star(t3.getInput()));
 		}
+
 		myRegEx.setTo(exp);
-		
 		return myRegEx;
 
 	}
@@ -146,7 +144,7 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		for(State s: finalStates){
 			newLambdaTransitions.add(new FSTransition(s, newFinal));
 		}
-
+		
 		return finalStates.add(newFinal);
 	}
 
@@ -189,18 +187,18 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	private boolean addAllEmptyTransitions(){
-		if (myEmptyTransitionsNeeded.isEmpty()) return false;
-		boolean added = getGTG().getTransitions().addAll(myEmptyTransitionsNeeded);
+		List<FSTransition> emptyTrans = getEmptyTransitionsNeeded();
+		if (emptyTrans.isEmpty()) return false;
+		boolean added = getGTG().getTransitions().addAll(emptyTrans);
 		if (added)
-			myEmptyTransitionsNeeded.clear();
+			emptyTrans.clear();
 		return added;	
 	}
 
 	public FSTransition addEmptyTransition(State from, State to){
-		for (FSTransition t: myEmptyTransitionsNeeded){
+		for (FSTransition t: getEmptyTransitionsNeeded()){
 			if (t.getToState().equals(to) && t.getFromState().equals(from)){
 				getGTG().getTransitions().add(t);
-				myEmptyTransitionsNeeded.remove(t);
 				return t;
 			}
 		}
@@ -224,9 +222,9 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	public boolean collapseState(State s) {
 		if (!myStatesToCollapse.contains(s))
 			return false;
-
 		myStatesToCollapse.remove(s);
 		Collection<FSTransition> toAdd = getTransitionsForCollapseState(s);
+
 		return getGTG().getStates().remove(s) && 
 				getGTG().getTransitions().addAll(toAdd);
 		
@@ -303,9 +301,10 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 
 		OperatorAlphabet ops = myRegEx.getOperators();
-
-		kk = star(kk);
-		pk.addAll(kk);
+		if (!isEmpty(kk)){
+			kk = star(kk);
+			pk.addAll(kk);
+		}
 		pk.addAll(kq);
 		if (!isEmpty(pq)){
 			pk.add(ops.getUnionOperator());
@@ -502,7 +501,7 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		@Override
 		public boolean isComplete() {
-			return myEmptyTransitionsNeeded.isEmpty();
+			return getEmptyTransitionsNeeded().isEmpty();
 		}
 
 	}

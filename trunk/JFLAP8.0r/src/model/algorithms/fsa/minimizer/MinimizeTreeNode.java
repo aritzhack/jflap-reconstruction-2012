@@ -22,7 +22,9 @@ package model.algorithms.fsa.minimizer;
 
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -47,7 +49,7 @@ import model.util.UtilFunctions;
  * @author Ryan Cavalcante
  */
 
-public class MinimizeTreeNode extends DefaultMutableTreeNode {
+public class MinimizeTreeNode extends DefaultMutableTreeNode implements Comparable<MinimizeTreeNode> {
 	
 	private Symbol mySplit;
 	
@@ -59,9 +61,16 @@ public class MinimizeTreeNode extends DefaultMutableTreeNode {
 	 *            the node's user object
 	 */
 	public MinimizeTreeNode(State ... group) {
-		super(group);
+		super(sortGroup(group));
 	}
 	
+
+
+	private static State[] sortGroup(State[] group) {
+		Arrays.sort(group);
+		return group;
+	}
+
 
 
 	@Override
@@ -106,7 +115,28 @@ public class MinimizeTreeNode extends DefaultMutableTreeNode {
 
 
 	public String createStateName() {
-		return UtilFunctions.createDelimitedString(getStateGroup(), ",");
+			ArrayList<String> names = new ArrayList<String>();
+			for (State s: getStateGroup()){
+				names.add(s.getName());
+			}
+		return UtilFunctions.createDelimitedString(names, "");
+	}
+
+
+
+	@Override
+	public int compareTo(MinimizeTreeNode o) {
+		State[] mine = this.getStateGroup();
+		State[] other = o.getStateGroup();
+		
+		int compare = new Integer(mine.length).compareTo(other.length);
+		int i =0;
+		while (compare == 0 && i < mine.length){
+			compare = mine[i].compareTo(other[i]);
+			i++;
+		}
+		
+		return compare;
 	}
 
 }

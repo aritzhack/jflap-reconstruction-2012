@@ -16,7 +16,9 @@ import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
 import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.algorithms.fsa.AddTrapStateAlgorithm;
 import model.algorithms.fsa.FSAtoRegularExpressionConverter;
+import model.algorithms.fsa.InacessibleStateRemover;
 import model.algorithms.fsa.NFAtoDFAConverter;
+import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -49,36 +51,41 @@ public class FSATest extends TestHarness{
 															transitions, 
 															start, 
 															finalStates);
-
-		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n"));
+		outPrintln("Testing error/definition completion printouts:");
+		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n") + "\n");
 		
-		for (char i = 'a'; i <= 'z'; i++){
+		for (char i = '0'; i <= '9'; i++){
 			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
 		}
 		
+		//figure 2.18 from the linz book with minor adjustments for non-determinism
 		State q0 = new State("q0", 0);
 		State q1 = new State("q1", 1);
 		State q2 = new State("q2", 2);
 		State q3 = new State("q3", 3);
+		State q4 = new State("q4", 4);
 
-		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
+
+		fsa.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3,q4}));
 		fsa.setStartState(q0);
-		fsa.getFinalStateSet().add(q3);
+		fsa.getFinalStateSet().addAll(Arrays.asList(new State[]{q2,q4}));
 		
-		Symbol A = 	new Symbol("a");
-		Symbol B = new Symbol("b");
+		Symbol ONE = new Symbol("1");
+		Symbol ZERO = new Symbol("0");
 		
+		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(ZERO));
+		FSTransition t1 = new FSTransition(q0, q3, new SymbolString(ONE));
+		FSTransition t2 = new FSTransition(q1, q2, new SymbolString(ZERO));
+		FSTransition t3 = new FSTransition(q1, q4, new SymbolString(ONE));
+		FSTransition t4 = new FSTransition(q2, q1, new SymbolString(ZERO));
+		FSTransition t5 = new FSTransition(q2, q4, new SymbolString(ONE));
+		FSTransition t6 = new FSTransition(q3,q2, new SymbolString(ZERO));
+		FSTransition t7 = new FSTransition(q3, q4, new SymbolString(ONE));
+		FSTransition t8 = new FSTransition(q4, q4, new SymbolString(ONE));
+		FSTransition t9 = new FSTransition(q4, q4, new SymbolString(ZERO));
+
 		
-		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(A));
-		FSTransition t5 = new FSTransition(q1, q0, new SymbolString(B));
-		FSTransition t7 = new FSTransition(q0,q1, new SymbolString());
-		FSTransition t1 = new FSTransition(q1, q1, new SymbolString(A));
-		FSTransition t6 = new FSTransition(q1, q1, new SymbolString(B));
-		FSTransition t2 = new FSTransition(q1, q2, new SymbolString(B));
-		FSTransition t3 = new FSTransition(q2, q2, new SymbolString(B));
-		FSTransition t4 = new FSTransition(q2, q3, new SymbolString(A));
-		
-		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4,t5, t6, t7})));
+		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4,t5,t6,t7,t8,t9})));
 
 		fsa.trimAlphabets();
 		
@@ -107,20 +114,41 @@ public class FSATest extends TestHarness{
 		converter = new FSAtoRegularExpressionConverter(fsa);
 		converter.stepToCompletion();
 		RegularExpression regEx = ((FSAtoRegularExpressionConverter) converter).getResultingRegEx();
-		outPrintln(regEx.toString());
+		outPrintln("Regex from FSA:\n" + regEx.toString());
 		
 		//CONVERT NFA to DFA
-		converter = new NFAtoDFAConverter(fsa);
-		System.out.println("WTF?");
+		FiniteStateAcceptor nfa = fsa.copy();
+		nfa.getTransitions().add(new FSTransition(q0, q4, new SymbolString(ONE)));
+		converter = new NFAtoDFAConverter(nfa);
 		converter.stepToCompletion();
 		FiniteStateAcceptor dfa = ((NFAtoDFAConverter) converter).getDFA();
 		outPrintln("DFA from NFA: \n" + dfa.toString());
+		
+		//minimize dfa Testing - test each step and then the whole alg.
+		// FIRST: add some inacessible states
+		dfa = fsa.copy();
+		State q5 = dfa.getStates().createAndAddState();
+		State q6 = dfa.getStates().createAndAddState();
+		dfa.getTransitions().add(new FSTransition(q5, q4, new SymbolString(ONE)));
+		dfa.getTransitions().add(new FSTransition(q4, q6, new SymbolString(ONE)));
+
+		outPrintln("Base FSA for minimization testing:\n" + dfa.toString());
+		
+		converter = new InacessibleStateRemover(dfa);
+		converter.stepToCompletion();
+		outPrintln("FSA with Inaccessible states removed: \n" + 
+		((InacessibleStateRemover) converter).getAdjustedAutomaton().toString());
 		
 		//Add trap state
 		converter = new AddTrapStateAlgorithm(dfa);
 		converter.stepToCompletion();
 		dfa = ((AddTrapStateAlgorithm) converter).getDFAWithTrapState();
 		outPrintln("DFA with Trap State: \n" + dfa.toString());
+		
+		converter = new MinimizeDFAAlgorithm(dfa);
+		converter.stepToCompletion();
+		dfa = ((MinimizeDFAAlgorithm) converter).getMinimizedDFA();
+		outPrintln("MinimizedDFA: \n" + dfa.toString());
 
 	}
 

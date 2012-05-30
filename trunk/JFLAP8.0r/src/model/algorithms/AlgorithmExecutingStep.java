@@ -1,13 +1,9 @@
 package model.algorithms;
 
-public class AlgorithmExecutingStep<T extends SteppableAlgorithm> implements AlgorithmStep {
+public abstract class AlgorithmExecutingStep<T extends SteppableAlgorithm> implements AlgorithmStep {
 
 	private T myAlg;
 
-	public AlgorithmExecutingStep(T alg) {
-		myAlg = alg;
-	}
-	
 	public T getAlgorithm(){
 		return myAlg;
 	}
@@ -24,12 +20,15 @@ public class AlgorithmExecutingStep<T extends SteppableAlgorithm> implements Alg
 
 	@Override
 	public boolean execute() throws AlgorithmException {
+		myAlg = initializeAlgorithm();
 		return myAlg.stepToCompletion();
 	}
 
+	public abstract T initializeAlgorithm();
+
 	@Override
 	public boolean isComplete() {
-		return !myAlg.isRunning();
+		return myAlg != null && !myAlg.isRunning();
 	}
 
 }
