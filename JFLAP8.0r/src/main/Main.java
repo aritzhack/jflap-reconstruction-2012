@@ -32,10 +32,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import universe.Universe;
+import universe.JFLAPUniverse;
+
 
 import errors.ThrowableCatcher;
 import file.Codec;
+import file.ParseException;
 
 /**
  * This is the class that starts JFLAP.
@@ -111,21 +113,21 @@ public class Main {
 		} catch (SecurityException e) {
 			// Well, not key.
 		}
-		Universe.showMainMenu();
+		JFLAPUniverse.showMainMenu();
 		if (args.length > 0) {
 			if(args[0].equals("text")){
 				
 			}
 			
 			for (int i = 0; i < args.length; i++) {
-				Codec[] codecs = (Codec[]) Universe.CODEC_REGISTRY
-				.getDecoders().toArray(new Codec[0]);
-				try {
-					OpenAction.openFile(new File(args[i]), codecs);
-				} catch (ParseException e) {
-					System.err.println("Could not open " + args[i] + ": "
-							+ e.getMessage());
-				}
+//				Codec[] codecs = (Codec[]) JFLAPUniverse.CODEC_REGISTRY
+//				.getDecoders().toArray(new Codec[0]);
+//				try {
+//					OpenAction.openFile(new File(args[i]), codecs);
+//				} catch (ParseException e) {
+//					System.err.println("Could not open " + args[i] + ": "
+//							+ e.getMessage());
+//				}
 			}
 		}		
 		loadPreferences();
