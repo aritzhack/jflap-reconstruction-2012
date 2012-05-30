@@ -3,6 +3,12 @@ package universe.preferences;
 import java.awt.event.InputEvent;
 import java.io.File;
 
+import model.formaldef.components.symbols.Symbol;
+import model.regex.EmptySub;
+import model.regex.operators.CloseGroup;
+import model.regex.operators.OpenGroup;
+import model.regex.operators.UnionOperator;
+
 /**
  * A class designed to hold all of the user preferences associated
  * with JFLAP. This class imports/exports from/to an xml file 
@@ -66,8 +72,28 @@ public class JFLAPPreferences {
 			MAIN_MENU_MASK = InputEvent.META_MASK;
 	}
 
-	public static String getTMBlankSymbol() {
-		return BLANK + "";
+	public static Symbol getTMBlankSymbol() {
+		return new Symbol(BLANK + "");
+	}
+
+	public static OpenGroup getCurrentRegExOpenGroup() {
+		return new OpenGroup("(");
+	}
+
+	public static CloseGroup getCurrentRegExCloseGroup() {
+		return new CloseGroup(")");
+	}
+
+	public static String getDefaultStateNameBase() {
+		return "q";
+	}
+
+	public static UnionOperator getUnionOperator() {
+		return new UnionOperator("+");
+	}
+
+	public static EmptySub getRegExSubForEmptyString() {
+		return new EmptySub("!");
 	}
 
 
