@@ -74,7 +74,7 @@ public class LRParseTable extends AbstractTableModel implements Serializable,
 		for (int i = 0; i < variables.length; i++)
 			symbolsToColumn.put(variables[i], new Integer(i + 1
 					+ terminals.length));
-		entries = new String[fsa.getStates().length][terminals.length
+		entries = new String[fsa.getStateGroup().length][terminals.length
 				+ variables.length + 1];
 		for (int i = 0; i < entries.length; i++)
 			for (int j = 0; j < entries[i].length; j++)
