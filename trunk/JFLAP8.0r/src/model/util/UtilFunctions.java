@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import model.automata.State;
 import model.formaldef.components.symbols.Symbol;
 
 public class UtilFunctions {
@@ -34,6 +35,12 @@ public class UtilFunctions {
 		  }
 		  return result;
 		}
+
+
+	public static String createDelimitedString(Object[] stateGroup,
+			String delimiter) {
+		return createDelimitedString(Arrays.asList(stateGroup), delimiter);
+	}
 	
 	
 }
