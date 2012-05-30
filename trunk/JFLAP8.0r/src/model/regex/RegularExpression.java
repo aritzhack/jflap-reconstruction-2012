@@ -130,17 +130,20 @@ public class RegularExpression extends FormalDefinition {
 			if (c.equals(union) && i == exp.size()-1){
 				return poorFormat;
 			}
-			else if((c.equals(star) || c.equals(empty)) &&
+			else if( c.equals(star) &&
 						(p.equals(open)|| p.equals(union))){
 				return poorFormat;
 			}
 			else if(c.equals(empty) ){
+				BooleanWrapper badLambda = new BooleanWrapper(false,
+						"Lambda character must not cat with anything else.");
+				if (!(p.equals(open) || p.equals(union)))
+					return badLambda;
 				if (i == exp.size() - 1)
 					continue;
 				p = exp.get(i+1);
 				if (!(p.equals(close) || p.equals(union) || p.equals(star)))
-					return new BooleanWrapper(false,
-							"Lambda character must not cat with anything else.");
+					return badLambda;
 			}
 			p=c;
 		}
