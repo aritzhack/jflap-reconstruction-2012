@@ -10,6 +10,7 @@ import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
+import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSTransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
@@ -99,6 +100,11 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	public FiniteStateAcceptor getDFAWithTrapState() {
 		return myNewDFA;
 	}
+	
+
+	public boolean trapStateNeeded() {
+		return !getAllTransitionsNeeded().isEmpty();
+	}
 
 	private boolean addTransition(FSTransition trans) {
 		if (!myNewDFA.getTransitions().add(trans))
@@ -150,6 +156,21 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	}
 
 	
+	public static boolean trapStateNeeded(FiniteStateAcceptor fsa) {
+		FSADeterminismChecker check = new FSADeterminismChecker();
+		if (!check.isDeterministic(fsa))
+			return false;
+		
+		int transNum = fsa.getInputAlphabet().size();
+		for (State s: fsa.getStates()){
+			Set<FSTransition> fromSet = fsa.getTransitions().getTransitionsFromState(s);
+			if (fromSet.size() != transNum)
+				return true;
+		}
+		return false;
+	}
+
+
 	private class AddStateStep implements AlgorithmStep{
 
 		@Override
@@ -198,4 +219,5 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		}
 		
 	}
+
 }
