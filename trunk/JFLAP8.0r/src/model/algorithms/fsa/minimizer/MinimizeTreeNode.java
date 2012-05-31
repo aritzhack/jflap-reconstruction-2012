@@ -115,11 +115,7 @@ public class MinimizeTreeNode extends DefaultMutableTreeNode implements Comparab
 
 
 	public String createStateName() {
-			ArrayList<String> names = new ArrayList<String>();
-			for (State s: getStateGroup()){
-				names.add(s.getName());
-			}
-		return UtilFunctions.createDelimitedString(names, "");
+		return UtilFunctions.createDelimitedString(getStateGroup(), "");
 	}
 
 
