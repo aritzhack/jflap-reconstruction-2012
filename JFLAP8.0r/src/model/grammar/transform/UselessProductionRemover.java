@@ -1,6 +1,6 @@
 package model.grammar.transform;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -8,15 +8,13 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
+import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
-import model.grammar.StartVariable;
-import model.grammar.VariableAlphabet;
 
 public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
@@ -24,15 +22,10 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	private ProductionSet myFullDerivesTerminals;
 	private ProductionSet myProcessedProductions;
 	private Set<Variable> myVarsDeriveTerms;
+	private ConstructDependencyGraphStep myConstructDependencyGraphStep;
 	
 	public UselessProductionRemover(Grammar g) {
 		super(g);
-		constructTerminalDerivationSet();
-		//check if is last start production and none derived 
-		if (noStartProductionsDeriveTerms())
-			throw new AlgorithmException("No start productions derive terminals." +
-												" Therefore this grammar cannot derive any strings " +
-												"and cannot be transformed further.");
 	}
 
 	@Override
@@ -42,7 +35,10 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		return new AlgorithmStep[]{new checkDerivesTerminals()};
+		myConstructDependencyGraphStep = new ConstructDependencyGraphStep();
+		return new AlgorithmStep[]{new checkDerivesTerminals(),
+				myConstructDependencyGraphStep,
+				};
 	}
 
 	@Override
@@ -53,10 +49,18 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	@Override
 	public boolean reset() throws AlgorithmException {
+		super.reset();
 		myDeriveTerms = new ProductionSet();
 		myProcessedProductions = new ProductionSet();
 		myVarsDeriveTerms = new TreeSet<Variable>();
-		super.reset();
+		myFullDerivesTerminals = new ProductionSet();
+		constructTerminalDerivationSet();
+		//check if is last start production and none derived 
+		if (noStartProductionsDeriveTerms())
+			throw new AlgorithmException("No start productions derive terminals." +
+												" Therefore this grammar cannot derive any strings " +
+												"and cannot be transformed further.");
+
 		this.getTransformedGrammar().setStartVariable(this.getOriginalGrammar().getStartVariable());
 		return true;
 	}
@@ -65,7 +69,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	////////Step 1: Get productions which derive terminals/////
 	
 	private void constructTerminalDerivationSet() {
-		myFullDerivesTerminals = new ProductionSet();
+
 		for (Production p : this.getOriginalGrammar().getProductionSet()){
 			if(this.checkDerivesTerminals(p)){
 				myFullDerivesTerminals.add(p);
@@ -175,6 +179,46 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	////////////// Algorithm Steps ///////////////
 	//////////////////////////////////////////////
 	
+	private void removeUnreachableProductions() {
+		for (Production p: this.getTransformedGrammar().getProductionSet()){
+			removeUnreachableProduction(p);
+		}
+	}
+
+	private BooleanWrapper removeUnreachableProduction(Production p) {
+		if (!isUnreachable(p))
+			return new BooleanWrapper(false, "The production " + p + " can be reached " +
+					"from the start variable. Therefore it is not unreachable.");
+		boolean removed = this.getTransformedGrammar().getProductionSet().remove(p);
+		return new BooleanWrapper(removed, "There was an error removing the production "+ p +
+				"from the grammar.");
+	}
+
+	public Production[] getRemainingUnreachableProductions(){
+		Set<Production> unreach = new TreeSet<Production>();
+		for (Production p: this.getTransformedGrammar().getProductionSet()){
+			if (isUnreachable(p))
+				unreach.add(p);
+		}
+		return unreach.toArray(new Production[0]);
+	}
+	
+	private boolean isUnreachable(Production p) {
+		DependencyGraph graph = myConstructDependencyGraphStep.getAlgorithm().getDependencyGraph();
+		Variable lhs = (Variable) p.getLHS().getFirst();
+		Variable start = this.getTransformedGrammar().getStartVariable();
+		Variable[] startDependencies = graph.getAllDependencies(start);
+		if (Arrays.asList(startDependencies).contains(lhs))
+			return false;
+		return true;
+	}
+
+	public int getNumberUnreachableProductionsLeft() {
+		return getRemainingUnreachableProductions().length;
+	}
+
+
+
 	private class checkDerivesTerminals implements AlgorithmStep {
 
 		@Override
@@ -201,4 +245,39 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		
 	}
 
+	private class ConstructDependencyGraphStep extends AlgorithmExecutingStep<ConstructDependencyGraph>{
+
+		@Override
+		public ConstructDependencyGraph initializeAlgorithm() {
+			return new ConstructDependencyGraph(getTransformedGrammar());
+		}
+		
+	}
+	
+	private class RemoveAllUnreachableProductions implements AlgorithmStep{
+
+		@Override
+		public String getDescriptionName() {
+			return "Remove Unreachable Productions";
+		}
+
+		@Override
+		public String getDescription() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean execute() throws AlgorithmException {
+			removeUnreachableProductions();
+			return true;
+		}
+
+		@Override
+		public boolean isComplete() {
+			return getNumberUnreachableProductionsLeft() == 0;
+		}
+		
+	}
+	
 }

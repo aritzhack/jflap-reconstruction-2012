@@ -6,13 +6,13 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
 import util.Copyable;
-import util.GraphHelper;
 
 
 
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.graph.GraphHelper;
 
 /**
  * A <CODE>Transition</CODE> object is a simple abstract class representing a
@@ -40,7 +40,6 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	 */
 	private SymbolString myInput;
 
-	private Point myControlPoint;
 
 	/**
 	 * Instantiates a new <CODE>Transition</CODE>.
@@ -55,7 +54,6 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 	public Transition(State from, State to, SymbolString input) {
 		this.myFrom = from;
 		this.myTo = to;
-		myControlPoint = GraphHelper.getCenterPoint(this);
 		setInput(input);
 	}
 
@@ -63,17 +61,6 @@ public abstract class Transition implements LanguageFunction, Comparable<Transit
 		return myInput;
 	}
 
-	public double getCtrlX(){
-		return myControlPoint.getX();
-	}
-
-	public double getCtrlY(){
-		return myControlPoint.getY();
-	}
-
-	public void translateCtrlPt(int dx, int dy){
-		myControlPoint.translate(dx, dy);
-	}
 
 	public void setInput(SymbolString input){
 		myInput = input;

@@ -36,6 +36,7 @@ import model.grammar.typetest.GrammarType;
 public class Grammar extends FormalDefinition{
 
 	private StartVariable myStartVariable;
+	private GroupingPair myGrouping;
 
 	/**
 	 * Creates a {@link Grammar}with all of the necessary components.
@@ -86,6 +87,30 @@ public class Grammar extends FormalDefinition{
 	public void setVariableGrouping(GroupingPair gp) {
 		clearGroupingPairRules();
 		addGroupingPairRules(gp);
+		myGrouping = gp;
+	}
+	
+	/**
+	 * Retrieves the open group of the grouping pair in use
+	 * or null if grouping is not in use.
+	 * 
+	 * @return
+	 */
+	public Character getOpenGroup(){
+		if (myGrouping != null)
+			return myGrouping.getOpenGroup();
+		return null;
+	}
+	
+	/**
+	 * Retrieves the close group of the grouping pair in use
+	 * or null if grouping is not in use.
+	 * @return
+	 */
+	public Character getCloseGroup(){
+		if (myGrouping != null)
+			return myGrouping.getCloseGroup();
+		return null;
 	}
 	
 	/**

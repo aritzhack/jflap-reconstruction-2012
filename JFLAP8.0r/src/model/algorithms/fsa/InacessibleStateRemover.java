@@ -11,11 +11,13 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.automata.Automaton;
-import model.automata.PathFinder;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
+import model.graph.GraphHelper;
+import model.graph.PathFinder;
+import model.graph.Vertex;
 
 public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton> {
 
@@ -82,11 +84,12 @@ public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton
 	}
 
 	public static State[] findAllInacessibleStates(Automaton m) {
-		State start = m.getStartState();
+		Vertex start = GraphHelper.convertToVertex(m.getStartState());
 		Set<State> inaccessible = new TreeSet<State>();
 		PathFinder finder = new PathFinder(m);
 		for (State target: m.getStates()){
-			if (finder.findPath(start, target) == null)
+			Vertex temp = GraphHelper.convertToVertex(target);
+			if (finder.findPath(start, temp) == null)
 				inaccessible.add(target);
 		}
 		return inaccessible.toArray(new State[0]);

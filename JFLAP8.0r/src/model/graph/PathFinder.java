@@ -17,16 +17,20 @@ import model.automata.Transition;
  */
 public class PathFinder {
 
-	private Automaton<? extends Transition> myAutomaton;
-	private Set<State> myVisited;
+	private Graph myGraph;
+	private Set<Vertex> myVisited;
 
-	public PathFinder(Automaton m) {
-		myAutomaton = m;
-		myVisited = new TreeSet<State>();
+	public PathFinder(Graph g) {
+		myGraph = g;
+		myVisited = new TreeSet<Vertex>();
 	}
 
-	public State[] findPath(State from, State to) {
-		State[] path = recurseForPath(from, to);
+	public PathFinder(Automaton m) {
+		this(GraphHelper.convertToGraph(m));
+	}
+
+	public Vertex[] findPath(Vertex from, Vertex to) {
+		Vertex[] path = recurseForPath(from, to);
 		clear();
 		return path;
 	}
@@ -35,19 +39,19 @@ public class PathFinder {
 		myVisited.clear();
 	}
 
-	private State[] recurseForPath(State from, State to) {
+	private Vertex[] recurseForPath(Vertex from, Vertex to) {
 		if (myVisited.contains(from))
 			return null;
 		
 		myVisited.add(from);
 		
 		if (from.equals(to))
-			return new State[]{to};
+			return new Vertex[]{to};
 		
 
-		for (Transition t: myAutomaton.getTransitions().getTransitionsFromState(from))
+		for (Edge t: myGraph.getEdgesFromVertex(from))
 		{
-			State[] path = recurseForPath(t.getToState(), to);
+			Vertex[] path = recurseForPath(t.getToVertex(), to);
 			if (path != null)
 				return path;
 		}
