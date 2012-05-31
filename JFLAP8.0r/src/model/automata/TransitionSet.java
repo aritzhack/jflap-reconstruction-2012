@@ -111,7 +111,7 @@ public class TransitionSet<T extends Transition> extends FunctionSet<T> {
 			transitionsToStateMap.remove(t.getToState());
 		}
 
-		if (transitionsToStateMap.get(t.getFromState()).isEmpty() &&
+		if (getTransitionsToState(t.getFromState()).isEmpty() &&
 				fromFromSet.isEmpty()){
 			transitionsFromStateMap.remove(t.getFromState());
 			transitionsToStateMap.remove(t.getFromState());

@@ -14,6 +14,7 @@ import util.Copyable;
 
 import model.algorithms.AlgorithmException;
 import model.automata.Automaton;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.Describable;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
@@ -33,6 +34,10 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		super(a);
 		myChains = new LinkedHashSet<ConfigurationChain>();
 		mySpecialCase = specialCase;
+	}
+
+	public SingleInputSimulator(Automaton a) {
+		this(a, DEFAULT);
 	}
 
 	public boolean canStep(){
