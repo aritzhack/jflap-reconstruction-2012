@@ -8,6 +8,7 @@ import debug.JFLAPDebug;
 
 import util.Copyable;
 
+import model.graph.Vertex;
 import model.util.JFLAPResources;
 
 
@@ -15,44 +16,18 @@ import model.util.JFLAPResources;
 
 public class State implements JFLAPResources, Comparable<State>, Copyable{
 
-	private String myName;
-
 	private String myLabel;
 
 	private int myID;
 
-	private Point myLocation;
+	private String myName;
 
 	public State(String name, int id){
-		this(name, id, new Point(0,0));
-	}
-
-	public State(String name, int id, Point point) {
 		setName(name);
 		setID(id);
-		setPoint(point);
 	}
 
-	/**
-	 * Returns the graphical location of this state
-	 * in the automaton transition graph.
-	 * 
-	 * @return
-	 */
-	public Point getPoint(){
-		return myLocation;
-	}
-	
-	/**
-	 * Sets the location of this state to the
-	 * passed in point. Only used in graphical
-	 * representation of the Automaton.
-	 * 
-	 * @param point
-	 */
-	public void setPoint(Point point) {
-		myLocation = point;
-	}
+
 
 	/**
 	 * Sets the name for this state. A parameter of <CODE>null</CODE> will
@@ -66,15 +41,11 @@ public class State implements JFLAPResources, Comparable<State>, Copyable{
 	}
 
 	/**
-	 * Returns the simple "name" for this state. By default this will simply be
-	 * "qd", where d is the ID number.
+	 * Returns the simple "name" for this state.
 	 * 
 	 * @return the name for this state
 	 */
 	public String getName() {
-		if (myName == null) {
-			myName = DEFAULT_STATE_NAME_PREFIX + Integer.toString(getID());
-		}
 		return myName;
 	}
 
@@ -100,6 +71,7 @@ public class State implements JFLAPResources, Comparable<State>, Copyable{
 
 		
 	}
+
 
 	public void setLabel(String label) {
 		myLabel = label;

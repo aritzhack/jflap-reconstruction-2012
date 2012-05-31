@@ -1,6 +1,10 @@
 package model.grammar;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import model.formaldef.components.functionset.FunctionSet;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class ProductionSet extends FunctionSet<Production> {
@@ -35,6 +39,26 @@ public class ProductionSet extends FunctionSet<Production> {
 				prods.add(p);
 		}
 		return prods.toArray(new Production[0]);
+	}
+
+	public Set<Production> getProductionsWithSymbolOnLHS(Symbol s) {
+		Set<Production> prods = new TreeSet<Production>();
+		for (Production p: this){
+			if (p.getLHS().contains(s))
+				prods.add(p);
+		}
+		
+		return prods;
+	}
+	
+	public Set<Production> getProductionsWithSymbolOnRHS(Symbol s) {
+		Set<Production> prods = new TreeSet<Production>();
+		for (Production p: this){
+			if (p.getRHS().contains(s))
+				prods.add(p);
+		}
+		
+		return prods;
 	}
 
 }

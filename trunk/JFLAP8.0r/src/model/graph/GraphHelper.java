@@ -1,10 +1,12 @@
-package util;
+package model.graph;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
 import java.awt.geom.QuadCurve2D.Double;
 
+import model.automata.Automaton;
+import model.automata.State;
 import model.automata.Transition;
 
 
@@ -12,9 +14,9 @@ import model.automata.Transition;
 
 public class GraphHelper {
 
-	public static double calculateAngle(Transition t) {
-		return calculateAngle(t.getFromState().getPoint(), t.getToState().getPoint());
-	}
+//	public static double calculateAngle(Transition t) {
+//		return calculateAngle(t.getFromState().getLocation(), t.getToState().getLocation());
+//	}
 
 //	public static double calculateAngle(CurvedArrow arrow) {
 //		return calculateAngle(arrow.getP1(), arrow.getP2());
@@ -44,9 +46,9 @@ public class GraphHelper {
 //		return getCenterPoint(arrow.getP1(), arrow.getP2());
 //	}
 
-	public static Point getCenterPoint(Transition t) {
-		return getCenterPoint(t.getFromState().getPoint(), t.getToState().getPoint());
-	}
+//	public static Point getCenterPoint(Transition t) {
+//		return getCenterPoint(t.getFromState().getLocation(), t.getToState().getLocation());
+//	}
 
 	public static Point getCenterPoint(Point2D p1, Point2D p2) {
 		return cloneAndTranslatePoint(p1, getXDisplacement(p1, p2)/2, getYDisplacement(p1, p2)/2);
@@ -57,11 +59,11 @@ public class GraphHelper {
 		return newPoint;
 	}
 
-	public static Point2D getCurveCenter(Transition t, Point ctrl) {
-		return getCurveCenter(t.getFromState().getPoint(), 
-				ctrl, 
-				t.getToState().getPoint());
-	}
+//	public static Point2D getCurveCenter(Transition t, Point ctrl) {
+//		return getCurveCenter(t.getFromState().getLocation(), 
+//				ctrl, 
+//				t.getToState().getLocation());
+//	}
 
 	public static Point2D getCurveCenter(QuadCurve2D curve) {
 		return getCurveCenter(curve.getP1(), curve.getCtrlPt(), curve.getP2());
@@ -73,8 +75,31 @@ public class GraphHelper {
 		return center;
 	}
 
-	public static double calculatePerpendicularAngle(Transition t) {
-		return calculateAngle(t) + Math.PI/2;
+//	public static double calculatePerpendicularAngle(Transition t) {
+//		return calculateAngle(t) + Math.PI/2;
+//	}
+
+	public static Graph convertToGraph(Automaton<? extends Transition> m) {
+		Graph g = new Graph();
+		for (Transition t: m.getTransitions()){
+			g.addEdge(convertToEdge(t));
+		}
+		
+		for (State s: m.getStates()){
+			g.addVertex(convertToVertex(s));
+		}
+		return g;
+	}
+
+	public static Vertex convertToVertex(State s) {
+		Vertex v = new Vertex(s.getName(), new Point(0,0));
+		return v;
+	}
+
+	public static Edge convertToEdge(Transition t) {
+		Vertex from = convertToVertex(t.getFromState());
+		Vertex to = convertToVertex(t.getToState());
+		return new Edge(from, to, t.getLabelText());
 	}
 
 }
