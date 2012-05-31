@@ -67,7 +67,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	public boolean reset() throws AlgorithmException {
 		myNewDFA = (FiniteStateAcceptor) this.getDFA().copy();
 		myTrapState = null;
-		myTransitionsNeeded = null;
+		myTransitionsNeeded = new TreeSet<FSTransition>();
 		return true;
 	}
 
@@ -81,13 +81,20 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		return true;
 	}
 
-	public boolean addStateForTrapState(State s) {
+	public boolean addStateAsTrapState(State s) {
 		if (!myNewDFA.getStates().add(s))
 			return false;
 		setupState(s);
 		return true;
 	}
 	
+	private void setupState(State s) {
+		s.setLabel(TRAP);
+		s.setName("TRAPPPPPPP");
+		myTrapState = s;
+		myTransitionsNeeded = getAllTransitionsNeeded();
+	}
+
 	public boolean addTransition(State from, Symbol s){
 		for (FSTransition trans: myTransitionsNeeded.toArray(new FSTransition[0])){
 			if (trans.getFromState().equals(from) &&
@@ -112,13 +119,6 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		if (!myNewDFA.getTransitions().add(trans))
 			return false;
 		return myTransitionsNeeded.remove(trans);
-	}
-
-	private void setupState(State s) {
-		s.setLabel(TRAP);
-		s.setName("TRAPPPPPPP");
-		myTrapState = s;
-		myTransitionsNeeded = getAllTransitionsNeeded();
 	}
 
 	private Set<FSTransition> getAllTransitionsNeeded() {
@@ -192,7 +192,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 
 		@Override
 		public boolean isComplete() {
-			return myTrapState != null;
+			return !trapStateNeeded(myNewDFA) || myTrapState != null;
 		}
 		
 	}

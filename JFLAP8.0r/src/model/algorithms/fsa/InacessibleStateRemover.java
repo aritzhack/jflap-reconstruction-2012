@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
@@ -52,7 +54,7 @@ public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton
 		return new BooleanWrapper[0];
 	}
 	
-	public Automaton getBaseAutomaton(){
+	private Automaton getBaseAutomaton(){
 		return getOriginalDefinition();
 	}
 
