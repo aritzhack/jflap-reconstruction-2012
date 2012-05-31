@@ -43,7 +43,6 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 
 	@Override
 	public BooleanWrapper[] checkOfProperForm(FiniteStateAcceptor fsa) {
-		JFLAPDebug.print();
 		List<BooleanWrapper> errors = new ArrayList<BooleanWrapper>();
 		FSADeterminismChecker check = new FSADeterminismChecker();
 		if (!check.isDeterministic(fsa))
@@ -90,7 +89,7 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 				MinimizeTreeModel finalTree = myMinimizeTreeStep.getAlgorithm().getMinimizeTree();
 				return new BuildMinimalDFA(finalTree);
 			}
-			
+
 		};
 	}
 
@@ -115,7 +114,13 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 
 		@Override
 		public InacessibleStateRemover initializeAlgorithm() {
+			JFLAPDebug.print("Call1:\n" + myTemporaryDFA.toString());
 			return new InacessibleStateRemover(myTemporaryDFA);
+		}
+
+		@Override
+		public void updateDataInMetaAlgorithm() {
+			myTemporaryDFA = (FiniteStateAcceptor) this.getAlgorithm().getAdjustedAutomaton();
 		}
 		
 	}
@@ -124,7 +129,13 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 
 		@Override
 		public AddTrapStateAlgorithm initializeAlgorithm() {
+			JFLAPDebug.print("Call2:\n" + myTemporaryDFA.toString());
 			return new AddTrapStateAlgorithm(myTemporaryDFA);
+		}
+
+		@Override
+		public void updateDataInMetaAlgorithm() {
+			myTemporaryDFA = (FiniteStateAcceptor) this.getAlgorithm().getDFAWithTrapState();
 		}
 		
 	}
@@ -133,7 +144,9 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 		
 		@Override
 		public BuildMinimizeTreeAlgorithm initializeAlgorithm() {
+			JFLAPDebug.print("Call3:\n" + myTemporaryDFA.toString());
 			return new BuildMinimizeTreeAlgorithm(myTemporaryDFA);
 		}
+
 	}
 }

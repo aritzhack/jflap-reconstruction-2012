@@ -35,6 +35,8 @@ import java.util.TreeSet;
 
 import javax.swing.tree.DefaultTreeModel;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
@@ -68,7 +70,7 @@ public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<Finite
 		List<BooleanWrapper> errors = new ArrayList<BooleanWrapper>();
 		if (InacessibleStateRemover.hasUnreachableStates(dfa)){
 			errors.add(new BooleanWrapper(false,
-					"The DFA must have all unreachable states removed before " +
+					"The DFA must have all accessible states removed before " +
 					"a minimization tree can be constructed."));
 		}
 		if(AddTrapStateAlgorithm.trapStateNeeded(dfa)){
