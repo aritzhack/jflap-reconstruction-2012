@@ -10,6 +10,7 @@ import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
+import model.regex.RegularExpression;
 
 public abstract class FourStateDeX extends DeExpressionifier {
 
@@ -22,7 +23,7 @@ public abstract class FourStateDeX extends DeExpressionifier {
 			FSTransition trans, GeneralizedTransitionGraph gtg) {
 		
 		SymbolString input = trans.getInput();
-		SymbolString before = super.getFirstOperand(input);
+		SymbolString before = RegularExpression.getFirstOperand(input, getOperatorAlphabet());
 		SymbolString after = input.subList(before.size()+getShiftFromFirstOp());
 
 		TransitionSet<FSTransition> transSet = gtg.getTransitions();
