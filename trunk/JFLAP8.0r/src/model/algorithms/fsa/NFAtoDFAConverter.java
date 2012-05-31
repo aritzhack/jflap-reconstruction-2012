@@ -150,18 +150,19 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		State[] linkedStates = getLinkedStates(s);
 		Set<State> toStates = new TreeSet<State>();
 		for (State state: linkedStates){
-			for (FSTransition tran: findTransitionsFromStateOnSym(this.getNFA(), state, sym)){
-				toStates.add(tran.getToState());
+			for (FSTransition tran: findTransitionsFromStateOnSym(state, sym)){
+				State to = tran.getToState();
+				Set<State> closure = ClosureHelper.takeClosure(to, getNFA());
+				toStates.addAll(closure);
 			}
 		}
 		return toStates;
 	}
 
-	private List<FSTransition> findTransitionsFromStateOnSym(FiniteStateAcceptor fsa,
-			State state, Symbol sym) {
+	private List<FSTransition> findTransitionsFromStateOnSym(State state, Symbol sym) {
 		List<FSTransition> list = new ArrayList<FSTransition>();
-		for (State s: ClosureHelper.takeClosure(state, fsa)){
-			for (FSTransition trans : fsa.getTransitions().getTransitionsFromState(s)){
+		for (State s: ClosureHelper.takeClosure(state, getNFA())){
+			for (FSTransition trans : getNFA().getTransitions().getTransitionsFromState(s)){
 				if (trans.getInput().startsWith(sym)){
 					list.add(trans);
 				}
@@ -194,11 +195,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 
 
 	private String createName(State...states) {
-		ArrayList<String> names = new ArrayList<String>();
-		for (State s: states){
-			names.add(s.getName());
-		}
-		String name = UtilFunctions.createDelimitedString(names, ",");
+		String name = UtilFunctions.createDelimitedString(states, ",");
 		name =  "{" + name + "}";
 		return name;
 	}
