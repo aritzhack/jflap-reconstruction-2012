@@ -9,6 +9,7 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
+import model.regex.RegularExpression;
 
 /**
  * An interface designed to provide some syntactic sugar for the 
@@ -37,7 +38,7 @@ public abstract class DeExpressionifier {
 	 */
 	public boolean isApplicable(FSTransition trans){
 		SymbolString input = trans.getInput();
-		SymbolString first = this.getFirstOperand(input);
+		SymbolString first = RegularExpression.getFirstOperand(input, myOpAlph);
 		return isApplicable(first, input.subList(first.size()));
 	}
 	
@@ -66,30 +67,8 @@ public abstract class DeExpressionifier {
 											GeneralizedTransitionGraph gtg);
 	
 	
-	/**
-	 * Retrieves the first operand from the input SymbolString.
-	 * 
-	 * @param input
-	 * @return
-	 */
-	protected SymbolString getFirstOperand(SymbolString input) {
-		int n = 0;
-		int i = 0;
-		for (; i < input.size(); i++){
-			Symbol s = input.get(i);
-			if (myOpAlph.getOpenGroup().equals(s))
-				n++;
-			else if(myOpAlph.getCloseGroup().equals(s)) 
-				n--;
-			
-			if (n == 0)
-				break;
-		}
-		
-		if (i < input.size()-1 && 
-				input.get(i+1).equals(myOpAlph.getKleeneStar())){
-			i++;
-		}
-		return input.subList(0,i+1);
+
+	protected OperatorAlphabet getOperatorAlphabet() {
+		return myOpAlph;
 	}
 }
