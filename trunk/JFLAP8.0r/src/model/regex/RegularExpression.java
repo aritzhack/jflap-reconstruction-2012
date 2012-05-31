@@ -267,4 +267,34 @@ public class RegularExpression extends FormalDefinition {
 		exp.removeAll(getOperators());
 		return !exp.isEmpty();
 	}
+
+	/**
+	 * Retrieves the first operand from the input SymbolString.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static SymbolString getFirstOperand(SymbolString input,
+			OperatorAlphabet ops) {
+		if (input.isEmpty())
+			return input;
+		int n = 0;
+		int i = 0;
+		for (; i < input.size(); i++){
+			Symbol s = input.get(i);
+			if (ops.getOpenGroup().equals(s))
+				n++;
+			else if(ops.getCloseGroup().equals(s)) 
+				n--;
+			
+			if (n == 0)
+				break;
+		}
+		
+		if (i < input.size()-1 && 
+				input.get(i+1).equals(ops.getKleeneStar())){
+			i++;
+		}
+		return input.subList(0,i+1);
+	}
 }

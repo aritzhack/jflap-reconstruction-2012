@@ -6,6 +6,7 @@ import model.automata.State;
 import model.automata.Transition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.EmptySub;
 
 public class FSTransition extends Transition {
 
@@ -16,6 +17,10 @@ public class FSTransition extends Transition {
 
 	public FSTransition(State from, State to) {
 		this(from, to, new SymbolString());
+	}
+
+	public FSTransition(State from, State to, Symbol s) {
+		this(from, to, new SymbolString(s));
 	}
 
 	@Override

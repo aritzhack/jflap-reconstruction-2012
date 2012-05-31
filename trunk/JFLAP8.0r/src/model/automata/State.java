@@ -117,6 +117,10 @@ public class State implements JFLAPResources, Comparable<State>, Copyable{
 
 	@Override
 	public String toString() {
+		return this.getName();
+	}
+	
+	public String toDetailedString() {
 		return this.getName() + "|id:" + this.getID();
 	}
 

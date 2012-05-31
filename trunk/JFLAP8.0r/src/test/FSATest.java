@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;
@@ -15,7 +17,7 @@ import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
 import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
 import model.algorithms.fsa.AddTrapStateAlgorithm;
-import model.algorithms.fsa.FSAtoRegularExpressionConverter;
+import model.algorithms.fsa.DFAtoRegularExpressionConverter;
 import model.algorithms.fsa.InacessibleStateRemover;
 import model.algorithms.fsa.NFAtoDFAConverter;
 import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
@@ -111,9 +113,9 @@ public class FSATest extends TestHarness{
 		outPrintln(converted.toString());
 		
 		//CONVERT FSA to RE
-		converter = new FSAtoRegularExpressionConverter(fsa);
+		converter = new DFAtoRegularExpressionConverter(fsa);
 		converter.stepToCompletion();
-		RegularExpression regEx = ((FSAtoRegularExpressionConverter) converter).getResultingRegEx();
+		RegularExpression regEx = ((DFAtoRegularExpressionConverter) converter).getResultingRegEx();
 		outPrintln("Regex from FSA:\n" + regEx.toString());
 		
 		//CONVERT NFA to DFA
@@ -130,7 +132,6 @@ public class FSATest extends TestHarness{
 		State q5 = dfa.getStates().createAndAddState();
 		State q6 = dfa.getStates().createAndAddState();
 		dfa.getTransitions().add(new FSTransition(q5, q4, new SymbolString(ONE)));
-		dfa.getTransitions().add(new FSTransition(q4, q6, new SymbolString(ONE)));
 
 		outPrintln("Base FSA for minimization testing:\n" + dfa.toString());
 		
@@ -142,8 +143,8 @@ public class FSATest extends TestHarness{
 		//Add trap state
 		converter = new AddTrapStateAlgorithm(dfa);
 		converter.stepToCompletion();
-		dfa = ((AddTrapStateAlgorithm) converter).getDFAWithTrapState();
-		outPrintln("DFA with Trap State: \n" + dfa.toString());
+		outPrintln("DFA with Trap State: \n" + 
+		((AddTrapStateAlgorithm) converter).getDFAWithTrapState().toString());
 		
 		converter = new MinimizeDFAAlgorithm(dfa);
 		converter.stepToCompletion();

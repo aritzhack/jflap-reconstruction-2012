@@ -22,7 +22,6 @@ public class RunTests {
 	}
 
 	private static void showMessage(JFLAPException e) {
-		JFLAPDebug.print("Huh?");
 		JFLAPError.show(e.getMessage(), "UHOH!");
 	}
 }
