@@ -49,7 +49,7 @@ public class CYKTester {
 		g.setStartVariable("S");
 		String target="abbbb";
 		System.out.println("aa");
-		CYKParser parser=new CYKParser(g);
+		CYKParserOld parser=new CYKParserOld(g);
 		System.out.println(parser.solve(target));
 		System.out.println("Trace = "+parser.getTrace());
 	}
