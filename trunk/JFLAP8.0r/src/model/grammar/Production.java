@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 
 import errors.BooleanWrapper;
+import errors.JFLAPException;
 
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
@@ -34,8 +35,8 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 *            the right hand side of the production rule.
 	 */
 	public Production(SymbolString lhs, SymbolString rhs) {
-		myLHS = lhs;
-		myRHS = rhs;
+		setLHS(lhs);
+		setRHS(rhs);
 	}
 
 	public Production(Symbol lhs, Symbol ... rhs) {
@@ -54,6 +55,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 *            the right hand side
 	 */
 	public void setRHS(SymbolString rhs) {
+		checkBadSymbols(rhs);
 		myRHS = rhs;
 	}
 
@@ -64,7 +66,24 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 *            the left hand side
 	 */
 	public void setLHS(SymbolString lhs) {
+		checkBadSymbols(lhs);
 		myLHS = lhs;
+	}
+
+	private void checkBadSymbols(SymbolString lhs) {
+		if (containsBadSymbol(lhs))
+			throw new ProductionException("The SymbolString set as the LHS or RHS " +
+					"in a production cannot contain non-terminal/non-variable " +
+					"symbols.");
+	}
+
+	private boolean containsBadSymbol(SymbolString side) {
+		for (Symbol s: side){
+			if (!(Grammar.isTerminal(s) ||
+					Grammar.isVariable(s)))
+				return true;
+		}
+		return false;
 	}
 
 	/**
