@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import errors.BooleanWrapper;
+import file.FileException;
 
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -64,13 +65,13 @@ public abstract class BaseParser extends Parser {
 	public boolean parse(SymbolString target) {
 		for (Symbol s: target)
 			if (!(s instanceof Terminal))
-				return new BooleanWrapper(false, 
+				throw new FileException(
 						"String to parse has nonterminal " + s + ".");
 
 		Grammar grammar = getGrammar();
 
 		if (grammar == null)
-			return new BooleanWrapper(false, "This grammar accepts no language.");
+			return false;
 
 		myQueue.clear();
 
