@@ -88,7 +88,7 @@ public class RegularExpression extends FormalDefinition {
 //		parser.init(s);
 //		parser.start();
 		BooleanWrapper format = correctFormat(s);
-		if (format.isFalse()){
+		if (format.isError()){
 			throw new RegularExpressionException(format.getMessage());
 		}
 	
@@ -253,7 +253,7 @@ public class RegularExpression extends FormalDefinition {
 		if (comp.length == 0){
 			BooleanWrapper bw = new BooleanWrapper(derivesSomething(), 
 					"This regular Expression does not derive any strings.");
-			if (bw.isFalse())
+			if (bw.isError())
 				comp = new BooleanWrapper[]{bw};
 		}
 

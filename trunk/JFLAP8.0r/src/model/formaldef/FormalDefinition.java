@@ -101,7 +101,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		ArrayList<BooleanWrapper> incomplete = new ArrayList<BooleanWrapper>();
 		for (FormalDefinitionComponent comp: this.getComponents()){
 			BooleanWrapper amComplete = comp.isComplete();
-			if (amComplete.isFalse())
+			if (amComplete.isError())
 				incomplete.add(amComplete);
 		}
 		return incomplete.toArray(new BooleanWrapper[0]);

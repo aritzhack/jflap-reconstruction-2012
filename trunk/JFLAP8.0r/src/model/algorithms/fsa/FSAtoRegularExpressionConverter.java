@@ -80,7 +80,7 @@ public class FSAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		boolean startIsFinal = fd.getFinalStateSet().contains(s);
 		BooleanWrapper bw = new BooleanWrapper(!startIsFinal, "The start state of the FA must not " +
 				"also be a final state when converting to a regular expression.");
-		if (bw.isFalse())
+		if (bw.isError())
 			return new BooleanWrapper[]{bw};
 		return new BooleanWrapper[0];
 	}

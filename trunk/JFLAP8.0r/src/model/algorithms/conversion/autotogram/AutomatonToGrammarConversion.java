@@ -95,7 +95,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		for (S mapping: this.getUnmappedMappings()){
 			Variable auto = new Variable(mapping.toString());
 			BooleanWrapper bw = this.addMapping(mapping, auto);
-			if (bw.isFalse())
+			if (bw.isError())
 				throw new AlgorithmException(bw.getMessage());
 		}
 		return true;

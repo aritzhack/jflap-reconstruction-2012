@@ -42,6 +42,11 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		this(new SymbolString(lhs), new SymbolString(rhs));
 	}
 
+	public Production(Symbol lhs, SymbolString rhs) {
+		this(new SymbolString(lhs), rhs);
+
+	}
+
 	/**
 	 * Sets the right hand side of production to <CODE>rhs</CODE>.
 	 * 

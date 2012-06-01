@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import errors.BooleanWrapper;
+
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
@@ -18,7 +20,7 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.typetest.matchers.ContextFreeChecker;
 
-public class UnitProductionRemover extends ProductionRemovalAlgorithm {
+public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 
 	private ProductionSet myNonUnitProductions;
 	private ConstructDependencyGraphStep myDependencyGraphStep;
@@ -33,11 +35,6 @@ public class UnitProductionRemover extends ProductionRemovalAlgorithm {
 		return null;
 	}
 
-	@Override
-	public String getTargetProductionType() {
-		return "Unit";
-	}
-	
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
 		AlgorithmStep[] steps = super.initializeAllSteps();
@@ -66,8 +63,7 @@ public class UnitProductionRemover extends ProductionRemovalAlgorithm {
 
 	@Override
 	public boolean isOfTargetForm(Production p) {
-		SymbolString rhs = p.getRHS();
-		return rhs.size() == 1 && Grammar.isVariable(rhs.get(0));
+		return isUnitProduction(p);
 	}
 
 	@Override
@@ -84,10 +80,27 @@ public class UnitProductionRemover extends ProductionRemovalAlgorithm {
 		Variable[] dep = graph.getAllDependencies(lhsVar);
 		
 		for(Variable v: dep){
-			toAdd.addAll(myNonUnitProductions.getProductionsWithSymbolOnLHS(v));
+			for (Production prod: myNonUnitProductions.getProductionsWithSymbolOnLHS(v)){
+				toAdd.add(new Production(lhsVar, prod.getRHS()));
+			}
 		}
 		
 		return toAdd;
+	}
+	
+	@Override
+	public BooleanWrapper performRemove(Production p) {
+		BooleanWrapper bw = super.performRemove(p);
+		if (!bw.isError())
+			myNonUnitProductions.addAll(getAddsRemaining());
+		return bw;
+	}
+	
+	
+	
+	private boolean isUnitProduction(Production p) {
+		SymbolString rhs = p.getRHS();
+		return rhs.size() == 1 && Grammar.isVariable(rhs.getFirst());
 	}
 	
 	private class ConstructDependencyGraphStep extends AlgorithmExecutingStep<ConstructDependencyGraph>{
@@ -101,15 +114,23 @@ public class UnitProductionRemover extends ProductionRemovalAlgorithm {
 					ContextFreeChecker checker = new ContextFreeChecker();
 					//if the production is context free, and has only a variable
 					//on the rhs then it is ok!
-					if (checker.matchesProduction(p) && 
-							p.getRHS().size() == 1 &&
-							Grammar.isVariable(p.getRHS().getFirst()))
+					if (isUnitProduction(p))
 						return super.getDependenciesFromProd(p);
 					return new TreeMap<Variable, Set<Variable>>();
 				}
 			};
 		}
-		
+
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "Unit Production Remover";
+	}
+
+	@Override
+	public String getIdentifyStepName() {
+		return "Identify all unit production";
 	}
 
 }
