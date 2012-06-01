@@ -2,17 +2,22 @@ package model.grammar.transform;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 
 public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
+
+	private Set<Production> myMemory;
 
 	public LambdaProductionRemover(Grammar g) {
 		super(g);
@@ -28,7 +33,13 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	 @Override
+	public boolean reset() throws AlgorithmException {
+		 myMemory = new TreeSet<Production>();
+		return super.reset();
+	}
+	 
 	@Override
 	public String getTargetProductionType() {
 		return "Lambda";
@@ -36,7 +47,47 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 
 	@Override
 	public boolean isOfTargetForm(Production p) {
+		return recursiveDerivesLambda(p, new TreeSet<Production>());
+	}
+
+	public boolean isLambdaProduction(Production p) {
 		return p.getRHS().isEmpty();
+	}
+
+	private boolean recursiveDerivesLambda(Variable v, Set<Production> history) {
+		ProductionSet prodSet = this.getOriginalGrammar().getProductionSet();
+		//if one prod with v on lhs derives lambda then v derives lambda
+		for (Production p: prodSet.getProductionsWithSymbolOnLHS(v)){
+			if (recursiveDerivesLambda(p, history)){
+				myMemory.add(p); //memoize
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean recursiveDerivesLambda(Production p, Set<Production> history) {
+		//check memory
+		if (myMemory.contains(p))
+			return true;
+		//check if it is a lambda prod
+		if (isLambdaProduction(p))
+			return true;
+		//check if we have already looked at this prod
+		if (history.contains(p))
+			return false;
+		//check if it has any terminals on RHS
+		if (!p.getTerminalsOnRHS().isEmpty())
+			return false;
+		
+		history = new TreeSet<Production>(history);
+		history.add(p);
+		//check if each variable on rhs derives lambda
+		for (Variable v: p.getVariablesOnRHS()){
+			if (!recursiveDerivesLambda(v, history))
+				return false;
+		}
+		return true;
 	}
 
 	@Override
