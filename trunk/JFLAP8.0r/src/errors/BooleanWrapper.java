@@ -48,14 +48,14 @@ public class BooleanWrapper {
 		return state;
 	}
 
-	public boolean isFalse() {
+	public boolean isError() {
 		return !state;
 	}
 	
 	public static String createErrorLog(BooleanWrapper ... errors) {
 		StringBuilder sb = new StringBuilder();
 		for (BooleanWrapper error: errors){
-			if (error.isFalse())
+			if (error.isError())
 				sb.append(error.getMessage() + "\n");
 		}
 		return sb.toString();
