@@ -12,12 +12,13 @@ import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 
-public class GrammarTest {
+public class GrammarTest extends TestHarness {
 
 	static String[] Variables = {"Hello", "He(llo", "(Hel)lo)", "(Hello)"};
 	static String[] Terminals = { "Hello", "(Hello)", "(moo",};
 	
-	public static void main(String[] args) {
+	@Override
+	public void runTest() {
 		TerminalAlphabet terms = new TerminalAlphabet();
 		VariableAlphabet vars = new VariableAlphabet();
 		ProductionSet prod = new ProductionSet();
@@ -27,15 +28,10 @@ public class GrammarTest {
 									prod, 
 									var);
 		
-		System.out.println(g + "\n");
 		g.setVariableGrouping(new GroupingPair('(',')'));
-		System.out.println(createRuleString(g.getVariables())+ "\n");
-		System.out.println(createRuleString(g.getTerminals())+ "\n");
 		
 		addSymbols(Variables, g.getVariables());
 		addSymbols(Terminals, g.getTerminals());
-
-		System.out.println(g + "\n");
 
 	}
 

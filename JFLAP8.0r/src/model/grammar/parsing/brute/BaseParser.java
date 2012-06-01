@@ -3,6 +3,7 @@ package model.grammar.parsing.brute;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.concurrent.SynchronousQueue;
 
 import errors.BooleanWrapper;
 import file.FileException;
@@ -14,6 +15,7 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.ParseNode;
 import model.grammar.parsing.Parser;
+import model.grammar.parsing.ParserException;
 
 
 
@@ -59,10 +61,20 @@ public abstract class BaseParser extends Parser {
 
 
 	/**
-	 * This will initialize data structures.
+	 * Attempts to parse the target input.
 	 */
 	@Override
 	public boolean parse(SymbolString target) {
+		if (!init(target))
+			throw new ParserException(this.getDescriptionName() + " initialization failed.");
+		return doParse();
+	}
+
+
+	public abstract boolean doParse();
+
+
+	public boolean init(SymbolString target) {
 		for (Symbol s: target)
 			if (!(s instanceof Terminal))
 				throw new FileException(
@@ -81,7 +93,7 @@ public abstract class BaseParser extends Parser {
 				.smallerSymbols(grammar));
 		myProductions = grammar.getProductionSet().toArray(new Production[0]);
 		myTarget = target;
-		return new BooleanWrapper(true);
+		return true;
 	}
 
 	/**

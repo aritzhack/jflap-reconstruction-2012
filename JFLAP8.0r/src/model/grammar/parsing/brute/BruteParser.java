@@ -96,7 +96,7 @@ public abstract class BruteParser extends BaseParser {
 		parseThread = new Thread() {
 			public void run() {
 				while (isActive())
-					parse();
+					doParse();
 			}
 		};
 		parseThread.start();
@@ -264,25 +264,26 @@ public abstract class BruteParser extends BaseParser {
 
 
 	@Override
-	public boolean parse(SymbolString target) {
+	public boolean init(SymbolString target) {
 		consideredNodes = 0;
 		beingConsideredNodes = 0;
 		deletedNodes = 0;
 		isDone = false;
 		alreadyAdded.clear();
 		parseThread = null;
-		return super.parse(target);
+		return super.init(target);
 	}
 
 	/**
 	 * The parsing method.
 	 */
-	private synchronized void parse() {
+	@Override
+	public synchronized boolean doParse() {
 		if (myQueue.isEmpty()) {
 			isDone = true;
 			parseThread = null;
 			distributeEvent(new BruteParserEvent(this, BruteParserEvent.REJECT));
-			return;
+			return false;
 		}
 		// Get one element.
 		ParseNode node = (ParseNode) myQueue.removeFirst();
@@ -310,12 +311,13 @@ public abstract class BruteParser extends BaseParser {
 				myQueue.clear();
 				distributeEvent(new BruteParserEvent(this,
 						BruteParserEvent.ACCEPT));
-				return;
+				return true;
 			}
 		}
 		// Was anything added?
 		if (node.isLeaf())
 			removeFutility(node);
+		return false;
 	}
 
 	/**
