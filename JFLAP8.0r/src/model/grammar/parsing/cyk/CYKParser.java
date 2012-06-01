@@ -54,7 +54,7 @@ public class CYKParser extends Parser {
 
 	@Override
 	// should be parsing, not initialization
-	public BooleanWrapper init(SymbolString input) {
+	public boolean parse(SymbolString input) {
 		myParseTable = new CYKParseTable(input);
 		
 		int length = input.size();

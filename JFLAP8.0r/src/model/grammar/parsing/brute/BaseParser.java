@@ -61,7 +61,7 @@ public abstract class BaseParser extends Parser {
 	 * This will initialize data structures.
 	 */
 	@Override
-	public BooleanWrapper init(SymbolString target) {
+	public boolean parse(SymbolString target) {
 		for (Symbol s: target)
 			if (!(s instanceof Terminal))
 				return new BooleanWrapper(false, 

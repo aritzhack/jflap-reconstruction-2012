@@ -1,7 +1,6 @@
 package model.grammar.parsing;
 
 import util.Copyable;
-import errors.BooleanWrapper;
 import model.formaldef.Describable;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
@@ -20,7 +19,12 @@ public abstract class Parser implements Describable, Copyable{
 		return myGrammar;
 	}
 	
-	public abstract BooleanWrapper init(SymbolString input);
+	/**
+	 * Returns true if the string was accepted.
+	 * @param input
+	 * @return
+	 */
+	public abstract boolean parse(SymbolString input);
 	
 	
 
