@@ -37,7 +37,7 @@ import universe.JFLAPUniverse;
 
 import errors.ThrowableCatcher;
 import file.Codec;
-import file.ParseException;
+import file.FileException;
 
 /**
  * This is the class that starts JFLAP.
