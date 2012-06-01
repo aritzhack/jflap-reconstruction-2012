@@ -21,7 +21,7 @@ public abstract class PermanentSpecialSymbolRule<T extends Alphabet, S extends S
 	}
 	
 	private boolean checkDifferentFromSpecial(Symbol oldSymbol) {
-		return this.getSpecialSymbol().isComplete().isFalse() || 
+		return this.getSpecialSymbol().isComplete().isError() || 
 				!this.getSpecialSymbol().toSymbolObject().equals(oldSymbol);
 	}
 

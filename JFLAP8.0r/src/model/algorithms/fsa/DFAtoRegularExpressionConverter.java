@@ -84,7 +84,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		BooleanWrapper bw = new BooleanWrapper(check.isDeterministic(fsa), 
 				"The FSA must be determinisitic in order to be comverted into " +
 				"a regular expression.");
-		if (bw.isFalse())
+		if (bw.isError())
 			return new BooleanWrapper[]{bw};
 		return new BooleanWrapper[0];
 	}

@@ -138,7 +138,7 @@ public class ConstructDependencyGraph extends FormalDefinitionAlgorithm<Grammar>
 	public void addAllDependencyFor(Variable from) {
 		for (Variable to: myTotalDependencies.get(from)){
 			BooleanWrapper added = addDependency(from, to);
-			if(added.isFalse())
+			if(added.isError())
 				throw new AlgorithmException(added.getMessage());
 		}
 	}

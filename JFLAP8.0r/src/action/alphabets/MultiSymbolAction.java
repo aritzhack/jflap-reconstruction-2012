@@ -97,7 +97,7 @@ public abstract class MultiSymbolAction extends UndoableAction {
 			case REMOVE:bw = myDefinition.removeSymbol(myAlphType,s); break;
 			}
 			errors.add(bw);
-			if (bw.isFalse()) shouldshow = true;
+			if (bw.isError()) shouldshow = true;
 		}
 		if (shouldshow)
 			JFLAPError.show("The following symbols could not be " + verb +":\n" + 

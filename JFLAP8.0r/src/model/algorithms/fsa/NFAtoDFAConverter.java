@@ -256,7 +256,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		public boolean execute() throws AlgorithmException {
 			BooleanWrapper bw = expandState(getFirstUnexpandedState());
 			
-			if (bw.isFalse())
+			if (bw.isError())
 				throw new AlgorithmException(bw.getMessage());
 			return true;
 		}

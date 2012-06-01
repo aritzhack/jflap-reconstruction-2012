@@ -3,8 +3,12 @@ package model.grammar.transform;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+
+import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
@@ -15,8 +19,22 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 
-public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
+/**
+ * Algorithm for removing lambda productions from a CFG. Broken
+ * down into three primary steps:
+ * 
+ * 		1. Identify all lambda transitions, i.e. transitions of
+ * 			the form: A->lambda
+ * 		2. Identify all other productions which derive lambda
+ * 				A->X1 X2 ... XN,   XI is a variable, XI derives lambda
+ * 		3. 
+ * 
+ * @author Julian
+ *
+ */
+public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 
+	private Set<Variable> myLambdaVariables;
 	private Set<Production> myMemory;
 
 	public LambdaProductionRemover(Grammar g) {
@@ -37,17 +55,33 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 	 @Override
 	public boolean reset() throws AlgorithmException {
 		 myMemory = new TreeSet<Production>();
-		return super.reset();
+		if (!super.reset())
+			return false;
+		myLambdaVariables = new TreeSet<Variable>();
+		return true;
 	}
 	 
 	@Override
-	public String getTargetProductionType() {
-		return "Lambda";
+	public boolean isOfTargetForm(Production p) {
+		return recursiveDerivesLambda(p, new TreeSet<Production>());
 	}
 
 	@Override
-	public boolean isOfTargetForm(Production p) {
-		return recursiveDerivesLambda(p, new TreeSet<Production>());
+	public Set<Production> getProductionsToAddForRemoval(Production p) {
+		Set<Production> toAdd = new TreeSet<Production>();
+		Symbol start = this.getOriginalGrammar().getStartVariable();
+		Symbol lhs = p.getLHS().getFirst();
+		if (lhs.equals(start))
+			return toAdd;
+		
+		ProductionSet prods = this.getTransformedGrammar().getProductionSet();
+		Set<Production> varOnRHS = prods.getProductionsWithSymbolOnRHS(lhs);
+			
+		for (Production pRHS : varOnRHS) {
+				toAdd.addAll(doAllPossibleSubs(pRHS,lhs));
+		}
+		
+		return toAdd;
 	}
 
 	public boolean isLambdaProduction(Production p) {
@@ -59,7 +93,7 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 		//if one prod with v on lhs derives lambda then v derives lambda
 		for (Production p: prodSet.getProductionsWithSymbolOnLHS(v)){
 			if (recursiveDerivesLambda(p, history)){
-				myMemory.add(p); //memoize
+				myMemory.add(p);
 				return true;
 			}
 		}
@@ -67,11 +101,11 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 	}
 
 	private boolean recursiveDerivesLambda(Production p, Set<Production> history) {
-		//check memory
+		//check already determined lambda productions.
 		if (myMemory.contains(p))
 			return true;
-		//check if it is a lambda prod
-		if (isLambdaProduction(p))
+		//check if lambda production
+		if(isLambdaProduction(p))
 			return true;
 		//check if we have already looked at this prod
 		if (history.contains(p))
@@ -89,24 +123,8 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 		}
 		return true;
 	}
+	
 
-	@Override
-	public Set<Production> getProductionsToAddForRemoval(Production p) {
-		Set<Production> toAdd = new TreeSet<Production>();
-		Symbol start = this.getOriginalGrammar().getStartVariable();
-		Symbol lhs = p.getLHS().getFirst();
-		if (lhs.equals(start))
-			return toAdd;
-		
-		ProductionSet prods = this.getOriginalGrammar().getProductionSet();
-		Set<Production> varOnRHS = prods.getProductionsWithSymbolOnRHS(lhs);
-			
-		for (Production pRHS : varOnRHS) {
-				toAdd.addAll(doAllPossibleSubs(pRHS,lhs));
-		}
-		
-		return toAdd;
-	}
 
 	private Set<Production> doAllPossibleSubs(Production pRHS,
 			Symbol target) {
@@ -119,6 +137,35 @@ public class LambdaProductionRemover extends ProductionRemovalAlgorithm {
 		}
 		return toAdd;
 	}
+	
+	private int[] getIndeciesOfTarget(SymbolString rhs, Symbol target) {
+		int[] index = new int[rhs.size()];
+		int j = 0;
+		for (int i = 0; i < rhs.size(); i++){
+			if (rhs.get(i).equals(target)){
+				index[j++] = i;
+			}
+		}
+		
+		return Arrays.copyOfRange(index, 0, j);
+	}
 
+	@Override
+	protected boolean shouldRemove(Production p) {
+		return isLambdaProduction(p);
+	}
+	
+	@Override
+	public String getIdentifyStepName() {
+		return "Identify all Lambda Productions";
+	}
+	
+	@Override
+	public BooleanWrapper identifyProductionToBeRemoved(Production p) {
+		BooleanWrapper bw = super.identifyProductionToBeRemoved(p) ;
+		if (!bw.isError())
+			myLambdaVariables.add((Variable) p.getLHS().getFirst());
+		return bw;
+	}
 
 }

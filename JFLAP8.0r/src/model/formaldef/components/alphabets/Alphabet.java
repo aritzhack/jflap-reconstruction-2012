@@ -213,7 +213,7 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 					bw = rule.canModify(this, symbols[0], symbols[1]); break;
 				}
 				
-				if (bw.isFalse())
+				if (bw.isError())
 					throw new AlphabetException(bw.getMessage());
 				
 			}
