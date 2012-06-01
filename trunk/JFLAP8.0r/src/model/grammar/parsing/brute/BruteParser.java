@@ -33,7 +33,6 @@ import java.util.Set;
 
 import debug.JFLAPDebug;
 
-import errors.BooleanWrapper;
 
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
@@ -265,14 +264,14 @@ public abstract class BruteParser extends BaseParser {
 
 
 	@Override
-	public BooleanWrapper init(SymbolString target) {
+	public boolean parse(SymbolString target) {
 		consideredNodes = 0;
 		beingConsideredNodes = 0;
 		deletedNodes = 0;
 		isDone = false;
 		alreadyAdded.clear();
 		parseThread = null;
-		return super.init(target);
+		return super.parse(target);
 	}
 
 	/**
