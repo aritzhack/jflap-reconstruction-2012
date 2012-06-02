@@ -52,6 +52,7 @@ public class GrammarTest extends TestHarness {
 		prod.add(new Production(A, B));
 		prod.add(new Production(B, b));
 		prod.add(new Production(B));
+		prod.add(new Production(B, B, B, B, B, B));
 		g.setStartVariable(S);
 		
 		outPrintln("Initial Grammar:\n" + g.toString());
@@ -67,15 +68,15 @@ public class GrammarTest extends TestHarness {
 		g2 = r2.getTransformedGrammar();
 		outPrintln("UNIT Productions removed:\n" + g2);
 		
-//		UselessProductionRemover r3 = new UselessProductionRemover(g2);
-//		r3.stepToCompletion();
-//		g2 = r3.getTransformedGrammar();
-//		outPrintln("USELESS Productions removed:\n" + g2);
+		UselessProductionRemover r3 = new UselessProductionRemover(g2);
+		r3.stepToCompletion();
+		g2 = r3.getTransformedGrammar();
+		outPrintln("USELESS Productions removed:\n" + g2);
 //
 		CNFConverter r4 = new CNFConverter(g);
-//		r4.stepToCompletion();
-//		g2 = r4.getTransformedGrammar();
-//		outPrintln("CNF Converted:\n" + g2);
+		r4.stepToCompletion();
+		g2 = r4.getTransformedGrammar();
+		outPrintln("CNF Converted:\n" + g2);
 		
 		InputAlphabet alph = new InputAlphabet();
 		alph.addAll(g.getTerminals());
