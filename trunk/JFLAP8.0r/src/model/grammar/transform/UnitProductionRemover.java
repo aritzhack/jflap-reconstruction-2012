@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
@@ -70,21 +72,20 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 	public Set<Production> getProductionsToAddForRemoval(Production p) {
 		Set<Production> toAdd = new TreeSet<Production>();
 		Variable lhsVar = (Variable) p.getLHS().getFirst();
-		Variable rhsVar = (Variable) p.getLHS().getFirst();
+		Variable rhsVar = (Variable) p.getRHS().getFirst();
 		
 		if (lhsVar.equals(rhsVar))
 			return toAdd;
 		
 		DependencyGraph graph = myDependencyGraphStep.getAlgorithm().getDependencyGraph();
-		
+
 		Variable[] dep = graph.getAllDependencies(lhsVar);
-		
 		for(Variable v: dep){
 			for (Production prod: myNonUnitProductions.getProductionsWithSymbolOnLHS(v)){
 				toAdd.add(new Production(lhsVar, prod.getRHS()));
 			}
 		}
-		
+
 		return toAdd;
 	}
 	
@@ -111,11 +112,11 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 				@Override
 				public Map<Variable, Set<Variable>> getDependenciesFromProd(
 						Production p) {
-					ContextFreeChecker checker = new ContextFreeChecker();
 					//if the production is context free, and has only a variable
 					//on the rhs then it is ok!
-					if (isUnitProduction(p))
+					if (isUnitProduction(p)){
 						return super.getDependenciesFromProd(p);
+					}
 					return new TreeMap<Variable, Set<Variable>>();
 				}
 			};

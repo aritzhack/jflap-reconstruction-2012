@@ -90,6 +90,7 @@ public abstract class BruteParser extends BaseParser {
 	 *         successful if the parsing is already underway, or if the parser
 	 *         is finished
 	 */
+	@Override
 	public synchronized boolean start() {
 		if (isActive() || isFinished())
 			return false;
@@ -277,7 +278,6 @@ public abstract class BruteParser extends BaseParser {
 	/**
 	 * The parsing method.
 	 */
-	@Override
 	public synchronized boolean doParse() {
 		if (myQueue.isEmpty()) {
 			isDone = true;

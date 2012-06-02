@@ -67,11 +67,9 @@ public abstract class BaseParser extends Parser {
 	public boolean parse(SymbolString target) {
 		if (!init(target))
 			throw new ParserException(this.getDescriptionName() + " initialization failed.");
-		return doParse();
+		return start();
 	}
 
-
-	public abstract boolean doParse();
 
 
 	public boolean init(SymbolString target) {

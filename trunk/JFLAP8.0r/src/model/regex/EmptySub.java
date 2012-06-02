@@ -2,8 +2,9 @@ package model.regex;
 
 import universe.preferences.JFLAPPreferences;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.Terminal;
 
-public class EmptySub extends Symbol {
+public class EmptySub extends Terminal {
 
 	public EmptySub(String s) {
 		super(s);

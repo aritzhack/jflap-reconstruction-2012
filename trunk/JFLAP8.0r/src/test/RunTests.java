@@ -9,10 +9,22 @@ import errors.JFLAPException;
 
 public class RunTests {
 
+	public static Class[] myTests = new Class[]{
+		PDATest.class, 
+		RegExTest.class, 
+		FSATest.class, 
+		GrammarTest.class
+	};
+	
 	public static void main(String[] args) {
+		for (Class c: myTests)
+			tryTest(c);
+	}
+
+	public static void tryTest(Class c) {
 		try{
-		new RegExTest();
-		new FSATest();
+		System.out.println("Running: " + c);
+		c.newInstance();
 		}catch(Exception e){
 			if (e instanceof JFLAPException)
 				showMessage((JFLAPException) e);

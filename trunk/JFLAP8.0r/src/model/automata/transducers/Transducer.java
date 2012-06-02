@@ -29,8 +29,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FST
 	public Transducer alphabetAloneCopy() {
 		Class<Transducer> clz = (Class<Transducer>) this.getClass();
 		try {
-					return clz.cast(clz.getConstructors()[0].newInstance(new StartState(),
-																			this.getInputAlphabet(),
+					return clz.cast(clz.getConstructors()[0].newInstance(new StateSet()	,																		this.getInputAlphabet(),
 																			this.getOutputAlphabet(),
 																			new TransitionSet<FSTransition>(),
 																			new StartState(),
@@ -68,6 +67,19 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FST
 			super.componentChanged(event);
 	}
 	
-	
+	@Override
+	public Transducer copy() {
+		Class<Transducer> clz = (Class<Transducer>) this.getClass();
+		try {
+					return clz.cast(clz.getConstructors()[0].newInstance(this.getStates().copy(),
+																			this.getInputAlphabet().copy(),
+																			this.getOutputAlphabet().copy(),
+																			new TransitionSet<FSTransition>().copy(),
+																			new StartState(this.getStartState().copy()),
+																			this.getOutputFunctionSet().copy()));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

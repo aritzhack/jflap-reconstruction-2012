@@ -84,18 +84,18 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 	}
 
-	@Override
-	public FormalDefinition copy() {
-		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
-		for (FormalDefinitionComponent comp : this.getComponents())
-			cloned.add(comp.copy());
-		cloned.trimToSize();
-		try {
-			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} 
-	}
+//	@Override
+//	public FormalDefinition copy() {
+//		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
+//		for (FormalDefinitionComponent comp : this.getComponents())
+//			cloned.add(comp.copy());
+//		cloned.trimToSize();
+//		try {
+//			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray());
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		} 
+//	}
 
 	public BooleanWrapper[] isComplete() {
 		ArrayList<BooleanWrapper> incomplete = new ArrayList<BooleanWrapper>();

@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
@@ -87,6 +89,7 @@ public class ConstructDependencyGraph extends FormalDefinitionAlgorithm<Grammar>
 	private Map<Variable, Set<Variable>> getAllDependecies() {
 		Map<Variable, Set<Variable>> all = new TreeMap<Variable, Set<Variable>>();
 		for (Production p: this.getOriginalGrammar().getProductionSet()){
+			
 			Map<Variable, Set<Variable>> dep = getDependenciesFromProd(p);
 			for (Entry<Variable, Set<Variable>> e : dep.entrySet()) {
 				if (!all.containsKey(e.getKey())){
@@ -95,12 +98,13 @@ public class ConstructDependencyGraph extends FormalDefinitionAlgorithm<Grammar>
 				all.get(e.getKey()).addAll(e.getValue());
 			}
 		}
+
 		return all;
 	}
 	
 	public BooleanWrapper addDependency(Variable from, Variable to){
 		Set<Variable> dep = myTotalDependencies.get(from);
-		if (dep != null || !Arrays.asList(dep).contains(to)){
+		if (dep == null || !dep.contains(to)){
 			return new BooleanWrapper(false, "There is no valid " +
 					"dependency between " + from + " and " + to);
 		}

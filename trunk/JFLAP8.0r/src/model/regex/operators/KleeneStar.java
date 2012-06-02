@@ -18,5 +18,10 @@ public class KleeneStar extends Operator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public KleeneStar copy() {
+		return new KleeneStar();
+	}
 
 }

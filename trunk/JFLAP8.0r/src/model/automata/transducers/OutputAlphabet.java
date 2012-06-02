@@ -13,8 +13,7 @@ public class OutputAlphabet extends Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return 'O';
 	}
 
 	@Override

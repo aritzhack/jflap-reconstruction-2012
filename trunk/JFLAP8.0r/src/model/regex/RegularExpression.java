@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import universe.preferences.JFLAPPreferences;
+
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
@@ -16,7 +18,9 @@ import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
 import model.grammar.parsing.brute.RestrictedBruteParser;
+import model.grammar.transform.CNFConverter;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.Operator;
 import model.util.UtilFunctions;
@@ -32,9 +36,20 @@ public class RegularExpression extends FormalDefinition {
 		myOperatorAlphabet = new OperatorAlphabet();
 		myRegEx = new SymbolString();
 		myGrammar = new RegularExpressionGrammar(alph, myOperatorAlphabet);
+//		myGrammar  = createRegexGrammar(alph);
+		
 	}
 	
 	
+//	private RegularExpressionGrammar createRegexGrammar(InputAlphabet alph) {
+//		Grammar g = new RegularExpressionGrammar(alph, myOperatorAlphabet);
+//		CNFConverter conv = new CNFConverter(g);
+//		conv.stepToCompletion();
+//		return (RegularExpressionGrammar) conv.getTransformedGrammar();
+//		
+//	}
+
+
 	public InputAlphabet getInputAlphabet(){
 		return this.getComponentOfClass(InputAlphabet.class);
 	}
@@ -60,6 +75,12 @@ public class RegularExpression extends FormalDefinition {
 	}
 	
 	public void setTo(String in){
+		JFLAPDebug.print("Parsing input:" + myGrammar);
+		JFLAPDebug.print(in);
+		in = in.replaceAll(JFLAPPreferences.getEmptyStringSymbol(),
+				myOperatorAlphabet.getEmptySub().getString());
+		JFLAPDebug.print(in);
+
 		if (!SymbolString.canBeParsed(in, myGrammar)){
 			throw new RegularExpressionException("Invalid input. This string contains symbols" +
 					" that are neither input symbols or operators");
@@ -84,9 +105,7 @@ public class RegularExpression extends FormalDefinition {
 		}
 			
 		//check syntax
-//		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
-//		parser.init(s);
-//		parser.start();
+
 		BooleanWrapper format = correctFormat(s);
 		if (format.isError()){
 			throw new RegularExpressionException(format.getMessage());
@@ -96,6 +115,24 @@ public class RegularExpression extends FormalDefinition {
 
 	}
 
+//	/**
+//	 * Ideal version of the Correct format method. Uses the JFLAP 
+//	 * Infrastructure to parse the input.
+//	 * 
+//	 * @param exp
+//	 * @return
+//	 */
+//	private BooleanWrapper correctFormat(SymbolString exp){
+//		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
+//		parser.parse(exp);
+//		parser.start();
+//		while(parser.isActive()){
+//		}
+//		boolean isInLanguage = parser.getAnswer() != null;
+//		return new BooleanWrapper(isInLanguage, "The input regex, " + exp + " is invalid. " +
+//				"This means it is not in the language of the JFLAP regular expression grammar.");
+//	}
+	
 	/**
 	 * A temporary solution to the inefficiency of the Brute parser
 	 * and non-optimized expression grammar.
@@ -215,8 +252,7 @@ public class RegularExpression extends FormalDefinition {
 	
 	@Override
 	public boolean purgeOfSymbol(Symbol s) {
-		return myGrammar.inputSymbolRemoved(s) ||
-				myRegEx.purgeOfSymbol(s) || super.purgeOfSymbol(s);
+		return myRegEx.purgeOfSymbol(s) || super.purgeOfSymbol(s);
 	}
 	
 	@Override
@@ -226,20 +262,6 @@ public class RegularExpression extends FormalDefinition {
 				"\n\t" + myGrammar.toString();
 	}
 	
-	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-		if (event.comesFrom(getInputAlphabet())){
-			switch (event.getType()){
-			case ALPH_SYMBOL_MODIFY: break;
-				//propagate modify to regex grammar if need be.
-			case ITEM_ADDED:
-				myGrammar.inputSymbolAdded((Symbol)event.getArg(0));
-				break;
-			}
-		}
-		super.componentChanged(event);
-	}
-
 
 	public SymbolString getExpression() {
 		return new SymbolString(myRegEx);
@@ -297,4 +319,13 @@ public class RegularExpression extends FormalDefinition {
 		}
 		return input.subList(0,i+1);
 	}
+
+
+	@Override
+	public RegularExpression copy() {
+		RegularExpression exp = this.alphabetAloneCopy();
+		exp.setTo(this.myRegEx);
+		return exp;
+	}
+	
 }

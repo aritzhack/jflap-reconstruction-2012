@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
+import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
 import model.automata.StartState;
 import model.automata.State;
@@ -22,9 +25,6 @@ import model.grammar.Production;
 import model.grammar.transform.UselessProductionRemover;
 
 public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAutomaton,PDAVariableMapping, PDATransition>{
-
-	private ThinProductions myThinningStep;
-
 
 
 	public PDAtoCFGConverter(PushdownAutomaton automaton)
@@ -157,22 +157,12 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 	public AlgorithmStep[] initializeAllSteps() {
 		LinkedList<AlgorithmStep> steps = new LinkedList<AlgorithmStep>();
 		steps.addAll(Arrays.asList(super.initializeAllSteps()));
-		steps.add(myThinningStep = new ThinProductions());
+		steps.add(new ThinProductions());
 		return steps.toArray(new AlgorithmStep[0]);
 	}
 	
 	
 	
-	@Override
-	public Grammar getConvertedGrammar() {
-		if (myThinningStep.isComplete())
-			return myThinningStep.getThinnedGrammar();
-		return super.getConvertedGrammar();
-		
-	}
-
-
-
 	/**
 	 * Thins out the converted grammar based on the 
 	 * {@link UselessProductionRemover} algorithm.
@@ -180,35 +170,18 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 	 * @author Julian
 	 *
 	 */
-	private class ThinProductions implements AlgorithmStep{
+	private class ThinProductions extends AlgorithmExecutingStep<UselessProductionRemover>{
 
-		private UselessProductionRemover myUselessRemover;
 		
 		@Override
-		public String getDescriptionName() {
-			return "Remove useless productions.";
-		}
-
-		@Override
-		public String getDescription() {
-			return "Thins out the productions, removing all that" +
-					"cannot derive a terminal.";
-		}
-
-		@Override
-		public boolean execute() throws AlgorithmException {
-			myUselessRemover = new UselessProductionRemover(getConvertedGrammar());
-			return myUselessRemover.stepToCompletion();
-		}
-
-		@Override
-		public boolean isComplete() {
-			return myUselessRemover != null &&
-					myUselessRemover.allProductionsChecked();
+		public UselessProductionRemover initializeAlgorithm() {
+			return new UselessProductionRemover(getConvertedGrammar());
 		}
 		
-		public Grammar getThinnedGrammar(){
-			return myUselessRemover.getTransformedGrammar();
+		@Override
+		public void updateDataInMetaAlgorithm() {
+			Grammar g = this.getAlgorithm().getTransformedGrammar();
+			getConvertedGrammar().getProductionSet().retainAll(g.getProductionSet());
 		}
 		
 	}

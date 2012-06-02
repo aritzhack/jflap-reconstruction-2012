@@ -1,5 +1,6 @@
 package model.automata.acceptors.pda;
 
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 
 
@@ -29,4 +30,8 @@ public class StackAlphabet extends Alphabet{
 	}
 	
 
+	@Override
+	public StackAlphabet copy() {
+		return (StackAlphabet) super.copy();
+	}
 }

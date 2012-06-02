@@ -3,6 +3,8 @@ package model.grammar.transform;
 import java.util.ArrayList;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
@@ -31,7 +33,7 @@ public abstract class GrammarTransformAlgorithm extends FormalDefinitionAlgorith
 	
 	@Override
 	public boolean reset() throws AlgorithmException {
-		myNewGrammar = (Grammar) getOriginalGrammar().alphabetAloneCopy();
+		myNewGrammar = (Grammar) getOriginalGrammar().copy();
 		return true;
 	}
 	

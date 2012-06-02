@@ -1,6 +1,7 @@
 package model.regex;
 
 import universe.preferences.JFLAPPreferences;
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.regex.operators.CloseGroup;
@@ -64,6 +65,11 @@ public class OperatorAlphabet extends Alphabet {
 
 	public EmptySub getEmptySub() {
 		return myEmptySub;
+	}
+	
+	@Override
+	public OperatorAlphabet copy() {
+		return (OperatorAlphabet) super.copy();
 	}
 
 }

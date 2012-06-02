@@ -67,4 +67,11 @@ public class Graph {
 	public Vertex[] getVertices() {
 		return myVertices.toArray(new Vertex[0]);
 	}
+	
+	@Override
+	public String toString() {
+		return "Graph:\n" + 
+					"\tEdges: " + myEdges.toString() + "\n" +
+					"\tVertices: " + myVertices.toString() + "\n";
+	}
 }

@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import model.formaldef.components.FormalDefinitionComponent;
+
 
 
 public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
@@ -17,8 +19,7 @@ public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		// TODO Auto-generated method stub
-		return null;
+		return '\u0915';
 	}
 
 	@Override
@@ -34,5 +35,9 @@ public class TapeAlphabet extends model.formaldef.components.alphabets.Alphabet{
 	}
 	
 
+	@Override
+	public TapeAlphabet copy() {
+		return (TapeAlphabet) super.copy();
+	}
 
 }

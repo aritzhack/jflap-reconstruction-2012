@@ -1,5 +1,7 @@
 package model.regex;
 
+import debug.JFLAPDebug;
+import main.JFLAP;
 import model.automata.InputAlphabet;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -35,9 +37,14 @@ public class RegularExpressionGrammar extends Grammar {
 
 	private final Variable EXPRESSION = new Variable("<Expression>");
 	private final Variable START = new Variable("<Start>");
+	private InputAlphabet myInputAlph;
+	private OperatorAlphabet myOperatorAlph;
 	
 	public RegularExpressionGrammar(InputAlphabet alph,
 			OperatorAlphabet ops) {
+		myInputAlph = alph;
+		myInputAlph.addListener(this);
+		myOperatorAlph = ops;
 		TerminalAlphabet terms = this.getTerminals();
 		terms.addAll(ops);
 		this.setVariableGrouping(new GroupingPair('<', '>'));
@@ -48,6 +55,7 @@ public class RegularExpressionGrammar extends Grammar {
 		addProduction(EXPRESSION, ops.getUnionOperator(), EXPRESSION);
 		addProduction(EXPRESSION, ops.getKleeneStar());
 		addProduction(EXPRESSION, EXPRESSION);
+		addProduction(ops.getEmptySub());
 		for (Symbol s: alph){
 			inputSymbolAdded(s);
 		}
@@ -111,8 +119,9 @@ public class RegularExpressionGrammar extends Grammar {
 	 * @return
 	 */
 	public boolean inputSymbolAdded(Symbol s){
-		return this.getTerminals().add(s) &&
-				addProductionForSymbol(s);
+		TerminalAlphabet terms = this.getTerminals();
+		return terms.add(s) &&
+				addProductionForSymbol(terms.getByString(s.getString()));
 		
 	}
 
@@ -120,4 +129,35 @@ public class RegularExpressionGrammar extends Grammar {
 		return addProduction(s);
 	}
 	
+	@Override
+	public Grammar alphabetAloneCopy() {
+		
+		return new RegularExpressionGrammar(myInputAlph, myOperatorAlph);
+	}
+	
+	@Override
+	public RegularExpressionGrammar copy(){
+		RegularExpressionGrammar g = (RegularExpressionGrammar) super.copy();
+		ProductionSet prods = g.getProductionSet();
+		prods.clear();
+		prods.addAll(this.getProductionSet());
+		return g;
+	}
+
+	@Override
+	public void componentChanged(ComponentChangeEvent event) {
+		if (event.comesFrom(myInputAlph)){
+			switch (event.getType()){
+			case ALPH_SYMBOL_MODIFY: break;
+				//propagate modify to regex grammar if need be.
+			case ITEM_ADDED:
+				this.inputSymbolAdded((Symbol)event.getArg(0));
+				break;
+			case ITEM_REMOVED:
+				this.inputSymbolRemoved((Symbol)event.getArg(0));
+				break;
+			}
+		}
+		super.componentChanged(event);
+	}
 }

@@ -5,7 +5,12 @@ import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
 public abstract class AlgorithmExecutingStep<T extends SteppableAlgorithm> implements AlgorithmStep {
 
 	private T myAlg;
+	private boolean amDone;
 
+	public AlgorithmExecutingStep() {
+		amDone = false;
+	}
+	
 	public T getAlgorithm(){
 		return myAlg;
 	}
@@ -24,8 +29,10 @@ public abstract class AlgorithmExecutingStep<T extends SteppableAlgorithm> imple
 	public boolean execute() throws AlgorithmException {
 		myAlg = initializeAlgorithm();
 		boolean completed = myAlg.stepToCompletion();
-		if (completed)
+		if (completed){
 			updateDataInMetaAlgorithm();
+			amDone = true;
+		}
 		return completed;
 	}
 
@@ -45,7 +52,7 @@ public abstract class AlgorithmExecutingStep<T extends SteppableAlgorithm> imple
 
 	@Override
 	public boolean isComplete() {
-		return myAlg != null && !myAlg.isRunning();
+		return amDone;
 	}
 
 }

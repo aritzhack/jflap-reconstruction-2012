@@ -32,6 +32,7 @@ import model.automata.acceptors.fsa.FSTransition;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
 import model.regex.RegularExpression;
@@ -72,8 +73,8 @@ public class FSATest extends TestHarness{
 		fsa.setStartState(q0);
 		fsa.getFinalStateSet().addAll(Arrays.asList(new State[]{q2,q4}));
 		
-		Symbol ONE = new Symbol("1");
-		Symbol ZERO = new Symbol("0");
+		Symbol ONE = new Terminal("1");
+		Symbol ZERO = new Terminal("0");
 		
 		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(ZERO));
 		FSTransition t1 = new FSTransition(q0, q3, new SymbolString(ONE));
@@ -151,6 +152,11 @@ public class FSATest extends TestHarness{
 		dfa = ((MinimizeDFAAlgorithm) converter).getMinimizedDFA();
 		outPrintln("MinimizedDFA: \n" + dfa.toString());
 
+	}
+
+	@Override
+	public String getTestName() {
+		return "FSA TEST";
 	}
 
 }

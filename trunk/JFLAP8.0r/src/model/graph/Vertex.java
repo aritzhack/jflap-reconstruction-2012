@@ -83,4 +83,14 @@ public class Vertex implements Comparable<Vertex>{
 		
 		return new Double(this.getY()).compareTo(o.getY());
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return this.compareTo((Vertex) obj) == 0;
+	}
+	
+	@Override
+	public String toString() {
+		return myName + "|" + myLocation;
+	}
 }
