@@ -7,6 +7,8 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
+import model.automata.acceptors.pda.BottomOfStackSymbol;
+import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
@@ -96,6 +98,22 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	public int getNumTapes() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public TuringMachineInputAlphabet getInputAlphabet() {
+		return (TuringMachineInputAlphabet) super.getInputAlphabet();
+	}
+
+	@Override
+	public TuringMachine copy() {
+		return new TuringMachine(this.getStates().copy(),
+				this.getTapeAlphabet().copy(),
+				myBlank.copy(),
+				this.getInputAlphabet().copy(), 
+				this.getTransitions().copy(), 
+				new StartState(this.getStartState().copy()), 
+				this.getFinalStateSet().copy());
 	}
 
 

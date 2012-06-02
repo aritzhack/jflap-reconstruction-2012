@@ -44,4 +44,11 @@ public class Edge implements Comparable<Edge>{
 		return this.getLabel().compareTo(o.getLabel());
 	}
 	
+	@Override
+	public String toString() {
+		return this.getFromVertex().getName() + "---" + 
+				this.getLabel() + "--->" + 
+					this.getToVertex().getName();
+	}
+	
 }

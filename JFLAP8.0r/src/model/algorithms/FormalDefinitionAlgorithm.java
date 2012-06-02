@@ -11,11 +11,13 @@ public abstract class FormalDefinitionAlgorithm<T extends FormalDefinition> exte
 
 	public FormalDefinitionAlgorithm(T fd) {
 		myFormalDefinition = fd;
+
 		BooleanWrapper[] bw = fd.isComplete();
 		if (bw.length > 0){
 			throw new AlgorithmException(bw);
 		}
 		bw = checkOfProperForm(fd);
+
 		if (bw.length > 0)
 			throw new AlgorithmException(bw);
 		if (!this.reset())

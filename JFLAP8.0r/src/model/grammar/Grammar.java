@@ -159,9 +159,9 @@ public class Grammar extends FormalDefinition{
 	}
 
 	@Override
-	public FormalDefinition alphabetAloneCopy() {
-		return new Grammar(this.getVariables(),
-							this.getTerminals(), 
+	public Grammar alphabetAloneCopy() {
+		return new Grammar(this.getVariables().copy(),
+							this.getTerminals().copy(), 
 							new ProductionSet(),
 							new StartVariable());
 	}
@@ -210,6 +210,14 @@ public class Grammar extends FormalDefinition{
 
 	public static boolean isTerminal(Symbol symbol) {
 		return symbol instanceof Terminal;
+	}
+
+	@Override
+	public Grammar copy() {
+		Grammar g = this.alphabetAloneCopy();
+		g.getProductionSet().addAll(this.getProductionSet());
+		g.setStartVariable(this.getStartVariable());
+		return g;
 	}
 
 

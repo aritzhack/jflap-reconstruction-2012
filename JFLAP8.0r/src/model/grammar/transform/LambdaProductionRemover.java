@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
@@ -76,11 +78,11 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 		
 		ProductionSet prods = this.getTransformedGrammar().getProductionSet();
 		Set<Production> varOnRHS = prods.getProductionsWithSymbolOnRHS(lhs);
-			
+		
 		for (Production pRHS : varOnRHS) {
+
 				toAdd.addAll(doAllPossibleSubs(pRHS,lhs));
 		}
-		
 		return toAdd;
 	}
 
@@ -133,6 +135,8 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 			SymbolString subInto = new SymbolString(pRHS.getRHS());
 			subInto.remove(i);
 			Production substituted = new Production(pRHS.getLHS(),subInto);
+			if (!isLambdaProduction(substituted))
+				toAdd.add(substituted);
 			toAdd.addAll(doAllPossibleSubs(substituted, target));
 		}
 		return toAdd;
@@ -146,7 +150,6 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 				index[j++] = i;
 			}
 		}
-		
 		return Arrays.copyOfRange(index, 0, j);
 	}
 

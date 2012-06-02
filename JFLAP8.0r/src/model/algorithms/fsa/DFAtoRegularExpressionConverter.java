@@ -44,7 +44,6 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 	public DFAtoRegularExpressionConverter (FiniteStateAcceptor fsa){
 		super(fsa);
-		JFLAPDebug.print("Constructor");
 	}
 
 	@Override
@@ -115,7 +114,6 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		if (!isEmptySetTransition(t3)){
 			exp.addAll(star(t3.getInput()));
 		}
-		JFLAPDebug.print(t2.getInput());
 		myRegEx.setTo(exp);
 		return myRegEx;
 
@@ -215,10 +213,6 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		myStatesToCollapse.remove(s);
 		Collection<FSTransition> toAdd = getTransitionsForCollapseState(s);
 
-		JFLAPDebug.print(s + " - " + toAdd);
-		
-		JFLAPDebug.print("states - " + getGTG().getStates());
-		JFLAPDebug.print("transtions - " + getGTG().getTransitions());
 		return getGTG().getStates().remove(s) && doTransitionAdditions(toAdd);
 		
 	}
@@ -306,7 +300,6 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 				kk = getExpressionBetweenStates(k, k),
 				kq = getExpressionBetweenStates(k, q);
 
-		JFLAPDebug.print(p + "|" + q + " - " + pq);
 		SymbolString exp = pk;
 		if (!isEmptySetTransition(kk)){
 			kk = star(kk);
@@ -436,9 +429,8 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		Set<FSTransition> fromTo = 
 				transSet.getTransitionsFromStateToState(trans.getFromState(), 
 						trans.getToState());
-		JFLAPDebug.print(transSet);
+
 		transSet.removeAll(fromTo);
-		JFLAPDebug.print(transSet);
 
 		SymbolString regexLabel = new SymbolString();
 		Symbol union = myRegEx.getOperators().getUnionOperator();

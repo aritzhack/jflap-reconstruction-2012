@@ -69,7 +69,8 @@ public class DependencyGraph {
 		PathFinder finder = new PathFinder(myGraph);
 		Set<Variable> dep = new TreeSet<Variable>();
 		for (Vertex to: myGraph.getVertices()){
-			if (finder.findPath(from, to) != null)
+			if (finder.findPath(from, to) != null &&
+					!from.equals(to))
 				dep.add(getVariableForVertex(to));
 		}
 		return dep.toArray(new Variable[0]);
@@ -81,6 +82,11 @@ public class DependencyGraph {
 				return e.getKey();
 		}
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return myGraph.toString();
 	}
 	
 }

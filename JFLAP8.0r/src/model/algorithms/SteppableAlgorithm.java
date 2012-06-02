@@ -36,7 +36,6 @@ public abstract class SteppableAlgorithm implements Describable, JFLAPConstants 
 	public boolean step() throws AlgorithmException{
 
 		AlgorithmStep current = getCurrentStep();
-		
 		if (current == null) return false;
 		return current.execute();
 	}

@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
@@ -84,22 +86,22 @@ public class PDATest extends TestHarness{
 				new SymbolString(bos.toSymbolObject()), new SymbolString());
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
-
+		pda.trimAlphabets();
 		outPrintln(pda.toString());
 		
 		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
 		
 		errPrintln("");
-		
+
 		//lets try some stuff...
 				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 				String in = "aabb";
 				sim.beginSimulation(SymbolString.createFromString(in, pda));
 				outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
-		
+
 		//convert PDA to CFG
 		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
-		while (converter.step());
+		converter.stepToCompletion();
 		
 		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
 		
@@ -161,6 +163,11 @@ public class PDATest extends TestHarness{
 		
 		outPrintln("[q1] removed:\n" + pda.toString());
 		
+	}
+
+	@Override
+	public String getTestName() {
+		return "PDAAAAA TEST";
 	}
 
 	

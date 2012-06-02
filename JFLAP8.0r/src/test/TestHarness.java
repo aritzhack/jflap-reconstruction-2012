@@ -1,6 +1,8 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -29,13 +31,16 @@ public abstract class TestHarness {
 	}
 
 	private JTextArea setUpDisplay() {
-		JFrame frame = new JFrame("JFLAP Test Print!");
+		JFrame frame = new JFrame(getTestName());
 		JTextArea area = new JTextArea();
 		JScrollPane panel = new JScrollPane(area);
+		panel.setPreferredSize(new Dimension(500, 300));
 
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
 		return area;
 	}
+
+	public abstract String getTestName();
 }

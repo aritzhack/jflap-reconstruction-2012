@@ -3,6 +3,7 @@ package model.grammar;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -39,5 +40,9 @@ public class TerminalAlphabet extends Alphabet {
 	}
 
 
+	@Override
+	public TerminalAlphabet copy() {
+		return (TerminalAlphabet) super.copy();
+	}
 	
 }

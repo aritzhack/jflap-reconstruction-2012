@@ -17,5 +17,10 @@ public class TuringMachineInputAlphabet extends InputAlphabet implements UsesSym
 	public boolean purgeOfSymbol(Symbol s) {
 		return this.remove(s);
 	}
+	
+	@Override
+	public TuringMachineInputAlphabet copy() {
+		return (TuringMachineInputAlphabet) super.copy();
+	}
 
 }

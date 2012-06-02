@@ -1,6 +1,7 @@
 package model.grammar;
 
 import errors.BooleanWrapper;
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -38,4 +39,8 @@ public class VariableAlphabet extends Alphabet{
 		return super.add(new Variable(e.getString()));
 	}
 
+	@Override
+	public VariableAlphabet copy() {
+		return (VariableAlphabet) super.copy();
+	}
 }

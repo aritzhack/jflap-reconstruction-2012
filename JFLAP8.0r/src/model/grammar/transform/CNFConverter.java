@@ -1,16 +1,22 @@
 package model.grammar.transform;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+
+import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
 
+import main.JFLAP;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -22,6 +28,7 @@ import model.grammar.typetest.matchers.GrammarChecker;
 public class CNFConverter extends GrammarTransformAlgorithm {
 
 	private CNFChecker myChecker;
+	private Map<Terminal, Variable> myTermToVarMap;
 
 	public CNFConverter(Grammar g) {
 		super(g);
@@ -31,9 +38,9 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 	public boolean reset() throws AlgorithmException {
 		super.reset();
 		myChecker = new CNFChecker();
+		myTermToVarMap = new TreeMap<Terminal, Variable>();
 		return updateProductionsTo(getOriginalGrammar());
 	}
-
 	private boolean updateProductionsTo(Grammar gram) {
 		ProductionSet p = getTransformedGrammar().getProductionSet();
 		p.clear();
@@ -52,7 +59,11 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		return null;
+		return new AlgorithmStep[]{
+				new LambdaRemovalStep(),
+				new UnitRemovalStep(),
+				new UselessRemovalStep(),
+				new ConvertToCNFStep()};
 	}
 	
 	public Production[] getNonCNFProductions() {
@@ -62,7 +73,6 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 			if (!isCNF(p))
 				nonCNF.add(p);
 		}
-		
 		return nonCNF.toArray(new Production[0]);
 	}
 
@@ -75,11 +85,11 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 		if (isCNF(p))
 			return new BooleanWrapper(false, "The production selected is already in " +
 					"Chomsky Normal Form (CNF).");
+
 		if (!p.getTerminalsOnRHS().isEmpty())
 			doTerminalSubstitution(p);
 		else
 			doVariableSplit(p);
-		
 		return new BooleanWrapper(true);
 	}
 
@@ -120,7 +130,9 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 		for (int i = 0; i < rhs.size(); i++ ){
 			Symbol curr = rhs.get(i);
 			if (Grammar.isTerminal(curr)){
-				Variable var = createAndAddNextTermVar(curr);
+				Variable var = myTermToVarMap.get(curr);
+				if (var == null)
+					var = createAndAddNextTermVar((Terminal) curr);
 				rhs.replace(i, var);
 				Production newProd = new Production(var, curr);
 				getTransformedGrammar().getProductionSet().add(newProd);
@@ -130,19 +142,20 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 		p.setRHS(rhs);
 	}
 
-	private Variable createAndAddNextTermVar(Symbol curr) {
+	private Variable createAndAddNextTermVar(Terminal curr) {
 		Grammar g = getTransformedGrammar();
 		VariableAlphabet vars = g.getVariables();
 		int i = 0;
 		Variable Ba = null;
 		do {
 			//TODO: BAD HARDCODING
-			String var = (char)((int)'B' + i)+ "(" + curr.toString() +")";
+			String var = (char)((int)'B' + i++)+ "(" + curr.toString() +")";
 			if (g.usingGrouping()){
 				var = g.getOpenGroup() + var + g.getCloseGroup();
 			}
 			Ba = new Variable(var);
 		}while (!vars.add(Ba));
+		myTermToVarMap.put(curr, Ba);
 		return Ba;
 	}
 

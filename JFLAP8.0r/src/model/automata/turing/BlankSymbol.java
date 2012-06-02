@@ -26,5 +26,10 @@ public class BlankSymbol extends SpecialSymbol {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public BlankSymbol copy() {
+		return (BlankSymbol) super.copy();
+	}
 
 }

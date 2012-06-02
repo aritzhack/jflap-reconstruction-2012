@@ -114,7 +114,6 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 
 		@Override
 		public InacessibleStateRemover initializeAlgorithm() {
-			JFLAPDebug.print("Call1:\n" + myTemporaryDFA.toString());
 			return new InacessibleStateRemover(myTemporaryDFA);
 		}
 
@@ -129,7 +128,6 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 
 		@Override
 		public AddTrapStateAlgorithm initializeAlgorithm() {
-			JFLAPDebug.print("Call2:\n" + myTemporaryDFA.toString());
 			return new AddTrapStateAlgorithm(myTemporaryDFA);
 		}
 
@@ -144,7 +142,6 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 		
 		@Override
 		public BuildMinimizeTreeAlgorithm initializeAlgorithm() {
-			JFLAPDebug.print("Call3:\n" + myTemporaryDFA.toString());
 			return new BuildMinimizeTreeAlgorithm(myTemporaryDFA);
 		}
 

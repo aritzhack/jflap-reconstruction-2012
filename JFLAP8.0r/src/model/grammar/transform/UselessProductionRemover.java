@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
@@ -38,6 +40,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		myConstructDependencyGraphStep = new ConstructDependencyGraphStep();
 		return new AlgorithmStep[]{new checkDerivesTerminals(),
 				myConstructDependencyGraphStep,
+				new RemoveAllUnreachableProductions()
 				};
 	}
 
@@ -54,13 +57,14 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		myProcessedProductions = new ProductionSet();
 		myVarsDeriveTerms = new TreeSet<Variable>();
 		myFullDerivesTerminals = new ProductionSet();
+
 		constructTerminalDerivationSet();
+
 		//check if is last start production and none derived 
 		if (noStartProductionsDeriveTerms())
 			throw new AlgorithmException("No start productions derive terminals." +
 												" Therefore this grammar cannot derive any strings " +
 												"and cannot be transformed further.");
-
 		this.getTransformedGrammar().setStartVariable(this.getOriginalGrammar().getStartVariable());
 		return true;
 	}
@@ -72,18 +76,18 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 		for (Production p : this.getOriginalGrammar().getProductionSet()){
 			if(this.checkDerivesTerminals(p)){
+				
 				myFullDerivesTerminals.add(p);
 			}
 		}
 	}
-
+	
 	private boolean checkDerivesTerminals(Production p) {
-		return checkDerivesTerminals(p, new LinkedList<Production>());
+		return checkDerivesTerminals(p, new TreeSet<Production>());
 	}
 
 	private boolean checkDerivesTerminals(Production p,
-			LinkedList<Production> history) {
-
+			Set<Production> history) {
 		//if this production has already been seen, i.e. we are in a loop
 		// then it cannot derive a terminal on this path
 		if (history.contains(p)) return false;
@@ -104,7 +108,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 
 	private boolean checkDerivesTerminals(Variable v,
-			LinkedList<Production> history) {
+			Set<Production> history) {
 		//memoizing!
 		if (myVarsDeriveTerms.contains(v)){
 			return true;
@@ -113,7 +117,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		SymbolString lhs = new SymbolString(v);
 		ProductionSet productions = this.getOriginalGrammar().getProductionSet();
 		for (Production prod: productions.getProductionsWithLHS(lhs)){
-			LinkedList<Production> temp = new LinkedList<Production>(history);
+			Set<Production> temp = new TreeSet<Production>(history);
 			if (checkDerivesTerminals(prod, temp)){
 				return true;
 			}
@@ -124,6 +128,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	private boolean noStartProductionsDeriveTerms() {
 		Variable var = this.getOriginalGrammar().getStartVariable();
+		JFLAPDebug.print(this.getTransformedGrammar());
 		return !myVarsDeriveTerms.contains(var);
 	}
 
@@ -146,7 +151,6 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 
 	public BooleanWrapper checkAndAddDerivesTerminals(Production p){
-		
 		//check in Production set
 		ProductionSet prod = this.getOriginalGrammar().getProductionSet();
 		if (!prod.contains(p))
@@ -180,12 +184,13 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	//////////////////////////////////////////////
 	
 	private void removeUnreachableProductions() {
-		for (Production p: this.getTransformedGrammar().getProductionSet()){
+		ProductionSet prods = this.getTransformedGrammar().getProductionSet();
+		for (Production p: prods.toArray(new Production[0])){
 			removeUnreachableProduction(p);
 		}
 	}
 
-	private BooleanWrapper removeUnreachableProduction(Production p) {
+	public BooleanWrapper removeUnreachableProduction(Production p) {
 		if (!isUnreachable(p))
 			return new BooleanWrapper(false, "The production " + p + " can be reached " +
 					"from the start variable. Therefore it is not unreachable.");
@@ -194,7 +199,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 				"from the grammar.");
 	}
 
-	public Production[] getRemainingUnreachableProductions(){
+	public Production[] getRemainingInaccessibleProductions(){
 		Set<Production> unreach = new TreeSet<Production>();
 		for (Production p: this.getTransformedGrammar().getProductionSet()){
 			if (isUnreachable(p))
@@ -204,6 +209,8 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 	
 	private boolean isUnreachable(Production p) {
+		if (p.isStartProduction(this.getTransformedGrammar().getStartVariable()))
+			return false;
 		DependencyGraph graph = myConstructDependencyGraphStep.getAlgorithm().getDependencyGraph();
 		Variable lhs = (Variable) p.getLHS().getFirst();
 		Variable start = this.getTransformedGrammar().getStartVariable();
@@ -213,8 +220,8 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		return true;
 	}
 
-	public int getNumberUnreachableProductionsLeft() {
-		return getRemainingUnreachableProductions().length;
+	public int getNumberInaccessibleProductionsLeft() {
+		return getRemainingInaccessibleProductions().length;
 	}
 
 
@@ -275,7 +282,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 		@Override
 		public boolean isComplete() {
-			return getNumberUnreachableProductionsLeft() == 0;
+			return getNumberInaccessibleProductionsLeft() == 0;
 		}
 		
 	}

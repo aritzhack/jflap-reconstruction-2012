@@ -88,4 +88,9 @@ public class RegExTest extends TestHarness{
 		
 	}
 
+	@Override
+	public String getTestName() {
+		return "RegEx test";
+	}
+
 }
