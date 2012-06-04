@@ -23,7 +23,7 @@ public class OperatorAlphabet extends Alphabet {
 		myKleeneStar = new KleeneStar();
 		myOpenGroup = JFLAPPreferences.getCurrentRegExOpenGroup();
 		myCloseGroup = JFLAPPreferences.getCurrentRegExCloseGroup();
-		myEmptySub = JFLAPPreferences.getRegExSubForEmptyString();
+		myEmptySub = JFLAPPreferences.getSubForEmptyString();
 		this.addAll(myUnionOperator, myKleeneStar, myOpenGroup, myCloseGroup, myEmptySub);
 	}
 	
