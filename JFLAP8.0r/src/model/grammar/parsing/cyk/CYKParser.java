@@ -210,19 +210,17 @@ public class CYKParser extends Parser {
 		return null;
 	}
 
+
 	@Override
 	/**
-	 * Checks whether the grammar is in CNF (required for CYK parsing)
-	 * and throws a ParserException if not
+	 * Return CNF enum from GrammarType class; 
+	 * CYK parser requires that the grammar be in Chomsky Normal Form
 	 */
-	public void checkOfProperForm(Grammar g) throws ParserException {
-		for (GrammarType type : GrammarType.getType(g)) {
-			if (type.equals(GrammarType.CHOMSKY_NORMAL_FORM)) {
-				return;
-			}
-		}
-		throw new ParserException("Grammar not in Chomsky Normal Form (CNF)");
+	public GrammarType getRequiredGrammarType() throws ParserException {
+		return GrammarType.CHOMSKY_NORMAL_FORM;
 	}
+
+
 	
 	
 	
