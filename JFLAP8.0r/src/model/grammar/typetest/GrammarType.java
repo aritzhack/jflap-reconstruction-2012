@@ -47,7 +47,7 @@ public enum GrammarType{
 
 		
 		for (GrammarType type: GrammarType.values()){
-			if (type.checkGrammar(g))
+			if (type.matches(g))
 				types.add(type);
 		}
 		
@@ -55,7 +55,7 @@ public enum GrammarType{
 		
 	}
 
-	public boolean checkGrammar(Grammar g) {
+	public boolean matches(Grammar g) {
 		return myMatcher.matchesGrammar(g);
 	}
 	

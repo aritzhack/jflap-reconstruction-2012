@@ -18,6 +18,7 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
+import model.grammar.GrammarUtil;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 
@@ -37,7 +38,6 @@ import model.grammar.ProductionSet;
 public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 
 	private Set<Variable> myLambdaVariables;
-	private Set<Production> myMemory;
 
 	public LambdaProductionRemover(Grammar g) {
 		super(g);
@@ -56,7 +56,6 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	
 	 @Override
 	public boolean reset() throws AlgorithmException {
-		 myMemory = new TreeSet<Production>();
 		if (!super.reset())
 			return false;
 		myLambdaVariables = new TreeSet<Variable>();
@@ -65,7 +64,8 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	 
 	@Override
 	public boolean isOfTargetForm(Production p) {
-		return recursiveDerivesLambda(p, new TreeSet<Production>());
+		return GrammarUtil.derivesLambda(p, 
+										this.getOriginalGrammar());
 	}
 
 	@Override
@@ -86,46 +86,6 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 		return toAdd;
 	}
 
-	public boolean isLambdaProduction(Production p) {
-		return p.getRHS().isEmpty();
-	}
-
-	private boolean recursiveDerivesLambda(Variable v, Set<Production> history) {
-		ProductionSet prodSet = this.getOriginalGrammar().getProductionSet();
-		//if one prod with v on lhs derives lambda then v derives lambda
-		for (Production p: prodSet.getProductionsWithSymbolOnLHS(v)){
-			if (recursiveDerivesLambda(p, history)){
-				myMemory.add(p);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean recursiveDerivesLambda(Production p, Set<Production> history) {
-		//check already determined lambda productions.
-		if (myMemory.contains(p))
-			return true;
-		//check if lambda production
-		if(isLambdaProduction(p))
-			return true;
-		//check if we have already looked at this prod
-		if (history.contains(p))
-			return false;
-		//check if it has any terminals on RHS
-		if (!p.getTerminalsOnRHS().isEmpty())
-			return false;
-		
-		history = new TreeSet<Production>(history);
-		history.add(p);
-		//check if each variable on rhs derives lambda
-		for (Variable v: p.getVariablesOnRHS()){
-			if (!recursiveDerivesLambda(v, history))
-				return false;
-		}
-		return true;
-	}
-	
 
 
 	private Set<Production> doAllPossibleSubs(Production pRHS,
@@ -135,7 +95,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 			SymbolString subInto = new SymbolString(pRHS.getRHS());
 			subInto.remove(i);
 			Production substituted = new Production(pRHS.getLHS(),subInto);
-			if (!isLambdaProduction(substituted))
+			if (!substituted.isLambdaProduction())
 				toAdd.add(substituted);
 			toAdd.addAll(doAllPossibleSubs(substituted, target));
 		}
@@ -155,7 +115,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 
 	@Override
 	protected boolean shouldRemove(Production p) {
-		return isLambdaProduction(p);
+		return p.isLambdaProduction();
 	}
 	
 	@Override
