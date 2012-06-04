@@ -7,6 +7,7 @@ package model.grammar.parsing.cyk;
 
 import java.util.*;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -16,11 +17,13 @@ import model.grammar.parsing.Parser;
 public class CYKParser extends Parser {
 	
 	private ProductionSet myProductions;
+	private List<Production> myAnswerTrace;
 	private Variable myStartVariable;
-	
-	private ArrayList<Production> myDerivationRules;
+	private SymbolString myTarget;
 	
 	private CYKParseTable myParseTable;
+	private CYKTracer myTracer;
+	
 
 	public CYKParser(Grammar g) {
 		super(g);
@@ -28,7 +31,6 @@ public class CYKParser extends Parser {
 		myProductions = g.getProductionSet();
 		myStartVariable = g.getStartVariable();
 		
-		myDerivationRules = new ArrayList<Production>();
 	}
 	
 	
@@ -46,15 +48,16 @@ public class CYKParser extends Parser {
 
 	@Override
 	public Object copy() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CYKParser(getGrammar());
 	}
 
-	// should be parsing, not initialization
+	
 	public boolean parse(SymbolString input) {
-		myParseTable = new CYKParseTable(input);
-		
+		myTarget = input;
 		int length = input.size();
+		myParseTable = new CYKParseTable(length);
+		myTracer = new CYKTracer(length);
+		
 		
 		// terminals
 		for (int i = 0; i < length; i++) {
@@ -88,10 +91,46 @@ public class CYKParser extends Parser {
 						if (p.getRHS().equals(concat)) {
 							myParseTable.addVariable(start, end, 
 									(Variable) p.getLHS().getFirst());
+							CYKTracerNode node = new CYKTracerNode(p, k);
+							myTracer.addNode(start, end, node);
 						}
 					}
 				}
 			}
 		}
+	}
+	
+	public List<Production> getTrace(){
+		myAnswerTrace = new ArrayList<Production>();
+		getPossibleTrace(getGrammar().getStartVariable(), 0, myTarget.size()-1);
+		return myAnswerTrace;
+	}
+	
+	private boolean getPossibleTrace(Variable LHS, int start, int end){
+		if(start == end){
+			Production terminalProduction = new Production(LHS, (Terminal) myTarget.get(start));
+			for(Production p: myProductions){
+				if(p.equals(terminalProduction)){
+					myAnswerTrace.add(terminalProduction);
+					return true;
+				}
+			}
+			return false;
+		}
+		for(CYKTracerNode node : myTracer.getNodeSet(start, end)){
+			Production nodeProduction = new Production(LHS, node.getRHS());
+			for(Production p : myProductions){
+				if(p.equals(nodeProduction)){
+					myAnswerTrace.add(nodeProduction);
+					if(getPossibleTrace(node.getAVariable(), start, node.getK()) && 
+							getPossibleTrace(node.getBVariable(), node.getK()+1, end)){
+						return true;
+					}
+					myAnswerTrace.remove(nodeProduction);
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 }

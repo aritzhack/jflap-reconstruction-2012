@@ -9,11 +9,11 @@ public class CYKParseTable {
 
 	private Map<Integer, Map<Integer, Set<Variable>>> myParseTable;
 	
-	public CYKParseTable (SymbolString input) {
+	public CYKParseTable (int size) {
 		myParseTable = new HashMap<Integer, Map<Integer, Set<Variable>>>();
-		for (int i = 0; i < input.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			HashMap<Integer, Set<Variable>> innerMap = new HashMap<Integer, Set<Variable>>();
-			for (int j = i; j < input.size(); j++) {
+			for (int j = i; j < size; j++) {
 				HashSet<Variable> innerSet = new HashSet<Variable>();
 				innerMap.put(j, innerSet);
 			}
