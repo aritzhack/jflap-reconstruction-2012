@@ -1,8 +1,16 @@
 package model.grammar.parsing.cyk;
 
 /**
- * CYK parser redesign, Summer 2012
- * @author Peggy Li, Ian McMahon
+ * Implementation of the CYK (Cocke-Younger-Kasami) parsing algorithm
+ * to determine whether a string is in the language of a given grammar 
+ * and the trace (set of productions) followed to derive the string
+ * 
+ * Note: CYKParser was redone in Summer 2012 with improved efficiency
+ * and significant code redesign/refactoring. The grammar passed in
+ * must be in Chomsky Normal Form (CNF) for the parser to work correctly.
+ * 
+ * @author Peggy Li
+ * @author Ian McMahon
  */
 
 import java.util.*;
@@ -23,6 +31,10 @@ public class CYKParser extends Parser {
 
 	private CYKParseTable myTracer;
 
+	/**
+	 * Constructor for the CYKParser 
+	 * @param g - grammar must be in Chomsky Normal Form (CNF)
+	 */
 	public CYKParser(Grammar g) {
 		super(g);
 
