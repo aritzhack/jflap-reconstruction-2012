@@ -4,6 +4,7 @@ import util.Copyable;
 import model.formaldef.Describable;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.typetest.GrammarType;
 
 
 public abstract class Parser implements Describable, Copyable{
@@ -12,16 +13,16 @@ public abstract class Parser implements Describable, Copyable{
 	protected Grammar myGrammar;
 
 	public Parser(Grammar g) throws ParserException{
-		try {
-		checkOfProperForm(g);
-		} catch (ParserException e){
-			throw e;
-		}
+		GrammarType type = this.getRequiredGrammarType();
+		if (!type.matches(g))
+			throw new ParserException("To use the " + this.getDescriptionName() +
+					" the grammar must be in " + type.name);
+		
 		myGrammar = g;
 		
 	}
 
-	public abstract void checkOfProperForm(Grammar g) throws ParserException;
+	public abstract GrammarType getRequiredGrammarType() throws ParserException;
 
 	public Grammar getGrammar(){
 		return myGrammar;

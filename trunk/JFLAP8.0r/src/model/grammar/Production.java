@@ -277,6 +277,10 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	public Production copy() {
 		return new Production(this.getLHS().copy(), this.getRHS().copy());
 	}
+	
+	public boolean isLambdaProduction() {
+		return this.getRHS().isEmpty();
+	}
 
 
 }
