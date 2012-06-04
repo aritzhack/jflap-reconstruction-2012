@@ -18,10 +18,10 @@ public enum GrammarType{
 	LEFT_LINEAR("Left-Linear Grammar", "LLG", new LeftLinearChecker()),
 	RIGHT_LINEAR("Right-Linear Grammar", "RLG", new RightLinearChecker()),
 	CONTEXT_FREE("Context Free Grammar", "CFG", new ContextFreeChecker()),
-	CHOMSKY_NORMAL_FORM("Grammar in Chomsky Normal From", 
+	CHOMSKY_NORMAL_FORM("Grammar in Chomsky Normal Form", 
 							"CNF", 
 							new CNFChecker()),
-	GREIBACH_NORMAL_FORM("Grammar in Greibach Normal From", 
+	GREIBACH_NORMAL_FORM("Grammar in Greibach Normal Form", 
 							"GNF", 
 							new GNFChecker());
 
