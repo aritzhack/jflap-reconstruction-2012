@@ -36,13 +36,20 @@ public class CYKParser extends Parser {
 	 * @param g - grammar must be in Chomsky Normal Form (CNF)
 	 */
 	public CYKParser(Grammar g) {
+		
 		super(g);
 
 		myProductions = g.getProductionSet();
 		myStartVariable = g.getStartVariable();
+		
 	}
 
-
+	/**
+	 * Returns true if the input string is in the language of the grammar
+	 * and false if not, as determined using the CYK parsing algorithm
+	 * 
+	 * @param input - the string to be parsed
+	 */
 	public boolean parse(SymbolString input) {
 		myTarget = input;
 		int length = input.size();
@@ -95,7 +102,20 @@ public class CYKParser extends Parser {
 		}
 	}
 
-	// finds all productions whose RHS matches the substring
+	/**
+	 * Find and add to the parse table the LHS of all productions in the
+	 * grammar if the production's RHS can derive the substring from
+	 * index <code>start</code> to index <code>end</end> in the input string,
+	 * excluding the terminal productions (substring of length 1)
+	 * 
+	 * Tests all possible concatenations of substrings for all possible increments k
+	 * e.g. 'abc' [0, 2] can be formed by concatenating 
+	 * 		'a' [0, 1] with 'bc' [1, 2] with k = 1
+	 * 		or 'ab' [0, 2] with 'c' [2, 2] with k = 2
+	 * 
+	 * @param start - start index of the substring in the input
+	 * @param end - end index of the substring in the input
+	 */
 	private void findProductions(int start, int end) {
 		for (int k = start; k < end; k++) {
 			for (Variable A : myTracer.getLHSVariableSet(start, k)) {
