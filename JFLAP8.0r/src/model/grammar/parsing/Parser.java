@@ -11,9 +11,17 @@ public abstract class Parser implements Describable, Copyable{
 
 	protected Grammar myGrammar;
 
-	public Parser(Grammar g){
+	public Parser(Grammar g) throws ParserException{
+		try {
+		checkOfProperForm(g);
+		} catch (ParserException e){
+			throw e;
+		}
 		myGrammar = g;
+		
 	}
+
+	public abstract void checkOfProperForm(Grammar g);
 
 	public Grammar getGrammar(){
 		return myGrammar;
