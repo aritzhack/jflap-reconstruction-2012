@@ -21,6 +21,8 @@
 package model.grammar.parsing.brute;
 
 import model.grammar.Grammar;
+import model.grammar.parsing.ParserException;
+import model.grammar.typetest.GrammarType;
 
 /**
  * This is the brute parser for an unrestricted grammar.
@@ -51,5 +53,9 @@ public class UnrestrictedBruteParser extends BruteParser {
 		return new UnrestrictedBruteParser(this.getGrammar());
 	}
 
+	@Override
+	public GrammarType getRequiredGrammarType() throws ParserException {
+		return GrammarType.UNRESTRICTED;
+	}
 
 }

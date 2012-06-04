@@ -27,6 +27,8 @@ import debug.JFLAPDebug;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.parsing.ParserException;
+import model.grammar.typetest.GrammarType;
 
 
 
@@ -111,5 +113,10 @@ public class RestrictedBruteParser extends BruteParser {
 	@Override
 	public RestrictedUserParser copy() {
 		return new RestrictedUserParser(getGrammar());
+	}
+
+	@Override
+	public GrammarType getRequiredGrammarType() throws ParserException {
+		return GrammarType.CONTEXT_FREE;
 	}
 }

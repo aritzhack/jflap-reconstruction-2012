@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.parsing.ParserException;
+import model.grammar.typetest.GrammarType;
 
 
 /**
@@ -113,5 +115,10 @@ public class RestrictedUserParser extends UserParser{
 	@Override
 	public RestrictedUserParser copy() {
 		return new RestrictedUserParser(getGrammar());
+	}
+	
+	@Override
+	public GrammarType getRequiredGrammarType() throws ParserException {
+		return GrammarType.CONTEXT_FREE;
 	}
 }
