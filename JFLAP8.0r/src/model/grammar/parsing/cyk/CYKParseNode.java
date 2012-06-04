@@ -4,12 +4,12 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
 
-public class CYKTracerNode {
+public class CYKParseNode {
 	private Variable LHS;
 	private SymbolString RHS;
-	private int k, row, col;
+	private int k;
 	
-	public CYKTracerNode(Production p, int k){
+	public CYKParseNode(Production p, int k){
 		LHS = (Variable) p.getLHS().getFirst();
 		RHS = p.getRHS();
 		this.k = k;
@@ -23,11 +23,11 @@ public class CYKTracerNode {
 		return RHS;
 	}
 	
-	public Variable getAVariable(){
+	public Variable getFirstRHSVariable(){
 		return (Variable) RHS.getFirst();
 	}
 	
-	public Variable getBVariable(){
+	public Variable getSecondRHSVariable(){
 		return (Variable) RHS.getLast();
 	}
 	
