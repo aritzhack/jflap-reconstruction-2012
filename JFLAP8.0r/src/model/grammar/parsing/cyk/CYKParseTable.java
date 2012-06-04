@@ -34,7 +34,13 @@ public class CYKParseTable {
 	}
 	
 	/*
-	 * Add individual variable to existing set
+	 * Add a single variable to the specified location of the map
+	 * 
+	 * For example, addVariable(2, 3, A) would add the variable A to 
+	 * the third (0-based index for row 2) key of the parse table, and
+	 * then at the fourth (0-based index for col 3) key of the inner map
+	 * which is the value for row 2 of the outer map
+	 * in this way, the map can be considered like a 2-D array 
 	 */
 	public void addVariable(int row, int col, Variable v) {
 		myParseTable.get(row).get(col).add(v);
