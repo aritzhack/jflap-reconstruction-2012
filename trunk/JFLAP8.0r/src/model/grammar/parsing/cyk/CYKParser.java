@@ -21,6 +21,8 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.parsing.Parser;
+import model.grammar.parsing.ParserException;
+import model.grammar.typetest.GrammarType;
 
 public class CYKParser extends Parser {
 
@@ -44,20 +46,6 @@ public class CYKParser extends Parser {
 		
 	}
 
-	@Override
-	public String getDescriptionName() {
-		return "CYK Parser";
-	}
-
-	@Override
-	public String getDescription() {
-		return null;
-	}
-
-	@Override
-	public CYKParser copy() {
-		return new CYKParser(getGrammar());
-	}
 
 	/**
 	 * Returns true if the input string is in the language of the grammar
@@ -202,4 +190,40 @@ public class CYKParser extends Parser {
 		}
 		return false;
 	}
+
+	@Override
+	public String getDescriptionName() {
+		return "CYK Parser";
+	}
+
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Object copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	/**
+	 * Checks whether the grammar is in CNF (required for CYK parsing)
+	 * and throws a ParserException if not
+	 */
+	public void checkOfProperForm(Grammar g) throws ParserException {
+		for (GrammarType type : GrammarType.getType(g)) {
+			if (type.equals(GrammarType.CHOMSKY_NORMAL_FORM)) {
+				return;
+			}
+		}
+		throw new ParserException("Grammar not in Chomsky Normal Form (CNF)");
+	}
+	
+	
+	
 }
