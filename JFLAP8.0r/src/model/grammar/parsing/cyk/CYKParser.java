@@ -28,7 +28,6 @@ public class CYKParser extends Parser {
 	private List<Production> myAnswerTrace;
 	private Variable myStartVariable;
 	private SymbolString myTarget;
-
 	private CYKParseTable myTracer;
 
 	/**
@@ -41,7 +40,23 @@ public class CYKParser extends Parser {
 
 		myProductions = g.getProductionSet();
 		myStartVariable = g.getStartVariable();
+
 		
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "CYK Parser";
+	}
+
+	@Override
+	public String getDescription() {
+		return null;
+	}
+
+	@Override
+	public CYKParser copy() {
+		return new CYKParser(getGrammar());
 	}
 
 	/**
@@ -132,6 +147,13 @@ public class CYKParser extends Parser {
 		}
 	}
 
+	/**
+	 * Returns a list of Productions that (in order of leftmost derivation) can derive the specified string.
+	 * For example, if the derivation of string aabaa is:
+	 * S -> BA -> aA -> aAA -> aBCA -> aaCA -> aabA -> aabBC -> aabaC -> aabaa, 
+	 * then the list returned would be: [S->B A, B->a, A->A A, A->B C, B->a, C->b, A->B C, B->a, C->b]
+	 *  
+	 */
 	public List<Production> getTrace() {
 		myAnswerTrace = new ArrayList<Production>();
 		getPossibleTrace(getGrammar().getStartVariable(), 0,
@@ -139,6 +161,17 @@ public class CYKParser extends Parser {
 		return myAnswerTrace;
 	}
 
+	/**
+	 * Recursive backtracking helper function that modifies <CODE>myAnswerTrace</CODE> and will return true
+	 * if and only if it finds a possible derivation of the string specified by the LHS variable and start and end
+	 * indexes.
+	 * @param LHS
+	 * 			the variable to be checked for possibly being able to derive the string.
+	 * @param start
+	 * 			the index of first symbol in the string.
+	 * @param end
+	 * 			the index of final symbol in the string.
+	 */
 	private boolean getPossibleTrace(Variable LHS, int start, int end) {
 		if (start == end) {
 			Production terminalProduction = new Production(LHS,
@@ -169,27 +202,4 @@ public class CYKParser extends Parser {
 		}
 		return false;
 	}
-
-
-	@Override
-	public String getDescriptionName() {
-		return "CYK Parser";
-	}
-
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Object copy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
-	
 }
