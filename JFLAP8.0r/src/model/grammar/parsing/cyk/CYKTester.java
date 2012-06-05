@@ -85,10 +85,12 @@ public class CYKTester {
 		CNFConverter conv = new CNFConverter(gram);		
 		conv.stepToCompletion();
 		Grammar CNFgram = conv.getTransformedGrammar();
-		//System.out.println(CNFgram.toString());
+//		System.out.println(CNFgram.toString());
 		
 		CYKParser parser = new CYKParser(CNFgram);
-		System.out.println(parser.parse(SymbolString.createFromString("( 1 ( 0 ( 0 0 ) * ( 0 1 + 1 ) + 1 ) + 0 0 ( 0 0 ) * ( 0 1 + 1 ) + 0 1 ) ( 0 + 1 ) * + 1 0 ( 0 0 ) * + 0 0 ( 0 0 ) *", CNFgram)));
+		parser.quickParse(SymbolString.createFromString("000", CNFgram));
+		System.out.println(parser.isAccept());
 		System.out.println(parser.getTrace());
+		
 	}
 }

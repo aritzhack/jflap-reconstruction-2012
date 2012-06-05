@@ -14,14 +14,11 @@ package model.grammar.parsing.cyk;
  */
 
 import java.util.*;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
-import model.grammar.Grammar;
-import model.grammar.Production;
-import model.grammar.ProductionSet;
-import model.grammar.parsing.Parser;
-import model.grammar.parsing.ParserException;
+
+import model.algorithms.*;
+import model.formaldef.components.symbols.*;
+import model.grammar.*;
+import model.grammar.parsing.*;
 import model.grammar.typetest.GrammarType;
 
 public class CYKParser extends Parser {
@@ -29,8 +26,8 @@ public class CYKParser extends Parser {
 	private ProductionSet myProductions;
 	private List<Production> myAnswerTrace;
 	private Variable myStartVariable;
-	private SymbolString myTarget;
 	private Set<CYKParseNode> myParseTable[][];
+	private int currentStart, currentIncrement;
 
 	/**
 	 * Constructor for the CYKParser
@@ -39,54 +36,21 @@ public class CYKParser extends Parser {
 	 *            - grammar must be in Chomsky Normal Form (CNF)
 	 */
 	public CYKParser(Grammar g) {
-
 		super(g);
-
-		myProductions = g.getProductionSet();
-		myStartVariable = g.getStartVariable();
-
+		this.resetParserStateOnly();
 	}
 
 	/**
-	 * Returns true if the input string is in the language of the grammar and
-	 * false if not, as determined using the CYK parsing algorithm
+	 * Sets <CODE>myParseTable</CODE> to a new Set[][] of size
+	 * length*(length+1)/2
 	 * 
-	 * @param input
-	 *            - the string to be parsed
-	 */
-	public boolean parse(SymbolString input) {
-		myTarget = input;
-		int length = input.size();
-		if (length == 0) {
-			throw new ParserException(
-					"CNF Grammars cannot produce empty strings!");
-		}
-
-		initializeTable(length);
-		addTerminalProductions(input, length);
-
-		for (int increment = 1; increment < length; increment++) {
-			for (int row = 0; row < length - 1; row++) {
-				int substringLength = row + increment;
-				if (length <= substringLength) {
-					break;
-				}
-				findProductions(row, substringLength);
-			}
-		}
-		return getLHSVariableSet(0, length - 1).contains(myStartVariable);
-	}
-
-	
-	/**
-	 * Sets <CODE>myParseTable</CODE> to a new Set[][] of size length*(length+1)/2
 	 * @param length
-	 * 		the size of the string being processed by the table.
+	 *            the size of the string being processed by the table.
 	 */
 	private void initializeTable(int length) {
 		myParseTable = new Set[length][length];
-		for(int i=0;i<length;i++){
-			for(int j=i;j<length;j++){
+		for (int i = 0; i < length; i++) {
+			for (int j = i; j < length; j++) {
 				myParseTable[i][j] = new HashSet<CYKParseNode>();
 			}
 		}
@@ -109,16 +73,16 @@ public class CYKParser extends Parser {
 	 * @param length
 	 *            - the length of the input string
 	 */
-	private void addTerminalProductions(SymbolString input, int length) {
-		for (int i = 0; i < length; i++) {
-			SymbolString current = input.subList(i, i + 1);
-			for (Production p : myProductions) {
-				if (p.getRHS().equals(current)) {
-					CYKParseNode node = new CYKParseNode(p, i);
-					myParseTable[i][i].add(node);
-				}
+	private boolean addTerminalProduction() {
+		int i = currentStart;
+		SymbolString current = getCurrentInput().subList(i, i + 1);
+		for (Production p : myProductions) {
+			if (p.getRHS().equals(current)) {
+				CYKParseNode node = new CYKParseNode(p, i);
+				myParseTable[i][i].add(node);
 			}
 		}
+		return myParseTable[i][i].size()>0;
 	}
 
 	/**
@@ -137,20 +101,21 @@ public class CYKParser extends Parser {
 	 * @param end
 	 *            - end index of the substring in the input
 	 */
-	private void findProductions(int start, int end) {
-		for (int k = start; k < end; k++) {
-			for (Variable A : getLHSVariableSet(start, k)) {
-				for (Variable B : getLHSVariableSet(k + 1, end)) {
+	private boolean findProductions() {
+		for (int k = currentStart; k < currentStart+currentIncrement; k++) {
+			for (Variable A : getLHSVariableSet(currentStart, k)) {
+				for (Variable B : getLHSVariableSet(k + 1, currentStart+currentIncrement)) {
 					SymbolString concat = new SymbolString(A, B);
 					for (Production p : myProductions) {
 						if (p.getRHS().equals(concat)) {
 							CYKParseNode node = new CYKParseNode(p, k);
-							myParseTable[start][end].add(node);
+							myParseTable[currentStart][currentStart+currentIncrement].add(node);
 						}
 					}
 				}
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -161,13 +126,12 @@ public class CYKParser extends Parser {
 	 * B->a, C->b, A->B C, B->a, C->b]
 	 * 
 	 */
-	public List<Production> getTrace() {
+	public Derivation retrieveDerivation() {
 		myAnswerTrace = new ArrayList<Production>();
 		getPossibleTrace(getGrammar().getStartVariable(), 0,
-				myTarget.size() - 1);
-		//don't allow for other classes to modify myAnswerTrace, return copy instead
-		List<Production> answer = new ArrayList<Production>();
-		answer.addAll(myAnswerTrace);
+				getCurrentInput().size() - 1);
+		
+		Derivation answer = new Derivation(new Integer[0],myAnswerTrace.toArray(new Production[0]));
 		return answer;
 	}
 
@@ -188,7 +152,7 @@ public class CYKParser extends Parser {
 	private boolean getPossibleTrace(Variable LHS, int start, int end) {
 		if (start == end) {
 			Production terminalProduction = new Production(LHS,
-					(Terminal) myTarget.get(start));
+					(Terminal) getCurrentInput().get(start));
 			for (Production p : myProductions) {
 				if (p.equals(terminalProduction)) {
 					myAnswerTrace.add(terminalProduction);
@@ -223,13 +187,7 @@ public class CYKParser extends Parser {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public CYKParser copy() {
-		return new CYKParser(this.getGrammar());
+		return "This is a CYK Parser!";
 	}
 
 	/**
@@ -241,11 +199,13 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns all variables that can derive the symbols specified by start and end
+	 * Returns all variables that can derive the symbols specified by start and
+	 * end
+	 * 
 	 * @param start
-	 * 		the index of the first symbol.
+	 *            the index of the first symbol.
 	 * @param end
-	 * 		the index of the final symbol.
+	 *            the index of the final symbol.
 	 */
 	private Set<Variable> getLHSVariableSet(int start, int end) {
 		Set<Variable> LHSVars = new HashSet<Variable>();
@@ -253,6 +213,60 @@ public class CYKParser extends Parser {
 			LHSVars.add(node.getLHS());
 		}
 		return LHSVars;
+	}
+
+	@Override
+	public boolean isAccept() {
+		return getLHSVariableSet(0, getCurrentInput().size() - 1).contains(
+				myStartVariable);
+	}
+
+	@Override
+	public boolean isDone() {
+		return currentIncrement >= getCurrentInput().size();
+	}
+
+	@Override
+	public boolean stepParser() {
+		boolean step;
+		if (currentIncrement == 0) {
+			step = addTerminalProduction();
+		}else{
+			step = findProductions();
+		}
+		currentStart++;
+		if(currentIncrement+currentStart >= getCurrentInput().size()){
+			currentStart = 0;
+			currentIncrement++;
+		}
+		return step;
+		
+	}
+
+	@Override
+	public boolean resetParserStateOnly() {
+		myProductions = getGrammar().getProductionSet();
+		myStartVariable = getGrammar().getStartVariable();
+		myAnswerTrace = new ArrayList<Production>();
+		currentStart = currentIncrement = 0;
+		if (getCurrentInput() != null) {
+			this.initializeTable(getCurrentInput().size());
+		}
+		return true;
+	}
+
+	@Override
+	public boolean setInput(SymbolString string) {
+		if (string!= null && string.size() == 0) {
+			throw new ParserException(
+					"CNF Grammars cannot produce empty strings!");
+		}
+		return super.setInput(string);
+	}
+
+	public List<Production> getTrace() {
+		retrieveDerivation();
+		return myAnswerTrace;
 	}
 
 }
