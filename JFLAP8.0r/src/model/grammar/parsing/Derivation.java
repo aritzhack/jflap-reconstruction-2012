@@ -65,8 +65,6 @@ public class Derivation {
 	}
 	
 	public SymbolString[] getResultArray(){
-		JFLAPDebug.print(mySubstitutions);
-		JFLAPDebug.print(myProductions);
 		SymbolString[] steps = new SymbolString[this.getLength()];
 		for (int i = 1; i < steps.length+1; i++){
 			steps[i-1] = createResult(i);
