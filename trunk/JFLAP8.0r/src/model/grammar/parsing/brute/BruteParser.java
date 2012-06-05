@@ -96,12 +96,12 @@ public abstract class BruteParser extends BaseParser {
 			return false;
 		parseThread = new Thread() {
 			public void run() {
+				distributeEvent(new BruteParserEvent(this, BruteParserEvent.START));
 				while (isActive())
 					doParse();
 			}
 		};
 		parseThread.start();
-		distributeEvent(new BruteParserEvent(this, BruteParserEvent.START));
 		return true;
 	}
 
