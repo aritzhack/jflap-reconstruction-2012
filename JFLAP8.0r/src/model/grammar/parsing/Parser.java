@@ -5,6 +5,7 @@ import util.Copyable;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
+import model.algorithms.SteppableAlgorithm;
 import model.formaldef.Describable;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
@@ -31,6 +32,23 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	}
 
 	@Override
+	public boolean reset() throws AlgorithmException {
+		myInput = null;
+		return resetParserState();
+	}
+	
+	/**
+	 * Returns this parser to its base state without changing
+	 * the currently set input. Can be used if one would
+	 * like to restart the parser, but not change what it is
+	 * parsing.
+	 * 
+	 * @return
+	 * 		true if everything went ok in the reset.
+	 */
+	public abstract boolean resetParserState();
+
+	@Override
 	public AlgorithmStep[] initializeAllSteps() {
 		return new AlgorithmStep[]{
 				new DoParsingStep()};
@@ -53,13 +71,30 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 		return !this.isAccept() && this.isDone();
 	}
 
+	/**
+	 * Returns true if this parser is accept. This conditions
+	 * varies based on the parser.
+	 * @return
+	 */
 	public abstract boolean isAccept();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract boolean isDone();
 
 	public abstract GrammarType getRequiredGrammarType() throws ParserException;
 	
-	protected abstract boolean stepParser();
+	/**
+	 * This will execute another step in the parser. It is 
+	 * more or less the same as calling {@link SteppableAlgorithm}.step
+	 * but does not require the same "isComplete" case in the
+	 * {@link AlgorithmStep} class.
+	 * 
+	 * @return
+	 */
+	public abstract boolean stepParser();
 	
 	private class DoParsingStep implements AlgorithmStep{
 
