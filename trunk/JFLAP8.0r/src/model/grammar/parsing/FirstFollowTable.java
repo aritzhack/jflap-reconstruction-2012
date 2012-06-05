@@ -1,6 +1,7 @@
 package model.grammar.parsing;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -279,7 +280,35 @@ public class FirstFollowTable {
 		return curFollow;
 	}
 
-	
+	/**
+	 * Retrieves the first set for the input {@link SymbolString} based
+	 * on this first/follow table. NOTE: this should only be
+	 * called once the table is complete and will throw an
+	 * error otherwise.
+	 * 
+	 * @param rhs
+	 * @return
+	 */
+	public Set<Terminal> retrieveFirstSet(SymbolString rhs) {
+		if (!this.isComplete())
+			throw new ParserException("The FIRST/FOLLOW table must be " +
+					"complete before you may use it to retrieve info.");
+		Set<Terminal> first = new TreeSet<Terminal>();
+		Terminal empty = JFLAPPreferences.getSubForEmptyString();
+		first.add(empty);
+		for (int i = 0; i< rhs.size(); i++){
+			first.remove(empty);
+			Symbol s = rhs.get(i);
+			if (Grammar.isTerminal(s)){
+				first.add((Terminal) s);
+				break;
+			}
+			first.addAll(this.getFirst((Variable) s));
+			if (!first.contains(empty))
+				break;
+		}
+		return first;
+	}
 
 	public boolean isFirstComplete(Variable v){
 		int i = getIndexForVar(v);
@@ -329,8 +358,16 @@ public class FirstFollowTable {
 		return getFirstIncompleteFollow() == null;
 	}
 	
+	public boolean isComplete() {
+		return allFirstComplete() && allFollowComplete();
+	}
+
 	public int size() {
 		return myTable.length;
+	}
+
+	public Grammar getAssociatedGrammar() {
+		return myGrammar;
 	}
 
 	/**
@@ -465,6 +502,14 @@ public class FirstFollowTable {
 			first = new TreeSet<Terminal>();
 			follow = new TreeSet<Terminal>();
 		}
+	}
+
+	public Set<Terminal> getFirst(Variable v) {
+		return new TreeSet<Terminal>(myTable[getIndexForVar(v)].first);
+	}
+
+	public Set<Terminal> getFollow(Variable v) {
+		return new TreeSet<Terminal>(myTable[getIndexForVar(v)].follow);
 	}
 
 }

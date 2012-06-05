@@ -9,9 +9,11 @@ import model.grammar.typetest.matchers.CNFChecker;
 import model.grammar.typetest.matchers.ContextFreeChecker;
 import model.grammar.typetest.matchers.GNFChecker;
 import model.grammar.typetest.matchers.GrammarChecker;
+import model.grammar.typetest.matchers.LL1Checker;
 import model.grammar.typetest.matchers.LeftLinearChecker;
 import model.grammar.typetest.matchers.RegChecker;
 import model.grammar.typetest.matchers.RightLinearChecker;
+import model.grammar.typetest.matchers.UnrestrictedChecker;
 
 public enum GrammarType{
 	REGULAR("Regular Grammar", "RG", new RegChecker()),
@@ -23,7 +25,9 @@ public enum GrammarType{
 							new CNFChecker()),
 	GREIBACH_NORMAL_FORM("Grammar in Greibach Normal Form", 
 							"GNF", 
-							new GNFChecker());
+							new GNFChecker()),
+	UNRESTRICTED("Unrestricted Grammar","UG", new UnrestrictedChecker()),
+	LL1("LL1 Grammar", "LL1", new LL1Checker());
 
 	
 	public String abbreviation;

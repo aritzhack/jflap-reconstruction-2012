@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import model.automata.State;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.Terminal;
 
 public class UtilFunctions {
 
@@ -40,6 +41,12 @@ public class UtilFunctions {
 	public static String createDelimitedString(Object[] stateGroup,
 			String delimiter) {
 		return createDelimitedString(Arrays.asList(stateGroup), delimiter);
+	}
+
+
+	public  static <T> T[] combine(T[] myColumns,
+									T ... toAdd) {
+		return concatAll(myColumns, toAdd);
 	}
 	
 	

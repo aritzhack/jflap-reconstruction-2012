@@ -4,6 +4,7 @@ import java.awt.event.InputEvent;
 import java.io.File;
 
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.Terminal;
 import model.regex.EmptySub;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
@@ -92,8 +93,12 @@ public class JFLAPPreferences {
 		return new UnionOperator("+");
 	}
 
-	public static EmptySub getRegExSubForEmptyString() {
+	public static EmptySub getSubForEmptyString() {
 		return new EmptySub("!");
+	}
+
+	public static Terminal getEndOfStringMarker() {
+		return new Terminal("$");
 	}
 
 
