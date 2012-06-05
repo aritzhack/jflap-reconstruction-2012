@@ -40,7 +40,8 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	 * Returns this parser to its base state without changing
 	 * the currently set input. Can be used if one would
 	 * like to restart the parser, but not change what it is
-	 * parsing. 
+	 * parsing. This method is automatically called when the
+	 * input in the parser changes.
 	 * 
 	 * NOTE: call the {@link Parser}.reset method to reset the
 	 * input string (to <code>null</code>) and the parser state.
