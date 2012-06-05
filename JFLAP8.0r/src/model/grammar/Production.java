@@ -39,6 +39,10 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		setRHS(rhs);
 	}
 
+	public Production(){
+		this(new SymbolString(), new SymbolString());
+	}
+	
 	public Production(Symbol lhs, Symbol ... rhs) {
 		this(new SymbolString(lhs), new SymbolString(rhs));
 	}
