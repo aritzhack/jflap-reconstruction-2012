@@ -87,7 +87,7 @@ public class GrammarTest extends TestHarness {
 		outPrintln("CNF Converted RegEx Grammar:\n" + g2);
 	}
 
-	private static void addSymbols(Alphabet alph, Symbol ... sym) {
+	public static void addSymbols(Alphabet alph, Symbol ... sym) {
 		for (Symbol s: sym){
 			try {
 				alph.add(s);
@@ -98,7 +98,7 @@ public class GrammarTest extends TestHarness {
 		
 	}
 
-	private static String createRuleString(Alphabet alph) {
+	public static String createRuleString(Alphabet alph) {
 		String ruleString = alph.toString() + "\n" +
 						"\tDescription: " + alph.getDescription() + "\n"+
 						"\tRules: " + "\n";
