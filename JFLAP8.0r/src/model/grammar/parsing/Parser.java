@@ -121,6 +121,17 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	 */
 	public abstract boolean stepParser();
 	
+	/**
+	 * Retrieves a derivation from this parser. Depending
+	 * on the current state of this parser, what the 
+	 * derivation represents may vary.
+	 * 
+	 * @return
+	 * 		A {@link Derivation} relating to this parser.
+	 */
+	public abstract Derivation retrieveDerivation();
+	
+	
 	private class DoParsingStep implements AlgorithmStep{
 
 		@Override
