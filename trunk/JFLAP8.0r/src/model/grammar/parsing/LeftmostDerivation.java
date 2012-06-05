@@ -15,8 +15,10 @@ public class LeftmostDerivation extends Derivation {
 	}
 	
 	public LeftmostDerivation(Production ...productions ){
-		super(productions[0]);
-		addAll(UtilFunctions.subArray(productions, 1, productions.length));
+		super(productions.length == 0 ? new Production() : productions[0]);
+		if(productions.length>0){
+			addAll(UtilFunctions.subArray(productions, 1, productions.length));
+		}
 	}
 	
 	@Override
