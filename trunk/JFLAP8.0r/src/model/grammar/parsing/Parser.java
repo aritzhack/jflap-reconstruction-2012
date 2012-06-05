@@ -37,6 +37,28 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	}
 	
 	/**
+	 * Does a quick parse of the input string. This method
+	 * automatically sets the input, and then calls the 
+	 * {@link SteppableAlgorithm} method <code>stepToCompletion</code>.
+	 * 
+	 * If the input was accepted, returns true. Otherwise returns false,
+	 * although this may not necessarily mean that the string was 
+	 * outright rejected as some parsers may be "done" as a result of
+	 * reaching a complexity limit. 
+	 *  
+	 * @param input
+	 * 		Symbol String to parse
+	 * @return
+	 * 		true if the string is in the language of the associated grammar
+	 * 			false otherwise.
+	 */
+	public boolean quickParse(SymbolString input){
+		setInput(input);
+		stepToCompletion();
+		return this.isAccept();
+	}
+	
+	/**
 	 * Returns this parser to its base state without changing
 	 * the currently set input. Can be used if one would
 	 * like to restart the parser, but not change what it is
