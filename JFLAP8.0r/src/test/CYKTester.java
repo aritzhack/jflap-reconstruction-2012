@@ -17,7 +17,7 @@
 
 
 
-package model.grammar.parsing.cyk;
+package test;
 
 import java.util.Arrays;
 
@@ -32,6 +32,7 @@ import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.grammar.parsing.cyk.CYKParser;
 import model.grammar.transform.CNFConverter;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
