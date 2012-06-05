@@ -36,7 +36,7 @@ public class LeftmostDerivation extends Derivation {
 	}
 	
 	
-	private boolean addStep(Production p) {
+	public boolean addStep(Production p) {
 		SymbolString current = createResult();
 		for (int i = 0; i< current.size(); i++){
 			if (Grammar.isVariable(current.get(i))){

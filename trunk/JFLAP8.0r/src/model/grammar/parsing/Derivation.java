@@ -76,5 +76,9 @@ public class Derivation {
 	public String toString() {
 		return myProductions.toString();
 	}
+
+	public Production getProduction(int i) {
+		return myProductions.get(i);
+	}
 	
 }

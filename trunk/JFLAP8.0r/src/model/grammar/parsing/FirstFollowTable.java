@@ -148,10 +148,7 @@ public class FirstFollowTable {
 	 */
 	public void populateForIndex(int i) {
 		Set<Terminal> first = populateFirstForIndex(i);
-		JFLAPDebug.print(first);
 		Set<Terminal> follow = populateFollowForIndex(i);
-		JFLAPDebug.print(follow);
-
 	}
 
 
