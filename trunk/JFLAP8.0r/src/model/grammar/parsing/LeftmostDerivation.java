@@ -1,13 +1,22 @@
 package model.grammar.parsing;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.util.UtilFunctions;
 
 public class LeftmostDerivation extends Derivation {
 
 	public LeftmostDerivation(Production start) {
 		super(start);
+	}
+	
+	public LeftmostDerivation(Production ...productions ){
+		super(productions[0]);
+		addAll(UtilFunctions.subArray(productions, 1, productions.length));
 	}
 	
 	@Override
@@ -17,7 +26,11 @@ public class LeftmostDerivation extends Derivation {
 	}
 
 	public void addAll(Production ... p){
-		addAll(p, new Integer[p.length]);
+		Integer[] subs = new Integer[p.length];
+		for(int i=0;i<subs.length;i++){
+			subs[i] = 0;
+		}
+		addAll(p, subs);
 	}
 	
 	

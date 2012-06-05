@@ -19,6 +19,8 @@
 
 package model.grammar.parsing.cyk;
 
+import java.util.Arrays;
+
 import model.automata.InputAlphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -88,9 +90,8 @@ public class CYKTester {
 //		System.out.println(CNFgram.toString());
 		
 		CYKParser parser = new CYKParser(CNFgram);
-		parser.quickParse(SymbolString.createFromString("000", CNFgram));
+		parser.quickParse(SymbolString.createFromString("(000)", CNFgram));
 		System.out.println(parser.isAccept());
-		System.out.println(parser.getTrace());
-		
+		System.out.println(Arrays.toString(parser.getDerivation().getResultArray()));
 	}
 }

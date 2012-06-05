@@ -126,12 +126,12 @@ public class CYKParser extends Parser {
 	 * B->a, C->b, A->B C, B->a, C->b]
 	 * 
 	 */
-	public Derivation retrieveDerivation() {
+	public Derivation getDerivation() {
 		myAnswerTrace = new ArrayList<Production>();
 		getPossibleTrace(getGrammar().getStartVariable(), 0,
 				getCurrentInput().size() - 1);
 		
-		Derivation answer = new Derivation(new Integer[0],myAnswerTrace.toArray(new Production[0]));
+		Derivation answer = new LeftmostDerivation(myAnswerTrace.toArray(new Production[0]));
 		return answer;
 	}
 
@@ -262,11 +262,6 @@ public class CYKParser extends Parser {
 					"CNF Grammars cannot produce empty strings!");
 		}
 		return super.setInput(string);
-	}
-
-	public List<Production> getTrace() {
-		retrieveDerivation();
-		return myAnswerTrace;
 	}
 
 }
