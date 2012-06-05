@@ -27,7 +27,7 @@ public class CYKParser extends Parser {
 	private List<Production> myAnswerTrace;
 	private Variable myStartVariable;
 	private Set<CYKParseNode> myParseTable[][];
-	private int currentStart, currentIncrement;
+	private int myStartIndex, myIncrement;
 
 	/**
 	 * Constructor for the CYKParser
@@ -74,8 +74,8 @@ public class CYKParser extends Parser {
 	 *            - the length of the input string
 	 */
 	private boolean addTerminalProduction() {
-		int i = currentStart;
-		SymbolString current = getCurrentInput().subList(i, i + 1);
+		int i = myStartIndex;
+		SymbolString current = getInput().subList(i, i + 1);
 		for (Production p : myProductions) {
 			if (p.getRHS().equals(current)) {
 				CYKParseNode node = new CYKParseNode(p, i);
@@ -102,14 +102,14 @@ public class CYKParser extends Parser {
 	 *            - end index of the substring in the input
 	 */
 	private boolean findProductions() {
-		for (int k = currentStart; k < currentStart+currentIncrement; k++) {
-			for (Variable A : getLHSVariableSet(currentStart, k)) {
-				for (Variable B : getLHSVariableSet(k + 1, currentStart+currentIncrement)) {
+		for (int k = myStartIndex; k < myStartIndex+myIncrement; k++) {
+			for (Variable A : getLHSVariableSet(myStartIndex, k)) {
+				for (Variable B : getLHSVariableSet(k + 1, myStartIndex+myIncrement)) {
 					SymbolString concat = new SymbolString(A, B);
 					for (Production p : myProductions) {
 						if (p.getRHS().equals(concat)) {
 							CYKParseNode node = new CYKParseNode(p, k);
-							myParseTable[currentStart][currentStart+currentIncrement].add(node);
+							myParseTable[myStartIndex][myStartIndex+myIncrement].add(node);
 						}
 					}
 				}
@@ -128,8 +128,8 @@ public class CYKParser extends Parser {
 	 */
 	public Derivation getDerivation() {
 		myAnswerTrace = new ArrayList<Production>();
-		getPossibleTrace(getGrammar().getStartVariable(), 0,
-				getCurrentInput().size() - 1);
+		getTrace(getGrammar().getStartVariable(), 0,
+				getInput().size() - 1);
 		
 		Derivation answer = new LeftmostDerivation(myAnswerTrace.toArray(new Production[0]));
 		return answer;
@@ -149,10 +149,10 @@ public class CYKParser extends Parser {
 	 * @param end
 	 *            the index of final symbol in the string.
 	 */
-	private boolean getPossibleTrace(Variable LHS, int start, int end) {
+	private boolean getTrace(Variable LHS, int start, int end) {
 		if (start == end) {
 			Production terminalProduction = new Production(LHS,
-					(Terminal) getCurrentInput().get(start));
+					(Terminal) getInput().get(start));
 			for (Production p : myProductions) {
 				if (p.equals(terminalProduction)) {
 					myAnswerTrace.add(terminalProduction);
@@ -166,9 +166,9 @@ public class CYKParser extends Parser {
 			for (Production p : myProductions) {
 				if (p.equals(nodeProduction)) {
 					myAnswerTrace.add(nodeProduction);
-					if (getPossibleTrace(node.getFirstRHSVariable(), start,
+					if (getTrace(node.getFirstRHSVariable(), start,
 							node.getK())
-							&& getPossibleTrace(node.getSecondRHSVariable(),
+							&& getTrace(node.getSecondRHSVariable(),
 									node.getK() + 1, end)) {
 						return true;
 					}
@@ -217,29 +217,29 @@ public class CYKParser extends Parser {
 
 	@Override
 	public boolean isAccept() {
-		return getLHSVariableSet(0, getCurrentInput().size() - 1).contains(
+		return getLHSVariableSet(0, getInput().size() - 1).contains(
 				myStartVariable);
 	}
 
 	@Override
 	public boolean isDone() {
-		return currentIncrement >= getCurrentInput().size();
+		return myIncrement >= getInput().size();
 	}
 
 	@Override
 	public boolean stepParser() {
-		boolean step;
-		if (currentIncrement == 0) {
-			step = addTerminalProduction();
+		boolean nextTableCell;
+		if (myIncrement == 0) {
+			nextTableCell = addTerminalProduction();
 		}else{
-			step = findProductions();
+			nextTableCell = findProductions();
 		}
-		currentStart++;
-		if(currentIncrement+currentStart >= getCurrentInput().size()){
-			currentStart = 0;
-			currentIncrement++;
+		myStartIndex++;
+		if(myIncrement+myStartIndex >= getInput().size()){
+			myStartIndex = 0;
+			myIncrement++;
 		}
-		return step;
+		return nextTableCell;
 		
 	}
 
@@ -248,9 +248,9 @@ public class CYKParser extends Parser {
 		myProductions = getGrammar().getProductionSet();
 		myStartVariable = getGrammar().getStartVariable();
 		myAnswerTrace = new ArrayList<Production>();
-		currentStart = currentIncrement = 0;
-		if (getCurrentInput() != null) {
-			this.initializeTable(getCurrentInput().size());
+		myStartIndex = myIncrement = 0;
+		if (getInput() != null) {
+			this.initializeTable(getInput().size());
 		}
 		return true;
 	}
