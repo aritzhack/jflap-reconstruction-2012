@@ -12,11 +12,15 @@ public class Derivation {
 	private Integer[] mySubstitutions;
 	
 	public Derivation(Integer[] subs, Production ... productions) {
-		myProductions = new LinkedList<Production>();
+		this();
 		myProductions.addAll(Arrays.asList(productions));
 		mySubstitutions = subs;
 	}
 	
+	public Derivation() {
+		myProductions = new LinkedList<Production>();
+	}
+
 	public boolean addProduction(Production p, int subIndex) {
 		mySubstitutions = UtilFunctions.combine(mySubstitutions, subIndex);
 		return myProductions.add(p);
