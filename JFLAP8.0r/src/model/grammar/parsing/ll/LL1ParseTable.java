@@ -1,6 +1,7 @@
 package model.grammar.parsing.ll;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -110,6 +111,19 @@ public class LL1ParseTable {
 				return i;
 		}
 		return -1;
+	}
+
+
+
+	public SymbolString get(Variable v, Terminal t) {
+		return get(getRowForVar(v), getColForTerm(t));
+	}
+
+
+
+	private SymbolString get(int r, int c) {
+		SymbolString[] entry = myTable[r][c].toArray(new SymbolString[0]);
+		return entry.length == 1 ? entry[0]: null;
 	}
 
 }

@@ -45,6 +45,7 @@ import java.util.Arrays;
  */
 
 public class ParseNode extends DefaultMutableTreeNode {
+
 	/**
 	 * Instantiates a new parse node.
 	 * 

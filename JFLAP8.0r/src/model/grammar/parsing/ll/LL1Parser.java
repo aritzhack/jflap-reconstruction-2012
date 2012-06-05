@@ -1,11 +1,22 @@
 package model.grammar.parsing.ll;
 
+import java.util.Deque;
+import java.util.Queue;
+
+import debug.JFLAPDebug;
+
+import universe.preferences.JFLAPPreferences;
+
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.Derivation;
+import model.grammar.parsing.LeftmostDerivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
@@ -14,9 +25,10 @@ import model.grammar.typetest.GrammarType;
 public class LL1Parser extends Parser {
 
 	private LL1ParseTable myParseTable;
-	private Derivation myDerivation;
+	private LeftmostDerivation myDerivation;
 	private SymbolString myStack;
 	private SymbolString myUnprocessedInput;
+	private SymbolString mySymbolsToAdd;
 
 	public LL1Parser(Grammar g) {
 		this(g, new LL1ParseTable(g));
@@ -38,10 +50,22 @@ public class LL1Parser extends Parser {
 	}
 
 	@Override
+	public AlgorithmStep[] initializeAllSteps() {
+		AlgorithmStep[] steps = super.initializeAllSteps();
+		return new AlgorithmStep[]{new AddSymbolToStackStep(),
+				new RemoveMatchStep(),
+				steps[0]};
+	}
+	
+	@Override
 	public boolean resetParserStateOnly() {
 		myUnprocessedInput = this.getInput();
-		myDerivation = new Derivation(createEmptyStart());
-		return false;
+		if (myUnprocessedInput != null)
+			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
+		myDerivation = new LeftmostDerivation(createEmptyStart());
+		myStack = new SymbolString(getGrammar().getStartVariable());
+		mySymbolsToAdd = new SymbolString();
+		return true;
 	}
 
 	private Production createEmptyStart() {
@@ -51,14 +75,17 @@ public class LL1Parser extends Parser {
 
 	@Override
 	public boolean isAccept() {
-		// TODO Auto-generated method stub
-		return false;
+		Symbol eos = JFLAPPreferences.getEndOfStringMarker();
+		return isDone() && 
+				myUnprocessedInput.size() == 1 &&
+				myUnprocessedInput.getFirst().equals(eos) ;
 	}
 
 	@Override
 	public boolean isDone() {
-		// TODO Auto-generated method stub
-		return false;
+		return mySymbolsToAdd.isEmpty() && 
+				!hasMatchingTerminal() &&
+				getCurrentEntry() == null;
 	}
 
 	@Override
@@ -68,40 +95,99 @@ public class LL1Parser extends Parser {
 
 	@Override
 	public boolean stepParser() {
-		// TODO Auto-generated method stub
-		return false;
+
+		SymbolString toAdd = getCurrentEntry();
+		Variable v = (Variable) myStack.pollFirst();
+
+		if (isEmptyString(toAdd))
+			toAdd = new SymbolString();
+
+		mySymbolsToAdd.addAll(toAdd);
+		
+		
+		myDerivation.addStep(new Production(v, toAdd));
+		return true;
+	}
+
+	private boolean isEmptyString(SymbolString toAdd) {
+		Terminal empty = JFLAPPreferences.getSubForEmptyString();
+		return toAdd.startsWith(empty);
 	}
 
 	@Override
 	public Derivation getDerivation() {
-		// TODO Auto-generated method stub
-		return null;
+		return myDerivation;
+	}
+	
+	public Terminal removeMatchingTerminal() {
+		myUnprocessedInput.removeFirst();
+		return (Terminal) myStack.pollFirst();
 	}
 
+	public boolean hasMatchingTerminal() {
+		return myStack.size() > 0 && 
+				myUnprocessedInput.getFirst().equals(myStack.peekFirst());
+	}
 	
-	private class CheckMatchStep implements AlgorithmStep {
+	private SymbolString getCurrentEntry() {
+		Symbol s = myStack.peekFirst();
+		if (s == null || Grammar.isTerminal(s))
+			return null;
+		Terminal t = (Terminal) myUnprocessedInput.getFirst();
+		Variable V = (Variable) s;
+		
+		return myParseTable.get(V,t);
+	}
+
+	public boolean addSymbolToStack() {
+		myStack.addFirst(mySymbolsToAdd.pollLast());
+		return true;
+	}
+
+	private class AddSymbolToStackStep implements AlgorithmStep{
+	
+		@Override
+		public String getDescriptionName() {
+			return "Add Symbol to Stack";
+		}
+	
+		@Override
+		public String getDescription() {
+			return null;
+		}
+	
+		@Override
+		public boolean execute() throws AlgorithmException {
+			return addSymbolToStack();
+		}
+	
+		@Override
+		public boolean isComplete() {
+			return mySymbolsToAdd.isEmpty();
+		}
+		
+	}
+
+	private class RemoveMatchStep implements AlgorithmStep {
 
 		@Override
 		public String getDescriptionName() {
-			return null;
+			return "Remove matching Terminals";
 		}
 
 		@Override
 		public String getDescription() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public boolean execute() throws AlgorithmException {
-			// TODO Auto-generated method stub
-			return false;
+			return removeMatchingTerminal() != null;
 		}
 
 		@Override
 		public boolean isComplete() {
-			// TODO Auto-generated method stub
-			return false;
+			return !hasMatchingTerminal();
 		}
 		
 	}
