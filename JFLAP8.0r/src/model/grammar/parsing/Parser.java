@@ -88,7 +88,7 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 		return resetParserStateOnly();
 	}
 	
-	public SymbolString getCurrentInput(){
+	public SymbolString getInput(){
 		return myInput;
 	}
 	
@@ -146,7 +146,7 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 
 		@Override
 		public boolean execute() throws AlgorithmException {
-			if (getCurrentInput() == null)
+			if (getInput() == null)
 				throw new AlgorithmException("You must set an input first before " +
 						"running the parser. ");
 			return stepParser();
