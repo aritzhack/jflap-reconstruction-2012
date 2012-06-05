@@ -75,11 +75,8 @@ public class RegularExpression extends FormalDefinition {
 	}
 	
 	public void setTo(String in){
-		JFLAPDebug.print("Parsing input:" + myGrammar);
-		JFLAPDebug.print(in);
 		in = in.replaceAll(JFLAPPreferences.getEmptyStringSymbol(),
 				myOperatorAlphabet.getEmptySub().getString());
-		JFLAPDebug.print(in);
 
 		if (!SymbolString.canBeParsed(in, myGrammar)){
 			throw new RegularExpressionException("Invalid input. This string contains symbols" +
