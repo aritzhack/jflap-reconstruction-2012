@@ -4,6 +4,8 @@ import java.lang.Character.Subset;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import debug.JFLAPDebug;
+
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;
 import model.util.UtilFunctions;
@@ -46,14 +48,16 @@ public class Derivation {
 
 	public SymbolString createResult(int n){
 		SymbolString result = new SymbolString();
-		if (myProductions.size() < n-1){
+		if (getLength() < n){
 			throw new ParserException("This derivation does not have " + n +
 					" steps."	);
 		}
 		
-		if (n != 0)
-			result.addAll(myProductions.getFirst().getRHS());
-		for (int i = 1; i < n-1; i++){
+		if (n == 0) return result;
+		
+		result.addAll(myProductions.getFirst().getRHS());
+		
+		for (int i = 1; i < n; i++){
 			SymbolString sub = myProductions.get(i).getRHS();
 			result.replace(mySubstitutions.get(i-1), sub);
 		}
@@ -61,9 +65,11 @@ public class Derivation {
 	}
 	
 	public SymbolString[] getResultArray(){
-		SymbolString[] steps = new SymbolString[this.getLength()-1];
-		for (int i = 1; i < steps.length-1; i++){
-			steps[i] = createResult(i);
+		JFLAPDebug.print(mySubstitutions);
+		JFLAPDebug.print(myProductions);
+		SymbolString[] steps = new SymbolString[this.getLength()];
+		for (int i = 1; i < steps.length+1; i++){
+			steps[i-1] = createResult(i);
 		}
 		return steps;
 	}
