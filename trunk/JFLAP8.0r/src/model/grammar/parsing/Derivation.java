@@ -48,7 +48,7 @@ public class Derivation {
 		SymbolString result = new SymbolString();
 		if (myProductions.size() < n-1){
 			throw new ParserException("This derivation does not have " + n +
-					"steps."	);
+					" steps."	);
 		}
 		
 		if (n != 0)
