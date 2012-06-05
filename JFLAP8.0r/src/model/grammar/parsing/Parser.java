@@ -129,7 +129,7 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	 * @return
 	 * 		A {@link Derivation} relating to this parser.
 	 */
-	public abstract Derivation retrieveDerivation();
+	public abstract Derivation getDerivation();
 	
 	
 	private class DoParsingStep implements AlgorithmStep{
