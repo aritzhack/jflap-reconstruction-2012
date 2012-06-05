@@ -33,20 +33,22 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 
 	@Override
 	public boolean reset() throws AlgorithmException {
-		myInput = null;
-		return resetParserState();
+		return setInput(null);
 	}
 	
 	/**
 	 * Returns this parser to its base state without changing
 	 * the currently set input. Can be used if one would
 	 * like to restart the parser, but not change what it is
-	 * parsing.
+	 * parsing. 
+	 * 
+	 * NOTE: call the {@link Parser}.reset method to reset the
+	 * input string (to <code>null</code>) and the parser state.
 	 * 
 	 * @return
 	 * 		true if everything went ok in the reset.
 	 */
-	public abstract boolean resetParserState();
+	public abstract boolean resetParserStateOnly();
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
@@ -58,9 +60,9 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 		return super.getOriginalDefinition();
 	}
 	
-	public void setInput(SymbolString string){
-		this.reset();
+	public boolean setInput(SymbolString string){
 		myInput = string;
+		return resetParserStateOnly();
 	}
 	
 	public SymbolString getCurrentInput(){
