@@ -17,7 +17,7 @@ public class Derivation {
 		mySubstitutions = subs;
 	}
 	
-	private boolean addProduction(Production p, int subIndex) {
+	public boolean addProduction(Production p, int subIndex) {
 		mySubstitutions = UtilFunctions.combine(mySubstitutions, subIndex);
 		return myProductions.add(p);
 	}
