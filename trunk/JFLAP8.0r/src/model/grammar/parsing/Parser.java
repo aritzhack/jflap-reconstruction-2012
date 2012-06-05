@@ -24,11 +24,11 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	@Override
 	public BooleanWrapper[] checkOfProperForm(Grammar g) {
 		GrammarType type = this.getRequiredGrammarType();
-		BooleanWrapper bw = new BooleanWrapper(true);
+		BooleanWrapper[] bw = new BooleanWrapper[0];
 		if (!type.matches(g))
-			 bw = new BooleanWrapper(false, "To use the " + this.getDescriptionName() +
-					" the grammar must be in " + type.name);
-		return new BooleanWrapper[]{bw};
+			 bw = new BooleanWrapper[]{new BooleanWrapper(false, "To use the " + this.getDescriptionName() +
+					" the grammar must be in " + type.name)};
+		return bw;
 	}
 
 	@Override
