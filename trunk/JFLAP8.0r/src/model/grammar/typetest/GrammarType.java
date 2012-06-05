@@ -27,7 +27,7 @@ public enum GrammarType{
 							"GNF", 
 							new GNFChecker()),
 	UNRESTRICTED("Unrestricted Grammar","UG", new UnrestrictedChecker()),
-//	LL1("LL1 Grammar", "LL1", new LL1Checker())
+	LL1("LL1 Grammar", "LL1", new LL1Checker())
 	;
 
 	
