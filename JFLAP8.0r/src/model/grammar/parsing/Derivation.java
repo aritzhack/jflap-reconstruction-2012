@@ -34,7 +34,9 @@ public class Derivation {
 	
 	public SymbolString createResult(){
 		SymbolString result = new SymbolString();
-		if (myProductions.isEmpty())
+		if (myProductions.isEmpty()){
+			
+		}
 		result.addAll(myProductions.getFirst().getRHS());
 		for (int i = 1; i < myProductions.size(); i++){
 			SymbolString sub = myProductions.get(i).getRHS();
