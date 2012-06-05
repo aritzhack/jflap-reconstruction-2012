@@ -3,6 +3,7 @@ package model.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import model.automata.State;
 import model.formaldef.components.symbols.Symbol;
@@ -49,5 +50,9 @@ public class UtilFunctions {
 		return concatAll(myColumns, toAdd);
 	}
 	
+	public static <T> T[] subArray(T[] array,int start, int end) {
+		List<T> list = Arrays.asList(array);
+		return list.subList(start, end).toArray(array);
+	}
 	
 }

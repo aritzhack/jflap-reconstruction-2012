@@ -128,7 +128,6 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	private boolean noStartProductionsDeriveTerms() {
 		Variable var = this.getOriginalGrammar().getStartVariable();
-		JFLAPDebug.print(this.getTransformedGrammar());
 		return !myVarsDeriveTerms.contains(var);
 	}
 
