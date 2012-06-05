@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import universe.preferences.JFLAPPreferences;
 
 import errors.BooleanWrapper;
@@ -146,7 +148,10 @@ public class FirstFollowTable {
 	 */
 	public void populateForIndex(int i) {
 		Set<Terminal> first = populateFirstForIndex(i);
+		JFLAPDebug.print(first);
 		Set<Terminal> follow = populateFollowForIndex(i);
+		JFLAPDebug.print(follow);
+
 	}
 
 
@@ -230,7 +235,7 @@ public class FirstFollowTable {
 	public Set<Terminal> populateFollowForIndex(int i) {
 		Variable v = myTable[i].var;
 		Set<Terminal> newFollow = findFollowSet(v, myGrammar);
-		Set<Terminal> oldFollow = myTable[i].first;
+		Set<Terminal> oldFollow = myTable[i].follow;
 		boolean changed = !oldFollow.equals(newFollow);
 		if (changed){
 			oldFollow.clear();
@@ -492,24 +497,38 @@ public class FirstFollowTable {
 		return follow;
 	}
 
-	private class FirstFollowMapping{
-		public Variable var;
-		public Set<Terminal> first;
-		public Set<Terminal> follow;
-
-		public FirstFollowMapping(Variable v) {
-			var = v;
-			first = new TreeSet<Terminal>();
-			follow = new TreeSet<Terminal>();
-		}
-	}
-
 	public Set<Terminal> getFirst(Variable v) {
 		return new TreeSet<Terminal>(myTable[getIndexForVar(v)].first);
 	}
 
 	public Set<Terminal> getFollow(Variable v) {
 		return new TreeSet<Terminal>(myTable[getIndexForVar(v)].follow);
+	}
+	
+	@Override
+	public String toString() {
+		String toString = "";
+		for (int i = 0; i < this.size(); i++){
+			toString += myTable[i].toString() +"\n";
+		}
+		return toString;
+	}
+
+	private class FirstFollowMapping{
+		public Variable var;
+		public Set<Terminal> first;
+		public Set<Terminal> follow;
+	
+		public FirstFollowMapping(Variable v) {
+			var = v;
+			first = new TreeSet<Terminal>();
+			follow = new TreeSet<Terminal>();
+		}
+		
+		@Override
+		public String toString() {
+			return var + ": FIRST = " + first + " | FOLLOW = " + follow;
+		}
 	}
 
 }
