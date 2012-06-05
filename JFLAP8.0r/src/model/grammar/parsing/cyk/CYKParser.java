@@ -62,13 +62,7 @@ public class CYKParser extends Parser {
 					"CNF Grammars cannot produce empty strings!");
 		}
 
-		myParseTable = new Set[length][length];
-		for(int i=0;i<length;i++){
-			for(int j=i;j<length;j++){
-				myParseTable[i][j] = new HashSet<CYKParseNode>();
-			}
-		}
-
+		initializeTable(length);
 		addTerminalProductions(input, length);
 
 		for (int increment = 1; increment < length; increment++) {
@@ -81,6 +75,21 @@ public class CYKParser extends Parser {
 			}
 		}
 		return getLHSVariableSet(0, length - 1).contains(myStartVariable);
+	}
+
+	
+	/**
+	 * Sets <CODE>myParseTable</CODE> to a new Set[][] of size length*(length+1)/2
+	 * @param length
+	 * 		the size of the string being processed by the table.
+	 */
+	private void initializeTable(int length) {
+		myParseTable = new Set[length][length];
+		for(int i=0;i<length;i++){
+			for(int j=i;j<length;j++){
+				myParseTable[i][j] = new HashSet<CYKParseNode>();
+			}
+		}
 	}
 
 	/**
@@ -156,7 +165,10 @@ public class CYKParser extends Parser {
 		myAnswerTrace = new ArrayList<Production>();
 		getPossibleTrace(getGrammar().getStartVariable(), 0,
 				myTarget.size() - 1);
-		return myAnswerTrace;
+		//don't allow for other classes to modify myAnswerTrace, return copy instead
+		List<Production> answer = new ArrayList<Production>();
+		answer.addAll(myAnswerTrace);
+		return answer;
 	}
 
 	/**
@@ -216,9 +228,8 @@ public class CYKParser extends Parser {
 	}
 
 	@Override
-	public Object copy() {
-		// TODO Auto-generated method stub
-		return null;
+	public CYKParser copy() {
+		return new CYKParser(this.getGrammar());
 	}
 
 	/**
@@ -230,7 +241,7 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns all variables that can derive the string specified by start and end
+	 * Returns all variables that can derive the symbols specified by start and end
 	 * @param start
 	 * 		the index of the first symbol.
 	 * @param end
@@ -241,7 +252,6 @@ public class CYKParser extends Parser {
 		for (CYKParseNode node : myParseTable[start][end]) {
 			LHSVars.add(node.getLHS());
 		}
-
 		return LHSVars;
 	}
 
