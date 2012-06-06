@@ -8,7 +8,6 @@ public class RestrictedBruteParser extends BruteParser {
 
 	public RestrictedBruteParser(Grammar g) {
 		super(g);
-		// TODO Auto-generated constructor stub
 	}
 
 
