@@ -59,7 +59,7 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(SymbolString.createFromString("(000)", gram)));
+		System.out.println(parser.quickParse(SymbolString.createFromString("", gram)));
 	}
 
 }
