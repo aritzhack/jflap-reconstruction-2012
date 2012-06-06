@@ -30,16 +30,16 @@ import model.formaldef.components.symbols.SymbolString;
 public abstract class BruteParser extends Parser {
 
 	private static final int INCREMENT_CAPACITY_BY = 5000;
-	private int NODES_TO_GENERATE = 5000;
+	private int NODES_TO_GENERATE = 10000000;
 
 	private Queue<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
-	private Set<Symbol>smaller;
-	
+	protected Set<Symbol> mySmallerSet;
+
 	public BruteParser(Grammar g) {
 		super(g);
-		smaller = Collections.unmodifiableSet(Unrestricted
+		mySmallerSet = Collections.unmodifiableSet(Unrestricted
 				.smallerSymbols(g));
 		maxLHSsize = 0;
 		for(Production p : g.getProductionSet()){
@@ -86,7 +86,7 @@ public abstract class BruteParser extends Parser {
 	public GrammarType getRequiredGrammarType() throws ParserException {
 		return GrammarType.UNRESTRICTED;
 	}
-	
+
 	@Override
 	public Derivation getDerivation () {
 		return myAnswerDerivation;
@@ -102,7 +102,7 @@ public abstract class BruteParser extends Parser {
 		return true;
 	}
 
-	
+
 
 	private void initializeQueue() {
 		myDerivationsQueue = new LinkedList<Derivation>();
@@ -116,22 +116,21 @@ public abstract class BruteParser extends Parser {
 
 	private boolean makeNextReplacement() {
 
-		// hold new Derivations, else queue not empty until end => cannot step
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
-			for(int i=0; i<result.size();i++){
-				for(int j=i; j<maxLHSsize+i;j++){
-					SymbolString LHS = result.subList(i,j+1);
+			for (int i = 0; i < result.size(); i++){
+				for(int j = i; j < maxLHSsize + i; j++){
+					SymbolString LHS = result.subList(i, j + 1);
 					for(Production p : getGrammar().getProductionSet().getProductionsWithLHS(LHS)){
 						Derivation tempDerivation = d.copy();
 						tempDerivation.addStep(p, result.indexOf(LHS, i));
-						if(isPossibleDerivation(tempDerivation.createResult())){
+						if (isPossibleDerivation(tempDerivation.createResult())){
 							temp.add(tempDerivation);
 							myNodesGenerated++;
-							if(tempDerivation.createResult().equals(getInput())){
+							if (tempDerivation.createResult().equals(getInput())){
 								break loop;
 							}
 						}
@@ -147,13 +146,13 @@ public abstract class BruteParser extends Parser {
 		NODES_TO_GENERATE += INCREMENT_CAPACITY_BY;
 		return true;
 	}
-	
+
 	public int getNumberOfNodes(){
 		return this.myNodesGenerated;
 	}
-	
+
 	public boolean isPossibleDerivation(SymbolString derivation) {
-		return Unrestricted.minimumLength(derivation, smaller) <= getInput().size();
+		return Unrestricted.minimumLength(derivation, mySmallerSet) <= getInput().size();
 	}
 
 }

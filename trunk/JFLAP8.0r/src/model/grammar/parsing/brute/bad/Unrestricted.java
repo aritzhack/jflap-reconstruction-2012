@@ -20,9 +20,7 @@
 
 package model.grammar.parsing.brute.bad;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import model.formaldef.components.symbols.Symbol;
@@ -72,7 +70,7 @@ public class Unrestricted {
 	 *            the string
 	 * @param c
 	 *            the character
-	 * @return the number of occurances of the character in the string
+	 * @return the number of occurrences of the character in the string
 	 */
 	private static int count(SymbolString str, Symbol s) {
 		int count = 0;
