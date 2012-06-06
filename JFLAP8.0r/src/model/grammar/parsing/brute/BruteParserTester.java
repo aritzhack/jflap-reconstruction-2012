@@ -37,17 +37,17 @@ public class BruteParserTester {
 //		p.add(new Production(S, A, B));
 //		p.add(new Production(A, a));
 //		p.add(new Production(B, b));
+		
+		
+		
 		InputAlphabet input = new InputAlphabet();
-//		for (char i = 'a'; i <= 'z'; i++){
-//			input.add(new Symbol(Character.toString(i)));
-//		}
 		input.add(new Symbol(Character.toString('0')));
 		input.add(new Symbol(Character.toString('1')));
+		
 		RegularExpressionGrammar gram = new RegularExpressionGrammar(input, new OperatorAlphabet());
 		gram.trimAlphabets();
 		
 		StartVariable s = new StartVariable("S");
-		
 		
 		RestrictedBruteParser parser = new RestrictedBruteParser(gram);
 		
@@ -59,7 +59,7 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(SymbolString.createFromString("0", gram)));
+		System.out.println(parser.quickParse(SymbolString.createFromString("00000", gram)));
 		System.out.println(parser.getNumberOfNodes());
 	}
 

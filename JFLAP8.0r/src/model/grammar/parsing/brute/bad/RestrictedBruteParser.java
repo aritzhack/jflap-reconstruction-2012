@@ -22,9 +22,12 @@ package model.grammar.parsing.brute.bad;
 
 import java.util.ArrayList;
 
+import debug.JFLAPDebug;
+
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
+import model.grammar.parsing.brute.BruteParser;
 
 
 /**
@@ -46,12 +49,12 @@ public class RestrictedBruteParser extends BruteParser {
 	}
 
 	public boolean isPossibleDerivation(SymbolString derivation) {
-		if (Unrestricted.minimumLength(derivation, mySmallerSet) > myTarget.size())
+		if (Unrestricted.minimumLength(derivation, mySmallerSet) > getInput().size())
 			return false;
-		int targetSearched = 0;
+		//int targetSearched = 0;
 		boolean startBookend = false, endBookend = false;
 		ArrayList<SymbolString> discrete = new ArrayList<SymbolString>();
-		int start = -1;
+		//int start = -1;
 
 		/*
 		 * Set the start and end "bookeneds", that is, the derivation is padded
@@ -81,18 +84,18 @@ public class RestrictedBruteParser extends BruteParser {
 		for (int i = 0; i < discrete.size(); i++) {
 			SymbolString e = discrete.get(i);
 			if (startBookend && i == 0) {
-				if (!myTarget.startsWith(e)){
+				if (!getInput().startsWith(e)){
 					JFLAPDebug.print(1);
 					return false;
 				}
 				cp = e.size();
 			} else if (endBookend && i == discrete.size() - 1) {
-				if (!myTarget.endsWith(e)){
+				if (!getInput().endsWith(e)){
 					JFLAPDebug.print(2);
 					return false;
 				}
 			} else {
-				cp = myTarget.indexOf(e, cp);
+				cp = getInput().indexOf(e, cp);
 				if (cp == -1){
 					JFLAPDebug.print(3);
 					return false;

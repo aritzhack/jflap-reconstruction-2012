@@ -21,6 +21,7 @@
 package model.grammar.parsing.brute.bad;
 
 import model.grammar.Grammar;
+import model.grammar.parsing.brute.BruteParser;
 
 /**
  * This is the brute parser for an unrestricted grammar.
