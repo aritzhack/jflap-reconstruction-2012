@@ -48,7 +48,7 @@ public class BruteParserTester {
 		//parser.resetParserStateOnly();
 		parser.stepParser();
 		parser.stepParser();
-		//parser.stepParser();
+		parser.stepParser();
 		System.out.println(parser.isAccept());
 	}
 

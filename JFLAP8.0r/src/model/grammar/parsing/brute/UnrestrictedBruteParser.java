@@ -1,5 +1,5 @@
 package model.grammar.parsing.brute;
 
-public class BruteParseNode {
+public class UnrestrictedBruteParser {
 
 }

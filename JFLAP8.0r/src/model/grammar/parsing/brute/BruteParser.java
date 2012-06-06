@@ -33,6 +33,7 @@ public abstract class BruteParser extends Parser {
 	private Map<SymbolString, Set<SymbolString>> productionMap;
 	private Queue<Derivation> derivationsQueue;
 	private int nodesGenerated;
+	private Derivation answerDerivation;
 
 	public BruteParser(Grammar g) {
 		super(g);
@@ -76,15 +77,15 @@ public abstract class BruteParser extends Parser {
 		// TODO Auto-generated method stub
 		return isAccept() || capacityReached();
 	}
-	
+
 
 	@Override
 	public GrammarType getRequiredGrammarType() throws ParserException {
 		// TODO Auto-generated method stub
 		return GrammarType.UNRESTRICTED;
 	}
-	
-	
+
+
 	private boolean capacityReached() {
 		return nodesGenerated >= NODES_TO_GENERATE;
 	}
@@ -167,38 +168,43 @@ public abstract class BruteParser extends Parser {
 
 		while (!derivationsQueue.isEmpty()) {
 			Derivation d = derivationsQueue.poll();
+			SymbolString rhs = d.createResult();
+			System.out.printf("RHS so far: %s\n" +
+					"", rhs);
 			
-			for (int i = 0; i < d.getLength(); i++) {
-				Production prod = d.getProduction(i);
-				SymbolString rhs = prod.getRHS();
-				for (int j = 0; j < rhs.size(); j++) {
-					SymbolString s = new SymbolString(rhs.get(j));
-					if (!productionMap.containsKey(s)) 	{
-						Derivation change = new Derivation(prod);
-						temp.add(change);
-						continue;
-					}
-					Set<SymbolString> replacements = productionMap.get(s);
-					for (SymbolString sub : replacements) {
-						SymbolString copy = rhs.clone();
-						copy.replace(j, sub);
+			//			for (int i = 0; i < d.getLength(); i++) {
+			//				Production prod = d.getProduction(i);
+			//				SymbolString rhs = prod.getRHS();
+			
+			for (int j = 0; j < rhs.size(); j++) {
+				SymbolString s = new SymbolString(rhs.get(j));
+				if (!productionMap.containsKey(s)) 	{
+					//Derivation change = new Derivation(prod);
+					//temp.add(change);
+					continue;
+				}
+				Set<SymbolString> replacements = productionMap.get(s);
+				for (SymbolString sub : replacements) {
+					SymbolString copy = rhs.clone();
+					copy.replace(j, sub);
 
-						Derivation change = new Derivation(prod);
-						change.addStep(new Production(s, sub), j);
-						temp.add(change);
+//					Derivation change = new Derivation(prod);
+					Derivation change = new Derivation(new Production(getGrammar().getStartVariable(), rhs));
+					change.addStep(new Production(s, sub), j);
+					temp.add(change);
 
-						System.out.printf("\n" +
-								"Original derivation: %s\t" +
-								"Replacement: %s -> %s at index %d\t\t" +
-								"New derivation: %s -> %s\n", 
-								prod, s, sub, j, prod.getLHS(), change.createResult());
-						
-						//System.out.printf("Added derivation with new production %s -> %s\n", prod.getLHS(), copy);
-					}
+//					System.out.printf("\n" +
+//							"Original derivation: %s\t" +
+//							"Replacement: %s -> %s at index %d\t\t" +
+//							"New derivation: %s -> %s\n", 
+//							prod, s, sub, j, prod.getLHS(), change.createResult());
 
+					//System.out.printf("Added derivation with new production %s -> %s\n", prod.getLHS(), copy);
 				}
 
 			}
+
+
 
 		}
 
