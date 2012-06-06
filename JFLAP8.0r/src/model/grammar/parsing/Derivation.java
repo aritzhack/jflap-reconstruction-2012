@@ -4,13 +4,15 @@ import java.lang.Character.Subset;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import util.Copyable;
+
 import debug.JFLAPDebug;
 
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;
 import model.util.UtilFunctions;
 
-public class Derivation {
+public class Derivation implements Copyable{
 
 	private LinkedList<Production> myProductions;
 	private LinkedList<Integer> mySubstitutions;
@@ -79,6 +81,15 @@ public class Derivation {
 
 	public Production getProduction(int i) {
 		return myProductions.get(i);
+	}
+
+	@Override
+	public Derivation copy() {
+		Derivation copy = new Derivation(myProductions.get(0));
+		for (int i = 1; i< this.getLength(); i++){
+			copy.addStep(myProductions.get(i), mySubstitutions.get(i-1));
+		}
+		return copy;
 	}
 	
 }
