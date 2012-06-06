@@ -15,7 +15,6 @@ package model.grammar.parsing.cyk;
 
 import java.util.*;
 
-import model.algorithms.*;
 import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.grammar.parsing.*;
@@ -47,6 +46,7 @@ public class CYKParser extends Parser {
 	 * @param length
 	 *            the size of the string being processed by the table.
 	 */
+	@SuppressWarnings("unchecked")
 	private void initializeTable(int length) {
 		myParseTable = new Set[length][length];
 		for (int i = 0; i < length; i++) {
@@ -119,10 +119,10 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns a list of Productions that (in order of leftmost derivation) can
+	 * Returns a LeftmostDerivation that can
 	 * derive the specified string. For example, if the derivation of string
 	 * aabaa is: S -> BA -> aA -> aAA -> aBCA -> aaCA -> aabA -> aabBC -> aabaC
-	 * -> aabaa, then the list returned would be: [S->B A, B->a, A->A A, A->B C,
+	 * -> aabaa, then the Derivation returned would be: [S->B A, B->a, A->A A, A->B C,
 	 * B->a, C->b, A->B C, B->a, C->b]
 	 * 
 	 */
