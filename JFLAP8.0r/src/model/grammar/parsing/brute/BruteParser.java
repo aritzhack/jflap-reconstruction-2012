@@ -4,12 +4,14 @@ import java.util.*;
 
 import model.grammar.*;
 import model.grammar.parsing.*;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
+import model.grammar.parsing.brute.bad.Unrestricted;
 import model.grammar.typetest.GrammarType;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -33,9 +35,12 @@ public abstract class BruteParser extends Parser {
 	private Queue<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
-
+	private Set<Symbol>smaller;
+	
 	public BruteParser(Grammar g) {
 		super(g);
+		smaller = Collections.unmodifiableSet(Unrestricted
+				.smallerSymbols(g));
 		maxLHSsize = 0;
 		for(Production p : g.getProductionSet()){
 			if(p.getLHS().size()>maxLHSsize){
@@ -93,7 +98,6 @@ public abstract class BruteParser extends Parser {
 
 	@Override
 	public boolean stepParser() {
-
 		makeNextReplacement();
 		return true;
 	}
@@ -115,7 +119,7 @@ public abstract class BruteParser extends Parser {
 		// hold new Derivations, else queue not empty until end => cannot step
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 
-		while (!myDerivationsQueue.isEmpty()) {
+		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
 			for(int i=0; i<result.size();i++){
@@ -124,8 +128,13 @@ public abstract class BruteParser extends Parser {
 					for(Production p : getGrammar().getProductionSet().getProductionsWithLHS(LHS)){
 						Derivation tempDerivation = d.copy();
 						tempDerivation.addStep(p, result.indexOf(LHS, i));
-						temp.add(tempDerivation);
-						myNodesGenerated++;
+						if(isPossibleDerivation(tempDerivation.createResult())){
+							temp.add(tempDerivation);
+							myNodesGenerated++;
+							if(tempDerivation.createResult().equals(getInput())){
+								break loop;
+							}
+						}
 					}
 				}
 			}
@@ -138,7 +147,13 @@ public abstract class BruteParser extends Parser {
 		NODES_TO_GENERATE += INCREMENT_CAPACITY_BY;
 		return true;
 	}
-
-	protected abstract boolean isPossibleDerivation(SymbolString string);
+	
+	public int getNumberOfNodes(){
+		return this.myNodesGenerated;
+	}
+	
+	public boolean isPossibleDerivation(SymbolString derivation) {
+		return Unrestricted.minimumLength(derivation, smaller) <= getInput().size();
+	}
 
 }

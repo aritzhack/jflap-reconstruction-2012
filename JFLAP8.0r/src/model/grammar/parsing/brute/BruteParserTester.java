@@ -59,7 +59,8 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(SymbolString.createFromString("", gram)));
+		System.out.println(parser.quickParse(SymbolString.createFromString("0", gram)));
+		System.out.println(parser.getNumberOfNodes());
 	}
 
 }

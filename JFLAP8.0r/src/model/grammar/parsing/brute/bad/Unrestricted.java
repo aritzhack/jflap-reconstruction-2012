@@ -95,7 +95,7 @@ public class Unrestricted {
 	 */
 	public static Set<Symbol> smallerSymbols(Grammar grammar) {
 		Set<Symbol> smaller = new HashSet<Symbol>();
-		Production[] prods = grammar.getProductions();
+		Production[] prods = grammar.getProductionSet().toArray();
 		boolean added;
 		do {
 			added = false;
@@ -128,7 +128,7 @@ public class Unrestricted {
 	 * @return if a grammar is unrestricted
 	 */
 	public static boolean isUnrestricted(Grammar grammar) {
-		Production[] prods = grammar.getProductions();
+		Production[] prods = grammar.getProductionSet().toArray();
 		for (int i = 0; i < prods.length; i++)
 			if (prods[i].getLHS().size() != 1)
 				return true;
@@ -149,7 +149,7 @@ public class Unrestricted {
 	 */
 	public static Grammar optimize(Grammar grammar) {
 		Variable startVariable = grammar.getStartVariable();
-		Production[] prods = grammar.getProductions();
+		Production[] prods = grammar.getProductionSet().toArray();
 		// Which symbols in the grammar may possibly lead to just
 		// terminals? First, we just add all those symbols with just
 		// terminals on the right hand side.
@@ -159,7 +159,7 @@ public class Unrestricted {
 		for (int i = 0; i < prods.length; i++) {
 			added[i] = false;
 			if (prods[i].getVariablesOnRHS().size() == 0) {
-				terminating.addAll(Arrays.asList(prods[i].getSymbols()));
+				terminating.addAll(prods[i].getUniqueSymbolsUsed());
 				added[i] = true;
 			}
 		}
@@ -171,7 +171,7 @@ public class Unrestricted {
 			for (int i = 0; i < prods.length; i++) {
 				Set<Variable> l = prods[i].getVariablesOnRHS();
 				if (!added[i] && terminating.containsAll(l)) {
-					terminating.addAll(Arrays.asList(prods[i].getSymbols()));
+					terminating.addAll(prods[i].getUniqueSymbolsUsed());
 					added[i] = changed = true;
 				}
 			}
@@ -186,10 +186,10 @@ public class Unrestricted {
 		if (i == prods.length)
 			return null;
 		
-		added[i] = g.isValidProduction(prods[i]);
+//		added[i] = g.isValidProduction(prods[i]);
 		for (i = 0; i < prods.length; i++)
 			if (added[i])
-				g.addProduction(prods[i]);
+				g.getProductionSet().add(prods[i]);
 		return g;
 	}
 }
