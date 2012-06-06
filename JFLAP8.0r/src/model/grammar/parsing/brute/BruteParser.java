@@ -1,13 +1,9 @@
 package model.grammar.parsing.brute;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
+import model.grammar.*;
+import model.grammar.parsing.*;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -15,6 +11,7 @@ import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
+import model.formaldef.components.symbols.SymbolString;
 
 /**
  * Brute force parser
@@ -34,11 +31,17 @@ public abstract class BruteParser extends Parser {
 	private int NODES_TO_GENERATE = 5000;
 
 	private Queue<Derivation> myDerivationsQueue;
-	private int myNodesGenerated;
+	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
 
 	public BruteParser(Grammar g) {
 		super(g);
+		maxLHSsize = 0;
+		for(Production p : g.getProductionSet()){
+			if(p.getLHS().size()>maxLHSsize){
+				maxLHSsize = p.getLHS().size();
+			}
+		}
 	}
 
 	@Override
@@ -115,12 +118,10 @@ public abstract class BruteParser extends Parser {
 		while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
-
-			for (int i = 0; i < result.size(); i++) {
-				for (int j = i; j < result.size(); j++) {
-					SymbolString LHS = result.subList(i, j + 1);
-					for (Production p : getGrammar().getProductionSet()
-							.getProductionsWithLHS(LHS)) {
+			for(int i=0; i<result.size();i++){
+				for(int j=i; j<maxLHSsize+i;j++){
+					SymbolString LHS = result.subList(i,j+1);
+					for(Production p : getGrammar().getProductionSet().getProductionsWithLHS(LHS)){
 						Derivation tempDerivation = d.copy();
 						tempDerivation.addStep(p, result.indexOf(LHS, i));
 						temp.add(tempDerivation);
