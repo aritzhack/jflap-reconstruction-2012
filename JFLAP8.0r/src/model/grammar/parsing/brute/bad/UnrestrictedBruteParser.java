@@ -20,8 +20,7 @@
 
 package model.grammar.parsing.brute.bad;
 
-import jflap.model.formaldef.symbols.SymbolString;
-import jflap.model.grammar.Grammar;
+import model.grammar.Grammar;
 
 /**
  * This is the brute parser for an unrestricted grammar.

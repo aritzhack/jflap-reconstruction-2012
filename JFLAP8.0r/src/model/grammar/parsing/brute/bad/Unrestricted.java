@@ -25,14 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jflap.debug.JFLAPDebug;
-import jflap.model.formaldef.symbols.Symbol;
-import jflap.model.formaldef.symbols.SymbolString;
-import jflap.model.formaldef.symbols.variable.Variable;
-import jflap.model.grammar.Grammar;
-import jflap.model.grammar.Production;
-import jflap.model.grammar.UnrestrictedGrammar;
-import jflap.util.*;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Variable;
+import model.grammar.Grammar;
+import model.grammar.Production;
 
 
 

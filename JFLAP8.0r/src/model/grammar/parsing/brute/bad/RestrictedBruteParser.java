@@ -22,12 +22,9 @@ package model.grammar.parsing.brute.bad;
 
 import java.util.ArrayList;
 
-import jflap.debug.JFLAPDebug;
-import jflap.model.formaldef.symbols.Symbol;
-import jflap.model.formaldef.symbols.SymbolString;
-import jflap.model.formaldef.symbols.variable.Variable;
-import jflap.model.grammar.Grammar;
-import jflap.util.*;
+import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
 
 
 /**
