@@ -1,6 +1,5 @@
 package model.grammar.parsing.brute;
 
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
@@ -10,7 +9,6 @@ import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
-import model.grammar.parsing.cyk.CYKParser;
 
 public class BruteParserTester {
 	
@@ -25,22 +23,33 @@ public class BruteParserTester {
 		TerminalAlphabet t = new TerminalAlphabet();
 		t.addAll(a, b, c);
 		
+		
 		ProductionSet p = new ProductionSet();
+//		p.add(new Production(S, A, B));
+//		p.add(new Production(A, a));
+//		p.add(new Production(A, A, a));
+//		p.add(new Production(B, b, b));
+//		p.add(new Production(B, c));
 		p.add(new Production(S, A, B));
 		p.add(new Production(A, a));
-		p.add(new Production(A, A, a));
-		p.add(new Production(B, b, b));
-		p.add(new Production(B, c));
+		p.add(new Production(B, b));
 		
 		StartVariable s = new StartVariable("S");
 		
 		Grammar g = new Grammar(v, t, p, s);
 		
 		RestrictedBruteParser parser = new RestrictedBruteParser(g);
-		parser.createProductionMap();
 		
-		System.out.println(parser.getNumberOfTerminals(new SymbolString(a, b, A, b, b, b)));
+		parser.setInput(new SymbolString(a, b));
 		
+		//parser.stepParser();
+		//System.out.println(parser.isAccept());
+		
+		//parser.resetParserStateOnly();
+		parser.stepParser();
+		parser.stepParser();
+		//parser.stepParser();
+		System.out.println(parser.isAccept());
 	}
 
 }
