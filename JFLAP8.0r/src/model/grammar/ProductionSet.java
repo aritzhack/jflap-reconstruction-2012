@@ -60,5 +60,10 @@ public class ProductionSet extends FunctionSet<Production> {
 		
 		return prods;
 	}
+	
+	@Override
+	public Production[] toArray() {
+		return super.toArray(new Production[0]);
+	}
 
 }
