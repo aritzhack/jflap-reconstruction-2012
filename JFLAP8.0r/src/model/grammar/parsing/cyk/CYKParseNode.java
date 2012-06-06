@@ -5,8 +5,9 @@ import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
 
 /**
- * The <CODE>CYKParseNode</CODE> is a class that keeps track of a single production that can derive a specific string
- * and at what index in the string the two RHS variables are separated.
+ * The <CODE>CYKParseNode</CODE> is a class that keeps track of a single 
+ * production that can derive a specific string and at what index in the 
+ * string the two RHS variables are separated.
  * @author Ian McMahon
  *
  */
@@ -16,7 +17,8 @@ public class CYKParseNode {
 	private int k;
 	
 	/**
-	 * This will instantiate a new <CODE>CKYParseNode</CODE> with a production and index for which a specific string can be derived
+	 * This will instantiate a new <CODE>CKYParseNode</CODE> with a 
+	 * production and index for which a specific string can be derived
 	 * from.
 	 * @param p
 	 * 		the <CODE>Production</CODE> that derives the specific string.
@@ -63,8 +65,9 @@ public class CYKParseNode {
 	
 	/**
 	 * @return
-	 * 		The index of the string that splits the two RHS variables. The first variable derives the string up to and 
-	 * including index k, and the second variable derives the remainder (k+1 through end of string).
+	 * 		The index of the string that splits the two RHS variables. 
+	 * The first variable derives the string up to and including 
+	 * index k, and the second variable derives the remainder (k+1 through end of string).
 	 */
 	public int getK(){
 		return k;
