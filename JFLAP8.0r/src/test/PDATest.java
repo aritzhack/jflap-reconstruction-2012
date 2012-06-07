@@ -1,13 +1,6 @@
 package test;
 
-import java.awt.Color;
 import java.util.Arrays;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import debug.JFLAPDebug;
 
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
