@@ -20,7 +20,7 @@ import model.algorithms.FormalDefinitionAlgorithm;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSTransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.derterminism.FSADeterminismChecker;
+import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.util.ClosureHelper;

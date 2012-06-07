@@ -13,7 +13,7 @@ import model.algorithms.SteppableAlgorithm;
 import model.algorithms.fsa.AddTrapStateAlgorithm;
 import model.algorithms.fsa.InacessibleStateRemover;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.derterminism.FSADeterminismChecker;
+import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.FormalDefinition;
 
 public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateAcceptor> {
