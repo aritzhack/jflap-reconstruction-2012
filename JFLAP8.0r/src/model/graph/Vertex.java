@@ -1,6 +1,7 @@
 package model.graph;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /**
  * A vertex object to be used in graph object creation.
@@ -11,7 +12,7 @@ public class Vertex implements Comparable<Vertex>{
 
 	private String myName;
 
-	private Point myLocation;
+	private Point2D myLocation;
 
 	public Vertex(String name, Point loc) {
 		setName(name);
@@ -28,7 +29,7 @@ public class Vertex implements Comparable<Vertex>{
 	 * 
 	 * @return
 	 */
-	public Point getLocation(){
+	public Point2D getLocation(){
 		return myLocation;
 	}
 	
@@ -45,10 +46,10 @@ public class Vertex implements Comparable<Vertex>{
 	 * passed in point. Only used in graphical
 	 * representation of the Automaton.
 	 * 
-	 * @param point
+	 * @param cartesian
 	 */
-	public void setLocation(Point point) {
-		myLocation = point;
+	public void setLocation(Point2D cartesian) {
+		myLocation = cartesian;
 	}
 	
 	/**
@@ -92,5 +93,18 @@ public class Vertex implements Comparable<Vertex>{
 	@Override
 	public String toString() {
 		return myName + "|" + myLocation;
+	}
+
+	public void translate(int x, int y) {
+		myLocation.setLocation(getX() + x, getY() + y);
+	}
+
+	public void setX(double newX) {
+		myLocation.setLocation(newX, getY());
+	}
+
+	public void setY(double newY) {
+		myLocation.setLocation(getX(), newY);
+		
 	}
 }

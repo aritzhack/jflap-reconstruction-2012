@@ -80,7 +80,7 @@ public class GraphHelper {
 //	}
 
 	public static Graph convertToGraph(Automaton<? extends Transition> m) {
-		Graph g = new Graph();
+		Graph g = new Graph(true);
 		for (Transition t: m.getTransitions()){
 			g.addEdge(convertToEdge(t));
 		}
