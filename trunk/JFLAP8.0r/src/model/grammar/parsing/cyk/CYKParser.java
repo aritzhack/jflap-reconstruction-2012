@@ -131,7 +131,7 @@ public class CYKParser extends Parser {
 		getTrace(getGrammar().getStartVariable(), 0,
 				getInput().size() - 1);
 		
-		Derivation answer = new LeftmostDerivation(myAnswerTrace.toArray(new Production[0]));
+		Derivation answer = Derivation.createLeftmostDerivation(myAnswerTrace);
 		return answer;
 	}
 

@@ -9,6 +9,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.AlphabetRule;
@@ -154,7 +155,10 @@ public class Grammar extends FormalDefinition{
 	 * Sets the StartVariable to the {@link Variable} v;
 	 * @param s
 	 */
-	public void setStartVariable(Symbol s){
+	public void setStartVariable(Variable s){
+		if (!this.getVariables().contains(s))
+			throw new GrammarException("To set the start symbol, it must " +
+					"first be in the Variable Alphabet");
 		myStartVariable.setTo(s);
 	}
 
@@ -218,6 +222,15 @@ public class Grammar extends FormalDefinition{
 		g.getProductionSet().addAll(this.getProductionSet());
 		g.setStartVariable(this.getStartVariable());
 		return g;
+	}
+
+	public static boolean isStartVariable(Variable a, Grammar gram) {
+		return gram.getStartVariable().equals(a);
+	}
+	
+	public static boolean isStartProduction(Production p, Grammar g){
+		SymbolString lhs = p.getLHS();
+		return lhs.size() == 1 && lhs.contains(g.getStartVariable());
 	}
 
 
