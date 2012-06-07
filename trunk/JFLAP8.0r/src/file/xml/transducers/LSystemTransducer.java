@@ -27,12 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import jflap.file.ParseException;
-import jflap.file.xml.Transducer;
-import jflap.model.grammar.*;
-import jflap.model.grammar.lsystem.*;
-import jflap.util.*;
-
 
 import org.w3c.dom.*;
 

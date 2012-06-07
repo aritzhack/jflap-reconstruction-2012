@@ -22,12 +22,6 @@ package file.xml.transducers;
 
 import java.util.Map;
 
-import jflap.file.xml.TransducerHelper;
-import jflap.model.formaldef.symbols.SymbolString;
-import jflap.model.grammar.Grammar;
-import jflap.model.grammar.Production;
-import jflap.model.grammar.UnboundGrammar;
-
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

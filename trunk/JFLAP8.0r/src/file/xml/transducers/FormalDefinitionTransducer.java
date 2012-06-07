@@ -2,14 +2,6 @@ package file.xml.transducers;
 
 import java.lang.reflect.ParameterizedType;
 
-import jflap.debug.JFLAPDebug;
-import jflap.file.xml.AlphabetXMLFactory;
-import jflap.file.xml.Transducer;
-import jflap.file.xml.TransducerHelper;
-import jflap.model.ModelMapping;
-import jflap.model.formaldef.FormalDefinition;
-import jflap.model.formaldef.alphabets.Alphabet;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

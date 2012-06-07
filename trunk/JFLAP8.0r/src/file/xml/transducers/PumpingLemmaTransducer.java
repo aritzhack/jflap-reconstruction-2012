@@ -22,10 +22,6 @@ package file.xml.transducers;
 
 import java.io.Serializable;
 
-import jflap.file.xml.Transducer;
-import jflap.model.pumping.PumpingLemma;
-
-
 import org.w3c.dom.Document;
 
 

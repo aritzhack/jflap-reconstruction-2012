@@ -6,10 +6,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import jflap.file.xml.Transducer;
-import jflap.file.xml.TransducerHelper;
-import jflap.model.JFLAPModel;
-
 public abstract class AbstractTransducer<T extends JFLAPModel> implements Transducer<T> {
 
 	/** The instance of the document builder. */

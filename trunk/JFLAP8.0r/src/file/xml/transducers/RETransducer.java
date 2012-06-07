@@ -23,11 +23,6 @@ package file.xml.transducers;
 
 import java.util.Map;
 
-import jflap.file.ParseException;
-import jflap.file.xml.TransducerHelper;
-import jflap.model.formaldef.symbols.SymbolString;
-import jflap.model.regular.*;
-
 
 import org.w3c.dom.*;
 

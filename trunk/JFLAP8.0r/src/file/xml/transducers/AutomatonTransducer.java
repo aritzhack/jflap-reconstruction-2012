@@ -43,29 +43,6 @@ import java.awt.Point;
 
 import javax.xml.stream.events.Attribute;
 
-import jflap.debug.EDebug;
-import jflap.debug.JFLAPDebug;
-import jflap.errors.BooleanWrapper;
-import jflap.errors.JFLAPError;
-import jflap.file.DataException;
-import jflap.file.xml.TransducerHelper;
-import jflap.model.automaton.Automaton;
-import jflap.model.automaton.LinearTransitionLabel;
-import jflap.model.automaton.Note;
-import jflap.model.automaton.State;
-import jflap.model.automaton.Transition;
-import jflap.model.automaton.TransitionLabel;
-import jflap.model.automaton.TransitionStack;
-import jflap.model.automaton.graph.AutomatonGraph;
-import jflap.model.automaton.graph.LayoutAlgorithm;
-import jflap.model.automaton.graph.layout.GEMLayoutAlgorithm;
-import jflap.model.automaton.mealy.MooreMachine;
-import jflap.model.automaton.mealy.MooreState;
-import jflap.model.automaton.mealy.MooreTransition;
-import jflap.model.automaton.mealy.OutputMachine;
-import jflap.model.automaton.turing.Block;
-import jflap.model.automaton.turing.TuringMachine;
-import jflap.model.formaldef.symbols.SymbolString;
 
 /**
  * This is an abstract implementation of a transducer that has methods common to

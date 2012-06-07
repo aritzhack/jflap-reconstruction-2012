@@ -2,13 +2,6 @@ package file.xml.transducers;
 
 import java.io.Serializable;
 
-import jflap.file.xml.Transducer;
-import jflap.file.xml.TransducerHelper;
-import jflap.file.xml.XMLCodec;
-import jflap.model.formaldef.FormalDefinition;
-import jflap.model.formaldef.MetaDefinition;
-import jflap.model.formaldef.alphabets.Alphabet;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
