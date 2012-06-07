@@ -2,8 +2,7 @@ package file;
 
 import javax.swing.JFileChooser;
 
-import file.xml.XMLCodec;
-
+import jflap.file.xml.XMLCodec;
 
 public class XMLFileChooser extends JFileChooser {
 

@@ -61,7 +61,7 @@ public interface Encoder {
 	 * Returns if this type of structure can be encoded with this encoder. This
 	 * should not perform a detailed check of the structure, since the user will
 	 * have no idea why it will not be encoded correctly if the {@link #encode}
-	 * method does not throw a {@link FileException}.
+	 * method does not throw a {@link ParseException}.
 	 * 
 	 * @param structure
 	 *            the structure to check

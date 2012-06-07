@@ -23,7 +23,7 @@ package file;
 /**
  * This error indicates elements in a file are arranged in such a fashion as to
  * prevent the correct initialization of a structure. This should be thrown by
- * {@link file.Decoder} implementing objects to indicate a problem processing
+ * {@link jflap.file.Decoder} implementing objects to indicate a problem processing
  * the data in the file that indicates that the data is formatted correctly, but
  * that trying to make a JFLAP structure out of it is impossible. For example,
  * the data could be formatted correctly, but be inconsistent.
