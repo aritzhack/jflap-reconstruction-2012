@@ -20,7 +20,7 @@ public class DependencyGraph {
 	private Map<Variable, Vertex> myVarToVertexMap;
 	
 	public DependencyGraph(VariableAlphabet vars){
-		myGraph = new Graph();
+		myGraph = new Graph(true);
 		myVarToVertexMap = new TreeMap<Variable, Vertex>();
 		for (Symbol v: vars){
 			createAndAddVertexForVar((Variable) v);

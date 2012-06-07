@@ -7,8 +7,10 @@ public class Graph {
 	
 	private Set<Edge> myEdges;
 	private TreeSet<Vertex> myVertices;
+	private boolean amDirected;
 
-	public Graph(){
+	public Graph(boolean directed){
+		amDirected = directed;
 		myEdges = new TreeSet<Edge>();
 		myVertices = new TreeSet<Vertex>();
 	}
