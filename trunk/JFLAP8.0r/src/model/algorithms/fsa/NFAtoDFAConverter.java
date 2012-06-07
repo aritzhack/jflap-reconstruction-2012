@@ -268,6 +268,12 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		
 	}
 
+	public static FiniteStateAcceptor convertToDFA(FiniteStateAcceptor nfa) {
+		NFAtoDFAConverter converter = new NFAtoDFAConverter(nfa);
+		converter.stepToCompletion();
+		return converter.getDFA();
+	}
+
 	
 
 }

@@ -146,4 +146,10 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 		}
 
 	}
+
+	public static FiniteStateAcceptor minimize(FiniteStateAcceptor dfa) {
+		MinimizeDFAAlgorithm minimizer = new MinimizeDFAAlgorithm(dfa);
+		minimizer.stepToCompletion();
+		return minimizer.getMinimizedDFA();
+	}
 }

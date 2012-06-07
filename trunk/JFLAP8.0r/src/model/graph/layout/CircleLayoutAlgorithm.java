@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
+import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
-
 
 
 /**
@@ -64,7 +64,7 @@ public class CircleLayoutAlgorithm extends LayoutAlgorithm {
 		super(pSize, vDim, vBuffer);
 	}
 	
-	
+	@Override
 	public void layout(Graph graph, Set notMoving) {
 		ArrayList vertices = getMovableVertices(graph, notMoving);
 		if (graph==null || vertices.size() == 0)

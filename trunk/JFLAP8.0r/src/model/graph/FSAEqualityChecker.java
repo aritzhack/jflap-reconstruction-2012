@@ -20,6 +20,8 @@
 
 package model.graph;
 
+import model.algorithms.fsa.NFAtoDFAConverter;
+import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 
 /**
@@ -42,24 +44,15 @@ public class FSAEqualityChecker {
 	 */
 	public boolean equals(FiniteStateAcceptor fsa1, FiniteStateAcceptor fsa2) {
 		// Clone for safety.
-		fsa1 =  fsa1.copy();
+		fsa1 = fsa1.copy();
 		fsa2 = fsa2.copy();
 
 		// Make sure they're DFAs.
-		fsa1 = nfaConverter.convertToDFA(fsa1);
-		fsa2 = nfaConverter.convertToDFA(fsa2);
+		fsa1 = NFAtoDFAConverter.convertToDFA(fsa1);
+		fsa2 = NFAtoDFAConverter.convertToDFA(fsa2);
 		// Minimize the DFAs.
-		minimizer.initializeMinimizer();
-		fsa1 = (FiniteStateAutomaton) minimizer.getMinimizeableAutomaton(fsa1);
-		javax.swing.tree.DefaultTreeModel tree = minimizer
-				.getDistinguishableGroupsTree(fsa1);
-		fsa1 = minimizer.getMinimumDfa(fsa1, tree);
-
-		minimizer.initializeMinimizer();
-		fsa2 = (FiniteStateAutomaton) minimizer.getMinimizeableAutomaton(fsa2);
-		tree = minimizer.getDistinguishableGroupsTree(fsa2);
-		fsa2 = minimizer.getMinimumDfa(fsa2, tree);
-
+		fsa1 = MinimizeDFAAlgorithm.minimize(fsa1);
+		fsa2 = MinimizeDFAAlgorithm.minimize(fsa2);
 		// Check the minimized DFAs to see if they are the same.
 		return checker.equals(fsa1, fsa2);
 	}
@@ -67,9 +60,4 @@ public class FSAEqualityChecker {
 	/** The equality checker. */
 	private static DFAEqualityChecker checker = new DFAEqualityChecker();
 
-	/** The converter for an NFA to a DFA. */
-	private static NFAToDFA nfaConverter = new NFAToDFA();
-
-	/** That which minimizes a DFA. */
-	private static Minimizer minimizer = new Minimizer();
 }
