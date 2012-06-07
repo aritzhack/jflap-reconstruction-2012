@@ -27,7 +27,11 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import errors.JFLAPError;
+
+import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
+
 
 
 

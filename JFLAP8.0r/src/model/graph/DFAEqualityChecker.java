@@ -23,6 +23,12 @@ package model.graph;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.automata.State;
+import model.automata.acceptors.Acceptor;
+import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.formaldef.components.symbols.SymbolString;
+
 
 /**
  * This is an object that checks if two deterministic finite state automatons
@@ -47,7 +53,9 @@ public class DFAEqualityChecker {
 	 *            the matchings of states in the first automaton to states in
 	 *            the second automaton
 	 */
-	private boolean hypothesize(State state1, State state2, Map matching) {
+	private boolean hypothesize(State state1, FiniteStateAcceptor a1,
+								State state2, FiniteStateAcceptor a2,
+								Map<State,State> matching) {
 		{
 			// Does state one already have a counterpart?
 			State counterpart = (State) matching.get(state1);
@@ -56,32 +64,33 @@ public class DFAEqualityChecker {
 				return counterpart == state2;
 			// We haven't visited this node yet.
 			// Does "finality" match up?
-			if (state1.getAutomaton().isFinalState(state1)
-					^ state2.getAutomaton().isFinalState(state2))
+			if (Acceptor.isFinalState(a1, state1)
+					^ Acceptor.isFinalState(a2,state2))
 				return false;
 		}
 
-		Map labelToTrans1 = new HashMap(), labelToTrans2 = new HashMap();
-		Transition[] t1 = state1.getAutomaton().getTransitionsFromState(state1);
-		Transition[] t2 = state2.getAutomaton().getTransitionsFromState(state2);
+		Map<SymbolString, FSTransition> labelToTrans1 = new HashMap<SymbolString, FSTransition>(), labelToTrans2 = new HashMap();
+		FSTransition[] t1 = a1.getTransitions().getTransitionsFromState(state1).toArray(new FSTransition[0]);
+		FSTransition[] t2 = a2.getTransitions().getTransitionsFromState(state2).toArray(new FSTransition[0]);
 		// If they're not even the same length...
 		if (t1.length != t2.length)
 			return false;
 		for (int i = 0; i < t1.length; i++) {
-			labelToTrans1.put(((FSATransition) t1[i]).getLabel(), t1[i]);
-			labelToTrans2.put(((FSATransition) t2[i]).getLabel(), t2[i]);
+			labelToTrans1.put(t1[i].getInput(), t1[i]);
+			labelToTrans2.put(t2[i].getInput(), t2[i]);
 		}
 		// Now, for each transition from state1, we can find the
 		// corresponding transition in state2, if it exists.
 		for (int i = 0; i < t1.length; i++) {
-			String label = ((FSATransition) t1[i]).getLabel();
-			Transition counterpart = (Transition) labelToTrans2.get(label);
+			SymbolString label = t1[i].getInput();
+			FSTransition counterpart = labelToTrans2.get(label);
 			// Does the same transition exist in the other automaton?
 			if (counterpart == null)
 				return false;
 			matching.put(state1, state2);
-			boolean equal = hypothesize(t1[i].getToState(), counterpart
-					.getToState(), matching);
+			boolean equal = hypothesize(t1[i].getToState(), a1,
+						counterpart.getToState(),a2,
+						matching);
 			if (!equal) {
 				matching.remove(state1);
 				return false;
@@ -103,11 +112,26 @@ public class DFAEqualityChecker {
 	 * @return <CODE>true</CODE> if the two DFAs are equal, <CODE>false</CODE>
 	 *         if they are not
 	 */
-	public boolean equals(FiniteStateAutomaton one, FiniteStateAutomaton two) {
+	public boolean equals(FiniteStateAcceptor a1, FiniteStateAcceptor a2) {
 		// Make sure they have the same number of states.
-		if (one.getStates().length != two.getStates().length)
+		if (!checkStates(a1,a2) || !checkTransitions(a1,a2) || !checkAlphabet(a1,a2))
 			return false;
-		return hypothesize(one.getInitialState(), two.getInitialState(),
-				new HashMap());
+		return hypothesize(a1.getStartState(),a1, 
+							a2.getStartState(),a2,
+								new HashMap<State,State>());
+	}
+
+	private boolean checkAlphabet(FiniteStateAcceptor a1, FiniteStateAcceptor a2) {
+		return a1.getInputAlphabet().equals(a2.getInputAlphabet());
+	}
+
+	private boolean checkTransitions(FiniteStateAcceptor a1,
+			FiniteStateAcceptor a2) {
+		return a1.getTransitions().size() == a2.getTransitions().size();
+	}
+
+	private boolean checkStates(FiniteStateAcceptor a1, FiniteStateAcceptor a2) {
+		return a1.getStates().size() == a2.getStates().size() &&
+				a1.getFinalStateSet().size() == a2.getFinalStateSet().size();
 	}
 }

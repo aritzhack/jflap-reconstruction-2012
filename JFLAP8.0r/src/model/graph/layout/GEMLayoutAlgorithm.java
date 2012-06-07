@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
 
 
@@ -67,11 +68,11 @@ public class GEMLayoutAlgorithm extends LayoutAlgorithm {
 		super(pSize, vDim, vBuffer);
 	}
 
-	
+	@Override
 	public void layout(Graph graph, Set isovertices) {
 		if (isovertices == null)
 			isovertices = EMPTY_SET;
-		Object[] vArray = graph.vertices();
+		Object[] vArray = graph.vertices().toArray();
 		int Rmax = 120 * (vArray.length - isovertices.size());
 		double Tglobal = Tmin + 1.0;
 
@@ -210,4 +211,5 @@ public class GEMLayoutAlgorithm extends LayoutAlgorithm {
 	/*
 	 * private static final double alphaO
 	 */
+
 }

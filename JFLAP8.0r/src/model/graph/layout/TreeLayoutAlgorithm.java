@@ -26,7 +26,12 @@ import java.util.Set;
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
 
+import model.automata.State;
+import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
+import model.graph.TransitionGraph;
+
+
 
 
 /**
@@ -90,11 +95,11 @@ public class TreeLayoutAlgorithm extends LayoutAlgorithm {
 		if (hierarchical) {
 			//It is up to the programmer to make sure the right kind of graph is present for
 			//hierarchical graphs.  If not, the algorithm will return with nothing happening.
-			if (!(graph instanceof AutomatonDirectedGraph))
+			if (!(graph instanceof TransitionGraph))
 				return;
-			final AutomatonDirectedGraph adg = (AutomatonDirectedGraph) graph;			
-			Collections.sort(vertices, new Comparator()	{			
-				public int compare(Object o1, Object o2) {					 
+			final TransitionGraph adg = (TransitionGraph) graph;			
+			Collections.sort(vertices, new Comparator<State>()	{			
+				public int compare(State o1, State o2) {					 
 					if (adg.toDegree(o1, true) == adg.toDegree(o2, true))
 						return 0;
 					else if (adg.toDegree(o1, true) > adg.toDegree(o2, true))

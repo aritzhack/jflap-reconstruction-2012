@@ -1,5 +1,7 @@
 package model.graph;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,19 +20,19 @@ import model.automata.Transition;
 public class PathFinder {
 
 	private Graph myGraph;
-	private Set<Vertex> myVisited;
+	private Set<Object> myVisited;
 
 	public PathFinder(Graph g) {
 		myGraph = g;
-		myVisited = new TreeSet<Vertex>();
+		myVisited = new TreeSet<Object>();
 	}
 
 	public PathFinder(Automaton m) {
-		this(GraphHelper.convertToGraph(m));
+		this(new TransitionGraph(m));
 	}
 
-	public Vertex[] findPath(Vertex from, Vertex to) {
-		Vertex[] path = recurseForPath(from, to);
+	public <T> List<T> findPath(T from, T to) {
+		List<T> path = recurseForPath(from, to);
 		clear();
 		return path;
 	}
@@ -39,23 +41,29 @@ public class PathFinder {
 		myVisited.clear();
 	}
 
-	private Vertex[] recurseForPath(Vertex from, Vertex to) {
+	private <T> List<T> recurseForPath(T from, T to) {
 		if (myVisited.contains(from))
-			return null;
+			return new ArrayList<T>();
 		
 		myVisited.add(from);
-		
-		if (from.equals(to))
-			return new Vertex[]{to};
+		List<T> path = new ArrayList<T>();
+		path.add(from);
+		if (from.equals(to)){
+			return path;
+		}
 		
 
-		for (Edge t: myGraph.getEdgesFromVertex(from))
+		for (Object v: myGraph.adjacent(from))
 		{
-			Vertex[] path = recurseForPath(t.getToVertex(), to);
-			if (path != null)
+			List<T> nextPath = recurseForPath((T)v, to);
+			
+			if (!nextPath.isEmpty()){
+				path.addAll(nextPath);
 				return path;
+			}
 		}
-		return null;
+		
+		return new ArrayList<T>();
 	}
 	
 	

@@ -79,27 +79,5 @@ public class GraphHelper {
 //		return calculateAngle(t) + Math.PI/2;
 //	}
 
-	public static Graph convertToGraph(Automaton<? extends Transition> m) {
-		Graph g = new Graph(true);
-		for (Transition t: m.getTransitions()){
-			g.addEdge(convertToEdge(t));
-		}
-		
-		for (State s: m.getStates()){
-			g.addVertex(convertToVertex(s));
-		}
-		return g;
-	}
-
-	public static Vertex convertToVertex(State s) {
-		Vertex v = new Vertex(s.getName(), new Point(0,0));
-		return v;
-	}
-
-	public static Edge convertToEdge(Transition t) {
-		Vertex from = convertToVertex(t.getFromState());
-		Vertex to = convertToVertex(t.getToState());
-		return new Edge(from, to, t.getLabelText());
-	}
 
 }

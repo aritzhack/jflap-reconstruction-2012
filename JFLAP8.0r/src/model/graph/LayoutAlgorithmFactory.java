@@ -172,7 +172,7 @@ public class LayoutAlgorithmFactory {
 	 * @param automaton the automaton that will be used to generate the graph.
 	 * @return the correct <code>AutomatonGraph</code>.
 	 */
-	public static Graph getAutomatonGraph(Automaton m) {
-			return GraphHelper.convertToGraph(m);
+	public static TransitionGraph getAutomatonGraph(int algorithm, Automaton automaton) {
+		return new TransitionGraph(automaton);
 	}
 }

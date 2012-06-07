@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import model.automata.Automaton;
+import model.automata.State;
+import model.automata.TransitionSet;
 
 /**
  * The disjoint sets detector can be used to determine the disjoint sets of
@@ -68,18 +71,19 @@ public class DisjointSetsDetector {
 	 *            a state
 	 * @param s2
 	 *            a state
-	 * @param automaton
+	 * @param a
 	 *            the automaton
 	 * @return true if <CODE>s1</CODE> and <CODE>s2</CODE> from <CODE>automaton</CODE>
 	 *         are directly connected. (i.e. there is either a transition from
 	 *         <CODE>s1</CODE> to <CODE>s2</CODE> or a transition from
 	 *         <CODE>s2</CODE> to <CODE>s1</CODE>.
 	 */
-	private boolean areDirectlyConnected(State s1, State s2, Automaton automaton) {
+	private boolean areDirectlyConnected(State s1, State s2, Automaton a) {
 		if (s1 == s2)
 			return false;
-		if (automaton.getTransitionStackFromStateToState(s1, s2).length == 0
-				&& automaton.getTransitionStackFromStateToState(s2, s1).length == 0)
+		TransitionSet trans = a.getTransitions();
+		if (trans.getTransitionsFromStateToState(s1, s2).size() == 0
+				&& trans.getTransitionsFromStateToState(s2, s1).size() == 0)
 			return false;
 		return true;
 	}
@@ -95,9 +99,9 @@ public class DisjointSetsDetector {
 	 * @return a list of states in <CODE>automaton</CODE> that are connected
 	 *         directly to <CODE>state</CODE>.
 	 */
-	private ArrayList getStatesConnectedToState(State state, Automaton automaton) {
-		ArrayList list = new ArrayList();
-		State[] states = automaton.getStates();
+	private ArrayList<State> getStatesConnectedToState(State state, Automaton automaton) {
+		ArrayList<State> list = new ArrayList<State>();
+		State[] states = automaton.getStates().toArray(new State[0]);
 		for (int k = 0; k < states.length; k++) {
 			if (areDirectlyConnected(state, states[k], automaton)) {
 				list.add(states[k]);
@@ -195,7 +199,7 @@ public class DisjointSetsDetector {
 	 *         accounted for in the determination of disjoint sets.
 	 */
 	public State getUnaccountedForState(Automaton automaton) {
-		State[] states = automaton.getStates();
+		State[] states = automaton.getStates().toArray(new State[0]);
 		for (int k = 0; k < states.length; k++) {
 			if (!isAccountedFor(states[k]))
 				return states[k];

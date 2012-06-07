@@ -1,79 +1,168 @@
+/*
+ *  JFLAP - Formal Languages and Automata Package
+ * 
+ * 
+ *  Susan H. Rodger
+ *  Computer Science Department
+ *  Duke University
+ *  August 27, 2009
+
+ *  Copyright (c) 2002-2009
+ *  All rights reserved.
+
+ *  JFLAP is open source software. Please see the LICENSE for terms.
+ *
+ */
+
+
+
+
+
 package model.graph;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
-public class Graph {
-	
-	private Set<Edge> myEdges;
-	private TreeSet<Vertex> myVertices;
-	private boolean amDirected;
+/**
+ * A graph data structure. The idea behind the graph data structure is that a
+ * vertex is just some sort of data structure whose type is not important, and
+ * associated with a point. There is therefore no explicit node structure.
+ * 
+ * @author Thomas Finley
+ */
 
-	public Graph(boolean directed){
-		amDirected = directed;
-		myEdges = new TreeSet<Edge>();
-		myVertices = new TreeSet<Vertex>();
-	}
-	
-	public void clear(){
-		myEdges.clear();
-		myVertices.clear();
+public class Graph<T> {
+	/** Creates a new empty graph structure. */
+	public Graph() {
+
 	}
 
-	public boolean addEdge(Edge e){
-		return myEdges.add(e);
+	/** Clears all vertices and edges. */
+	public void clear() {
+		verticesToPoints.clear();
+		verticesToNeighbors.clear();
 	}
-	
-	public boolean removeEdge(Edge e){
-		return myEdges.remove(e);
+
+	/** Returns the degree of a vertex. */
+	public int degree(T vertex) {
+		return adjacent(vertex).size();
 	}
-	
-	public boolean addVertex(Vertex v){
-		return myVertices.add(v);
+
+	/** Returns the number of vertices. */
+	public int numberOfVertices() {
+		return verticesToPoints.size();
 	}
-	
-	public boolean removeVertex(Vertex v){
-		if(myVertices.remove(v)){
-			for (Edge e: myEdges.toArray(new Edge[0])){
-				if (e.getFromVertex().equals(v) ||
-						e.getToVertex().equals(v))
-					myEdges.remove(e);
-			}
-			return true;
+
+	/** Returns the set of vertices a vertex is adjacent to. */
+	public Set<T> adjacent(T vertex) {
+		if (!verticesToNeighbors.containsKey(vertex))
+			verticesToNeighbors.put(vertex, new HashSet<T>());
+		return (Set<T>) verticesToNeighbors.get(vertex);
+	}
+
+	/** Adds an edge between two vertices. */
+	public boolean addEdge(T vertex1, T vertex2) {
+		return adjacent(vertex1).add(vertex2) &&
+					adjacent(vertex2).add(vertex1);
+	}
+
+	/** Removes an edge between two vertices. */
+	public boolean removeEdge(T vertex1, T vertex2) {
+		return adjacent(vertex1).remove(vertex2) &&
+					adjacent(vertex2).remove(vertex1);
+	}
+
+	/** Returns if an edge exists between two vertices. */
+	public boolean hasEdge(T vertex1, T vertex2) {
+		return adjacent(vertex1).contains(vertex2);
+	}
+
+	/** Adds a vertex. */
+	public boolean addVertex(T vertex, Point2D point) {
+		return verticesToPoints.put(vertex, (Point2D) point.clone()) != null;
+	}
+
+	/** Removes a vertex. */
+	public boolean removeVertex(T vertex) {
+		Set<T> others = adjacent(vertex);
+		Iterator<T> it = others.iterator();
+		while (it.hasNext())
+			adjacent(it.next()).remove(vertex);
+		return verticesToNeighbors.remove(vertex) != null &&
+						verticesToPoints.remove(vertex) != null;
+	}
+
+	/** Moves a vertex to a new point. */
+	public void moveVertex(T vertex, Point2D point) {
+		addVertex(vertex, point);
+	}
+
+	public int totalDegree(){
+		int degree = 0;
+		for (T v: vertices()){
+			degree += degree(v);
 		}
-		return false;
+		return degree;
+	}
+	/** Returns the point for a given vertex. */
+	public Point2D pointForVertex(T vertex) {
+		return (Point2D) verticesToPoints.get(vertex);
 	}
 
-	public Edge[] getEdgesFromVertex(Vertex from) {
-		Set<Edge> fromSet = new TreeSet<Edge>();
-		for (Edge e: myEdges.toArray(new Edge[0])){
-			if (e.getFromVertex().equals(from))
-				fromSet.add(e);
+	/**
+	 * Returns a copy of the set of vertex objects.
+	 * @return
+	 */
+	public Set<T> vertices() {
+		return new HashSet<T>(verticesToPoints.keySet());
+	}
+
+	/**
+	 * Returns the list of vertex points. The order they appear is not
+	 * necessarily the same as the vertices.
+	 */
+	public Point2D[] points() {
+		return (Point2D[]) verticesToPoints.values().toArray(new Point2D[0]);
+	}
+
+	/** Reforms the points so they are enclosed within a certain frame. */
+	public void moveWithinFrame(Rectangle2D bounds) {
+		Object[] vertices = vertices().toArray();
+		if (vertices.length == 0)
+			return;
+		Point2D p = pointForVertex((T)vertices[0]);
+		double minx = p.getX(), miny = p.getY(), maxx = minx, maxy = miny;
+		for (int i = 1; i < vertices.length; i++) {
+			p = pointForVertex((T) vertices[i]);
+			minx = Math.min(minx, p.getX());
+			miny = Math.min(miny, p.getY());
+			maxx = Math.max(maxx, p.getX());
+			maxy = Math.max(maxy, p.getY());
 		}
-		return fromSet.toArray(new Edge[0]);
-	}
-	
-	public Edge[] getEdgesToVertex(Vertex to) {
-		Set<Edge> toSet = new TreeSet<Edge>();
-		for (Edge e: myEdges.toArray(new Edge[0])){
-			if (e.getToVertex().equals(to))
-				toSet.add(e);
+		// Now, scale them!
+		for (int i = 0; i < vertices.length; i++) {
+			p = pointForVertex((T) vertices[i]);
+			p = new Point2D.Double((p.getX() - minx) * bounds.getWidth()
+					/ (maxx - minx) + bounds.getX(), (p.getY() - miny)
+					* bounds.getHeight() / (maxy - miny) + bounds.getY());
+			moveVertex((T) vertices[i], p);
 		}
-		return toSet.toArray(new Edge[0]);
 	}
 
-	public int getNumberEdges() {
-		return myEdges.size();
-	}
-
-	public Vertex[] getVertices() {
-		return myVertices.toArray(new Vertex[0]);
-	}
-	
-	@Override
+	/** Returns a string description of the graph. */
 	public String toString() {
-		return "Graph:\n" + 
-					"\tEdges: " + myEdges.toString() + "\n" +
-					"\tVertices: " + myVertices.toString() + "\n";
+		StringBuffer sb = new StringBuffer();
+		sb.append(super.toString() + "\n");
+		sb.append(verticesToPoints);
+		return sb.toString();
 	}
+
+	private Map<T, Point2D> verticesToPoints = new HashMap<T, Point2D>();
+
+	private Map<T, Set<T>> verticesToNeighbors = new HashMap<T, Set<T>>();
 }

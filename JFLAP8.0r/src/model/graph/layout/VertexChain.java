@@ -21,6 +21,8 @@ package model.graph.layout;
 
 import java.util.ArrayList;
 
+import model.graph.Graph;
+
 
 
 /**
