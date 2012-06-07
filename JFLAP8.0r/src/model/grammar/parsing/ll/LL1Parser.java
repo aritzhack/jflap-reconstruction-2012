@@ -1,12 +1,5 @@
 package model.grammar.parsing.ll;
 
-import java.util.Deque;
-import java.util.Queue;
-
-import debug.JFLAPDebug;
-
-import universe.preferences.JFLAPPreferences;
-
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.symbols.Symbol;
@@ -16,16 +9,16 @@ import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.Derivation;
-import model.grammar.parsing.LeftmostDerivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
+import universe.preferences.JFLAPPreferences;
 
 
 public class LL1Parser extends Parser {
 
 	private LL1ParseTable myParseTable;
-	private LeftmostDerivation myDerivation;
+	private Derivation myDerivation;
 	private SymbolString myStack;
 	private SymbolString myUnprocessedInput;
 	private SymbolString mySymbolsToAdd;
@@ -62,7 +55,7 @@ public class LL1Parser extends Parser {
 		myUnprocessedInput = this.getInput();
 		if (myUnprocessedInput != null)
 			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
-		myDerivation = new LeftmostDerivation(createEmptyStart());
+		myDerivation = new Derivation(createEmptyStart());
 		myStack = new SymbolString(getGrammar().getStartVariable());
 		mySymbolsToAdd = new SymbolString();
 		return true;
@@ -105,7 +98,7 @@ public class LL1Parser extends Parser {
 		mySymbolsToAdd.addAll(toAdd);
 		
 		
-		myDerivation.addStep(new Production(v, toAdd));
+		myDerivation.addLeftmostStep(new Production(v, toAdd));
 		return true;
 	}
 

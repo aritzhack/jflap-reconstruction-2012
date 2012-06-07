@@ -1,20 +1,14 @@
 package model.automata;
 
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
-
-import debug.JFLAPDebug;
 
 import util.Copyable;
 
-import model.graph.Vertex;
-import model.util.JFLAPResources;
+import model.util.JFLAPConstants;
 
 
 
-
-public class State implements JFLAPResources, Comparable<State>, Copyable{
+public class State implements JFLAPConstants, Comparable<State>, Copyable{
 
 	private String myLabel;
 

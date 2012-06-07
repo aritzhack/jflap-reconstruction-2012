@@ -1,5 +1,6 @@
 package test;
 
+import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
@@ -13,6 +14,9 @@ import model.grammar.VariableAlphabet;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.FirstFollowTable;
 import model.grammar.parsing.ll.LL1Parser;
+import model.grammar.parsing.lr.SLR1DFA;
+import model.grammar.parsing.lr.SLR1ParseTable;
+import model.grammar.parsing.lr.SLR1Parser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
 import model.util.UtilFunctions;
@@ -63,7 +67,32 @@ public class ParserTest extends GrammarTest {
 		String in = "aaaaacd";
 		LL1Parser ll1parse = new LL1Parser(g);
 		boolean accepts = ll1parse.quickParse(SymbolString.createFromString(in, g));
-		outPrintln("Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
+		outPrintln("LL1 Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
+		
+		//prepare and execute SLR parse
+		prod.clear();
+		prod.add(new Production(S, A));
+		prod.add(new Production(A,a,a,A));
+		prod.add(new Production(A, b));
+		g.trimAlphabets();
+		outPrintln("SLR1 Grammar: " + g);
+		
+		//Show FirstFollow
+		table = new FirstFollowTable(g);
+		outPrintln(table.toString());
+		
+		//Show DFA
+		SLR1DFA dfa = new SLR1DFA(g);
+		outPrintln(dfa.toString());
+		
+		//Show SLR1 parse Table
+		SLR1ParseTable slrTable = new SLR1ParseTable(g);
+		outPrintln(slrTable.toString());
+
+		in = "aaaab";
+		SLR1Parser slr1parse = new SLR1Parser(g);
+		accepts = slr1parse.quickParse(SymbolString.createFromString(in, g));
+		outPrintln("SLR1 Accept? " + accepts + "\n" + createPrintout(slr1parse.getDerivation()));
 		
 	}
 

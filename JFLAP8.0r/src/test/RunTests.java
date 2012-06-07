@@ -13,7 +13,7 @@ public class RunTests {
 //		PDATest.class, 
 //		RegExTest.class, 
 //		FSATest.class, 
-//		GrammarTest.class
+//		GrammarTest.class,
 		ParserTest.class
 	};
 	

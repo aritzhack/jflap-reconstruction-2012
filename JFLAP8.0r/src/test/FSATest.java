@@ -40,6 +40,8 @@ import model.util.UtilFunctions;
 
 public class FSATest extends TestHarness{
 
+	public static String ABSURDITY = "( 1 ( 0 ( 0 0 ) * ( 0 1 + 1 ) + 1 ) + 0 0 ( 0 0 ) * ( 0 1 + 1 ) + 0 1 ) ( 0 + 1 ) * + 1 0 ( 0 0 ) * + 0 0 ( 0 0 ) *";
+
 	
 	@Override
 	public void runTest(){

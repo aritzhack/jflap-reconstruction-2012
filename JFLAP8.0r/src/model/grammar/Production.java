@@ -1,14 +1,9 @@
 package model.grammar;
 
-import java.util.Arrays;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-
-import errors.BooleanWrapper;
-import errors.JFLAPException;
 
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
@@ -16,9 +11,9 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
-import model.util.JFLAPResources;
+import model.util.JFLAPConstants;
 
-public class Production implements LanguageFunction, Comparable<Production>, JFLAPResources{
+public class Production implements LanguageFunction, Comparable<Production>, JFLAPConstants{
 
 	/** the left hand side of the production. */
 	protected SymbolString myLHS;
@@ -127,7 +122,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return all variables on the left hand side of the production.
 	 */
 	public Set<Variable> getVariablesOnLHS() {
-		return myLHS.getSymbolsOfClass(Variable.class);
+		return getLHS().getSymbolsOfClass(Variable.class);
 	}
 
 	/**
@@ -136,7 +131,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return all variables on the right hand side of the production.
 	 */
 	public Set<Variable> getVariablesOnRHS() {
-		return myRHS.getSymbolsOfClass(Variable.class);
+		return getRHS().getSymbolsOfClass(Variable.class);
 	}
 
 	/**
@@ -156,7 +151,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return all terminals on the right hand side of the production.
 	 */
 	public Set<Terminal> getTerminalsOnRHS() {
-		return myRHS.getSymbolsOfClass(Terminal.class);
+		return getRHS().getSymbolsOfClass(Terminal.class);
 	}
 
 	/**
@@ -182,7 +177,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return the hashcode for this production
 	 */
 	public int hashCode() {
-		return myRHS.hashCode() * myLHS.hashCode();
+		return getRHS().hashCode() * getLHS().hashCode();
 	}
 
 	/**
@@ -191,7 +186,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @return all terminals on the left hand side of the production.
 	 */
 	public Set<Terminal> getTerminalsOnLHS() {
-		return myLHS.getSymbolsOfClass(Terminal.class);
+		return getLHS().getSymbolsOfClass(Terminal.class);
 	}
 
 	/**
@@ -216,7 +211,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		try {
 			return this.getClass().
 							getConstructor(SymbolString.class, SymbolString.class).
-								newInstance(myLHS.clone(), myRHS.clone());
+								newInstance(getLHS().clone(), getRHS().clone());
 		} catch (Exception e) {
 			throw new AlphabetException("Error cloning Production");
 		}
@@ -229,7 +224,7 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	}
 	
 	public boolean containsSymbol(Symbol symbol) {
-		return myLHS.contains(symbol) || myRHS.contains(symbol);
+		return getLHS().contains(symbol) || getRHS().contains(symbol);
 	}
 
 	@Override
@@ -261,8 +256,8 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
-		Set<Symbol> used = myLHS.getUniqueSymbolsUsed();
-		used.addAll(myRHS.getUniqueSymbolsUsed());
+		Set<Symbol> used = getLHS().getUniqueSymbolsUsed();
+		used.addAll(getRHS().getUniqueSymbolsUsed());
 		return used;
 	}
 

@@ -1,14 +1,18 @@
 package model.grammar.parsing;
 
 import java.lang.Character.Subset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import util.Copyable;
 
 import debug.JFLAPDebug;
 
 import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
 import model.grammar.Production;
 import model.util.UtilFunctions;
 
@@ -32,6 +36,29 @@ public class Derivation implements Copyable{
 		}
 	}
 
+	public boolean addLeftmostStep(Production p){
+		SymbolString current = createResult();
+		for (int i = 0; i< current.size(); i++){
+			if (Grammar.isVariable(current.get(i))){
+				return this.addStep(p, i);
+			}
+				
+		}
+		return false;
+	}
+	
+	public boolean addRightmostStep(Production p){
+		SymbolString current = createResult();
+		JFLAPDebug.print(current);
+		for (int i = current.size()-1; i >= 0; i--){
+			if (Grammar.isVariable(current.get(i))){
+				return this.addStep(p, i);
+			}
+				
+		}
+		return false;
+	}
+	
 	public boolean addStep(Production p, int subIndex) {
 		return myProductions.add(p) && mySubstitutions.add(subIndex);
 	}
@@ -94,4 +121,31 @@ public class Derivation implements Copyable{
 		return copy;
 	}
 	
+	/**
+	 * Helper method to create a Rightmost Derivation from the trace.
+	 * @return
+	 * 		the corresponding derivation or null if there is
+	 * 		no derivation.
+	 */
+	public static Derivation createRightmostDerivation(List<Production> trace, boolean flip) {
+		if (trace.isEmpty()) return null;
+		if (flip){
+			trace = new ArrayList<Production>(trace);
+			Collections.reverse(trace);
+		}
+		Derivation d = new Derivation(trace.get(0));
+		for (int i = 1; i < trace.size(); i++){
+			d.addRightmostStep(trace.get(i));
+		}
+		return d;
+	}
+
+	public static Derivation createLeftmostDerivation(List<Production> trace) {
+		if (trace.isEmpty()) return null;
+		Derivation d = new Derivation(trace.get(0));
+		for (int i = 1; i < trace.size(); i++){
+			d.addLeftmostStep(trace.get(i));
+		}
+		return d;
+	}
 }

@@ -39,15 +39,15 @@ public class UtilFunctions {
 		}
 
 
-	public static String createDelimitedString(Object[] stateGroup,
+	public static String createDelimitedString(Object[] array,
 			String delimiter) {
-		return createDelimitedString(Arrays.asList(stateGroup), delimiter);
+		return createDelimitedString(Arrays.asList(array), delimiter);
 	}
 
 
-	public  static <T> T[] combine(T[] myColumns,
+	public  static <T> T[] combine(T[] array,
 									T ... toAdd) {
-		return concatAll(myColumns, toAdd);
+		return concatAll(array, toAdd);
 	}
 	
 	public static <T> T[] subArray(T[] array,int start, int end) {
