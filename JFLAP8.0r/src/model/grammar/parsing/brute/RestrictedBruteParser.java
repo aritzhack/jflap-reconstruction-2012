@@ -7,7 +7,6 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.Derivation;
-import model.grammar.parsing.brute.bad.Unrestricted;
 
 public class RestrictedBruteParser extends BruteParser {
 
@@ -33,7 +32,7 @@ public class RestrictedBruteParser extends BruteParser {
 
 
 	public boolean isPossibleDerivation(SymbolString derivation) {
-		if (Unrestricted.minimumLength(derivation, mySmallerSet) > getInput().size())
+		if (minimumLength(derivation, mySmallerSet) > getInput().size())
 			return false;
 		//int targetSearched = 0;
 		boolean startBookend = false, endBookend = false;
@@ -76,6 +75,9 @@ public class RestrictedBruteParser extends BruteParser {
 					return false;
 				}
 			} else {
+				if(cp>=discrete.size()){
+					continue;
+				}
 				cp = getInput().indexOf(e, cp);
 				if (cp == -1){
 					return false;
