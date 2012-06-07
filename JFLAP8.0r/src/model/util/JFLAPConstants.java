@@ -34,4 +34,6 @@ public interface JFLAPConstants {
 		
 		public static final String DEFAULT_STATE_NAME_PREFIX = "q";
 
+		public static final String VERSION = "8.0";
+
 }
