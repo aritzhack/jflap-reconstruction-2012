@@ -9,6 +9,7 @@ import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.Derivation;
+import model.grammar.parsing.ParseNode;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.parsing.brute.bad.Unrestricted;
@@ -141,6 +142,7 @@ public abstract class BruteParser extends Parser {
 		myDerivationsQueue.addAll(temp);
 		return true;
 	}
+	
 
 	private boolean raiseCapacity() {
 		NODES_TO_GENERATE += INCREMENT_CAPACITY_BY;
