@@ -1,4 +1,4 @@
-package model.automata.derterminism;
+package model.automata.determinism;
 
 import java.util.ArrayList;
 import java.util.Collection;
