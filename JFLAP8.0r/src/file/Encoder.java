@@ -24,9 +24,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
-import jflap.model.JFLAPModel;
-
-
 
 /**
  * This specifies the common interface for objects that parse documents and
@@ -37,7 +34,7 @@ import jflap.model.JFLAPModel;
  * @author Thomas Finley
  */
 
-public interface Encoder {
+public interface Encoder<T> {
 	/**
 	 * Given a structure, this will attempt to write the structure to a file.
 	 * This method should always return a file, or throw an
@@ -55,20 +52,20 @@ public interface Encoder {
 	 * @throws EncodeException
 	 *             if there was a problem writing the file
 	 */
-	public File encode(JFLAPModel structure, File file, Map parameters);
+	public File encode(T structure, File file, Map<String, Object> parameters);
 
 	/**
 	 * Returns if this type of structure can be encoded with this encoder. This
 	 * should not perform a detailed check of the structure, since the user will
 	 * have no idea why it will not be encoded correctly if the {@link #encode}
-	 * method does not throw a {@link ParseException}.
+	 * method does not throw a {@link FileParseException}.
 	 * 
 	 * @param structure
 	 *            the structure to check
 	 * @return if the structure, perhaps with minor changes, could possibly be
 	 *         written to a file
 	 */
-	public boolean canEncode(Serializable structure);
+	public boolean canEncode(T structure);
 
 	/**
 	 * Proposes a file name for a given structure. This encoder should return
@@ -85,5 +82,5 @@ public interface Encoder {
 	 *            the structure that will be saved
 	 * @return the file name, either original or modified
 	 */
-	public String proposeFilename(String filename, Serializable structure);
+	public String proposeFilename(String filename, T structure);
 }

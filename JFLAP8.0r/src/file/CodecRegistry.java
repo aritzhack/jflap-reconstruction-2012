@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import jflap.util.*;
-
 /**
  * This is a registry of the codec, both {@link Encoder} and {@link Decoder}
  * objects. It helps in the selection of a codec for structures, and imposes an

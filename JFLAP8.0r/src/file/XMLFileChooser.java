@@ -1,13 +1,19 @@
 package file;
 
-import javax.swing.JFileChooser;
+import java.io.File;
 
-import jflap.file.xml.XMLCodec;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
+import model.util.JFLAPConstants;
+
+import file.xml.JFFCodec;
+
 
 public class XMLFileChooser extends JFileChooser {
 
 	public XMLFileChooser(){
 		super(System.getProperties().getProperty("user.dir"));
-		this.setFileFilter(new XMLCodec());
+		this.setFileFilter(JFFCodec.getJFFfileFilter());
 	}
 }

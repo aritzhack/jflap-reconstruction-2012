@@ -33,11 +33,11 @@ import java.util.Map;
  * @author Thomas Finley
  */
 
-public interface Decoder {
+public interface Decoder<T> {
 	/**
 	 * Given a file, this will return a JFLAP structure associated with that
 	 * file. This method should always return a structure, or throw a
-	 * {@link ParseException} in the event of failure with a message detailing
+	 * {@link FileParseException} in the event of failure with a message detailing
 	 * the nature of why the decoder failed.
 	 * 
 	 * @param file
@@ -46,10 +46,10 @@ public interface Decoder {
 	 *            implementors have the option of accepting custom parameters in
 	 *            the form of a map
 	 * @return a JFLAP structure resulting from the interpretation of the file
-	 * @throws ParseException
+	 * @throws FileParseException
 	 *             if there was a problem reading the file
 	 */
-	public Serializable decode(File file);
+	public T decode(File file);
 
 	/**
 	 * Returns an instance of a corresponding encoder. In many cases the
@@ -58,5 +58,5 @@ public interface Decoder {
 	 * @return an encoder that encodes in the same format this decodes in, or
 	 *         <CODE>null</CODE> if there is no such encoder
 	 */
-	public Encoder correspondingEncoder();
+	public Encoder<T> correspondingEncoder();
 }

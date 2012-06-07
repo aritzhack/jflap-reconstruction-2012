@@ -29,11 +29,11 @@ package file;
  * @author Thomas Finley
  */
 
-public class ParseException extends RuntimeException {
+public class FileParseException extends RuntimeException {
 	/**
 	 * Creates a generic parse exception.
 	 */
-	public ParseException() {
+	public FileParseException() {
 		super();
 	}
 
@@ -43,7 +43,7 @@ public class ParseException extends RuntimeException {
 	 * @param message
 	 *            the exception message
 	 */
-	public ParseException(String message) {
+	public FileParseException(String message) {
 		super(message);
 	}
 }

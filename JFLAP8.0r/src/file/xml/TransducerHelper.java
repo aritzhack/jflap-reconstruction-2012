@@ -7,11 +7,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import jflap.debug.JFLAPDebug;
-import jflap.file.DataException;
-import jflap.model.JFLAPModel;
-import jflap.model.ModelMapping;
-
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -19,6 +14,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import file.DataException;
 
 public class TransducerHelper {
 
@@ -155,12 +152,12 @@ public class TransducerHelper {
 		String type = ((Text) n.getChildNodes().item(0)).getData();
 		
 		
-		return ModelMapping.getTransducerByTypeTag(type);
+		return TransducerFactory.getTransducerForTag(type);
 		
 	}
 	
-	public static Transducer getTransducer(JFLAPModel structure) {
-		return ModelMapping.getTransducerByModelClass(structure.getClass());
+	public static <T> Transducer<T> getTransducer(T structure) {
+		return TransducerFactory.getTransducerForModel(structure);
 	}
 
 	
