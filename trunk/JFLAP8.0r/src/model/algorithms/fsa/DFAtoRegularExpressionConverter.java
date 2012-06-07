@@ -20,7 +20,7 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSTransition;
-import model.automata.derterminism.FSADeterminismChecker;
+import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
