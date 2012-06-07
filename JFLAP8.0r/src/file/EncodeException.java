@@ -22,7 +22,7 @@ package file;
 
 /**
  * This error indicates that a structure could not be properly encoded with the
- * encoder. This should be thrown by {@link file.Encoder} implementing objects
+ * encoder. This should be thrown by {@link jflap.file.Encoder} implementing objects
  * to indicate a problem writing the file.
  * 
  * @author Thomas Finley

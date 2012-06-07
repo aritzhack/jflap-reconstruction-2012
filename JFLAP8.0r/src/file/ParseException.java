@@ -23,17 +23,17 @@ package file;
 /**
  * This error indicates elements in a file are arranged in such a fashion as to
  * prevent the interpreter from working correctly. This should be thrown by
- * {@link file.Decoder} implementing objects to indicate a problem processing
+ * {@link jflap.file.Decoder} implementing objects to indicate a problem processing
  * the file that could indicate that it is not the target type of file at all.
  * 
  * @author Thomas Finley
  */
 
-public class FileException extends RuntimeException {
+public class ParseException extends RuntimeException {
 	/**
 	 * Creates a generic parse exception.
 	 */
-	public FileException() {
+	public ParseException() {
 		super();
 	}
 
@@ -43,7 +43,7 @@ public class FileException extends RuntimeException {
 	 * @param message
 	 *            the exception message
 	 */
-	public FileException(String message) {
+	public ParseException(String message) {
 		super(message);
 	}
 }

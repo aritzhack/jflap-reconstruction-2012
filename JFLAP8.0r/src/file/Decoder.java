@@ -37,7 +37,7 @@ public interface Decoder {
 	/**
 	 * Given a file, this will return a JFLAP structure associated with that
 	 * file. This method should always return a structure, or throw a
-	 * {@link FileException} in the event of failure with a message detailing
+	 * {@link ParseException} in the event of failure with a message detailing
 	 * the nature of why the decoder failed.
 	 * 
 	 * @param file
@@ -46,7 +46,7 @@ public interface Decoder {
 	 *            implementors have the option of accepting custom parameters in
 	 *            the form of a map
 	 * @return a JFLAP structure resulting from the interpretation of the file
-	 * @throws FileException
+	 * @throws ParseException
 	 *             if there was a problem reading the file
 	 */
 	public Serializable decode(File file);
