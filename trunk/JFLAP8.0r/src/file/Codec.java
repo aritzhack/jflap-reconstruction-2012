@@ -25,9 +25,6 @@ import java.io.Serializable;
 
 import javax.swing.filechooser.FileFilter;
 
-import jflap.controller.JFLAPController;
-import jflap.model.JFLAPModel;
-
 
 
 
@@ -35,7 +32,7 @@ import jflap.model.JFLAPModel;
  * This object is both an encoder and decoder, and is useful as a file filter.
  */
 
-public abstract class Codec extends FileFilter implements Encoder, Decoder {
+public abstract class Codec<T> extends FileFilter implements Encoder<T>, Decoder<T> {
 	/**
 	 * Whether the given file is accepted by the codec. This method is
 	 * implemented to, by default, always return true.
@@ -71,7 +68,7 @@ public abstract class Codec extends FileFilter implements Encoder, Decoder {
 	 * @return an encoder that encodes in the same format this decodes in, or
 	 *         <CODE>null</CODE> if there is no such encoder
 	 */
-	public Encoder correspondingEncoder() {
+	public Encoder<T> correspondingEncoder() {
 		return this;
 	}
 
@@ -86,7 +83,7 @@ public abstract class Codec extends FileFilter implements Encoder, Decoder {
 	 *            the structure saved at the file with that name
 	 * @return the "root" of the filename
 	 */
-	public String rootFilename(String filename, Serializable structure) {
+	public String rootFilename(String filename, T structure) {
 		int lastIndex = filename.lastIndexOf('.');
 		if (lastIndex == -1)
 			return filename;
@@ -96,7 +93,4 @@ public abstract class Codec extends FileFilter implements Encoder, Decoder {
 		return filename;
 	}
 
-	public File encode(JFLAPModel model) {
-		return this.encode(model, model.getFile(), null);
-	}
 }

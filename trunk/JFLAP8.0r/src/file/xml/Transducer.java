@@ -22,10 +22,6 @@ package file.xml;
 
 import java.io.Serializable;
 
-import jflap.file.ParseException;
-import jflap.model.JFLAPModel;
-import jflap.model.formaldef.FormalDefinition;
-
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,7 +35,7 @@ import org.w3c.dom.Element;
  * @author Thomas Finley
  */
 
-public interface Transducer<T extends JFLAPModel> {
+public interface Transducer<T> {
 	/**
 	 * Given a document, this will return the corresponding JFLAP structure
 	 * encoded in the DOM document.
@@ -48,7 +44,7 @@ public interface Transducer<T extends JFLAPModel> {
 	 *            the DOM document to decode
 	 * @return a serializable object, as all JFLAP structures are encoded in
 	 *         serializable objects
-	 * @throws ParseException
+	 * @throws FileParseException
 	 *             in the event of an error that may lead to undesirable
 	 *             functionality
 	 */

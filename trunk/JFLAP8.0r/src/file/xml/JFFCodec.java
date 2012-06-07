@@ -24,11 +24,17 @@ package file.xml;
 import java.io.*;
 import java.util.Map;
 
+import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.*;
 
 
+import model.util.JFLAPConstants;
+
 import org.w3c.dom.*;
 
+import file.Codec;
+import file.EncodeException;
+import file.FileParseException;
 import file.xml.*;
 
 
@@ -37,37 +43,27 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import jflap.JFLAPResources;
-import jflap.file.Codec;
-import jflap.file.DataException;
-import jflap.file.EncodeException;
-import jflap.file.ParseException;
-import jflap.model.JFLAPModel;
-import jflap.model.ModelMapping;
-import jflap.model.formaldef.MetaDefinition;
-import jflap.view.pumping.PumpingLemmaChooser;
-
 /**
  * This is the codec for reading and writing JFLAP structures as XML documents.
  * 
  * @author Thomas Finley, Henry Qin
  */
 
-public class XMLCodec extends Codec {
+public abstract class JFFCodec<T> extends Codec<T> {
 
 
-    /**
-      * Determines which files this FileFilter will allow. We are only allowing files with extension XML and jff.
-      * 
-      */
-    @Override
-    public boolean accept(File f){
-        if (f.isDirectory()) return true;
-        boolean b = false;
-        for (String s: new String[]{".xml",".jff",".jdef"})
-        	b = (b || f.getName().endsWith(s));
-        return true;
-    } 
+	/**
+	 * Determines which files this FileFilter will allow. We are only allowing files with extension XML and jff.
+	 * 
+	 */
+	@Override
+	public boolean accept(File f){
+		if (f.isDirectory()) return true;
+		boolean b = false;
+		for (String s: new String[]{".xml",".jff",".jdef"})
+			b = (b || f.getName().endsWith(s));
+		return true;
+	} 
 
 	/**
 	 * Given a file, this will return a JFLAP structure associated with that
@@ -76,33 +72,33 @@ public class XMLCodec extends Codec {
 	 * @param file
 	 *            the file to decode into a structure
 	 * @return a JFLAP structure resulting from the interpretation of the file
-	 * @throws ParseException
+	 * @throws FileParseException
 	 *             if there was a problem reading the file
 	 */
-	public Serializable decode(File file) {
+	public T decode(File file) {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(file);
-			Transducer transducer = TransducerHelper.getTransducer(doc.getDocumentElement());
+			Transducer<T> transducer = TransducerHelper.getTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
 		} catch (ParserConfigurationException e) {
-			throw new ParseException("Java could not create the parser!");
+			throw new FileParseException("Java could not create the parser!");
 		} catch (IOException e) {
-			throw new ParseException("Could not open file to read!");
+			throw new FileParseException("Could not open file to read!");
 		} catch (org.xml.sax.SAXException e) {
-			throw new ParseException("Could not parse XML!\n" + e.getMessage());
+			throw new FileParseException("Could not parse XML!\n" + e.getMessage());
 		} catch (ExceptionInInitializerError e) {
 			// Hmm. That shouldn't be.
 			System.err.println("STATIC INIT:");
 			e.getException().printStackTrace();
-			throw new ParseException("Unexpected Error!");
+			throw new FileParseException("Unexpected Error!");
 		}
 	}
 
-	
-	
-	
+
+
+
 
 	/**
 	 * Given a structure, this will attempt to write the structure as a
@@ -120,21 +116,21 @@ public class XMLCodec extends Codec {
 	 *             if there was a problem writing the file
 	 */
 	@Override
-	public File encode(JFLAPModel structure, File file, Map parameters) {
+	public File encode(T structure, File file, Map parameters) {
 		file = new File(this.proposeFilename(file.getName(), structure));
 		Transducer transducer = null;
 		try {
 			transducer = TransducerHelper.getTransducer(structure);
-            
-            /*
-             * If we are saving a pumping lemma, the associated structure would
-             * actually be a pumping lemma chooser. Thus, we have to get the
-             * lemma from the chooser.
-             */
-            Document dom = transducer.toDOM(structure);
-            
-//			Document dom = transducer.toDOM(structure);    // original line
-            
+
+			/*
+			 * If we are saving a pumping lemma, the associated structure would
+			 * actually be a pumping lemma chooser. Thus, we have to get the
+			 * lemma from the chooser.
+			 */
+			Document dom = transducer.toDOM(structure);
+
+			//			Document dom = transducer.toDOM(structure);    // original line
+
 			DOMPrettier.makePretty(dom);
 			Source s = new DOMSource(dom);
 			Result r = new StreamResult(file);
@@ -155,7 +151,7 @@ public class XMLCodec extends Codec {
 	 * Returns if this type of structure can be encoded with this encoder. This
 	 * should not perform a detailed check of the structure, since the user will
 	 * have no idea why it will not be encoded correctly if the {@link #encode}
-	 * method does not throw a {@link ParseException}.
+	 * method does not throw a {@link FileParseException}.
 	 * 
 	 * @param structure
 	 *            the structure to check
@@ -186,14 +182,27 @@ public class XMLCodec extends Codec {
 	 * @return the new suggestion for a name
 	 */
 	public String proposeFilename(String filename, Serializable structure) {
-		String suffix = (structure instanceof MetaDefinition) ? 
-				JFLAPResources.JDEF_SUFFIX : JFLAPResources.JFF_SUFFIX;
-		
+		String suffix = JFLAPConstants.JFF_SUFFIX;
 		if (!filename.endsWith(suffix)) filename += suffix;
-		
+
 		return filename;
 	}
 
-	/** The filename suffix. */
-	public static final String SUFFIX = ".jff";
+	public static FileFilter getJFFfileFilter(){
+		return new FileFilter() {
+
+			@Override
+			public String getDescription() {
+				return "A filter for JFLAP "+ JFLAPConstants.VERSION + " files.";
+			}
+
+			@Override
+			public boolean accept(File f) {
+				return f.getName().endsWith(JFLAPConstants.JFF_SUFFIX);
+
+			}
+		};
+	}
+
 }
+
