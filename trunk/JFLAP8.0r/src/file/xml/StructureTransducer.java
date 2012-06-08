@@ -21,21 +21,22 @@
 package file.xml;
 
 import java.io.Serializable;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 
 /**
- * This is an interface for objects that serve as a go between from DOM to a
+ * This is an class for objects that serve as a go between from DOM to a
  * JFLAP object representing a structure (such as an automaton or grammar), and
  * back again.
  * 
  * @author Thomas Finley
  */
 
-public interface Transducer<T> {
+public abstract class StructureTransducer<T> {
 	/**
 	 * Given a document, this will return the corresponding JFLAP structure
 	 * encoded in the DOM document.
@@ -48,7 +49,7 @@ public interface Transducer<T> {
 	 *             in the event of an error that may lead to undesirable
 	 *             functionality
 	 */
-	public T fromStructureRoot(Element root);
+	public abstract T fromStructureRoot(Element root);
 
 	/**
 	 * Given a JFLAP structure, this will return the corresponding DOM encoding
@@ -58,7 +59,22 @@ public interface Transducer<T> {
 	 *            the JFLAP structure to encode
 	 * @return a DOM document instance
 	 */
-	public Document toDOM(T structure);
+	public Element toXMLTree(T structure){
+		Element root = creatRoot(structure);
+		return appendComponentsToRoot(structure, root);
+	}
+
+	public abstract Element appendComponentsToRoot(T structure, Element root);
+
+	public Element creatRoot(T structure) {
+		
+		Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put(STRUCTURE_TYPE_NAME, getTag());
+		// Create and add the <structure> element.
+		Element structureElement = XMLHelper.createElement(STRUCTURE_NAME, null,
+				attributes);
+		return structureElement;
+	}
 
 	/**
 	 * Returns the string encoding of the type this transducer decodes and
@@ -66,7 +82,7 @@ public interface Transducer<T> {
 	 * 
 	 * @return the type this transducer recognizes
 	 */
-	public String getType();
+	public abstract String getTag();
 
 	/** The tag name for the root of a structure. */
 	public static final String STRUCTURE_NAME = "structure";

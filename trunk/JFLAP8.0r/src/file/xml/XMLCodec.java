@@ -49,8 +49,7 @@ import javax.xml.transform.stream.StreamResult;
  * @author Thomas Finley, Henry Qin
  */
 
-public abstract class JFFCodec<T> extends Codec<T> {
-
+public abstract class XMLCodec extends Codec {
 
 	/**
 	 * Determines which files this FileFilter will allow. We are only allowing files with extension XML and jff.
@@ -75,15 +74,12 @@ public abstract class JFFCodec<T> extends Codec<T> {
 	 * @throws FileParseException
 	 *             if there was a problem reading the file
 	 */
-	public T decode(File file) {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	@Override
+	public Object decode(File file) {
 		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(file);
-			Transducer<T> transducer = TransducerHelper.getTransducer(doc.getDocumentElement());
+			Document doc = XMLHelper.parse(file);
+			StructureTransducer transducer = TransducerFactory.getTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
-		} catch (ParserConfigurationException e) {
-			throw new FileParseException("Java could not create the parser!");
 		} catch (IOException e) {
 			throw new FileParseException("Could not open file to read!");
 		} catch (org.xml.sax.SAXException e) {
@@ -116,22 +112,16 @@ public abstract class JFFCodec<T> extends Codec<T> {
 	 *             if there was a problem writing the file
 	 */
 	@Override
-	public File encode(T structure, File file, Map parameters) {
-		file = new File(this.proposeFilename(file.getName(), structure));
-		Transducer transducer = null;
+	public File encode(Object structure, File file, Map parameters) {
+		Document doc = createBasicJFFDoc();
 		try {
-			transducer = TransducerHelper.getTransducer(structure);
+			StructureTransducer transducer = 
+					TransducerFactory.getTransducerForStructure(structure);
 
-			/*
-			 * If we are saving a pumping lemma, the associated structure would
-			 * actually be a pumping lemma chooser. Thus, we have to get the
-			 * lemma from the chooser.
-			 */
-			Document dom = transducer.toDOM(structure);
+			Element dom = transducer.toXMLTree(structure);
+			doc.appendChild(dom);
 
-			//			Document dom = transducer.toDOM(structure);    // original line
-
-			DOMPrettier.makePretty(dom);
+			XMLPrettier.makePretty(doc);
 			Source s = new DOMSource(dom);
 			Result r = new StreamResult(file);
 			Transformer t = TransformerFactory.newInstance().newTransformer();
@@ -145,6 +135,15 @@ public abstract class JFFCodec<T> extends Codec<T> {
 		} catch (TransformerException e) {
 			throw new EncodeException("Could not open file to write!");
 		}
+	}
+
+	private Document createBasicJFFDoc() {
+		Document doc = XMLHelper.newDocument();
+		
+		Node versionTag = XMLHelper.createComment("Created with JFLAP "
+				+ JFLAPConstants.VERSION + ".");
+		doc.appendChild(versionTag);
+		return doc;
 	}
 
 	/**

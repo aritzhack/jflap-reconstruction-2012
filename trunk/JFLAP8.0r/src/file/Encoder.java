@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Thomas Finley
  */
 
-public interface Encoder<T> {
+public interface Encoder {
 	/**
 	 * Given a structure, this will attempt to write the structure to a file.
 	 * This method should always return a file, or throw an
@@ -52,35 +52,6 @@ public interface Encoder<T> {
 	 * @throws EncodeException
 	 *             if there was a problem writing the file
 	 */
-	public File encode(T structure, File file, Map<String, Object> parameters);
+	public File encode(Object structure, File file, Map<String, Object> parameters);
 
-	/**
-	 * Returns if this type of structure can be encoded with this encoder. This
-	 * should not perform a detailed check of the structure, since the user will
-	 * have no idea why it will not be encoded correctly if the {@link #encode}
-	 * method does not throw a {@link FileParseException}.
-	 * 
-	 * @param structure
-	 *            the structure to check
-	 * @return if the structure, perhaps with minor changes, could possibly be
-	 *         written to a file
-	 */
-	public boolean canEncode(T structure);
-
-	/**
-	 * Proposes a file name for a given structure. This encoder should return
-	 * either the file name, or a file name more amenable to the format this
-	 * encoder will encode in. The file name suggested should be a fixed point
-	 * for this method, i.e.
-	 * <code>x.proposeFilename(x.proposeFilename(name,S),S)</code> should
-	 * always equal <code>x.proposeFilename(name,S)</code>, where
-	 * <code>S</code> is any structure.
-	 * 
-	 * @param filename
-	 *            the proposed file name
-	 * @param structure
-	 *            the structure that will be saved
-	 * @return the file name, either original or modified
-	 */
-	public String proposeFilename(String filename, T structure);
 }

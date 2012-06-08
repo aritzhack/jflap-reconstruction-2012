@@ -32,7 +32,7 @@ import org.w3c.dom.*;
  * @author Thomas Finley
  */
 
-public class DOMPrettier {
+public class XMLPrettier {
 	/**
 	 * Recursive private helper method that inserts indenting text nodes.
 	 * 
