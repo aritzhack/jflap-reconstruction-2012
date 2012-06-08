@@ -44,7 +44,7 @@ public class SetOperators {
 	        newSet.addAll(set);
 	        sets.add(newSet);
 	        sets.add(set);
-	    }           
+	    }
 		return sets;
 	}
 	
@@ -124,5 +124,9 @@ public class SetOperators {
 	 */
 	public static <T extends Object> boolean isDisjoint(Set<T> set1, Set<T> set2){
 		return intersection(set1, set2).size()==0;
+	}
+	
+	public static<T extends Object> Set<T> symmetricDifference(Set<T> set1, Set<T> set2){
+		return difference(union(set1,set2),intersection(set1,set2));
 	}
 }
