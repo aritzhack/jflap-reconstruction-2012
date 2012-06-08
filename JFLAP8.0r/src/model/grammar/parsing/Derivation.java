@@ -49,7 +49,6 @@ public class Derivation implements Copyable{
 	
 	public boolean addRightmostStep(Production p){
 		SymbolString current = createResult();
-		JFLAPDebug.print(current);
 		for (int i = current.size()-1; i >= 0; i--){
 			if (Grammar.isVariable(current.get(i))){
 				return this.addStep(p, i);

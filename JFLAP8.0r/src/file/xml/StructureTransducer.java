@@ -36,56 +36,42 @@ import org.w3c.dom.Element;
  * @author Thomas Finley
  */
 
-public abstract class StructureTransducer<T> {
-	/**
-	 * Given a document, this will return the corresponding JFLAP structure
-	 * encoded in the DOM document.
-	 * 
-	 * @param root
-	 *            the DOM document to decode
-	 * @return a serializable object, as all JFLAP structures are encoded in
-	 *         serializable objects
-	 * @throws FileParseException
-	 *             in the event of an error that may lead to undesirable
-	 *             functionality
+public abstract class StructureTransducer<T> implements Transducer<T> {
+	/* (non-Javadoc)
+	 * @see file.xml.Transducer#fromStructureRoot(org.w3c.dom.Element, org.w3c.dom.Document)
 	 */
+	@Override
 	public abstract T fromStructureRoot(Element root);
 
-	/**
-	 * Given a JFLAP structure, this will return the corresponding DOM encoding
-	 * of the structure.
-	 * 
-	 * @param structure
-	 *            the JFLAP structure to encode
-	 * @return a DOM document instance
+	/* (non-Javadoc)
+	 * @see file.xml.Transducer#toXMLTree(org.w3c.dom.Document, T)
 	 */
-	public Element toXMLTree(T structure){
-		Element root = creatRoot(structure);
-		return appendComponentsToRoot(structure, root);
+	@Override
+	public Element toXMLTree(Document doc, T structure){
+		Element root = creatRoot(doc, structure);
+		return appendComponentsToRoot(doc, structure, root);
 	}
 
-	public abstract Element appendComponentsToRoot(T structure, Element root);
+	public abstract Element appendComponentsToRoot(Document doc, T structure, Element root);
 
-	public Element creatRoot(T structure) {
+	public Element creatRoot(Document doc, T structure) {
 		
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(STRUCTURE_TYPE_NAME, getTag());
 		// Create and add the <structure> element.
-		Element structureElement = XMLHelper.createElement(STRUCTURE_NAME, null,
+		Element structureElement = XMLHelper.createElement(doc, STRUCTURE_TAG, null,
 				attributes);
 		return structureElement;
 	}
 
-	/**
-	 * Returns the string encoding of the type this transducer decodes and
-	 * encodes.
-	 * 
-	 * @return the type this transducer recognizes
+	/* (non-Javadoc)
+	 * @see file.xml.Transducer#getTag()
 	 */
+	@Override
 	public abstract String getTag();
 
 	/** The tag name for the root of a structure. */
-	public static final String STRUCTURE_NAME = "structure";
+	public static final String STRUCTURE_TAG = "structure";
 
 	/** The tag name for the type of structure this is. */
 	public static final String STRUCTURE_TYPE_NAME = "type";

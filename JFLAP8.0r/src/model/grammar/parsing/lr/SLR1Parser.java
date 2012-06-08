@@ -121,7 +121,6 @@ public class SLR1Parser extends Parser {
 			}
 			nextState = getStateForID((Integer) myStack.peekFirst());
 			nextCol = p.getLHS().getFirst();
-			JFLAPDebug.print(p);
 			myDerivation.add(p);
 		}
 		else{

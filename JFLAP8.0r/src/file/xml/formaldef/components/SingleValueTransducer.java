@@ -2,6 +2,7 @@ package file.xml.formaldef.components;
 
 import model.formaldef.components.symbols.SpecialSymbol;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -22,8 +23,8 @@ public abstract class SingleValueTransducer<T> extends StructureTransducer<T> {
 	public abstract T createInstance(String s);
 
 	@Override
-	public Element appendComponentsToRoot(T structure, Element root) {
-		Element e = XMLHelper.createElement(VALUE_TAG, retrieveData(structure), null);
+	public Element appendComponentsToRoot(Document doc, T structure, Element root) {
+		Element e = XMLHelper.createElement(doc, VALUE_TAG, retrieveData(structure), null);
 		root.appendChild(e);
 		return root;
 	}

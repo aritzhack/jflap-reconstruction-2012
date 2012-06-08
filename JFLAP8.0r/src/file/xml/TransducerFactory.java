@@ -1,8 +1,13 @@
 package file.xml;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import model.automata.InputAlphabet;
+import model.automata.StartState;
+import model.automata.StateSet;
+import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.regex.RegularExpression;
 
@@ -11,19 +16,32 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import debug.JFLAPDebug;
+
 import file.DataException;
 import file.xml.formaldef.FSATransducer;
 import file.xml.formaldef.RegExTransducer;
+import file.xml.formaldef.components.specific.alphabet.InputAlphabetTransducer;
+import file.xml.formaldef.components.specific.states.FinalStateSetTransducer;
+import file.xml.formaldef.components.specific.states.StartStateTransducer;
+import file.xml.formaldef.components.specific.states.StateSetTransducer;
 
 public class TransducerFactory {
 
 	private static Map<Class, StructureTransducer> myClassToTransducerMap;
 	
 	static{
-		myClassToTransducerMap = new TreeMap<Class, StructureTransducer>();
-		myClassToTransducerMap.put(RegularExpression.class, new RegExTransducer());
-		myClassToTransducerMap.put(FiniteStateAcceptor.class, new FSATransducer());
-		myClassToTransducerMap.put(RegularExpression.class, new RegExTransducer());
+		myClassToTransducerMap = new HashMap<Class, StructureTransducer>();
+		addMapping(RegularExpression.class, new RegExTransducer());
+		addMapping(FiniteStateAcceptor.class, new FSATransducer());
+		addMapping(FinalStateSet.class, new FinalStateSetTransducer());
+		addMapping(InputAlphabet.class, new InputAlphabetTransducer());
+		addMapping(StateSet.class, new StateSetTransducer());
+		addMapping(StartState.class, new StartStateTransducer());
+	}
+
+	public static void addMapping(Class c, StructureTransducer struct) {
+		myClassToTransducerMap.put(c,struct);
 	}
 	
 	public static <T> StructureTransducer<T> getTransducerForStructure(T object){

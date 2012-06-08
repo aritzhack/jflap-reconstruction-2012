@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.VariableAlphabet;
@@ -43,8 +45,24 @@ public class DependencyGraph extends DirectedGraph<Variable>{
 		return super.totalDegree();
 	}
 	
-	public Variable[] getAllDependencies(Variable var){
-		return adjacent(var).toArray(new Variable[0]);
+	public Variable[] getAllDependencies(Variable from){
+        PathFinder finder = new PathFinder(this);
+        Set<Variable> dep = new TreeSet<Variable>();
+        for (Variable to: this.vertices()){
+            if (finder.findPath(from, to) != null &&
+                            !from.equals(to))
+                    dep.add(to);
+        }
+        return dep.toArray(new Variable[0]);
+	}
+	
+	@Override
+	public String toString() {
+		String out = "";
+		for (Variable v: vertices()){
+			out += v + ": " + adjacent(v) + "\n";
+		}
+		return out;
 	}
 	
 }
