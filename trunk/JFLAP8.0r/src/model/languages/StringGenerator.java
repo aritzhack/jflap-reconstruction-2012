@@ -11,29 +11,36 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.pda.PushdownAutomaton;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.Derivation;
+import model.grammar.parsing.brute.BruteParser;
+import model.grammar.parsing.brute.RestrictedBruteParser;
+import model.grammar.parsing.cyk.CYKParser;
+import model.grammar.transform.CNFConverter;
 
 public class StringGenerator {
 
-	public static final int DEFAULT_NUMBER_TO_GENERATE = 10;
+	public static final int DEFAULT_NUMBER_TO_GENERATE = 5;
 	
 	private Grammar myGrammar;
 
 	private Queue<Derivation> myDerivationsQueue;
-	private Set<SymbolString> myStringsInLanguage;
+	private Set<SymbolString> myStringsInLanguage,myPossibleStrings;
 	
-	private int myNumberToGenerate;
+	private int myNumberToGenerate, currentStringLength;
 	
 
 	public StringGenerator (Grammar g) {
@@ -64,58 +71,18 @@ public class StringGenerator {
 	}
 
 	
-	public void generateStrings () {
+	public List<SymbolString> generateStrings () {
 		while (myStringsInLanguage.size() < myNumberToGenerate) {
-			makeNextReplacement();
-			if (myDerivationsQueue.isEmpty()) 
-				break;
+			checkStrings();
 		}
 		
 		ArrayList<SymbolString> stringsList = new ArrayList<SymbolString>(myStringsInLanguage);
 		Collections.sort(stringsList, new StringComparator());
-		System.out.println("Strings: " + stringsList);
+		stringsList.add(new SymbolString(new Symbol("...")));
+		return stringsList;
 		
 	}
 	
-	private boolean makeNextReplacement() {
-		
-		ArrayList<Derivation> temp = new ArrayList<Derivation>();
-
-		loop: while (!myDerivationsQueue.isEmpty()) {
-			Derivation d = myDerivationsQueue.poll();
-			SymbolString result = d.createResult();
-			
-			for (int i = 0; i < result.size(); i++) {
-				for (int j = i; j < result.size(); j++) {
-					SymbolString LHS = result.subList(i, j + 1);
-					
-					for (Production p : myGrammar.getProductionSet()
-							.getProductionsWithLHS(LHS)) {
-						
-						Derivation tempDerivation = d.copy();
-						tempDerivation.addStep(p, result.indexOf(LHS, i));
-						SymbolString str = tempDerivation.createResult();
-					
-						if (str.getSymbolsOfClass(Variable.class).size() == 0) {
-						
-							myStringsInLanguage.add(str);
-						}
-						
-						if (myStringsInLanguage.size() >= myNumberToGenerate)
-							break loop;
-						
-						temp.add(tempDerivation);
-					}
-				}
-				
-
-			}
-		}
-		myDerivationsQueue.addAll(temp);
-		return true;
-	}
-
-
 	private class StringComparator implements Comparator<SymbolString> {
 
 		@Override
@@ -126,5 +93,37 @@ public class StringGenerator {
 		}
 		
 	}
-
+	
+	private void checkStrings(){
+		if(currentStringLength == 0){
+			myPossibleStrings = new TreeSet<SymbolString>();
+		}
+		else if(currentStringLength == 1){
+			for(Symbol terminal : myGrammar.getTerminals()){
+				myPossibleStrings.add(new SymbolString(terminal));
+			}
+		}else{
+			getNextLengthStrings();
+		}
+		BruteParser parser = new RestrictedBruteParser(myGrammar);
+		for(SymbolString string : myPossibleStrings){
+			if(parser.quickParse(string)){
+				myStringsInLanguage.add(string);
+			}
+		}
+		currentStringLength++;
+	}
+	
+	private void getNextLengthStrings(){
+		List<SymbolString> tempList = new ArrayList<SymbolString>();
+		tempList.addAll(myPossibleStrings);
+			for(SymbolString string : tempList){
+				for(Symbol terminal : myGrammar.getTerminals()){
+					SymbolString temp = string.copy();
+					temp.add(terminal);
+					myPossibleStrings.add(temp);
+				}
+				myPossibleStrings.remove(string);
+			}
+		}
 }

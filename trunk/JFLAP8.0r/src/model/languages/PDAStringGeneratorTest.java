@@ -96,8 +96,8 @@ public class PDAStringGeneratorTest {
 		Grammar cnf = cnfconvert.getTransformedGrammar();
 		
 		
-		StringGenerator gen = new StringGenerator(cnf, 2);
-		gen.generateStrings();
+		StringGenerator gen = new StringGenerator(cnf, 7);
+		System.out.println("Strings: "+ gen.generateStrings());
 		
 //		StringGenerator gen = new StringGenerator(pda);
 //		gen.generateStrings();
