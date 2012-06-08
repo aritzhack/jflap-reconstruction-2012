@@ -22,6 +22,8 @@ import model.grammar.parsing.Derivation;
 
 public class StringGenerator {
 
+	public static final int DEFAULT_NUMBER_TO_GENERATE = 10;
+	
 	private Grammar myGrammar;
 
 	private Queue<Derivation> myDerivationsQueue;
@@ -31,7 +33,7 @@ public class StringGenerator {
 	
 
 	public StringGenerator (Grammar g) {
-		this(g, 10);
+		this(g, DEFAULT_NUMBER_TO_GENERATE);
 	}
 	
 	public StringGenerator (Grammar g, int numberToGenerate) {
