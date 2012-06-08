@@ -69,7 +69,7 @@ public class GeneratorTest {
 		gram.trimAlphabets();
 		
 		StringGenerator gen = new StringGenerator(gram, 12);
-		gen.generateStrings();
+		gen.generateStringsBrute();
 		
 		
 	}
