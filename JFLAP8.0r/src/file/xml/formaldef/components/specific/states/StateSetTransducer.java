@@ -42,8 +42,8 @@ public class StateSetTransducer extends SetComponentTransducer<State> {
 	}
 
 	@Override
-	public String getTag() {
-		return "state_set";
+	public String getTypeTag() {
+		return STATE_SET_TAG;
 	}
 
 

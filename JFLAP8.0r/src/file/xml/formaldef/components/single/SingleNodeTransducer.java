@@ -3,10 +3,10 @@ package file.xml.formaldef.components.single;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import file.xml.Transducer;
+import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 
-public abstract class SingleNodeTransducer<T> implements Transducer<T>{
+public abstract class SingleNodeTransducer<T> implements XMLTransducer<T>{
 
 
 	@Override

@@ -5,7 +5,6 @@ import model.automata.acceptors.FinalStateSet;
 
 public class FinalStateSetTransducer extends StateSetTransducer {
 
-	private static final String FINAL_STATESET_TAG = "final_states";
 
 	@Override
 	public StateSet createEmptyComponent() {
@@ -13,7 +12,7 @@ public class FinalStateSetTransducer extends StateSetTransducer {
 	}
 
 	@Override
-	public String getTag() {
+	public String getTypeTag() {
 		return FINAL_STATESET_TAG;
 	}
 

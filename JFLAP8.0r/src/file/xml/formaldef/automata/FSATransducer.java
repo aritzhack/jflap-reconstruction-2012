@@ -5,8 +5,9 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
-import file.xml.Transducer;
+import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
+import file.xml.formaldef.components.FunctionSetTransducer;
 import file.xml.formaldef.components.specific.transitions.FSATransitionTransducer;
 import file.xml.formaldef.components.specific.transitions.TransitionSetTransducer;
 import file.xml.formaldef.components.specific.transitions.TransitionTransducer;
@@ -20,7 +21,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.alphabets.Alphabet;
 
-public class FSATransducer extends FormalDefinitionTransducer<FiniteStateAcceptor> {
+public class FSATransducer extends AutomatonTransducer<FiniteStateAcceptor> {
 
 	@Override
 	public FiniteStateAcceptor buildStructure(Object[] subComp) {
@@ -32,25 +33,21 @@ public class FSATransducer extends FormalDefinitionTransducer<FiniteStateAccepto
 	}
 
 	@Override
-	public String getTag() {
-		return "fsa";
+	public String getTypeTag() {
+		return FSA_TAG;
 	}
 
 	@Override
-	public FiniteStateAcceptor createFromAlphabets(List<Alphabet> alphs,
-			List<Element> remains) {
-		
-		return null;
-	}
-
-	@Override
-	public void addFunctionSets(Map<Object, Transducer> map,
-			FiniteStateAcceptor fsa) {
-		TransitionSet<FSATransition> trans = fsa.getTransitions();
-		FSATransitionTransducer single = new FSATransitionTransducer(null);
+	public TransitionSetTransducer createTransitionFuncTransducer(
+			List<Alphabet> alphs) {
+		InputAlphabet inputAlph = null;
+		if (alphs != null)
+			inputAlph = (InputAlphabet) alphs.get(0);
+		FSATransitionTransducer single = 
+				new FSATransitionTransducer(inputAlph);
 		TransitionSetTransducer<FSATransition> ducer = 
 				new TransitionSetTransducer<FSATransition>(single);
-		map.put(trans, ducer);
+		return ducer;
 	}
 
 	

@@ -1,7 +1,7 @@
-package file.xml.formaldef.components.specific.transitions;
+package file.xml.formaldef.components.specific.output;
 
-import model.automata.Transition;
-import model.automata.TransitionSet;
+import model.automata.transducers.OutputFunction;
+import model.automata.transducers.OutputFunctionSet;
 import model.formaldef.components.SetComponent;
 
 import org.w3c.dom.Document;
@@ -11,21 +11,21 @@ import util.Copyable;
 import file.xml.formaldef.components.FunctionSetTransducer;
 import file.xml.formaldef.components.FunctionTransducer;
 
-public class TransitionSetTransducer<T extends Transition> extends FunctionSetTransducer<T> {
+public class OutputFunctionSetTransducer<T extends OutputFunction> extends FunctionSetTransducer<T> {
 
-	public TransitionSetTransducer(FunctionTransducer<T> trans) {
+
+	public OutputFunctionSetTransducer(FunctionTransducer<T> trans) {
 		super(trans);
 	}
 
 	@Override
 	public String getTypeTag() {
-		return TRANS_SET;
+		return OUTPUT_FUNC_SET;
 	}
 
 	@Override
 	public SetComponent<T> createEmptyComponent() {
-		return new TransitionSet<T>();
+		return new OutputFunctionSet<T>();
 	}
-
 
 }

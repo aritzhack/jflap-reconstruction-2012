@@ -3,7 +3,7 @@ package file.xml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public interface Transducer<T> extends XMLTags{
+public interface XMLTransducer<T> extends XMLTags{
 
 	/**
 	 * Given a document, this will return the corresponding JFLAP structure

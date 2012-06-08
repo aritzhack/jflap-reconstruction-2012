@@ -273,12 +273,12 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		return input.length() == 0 || input.equals(JFLAPPreferences.getEmptyStringSymbol());
 	}
 
-	public boolean replace(int i, Symbol ... replaceWith) {
+	public SymbolString replace(int i, Symbol ... replaceWith) {
 		return this.replace(i, new SymbolString(replaceWith));
 
 	}
 
-	public boolean replace(int i, SymbolString replaceWith) {
+	public SymbolString replace(int i, SymbolString replaceWith) {
 		return this.replace(i,i+1, replaceWith);
 	}
 
@@ -287,38 +287,43 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		return cp + temp.indexOf(e);
 	}
 
-	public boolean replace(int start, int end, SymbolString rhs) {
+	public SymbolString replace(int start, int end, SymbolString rhs) {
 		
 		if (start < 0 || end > this.size() || end < start){
-			return false;
+			throw new RuntimeException("Start index " + start + " does not work" +
+					" with end index "+end);
 		}
-		
+		SymbolString toreturn = new SymbolString(this);
 		for(int i = start; i< end; i++){
-			this.remove(start);
+			toreturn.remove(start);
 		}
-		return this.addAll(start, rhs);
+		toreturn.addAll(start, rhs);
+		return toreturn;
 	}
 	
-	public boolean replace(int start, int end, Symbol ... rhs) {
+	public SymbolString replace(int start, int end, Symbol ... rhs) {
 		return this.replace(start, end, new SymbolString(rhs));
 	}
 
-	public boolean replaceAll(Symbol toReplace, Symbol ... replaceWith) {
+	public SymbolString replaceAll(Symbol toReplace, Symbol ... replaceWith) {
 		return this.replaceAll(toReplace, new SymbolString(replaceWith));
 	}
 
-	public boolean replaceAll(Symbol toReplace, SymbolString replaceWith) {
+	public SymbolString replaceAll(Symbol toReplace, SymbolString replaceWith) {
 		boolean replaced = false;
-		for (int i = 0; i < this.size(); i++){
-			if(this.replace(toReplace, replaceWith)){
+		SymbolString toReturn = new SymbolString(this);
+		for (int i = 0; i < toReturn.size(); i++){
+			int oldSize = toReturn.size();
+			toReturn = toReturn.replace(toReplace, replaceWith);
+			if( oldSize != toReturn.size()){
 					i += replaceWith.size()-1;
 					replaced = true;
 			}
 		}
-		return replaced;
+		return toReturn;
 	}
 
-	private boolean replace(Symbol toReplace, SymbolString replaceWith) {
+	public SymbolString replace(Symbol toReplace, SymbolString replaceWith) {
 		int index = this.indexOf(toReplace);
 		return replace(index, replaceWith);
 	}

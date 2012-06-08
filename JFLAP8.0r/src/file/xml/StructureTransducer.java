@@ -26,6 +26,11 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
+import file.DataException;
 
 
 /**
@@ -36,7 +41,15 @@ import org.w3c.dom.Element;
  * @author Thomas Finley
  */
 
-public abstract class StructureTransducer<T> implements Transducer<T> {
+public abstract class StructureTransducer<T> implements XMLTransducer<T> {
+	/** The tag name for the type of structure this is. */
+	public static final String STRUCTURE_TYPE_NAME = "type";
+
+
+	/** The tag name for the root of a structure. */
+	public static final String STRUCTURE_TAG = "structure";
+
+
 	/* (non-Javadoc)
 	 * @see file.xml.Transducer#fromStructureRoot(org.w3c.dom.Element, org.w3c.dom.Document)
 	 */
@@ -57,22 +70,42 @@ public abstract class StructureTransducer<T> implements Transducer<T> {
 	public Element creatRoot(Document doc, T structure) {
 		
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(STRUCTURE_TYPE_NAME, getTag());
+		attributes.put(STRUCTURE_TYPE_ATTR, getTypeTag());
 		// Create and add the <structure> element.
-		Element structureElement = XMLHelper.createElement(doc, STRUCTURE_TAG, null,
+		Element structureElement = XMLHelper.createElement(doc, getTag(), null,
 				attributes);
 		return structureElement;
 	}
-
-	/* (non-Javadoc)
-	 * @see file.xml.Transducer#getTag()
-	 */
+	
 	@Override
-	public abstract String getTag();
+	public String getTag() {
+		return STRUCTURE_TAG;
+	}
+	
+	public abstract String getTypeTag();
 
-	/** The tag name for the root of a structure. */
-	public static final String STRUCTURE_TAG = "structure";
+	public static String retrieveTypeTag(Element struct) {
+		// Check for the type tag.
+		String tag = struct.getAttribute(STRUCTURE_TYPE_ATTR);
 
-	/** The tag name for the type of structure this is. */
-	public static final String STRUCTURE_TYPE_NAME = "type";
+		return tag;
+	}
+	
+	/**
+	 * Given a DOM document, this will return an appropriate instance of a
+	 * transducer for the type of document. Note that the type of the structure
+	 * should be specified with in the "type" tags.
+	 * 
+	 * @param document
+	 *            the document to get the transducer for
+	 * @return the correct transducer for this document
+	 * @throws IllegalArgumentException
+	 *             if the document does not map to a transducer, or if it does
+	 *             not contain a "type" tag at all
+	 */
+	public static XMLTransducer getStructureTransducer(Element root) {
+		
+		return TransducerFactory.getTransducerForTag(retrieveTypeTag(root));
+		
+	}
 }

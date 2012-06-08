@@ -133,7 +133,7 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 				Variable var = myTermToVarMap.get(curr);
 				if (var == null)
 					var = createAndAddNextTermVar((Terminal) curr);
-				rhs.replace(i, var);
+				rhs = rhs.replace(i, var);
 				Production newProd = new Production(var, curr);
 				getTransformedGrammar().getProductionSet().add(newProd);
 			}

@@ -13,7 +13,7 @@ import model.automata.Transition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 import model.util.UtilFunctions;
-import file.xml.Transducer;
+import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.FunctionTransducer;
 import file.xml.formaldef.components.single.SymbolStringTransducer;

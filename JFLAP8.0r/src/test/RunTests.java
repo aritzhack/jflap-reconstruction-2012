@@ -10,12 +10,12 @@ import errors.JFLAPException;
 public class RunTests {
 
 	public static Class[] myTests = new Class[]{
-		PDATest.class,
-		RegExTest.class, 
-		FSATest.class, 
-		GrammarTest.class,
-		ParserTest.class,
-//		FileTester.class
+//		PDATest.class,
+//		RegExTest.class, 
+//		FSATest.class, 
+//		GrammarTest.class,
+//		ParserTest.class,
+		FileTester.class
 	};
 	
 	public static void main(String[] args) {
