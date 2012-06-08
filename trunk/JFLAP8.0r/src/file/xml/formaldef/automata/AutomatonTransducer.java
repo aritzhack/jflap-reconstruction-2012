@@ -23,14 +23,14 @@ public abstract class AutomatonTransducer<T extends Automaton> extends FormalDef
 	@Override
 	public XMLTransducer getTransducerForStructureNode(String s,
 			List<Alphabet> alphs) {
-		if (s == TRANS_SET){
+		if (s.equals(TRANS_SET)){
 			return createTransitionFuncTransducer(alphs);
 		}
 		return null;
 	}
 
 	@Override
-	public void addFunctionSets(Map<Object, XMLTransducer> map, T structure) {
+	public void addFunctionSetsToMap(Map<Object, XMLTransducer> map, T structure) {
 		XMLTransducer func = createTransitionFuncTransducer(null);
 		map.put(structure.getTransitions(), func);
 	}

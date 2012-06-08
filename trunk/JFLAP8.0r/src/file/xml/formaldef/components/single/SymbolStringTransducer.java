@@ -1,9 +1,13 @@
 package file.xml.formaldef.components.single;
 
+import java.util.Arrays;
+
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 
 import org.w3c.dom.Element;
+
+import debug.JFLAPDebug;
 
 public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 

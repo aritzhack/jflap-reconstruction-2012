@@ -18,7 +18,7 @@ public class TransitionSetTransducer<T extends Transition> extends FunctionSetTr
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return TRANS_SET;
 	}
 

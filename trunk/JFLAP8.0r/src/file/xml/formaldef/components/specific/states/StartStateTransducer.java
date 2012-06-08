@@ -34,7 +34,7 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return START_STATE;
 	}
 

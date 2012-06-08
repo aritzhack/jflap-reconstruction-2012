@@ -1,5 +1,6 @@
 package file.xml.formaldef.regex;
 
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Document;
@@ -8,15 +9,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import file.xml.XMLHelper;
+import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
 
 import model.automata.InputAlphabet;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.RegularExpression;
 
 public class RegExTransducer extends FormalDefinitionTransducer<RegularExpression> {
 
-	private static final String EXPRESSION_TAG = "exp";
 
 	@Override
 	public RegularExpression fromStructureRoot(Element root) {
@@ -30,13 +32,13 @@ public class RegExTransducer extends FormalDefinitionTransducer<RegularExpressio
 	
 	@Override
 	public RegularExpression buildStructure(Object[] subComp) {
-		return buildStructure((InputAlphabet) subComp[0]);
-	}
-
-	private RegularExpression buildStructure(InputAlphabet inputAlphabet) {
-		RegularExpression regex = new RegularExpression(inputAlphabet);
+		InputAlphabet alph = retrieveTarget(InputAlphabet.class, subComp);
+		SymbolString exp = retrieveTarget(SymbolString.class, subComp);
+		RegularExpression regex = new RegularExpression(alph);
+		regex.setTo(exp);
 		return regex;
 	}
+
 	
 	
 
@@ -53,7 +55,21 @@ public class RegExTransducer extends FormalDefinitionTransducer<RegularExpressio
 
 	@Override
 	public String getTag() {
-		return "regex";
+		return REGEX;
+	}
+
+	@Override
+	public XMLTransducer getTransducerForStructureNode(String string,
+			List<Alphabet> alphs) {
+		if (string.equals(EXPRESSION_TAG))
+			return new ExpressionStringTransducer((InputAlphabet) alphs.get(0));
+		return null;
+	}
+
+	@Override
+	public void addFunctionSetsToMap(Map<Object, XMLTransducer> map,
+			RegularExpression regex) {
+		map.put(regex.getExpression(), new ExpressionStringTransducer(null));
 	}
 
 

@@ -4,15 +4,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import model.automata.State;
-import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
+import file.xml.XMLTransducer;
 
 public class StateTransducer implements XMLTransducer<State> {
 
-	private static final String ID_TAG = "id";
-	private static final String NAME_TAG = "name";
-	private static final String STATE_TAG = "state";
-	
 	@Override
 	public State fromStructureRoot(Element root) {
 		Element id_ele = XMLHelper.getChildWithTag(root, ID_TAG);
@@ -25,7 +21,7 @@ public class StateTransducer implements XMLTransducer<State> {
 
 	@Override
 	public Element toXMLTree(Document doc, State item) {
-		Element parent = XMLHelper.createElement(doc, STATE_TAG, null, null);
+		Element parent = XMLHelper.createElement(doc, getTag(), null, null);
 		Element id = XMLHelper.createElement(doc, ID_TAG, item.getID(), null);
 		Element name = XMLHelper.createElement(doc, NAME_TAG, item.getName(), null);
 		parent.appendChild(name);

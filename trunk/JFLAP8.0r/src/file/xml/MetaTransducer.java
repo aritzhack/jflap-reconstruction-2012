@@ -54,4 +54,12 @@ public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 
 	public abstract Object[] getConstituentComponents(T structure);
 	
+	public static <T> T retrieveTarget(Class<T> target, Object ... population){
+		for (Object o: population){
+			if (target.isAssignableFrom(o.getClass()))
+				return (T) o;
+		}
+		return null;
+	}
+	
 }

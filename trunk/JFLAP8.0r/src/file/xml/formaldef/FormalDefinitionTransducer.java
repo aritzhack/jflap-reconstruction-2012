@@ -10,6 +10,8 @@ import java.util.TreeSet;
 
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -29,15 +31,15 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	@Override
 	public T fromSubStructureList(List<Element> list) {
 		List<Alphabet> alphs = retrieveAlphabets(list);
-		List<FormalDefinitionComponent> comps = 
-				new ArrayList<FormalDefinitionComponent>(alphs);
+		List<Object> comps = new ArrayList<Object>(alphs);
 		Map<Element, XMLTransducer> tdMap = new HashMap<Element, XMLTransducer>();
 		for (Element e: list){
 			XMLTransducer trans = StructureTransducer.getStructureTransducer(e);
 			if (trans == null)
 				trans = getTransducerForStructureNode(StructureTransducer.retrieveTypeTag(e),
 																alphs);
-			comps.add((FormalDefinitionComponent) trans.fromStructureRoot(e));
+			JFLAPDebug.print(e.getAttribute(STRUCTURE_TYPE_ATTR));
+			comps.add(trans.fromStructureRoot(e));
 		}
 		return buildStructure(comps.toArray());
 	}
@@ -47,7 +49,7 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	private List<Alphabet> retrieveAlphabets(List<Element> list) {
 		List<Alphabet> alphs = new ArrayList<Alphabet>();
 		for (Element e: list.toArray(new Element[0])){
-			XMLTransducer trans = TransducerFactory.getTransducerForTag(e.getTagName());
+			XMLTransducer trans = StructureTransducer.getStructureTransducer(e);
 			if (trans instanceof AlphabetTransducer){
 				alphs.add((Alphabet) trans.fromStructureRoot(e));
 				list.remove(e);
@@ -69,11 +71,11 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	@Override
 	public Map<Object, XMLTransducer> createTransducerMap(T structure) {
 		Map<Object, XMLTransducer> map = super.createTransducerMap(structure);
-		addFunctionSets(map, structure);
+		addFunctionSetsToMap(map, structure);
 		return map;
 	}
 
-	public abstract void addFunctionSets(Map<Object, XMLTransducer> map, T structure);
+	public abstract void addFunctionSetsToMap(Map<Object, XMLTransducer> map, T structure);
 	
 
 

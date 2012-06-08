@@ -19,7 +19,7 @@ public class OutputFunctionSetTransducer<T extends OutputFunction> extends Funct
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return OUTPUT_FUNC_SET;
 	}
 

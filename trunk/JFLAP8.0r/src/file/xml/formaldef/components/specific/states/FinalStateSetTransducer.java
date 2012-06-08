@@ -12,7 +12,7 @@ public class FinalStateSetTransducer extends StateSetTransducer {
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return FINAL_STATESET_TAG;
 	}
 

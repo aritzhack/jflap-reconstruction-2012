@@ -14,6 +14,11 @@ import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
+import model.grammar.StartVariable;
+import model.grammar.TerminalAlphabet;
+import model.grammar.VariableAlphabet;
 import model.regex.RegularExpression;
 
 import org.w3c.dom.Element;
@@ -26,12 +31,17 @@ import debug.JFLAPDebug;
 import file.DataException;
 import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.components.specific.alphabet.InputAlphabetTransducer;
+import file.xml.formaldef.components.specific.alphabet.TerminalsTransducer;
+import file.xml.formaldef.components.specific.alphabet.VariablesTransducer;
+import file.xml.formaldef.components.specific.grammar.GrammarTransducer;
+import file.xml.formaldef.components.specific.grammar.StartVariableTransducer;
 import file.xml.formaldef.components.specific.states.FinalStateSetTransducer;
 import file.xml.formaldef.components.specific.states.StartStateTransducer;
 import file.xml.formaldef.components.specific.states.StateSetTransducer;
 import file.xml.formaldef.components.specific.states.StateTransducer;
 import file.xml.formaldef.components.specific.transitions.FromStateTransducer;
 import file.xml.formaldef.components.specific.transitions.ToStateTransducer;
+import file.xml.formaldef.regex.ExpressionStringTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
 
 public class TransducerFactory{
@@ -49,6 +59,10 @@ public class TransducerFactory{
 		addMapping(State.class, new StateTransducer(),
 								new FromStateTransducer(), 
 								new ToStateTransducer());
+		addMapping(Grammar.class, new GrammarTransducer());
+		addMapping(TerminalAlphabet.class, new TerminalsTransducer());
+		addMapping(VariableAlphabet.class, new VariablesTransducer());
+		addMapping(StartVariable.class, new StartVariableTransducer());
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {

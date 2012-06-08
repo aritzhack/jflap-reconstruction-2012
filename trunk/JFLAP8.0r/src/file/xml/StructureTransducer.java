@@ -42,12 +42,7 @@ import file.DataException;
  */
 
 public abstract class StructureTransducer<T> implements XMLTransducer<T> {
-	/** The tag name for the type of structure this is. */
-	public static final String STRUCTURE_TYPE_NAME = "type";
 
-
-	/** The tag name for the root of a structure. */
-	public static final String STRUCTURE_TAG = "structure";
 
 
 	/* (non-Javadoc)
@@ -70,20 +65,14 @@ public abstract class StructureTransducer<T> implements XMLTransducer<T> {
 	public Element creatRoot(Document doc, T structure) {
 		
 		Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(STRUCTURE_TYPE_ATTR, getTypeTag());
+		attributes.put(STRUCTURE_TYPE_ATTR, getTag());
 		// Create and add the <structure> element.
-		Element structureElement = XMLHelper.createElement(doc, getTag(), null,
+		Element structureElement = XMLHelper.createElement(doc, STRUCTURE_TAG, null,
 				attributes);
 		return structureElement;
 	}
 	
-	@Override
-	public String getTag() {
-		return STRUCTURE_TAG;
-	}
 	
-	public abstract String getTypeTag();
-
 	public static String retrieveTypeTag(Element struct) {
 		// Check for the type tag.
 		String tag = struct.getAttribute(STRUCTURE_TYPE_ATTR);
@@ -103,9 +92,9 @@ public abstract class StructureTransducer<T> implements XMLTransducer<T> {
 	 *             if the document does not map to a transducer, or if it does
 	 *             not contain a "type" tag at all
 	 */
-	public static XMLTransducer getStructureTransducer(Element root) {
-		
-		return TransducerFactory.getTransducerForTag(retrieveTypeTag(root));
+	public static StructureTransducer getStructureTransducer(Element root) {
+		String tag = retrieveTypeTag(root);
+		return (StructureTransducer) TransducerFactory.getTransducerForTag(tag);
 		
 	}
 }

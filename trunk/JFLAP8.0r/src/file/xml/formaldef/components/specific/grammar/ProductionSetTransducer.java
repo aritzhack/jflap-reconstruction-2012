@@ -1,0 +1,32 @@
+package file.xml.formaldef.components.specific.grammar;
+
+import model.formaldef.components.SetComponent;
+import model.grammar.Production;
+import model.grammar.ProductionSet;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import util.Copyable;
+import file.xml.formaldef.components.FunctionSetTransducer;
+import file.xml.formaldef.components.FunctionTransducer;
+
+public class ProductionSetTransducer extends FunctionSetTransducer<Production> {
+
+
+	public ProductionSetTransducer(ProductionTransducer trans) {
+		super(trans);
+	}
+
+	@Override
+	public String getTag() {
+		return PROD_SET_TAG;
+	}
+
+	@Override
+	public ProductionSet createEmptyComponent() {
+		return new ProductionSet();
+	}
+
+
+}

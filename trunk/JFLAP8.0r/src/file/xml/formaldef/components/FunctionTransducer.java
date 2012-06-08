@@ -58,6 +58,7 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 			JFLAPDebug.print(tag);
 			if (trans == null)
 				trans = new SymbolStringTransducer(e.getKey());
+			JFLAPDebug.print(trans.getClass());
 			root.appendChild(trans.toXMLTree(doc, e.getValue()));
 		}
 		return root;
