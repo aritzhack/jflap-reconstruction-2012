@@ -23,8 +23,8 @@ public abstract class TransducerTransducer<T extends Transducer> extends Automat
 	public abstract OutputFunctionSetTransducer createOutputSetTransducer(List<Alphabet> alphs);
 
 	@Override
-	public void addFunctionSets(Map<Object,XMLTransducer> map, T structure) {
-		super.addFunctionSets(map, structure);
+	public void addFunctionSetsToMap(Map<Object,XMLTransducer> map, T structure) {
+		super.addFunctionSetsToMap(map, structure);
 		map.put(structure.getOutputFunctionSet(), 
 				createOutputSetTransducer(null));
 	};

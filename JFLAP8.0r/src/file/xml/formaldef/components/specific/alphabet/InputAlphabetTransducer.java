@@ -13,7 +13,7 @@ public class InputAlphabetTransducer extends AlphabetTransducer{
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return INPUT_ALPH;
 	}
 

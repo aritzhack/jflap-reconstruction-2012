@@ -14,6 +14,14 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
+import model.grammar.Grammar;
+import model.grammar.Production;
+import model.grammar.ProductionSet;
+import model.grammar.StartVariable;
+import model.grammar.TerminalAlphabet;
+import model.grammar.VariableAlphabet;
+import model.regex.RegularExpression;
 import model.util.UtilFunctions;
 
 import file.XMLFileChooser;
@@ -23,21 +31,42 @@ public class FileTester extends TestHarness {
 
 	@Override
 	public void runTest() {
-		FiniteStateAcceptor fsa = createFSA();
-		outPrintln(fsa.toString());
 		
-		XMLFileChooser chooser = new XMLFileChooser();
-		chooser.showSaveDialog(null);
-		File f = chooser.getSelectedFile();
-		if (f == null) return;
-		outPrintln(f.toString());
+		
+		String toSave = System.getProperties().getProperty("user.dir") +"/filetest";
 
+		//SAVE AND LOAD FSA
+		FiniteStateAcceptor fsa = createFSA();
+		File f = new File(toSave + "/fsa.jff");
+		outPrintln("Before import:\n" + fsa.toString());
 		XMLCodec codec = new XMLCodec();
 		codec.encode(fsa, f, null);
-		
 		fsa = (FiniteStateAcceptor) codec.decode(f);
-		
 		outPrintln("After import:\n" + fsa.toString());
+		
+		//SAVE AND LOAD GRAMMAR
+		Grammar g = createGrammar();
+		f = new File(toSave + "/grammar.jff");
+		outPrintln("Before import:\n" + g.toString());
+		codec.encode(g, f, null);
+		g = (Grammar) codec.decode(f);
+		outPrintln("After import:\n" + g.toString());
+		
+		//SAVE AND LOAD INPUT ALPHABET
+		InputAlphabet inputAlph = fsa.getInputAlphabet();
+		f = new File(toSave + "/inputAlph.jff");
+		outPrintln("Before import:\n" + inputAlph.toString());
+		codec.encode(inputAlph, f, null);
+		inputAlph = (InputAlphabet) codec.decode(f);
+		outPrintln("After import:\n" + inputAlph.toString());
+		
+		//SAVE AND LOAD REGEX
+		RegularExpression regex = createRegex();
+		f = new File(toSave + "/regEx.jff");
+		outPrintln("Before import:\n" + regex.toString());
+		codec.encode(regex, f, null);
+		regex = (RegularExpression) codec.decode(f);
+		outPrintln("After import:\n" + regex.toString());
 	}
 
 	private FiniteStateAcceptor createFSA() {
@@ -93,10 +122,59 @@ public class FileTester extends TestHarness {
 		
 	}
 
+	private Grammar createGrammar() {
+		TerminalAlphabet terms = new TerminalAlphabet();
+		VariableAlphabet vars = new VariableAlphabet();
+		ProductionSet prod = new ProductionSet();
+		StartVariable var = new StartVariable();
+		Grammar g  = new Grammar(vars,
+									terms,
+									prod, 
+									var);
+		
+		Variable S = new Variable("S");
+		Variable A = new Variable("A");
+		Variable B = new Variable("B");
+		Terminal a = new Terminal("a");
+		Terminal b = new Terminal("b");
+
+		//ex7.6cnf-a.jff
+		g.getVariables().addAll(S,A,B );
+		g.getTerminals().addAll(a,b);
+		prod.add(new Production(S, a,S,b));
+		prod.add(new Production(S, a,A,b));
+		prod.add(new Production(A, a,A));
+		prod.add(new Production(A, B));
+		prod.add(new Production(B, b));
+		prod.add(new Production(B));
+		prod.add(new Production(B, B, B, B, B, B));
+		g.setStartVariable(S);
+		
+		return g;
+	}
+	
+	private RegularExpression createRegex() {
+		RegularExpression regex = new RegularExpression(new InputAlphabet());
+		for (char i = 'a'; i <= 'c'; i++){
+			regex.getInputAlphabet().add(new Symbol(Character.toString(i)));
+		}
+
+		outPrintln(regex.toString());
+
+
+		//set regex
+		String in = "((a+b)*+c)";
+		regex.setTo(in);
+		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
+
+		//trim alphabets
+		regex.trimAlphabets();
+		return regex;
+	}
+	
 	@Override
 	public String getTestName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "File Test";
 	}
 
 }

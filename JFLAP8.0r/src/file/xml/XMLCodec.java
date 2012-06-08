@@ -32,7 +32,10 @@ import model.util.JFLAPConstants;
 
 import org.w3c.dom.*;
 
+import debug.JFLAPDebug;
+
 import file.Codec;
+import file.DataException;
 import file.EncodeException;
 import file.FileParseException;
 import file.xml.*;
@@ -78,7 +81,7 @@ public class XMLCodec extends Codec {
 	public Object decode(File file) {
 		try {
 			Document doc = XMLHelper.parse(file);
-			XMLTransducer transducer = StructureTransducer.getStructureTransducer(doc.getDocumentElement());
+			XMLTransducer transducer = getRootTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
 		} catch (IOException e) {
 			throw new FileParseException("Could not open file to read!");
@@ -120,7 +123,6 @@ public class XMLCodec extends Codec {
 
 			Element dom = transducer.toXMLTree(doc, structure);
 			doc.appendChild(dom);
-
 			XMLPrettier.makePretty(doc);
 			Source s = new DOMSource(dom);
 			Result r = new StreamResult(file);
@@ -147,20 +149,33 @@ public class XMLCodec extends Codec {
 	}
 
 	/**
-	 * Returns if this type of structure can be encoded with this encoder. This
-	 * should not perform a detailed check of the structure, since the user will
-	 * have no idea why it will not be encoded correctly if the {@link #encode}
-	 * method does not throw a {@link FileParseException}.
+	 * Given a DOM document, this will return an appropriate instance of a
+	 * transducer for the type of document. Note that the type of the structure
+	 * should be specified with in the "type" tags.
 	 * 
-	 * @param structure
-	 *            the structure to check
-	 * @return if the structure, perhaps with minor changes, could possibly be
-	 *         written to a file
+	 * @param document
+	 *            the document to get the transducer for
+	 * @return the correct transducer for this document
+	 * @throws IllegalArgumentException
+	 *             if the document does not map to a transducer, or if it does
+	 *             not contain a "type" tag at all
 	 */
-	public boolean canEncode(Serializable structure) {
-		return true;
+	private StructureTransducer getRootTransducer(Element root) {
+		// Check for the type tag.
+		JFLAPDebug.print(StructureTransducer.retrieveTypeTag(root));
+//		NodeList structureNodes = root.getElementsByTagName(XMLTags.STRUCTURE_TAG);
+//		
+//		if (structureNodes.getLength() > 1)
+//			throw new DataException("Multiple type nodes \n" +
+//										"exist in this structure");
+//		
+//		Element n = (Element) structureNodes.item(0);
+		
+		
+		return StructureTransducer.getStructureTransducer(root);
+		
 	}
-
+	
 	/**
 	 * Given a proposed filename, returns a new suggested filename. JFLAP 4
 	 * saved files have the suffix <CODE>.jff</CODE> appended to them.
