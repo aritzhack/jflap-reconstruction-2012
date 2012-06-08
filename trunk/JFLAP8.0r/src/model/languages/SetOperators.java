@@ -113,6 +113,13 @@ public class SetOperators {
 	}
 	
 	/**
+	 * Returns true if <i>subset</i> is a proper subset of <i>superset</i>
+	 */
+	public static <T extends Object> boolean isProperSubset(Set<T> subset, Set<T> superset) {
+		return subset.size() < superset.size() && isSubset(subset, superset);
+	}
+	
+	/**
 	 * Returns true if set1 and set2 have no common elements
 	 */
 	public static <T extends Object> boolean isDisjoint(Set<T> set1, Set<T> set2){
