@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Thomas Finley
  */
 
-public interface Decoder<T> {
+public interface Decoder {
 	/**
 	 * Given a file, this will return a JFLAP structure associated with that
 	 * file. This method should always return a structure, or throw a
@@ -49,7 +49,7 @@ public interface Decoder<T> {
 	 * @throws FileParseException
 	 *             if there was a problem reading the file
 	 */
-	public T decode(File file);
+	public Object decode(File file);
 
 	/**
 	 * Returns an instance of a corresponding encoder. In many cases the
@@ -58,5 +58,5 @@ public interface Decoder<T> {
 	 * @return an encoder that encodes in the same format this decodes in, or
 	 *         <CODE>null</CODE> if there is no such encoder
 	 */
-	public Encoder<T> correspondingEncoder();
+	public Encoder correspondingEncoder();
 }

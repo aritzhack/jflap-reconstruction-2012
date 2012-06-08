@@ -7,13 +7,13 @@ import javax.swing.filechooser.FileFilter;
 
 import model.util.JFLAPConstants;
 
-import file.xml.JFFCodec;
+import file.xml.XMLCodec;
 
 
 public class XMLFileChooser extends JFileChooser {
 
 	public XMLFileChooser(){
 		super(System.getProperties().getProperty("user.dir"));
-		this.setFileFilter(JFFCodec.getJFFfileFilter());
+		this.setFileFilter(XMLCodec.getJFFfileFilter());
 	}
 }
