@@ -19,6 +19,9 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
 import model.grammar.transform.CNFConverter;
+import model.grammar.transform.LambdaProductionRemover;
+import model.grammar.transform.UnitProductionRemover;
+import model.grammar.transform.UselessProductionRemover;
 
 public class PDAStringGeneratorTest {
 
@@ -38,10 +41,6 @@ public class PDAStringGeneratorTest {
 														start, 
 														bos,
 														finalStates);
-
-//		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
-//		
-//		errPrintln("");
 		
 		for (char i = 'a'; i <= 'z'; i++){
 			pda.getInputAlphabet().add(new Symbol(Character.toString(i)));
@@ -73,24 +72,26 @@ public class PDAStringGeneratorTest {
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 		pda.trimAlphabets();
-//		outPrintln(pda.toString());
-//		
-//		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
-//		
-//		errPrintln("");
-
-//		//lets try some stuff...
-//				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
-//				String in = "aabb";
-//				sim.beginSimulation(SymbolString.createFromString(in, pda));
-////				outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
-
-		//convert PDA to CFG
+		
+		
 		SteppableAlgorithm converter = new PDAtoCFGConverter(pda);
 		converter.stepToCompletion();
 //		
 		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
-		System.out.println(CFG.toString());
+		
+		LambdaProductionRemover lambda = new LambdaProductionRemover(CFG);
+		lambda.stepToCompletion();
+		Grammar ans = lambda.getTransformedGrammar();
+		
+		UnitProductionRemover unit = new UnitProductionRemover(ans);
+		unit.stepToCompletion();
+		ans = unit.getTransformedGrammar();
+		
+		UselessProductionRemover useless = new UselessProductionRemover(ans);
+		useless.stepToCompletion();
+		ans = useless.getTransformedGrammar();
+		
+		System.out.println(ans.toString());
 		
 		CNFConverter cnfconvert = new CNFConverter(CFG);
 		Grammar cnf = cnfconvert.getTransformedGrammar();
