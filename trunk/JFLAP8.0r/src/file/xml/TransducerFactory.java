@@ -1,8 +1,12 @@
 package file.xml;
 
 import java.lang.Thread.State;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import model.automata.InputAlphabet;
@@ -30,65 +34,44 @@ import file.xml.formaldef.components.specific.transitions.FromStateTransducer;
 import file.xml.formaldef.components.specific.transitions.ToStateTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
 
-public class TransducerFactory {
+public class TransducerFactory{
 
-	private static Map<Class, Transducer> myClassToTransducerMap;
+	private static Map<Class, LinkedHashSet<XMLTransducer>> myClassToTransducerMap;
 	
 	static{
-		myClassToTransducerMap = new HashMap<Class, Transducer>();
+		myClassToTransducerMap = new HashMap<Class, LinkedHashSet<XMLTransducer>>();
 		addMapping(RegularExpression.class, new RegExTransducer());
 		addMapping(FiniteStateAcceptor.class, new FSATransducer());
 		addMapping(FinalStateSet.class, new FinalStateSetTransducer());
 		addMapping(InputAlphabet.class, new InputAlphabetTransducer());
 		addMapping(StateSet.class, new StateSetTransducer());
 		addMapping(StartState.class, new StartStateTransducer());
-		addMapping(State.class, new StateTransducer());
-		addMapping(State.class, new FromStateTransducer());
-		addMapping(State.class, new ToStateTransducer());
+		addMapping(State.class, new StateTransducer(),
+								new FromStateTransducer(), 
+								new ToStateTransducer());
 	}
 
-	public static void addMapping(Class c, Transducer struct) {
-		myClassToTransducerMap.put(c,struct);
+	public static void addMapping(Class c, XMLTransducer ... struct) {
+		myClassToTransducerMap.put(c,
+				new LinkedHashSet<XMLTransducer>(Arrays.asList(struct)));
 	}
 	
-	public static <T> Transducer<T> getTransducerForStructure(T object){
-		return myClassToTransducerMap.get(object.getClass());
+	public static <T> XMLTransducer<T> getTransducerForStructure(T object){
+		LinkedHashSet<XMLTransducer> set = myClassToTransducerMap.get(object.getClass());
+		if (set == null) return null;
+		return (XMLTransducer<T>) set.toArray()[0];
 	}
 	
-	public static Transducer getTransducerForTag(String tag){
-		for (Transducer trans: myClassToTransducerMap.values())
+	public static XMLTransducer getTransducerForTag(String tag){
+		for (LinkedHashSet<XMLTransducer> set: myClassToTransducerMap.values())
 		{
-			if (trans.getTag().equals(tag))
-				return trans;
+			for (XMLTransducer trans:set){
+				if (trans.getTag().equals(tag))
+					return trans;
+			}
 		}
 		return null;
 	}
 	
-	/**
-	 * Given a DOM document, this will return an appropriate instance of a
-	 * transducer for the type of document. Note that the type of the structure
-	 * should be specified with in the "type" tags.
-	 * 
-	 * @param document
-	 *            the document to get the transducer for
-	 * @return the correct transducer for this document
-	 * @throws IllegalArgumentException
-	 *             if the document does not map to a transducer, or if it does
-	 *             not contain a "type" tag at all
-	 */
-	public static Transducer getTransducer(Element root) {
-		// Check for the type tag.
-		NodeList structureNodes = root.getElementsByTagName(StructureTransducer.STRUCTURE_TYPE_NAME);
-		
-		if (structureNodes.getLength() > 1)
-			throw new DataException("Multiple type nodes \n" +
-										"exist in this structure");
-		
-		Node n = structureNodes.item(0);
-		String type = ((Text) n.getChildNodes().item(0)).getData();
-		
-		
-		return getTransducerForTag(type);
-		
-	}
+
 }

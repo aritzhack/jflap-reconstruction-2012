@@ -4,10 +4,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import model.automata.State;
-import file.xml.Transducer;
+import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 
-public class StateTransducer implements Transducer<State> {
+public class StateTransducer implements XMLTransducer<State> {
 
 	private static final String ID_TAG = "id";
 	private static final String NAME_TAG = "name";

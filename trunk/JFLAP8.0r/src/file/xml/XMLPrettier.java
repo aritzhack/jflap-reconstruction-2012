@@ -22,6 +22,8 @@ package file.xml;
 
 import org.w3c.dom.*;
 
+import debug.JFLAPDebug;
+
 /**
  * This prettier converts DOMs to a prettier form. When creating a new raw DOM,
  * all the tags run together. However, this is not very pretty. To correct this,
@@ -77,6 +79,7 @@ public class XMLPrettier {
 	 */
 	public static void makePretty(Document dom) {
 		String newline = System.getProperty("line.separator");
+		JFLAPDebug.print(newline);
 		makePretty(dom, newline, dom.getDocumentElement());
 	}
 

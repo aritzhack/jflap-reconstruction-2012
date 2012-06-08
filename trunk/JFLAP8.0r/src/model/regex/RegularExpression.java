@@ -235,7 +235,7 @@ public class RegularExpression extends FormalDefinition {
 	public static String convertToStringPattern(RegularExpression regEx) {
 		OperatorAlphabet ops = regEx.getOperators();
 		SymbolString temp = regEx.getExpression();
-		temp.replaceAll(ops.getUnionOperator(),new Symbol("|"));
+		temp = temp.replaceAll(ops.getUnionOperator(),new Symbol("|"));
 		return temp.toNondelimitedString();
 
 	}

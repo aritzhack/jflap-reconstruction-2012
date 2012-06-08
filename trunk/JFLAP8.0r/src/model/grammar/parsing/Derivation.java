@@ -89,7 +89,7 @@ public class Derivation implements Copyable{
 			SymbolString sub = myProductions.get(i).getRHS();
 			int start = mySubstitutions.get(i-1);
 			int end = start + myProductions.get(i).getLHS().size();
-			result.replace(start,end, sub);
+			result = result.replace(start,end, sub);
 		}
 		return result;
 	}

@@ -6,24 +6,32 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 import model.automata.Automaton;
+import model.automata.StateSet;
+import model.automata.TransitionSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import file.xml.Transducer;
+import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
+import file.xml.XMLHelper;
 import file.xml.formaldef.FormalDefinitionTransducer;
+import file.xml.formaldef.components.FunctionSetTransducer;
 import file.xml.formaldef.components.specific.transitions.TransitionSetTransducer;
 
 public abstract class AutomatonTransducer<T extends Automaton> extends FormalDefinitionTransducer<T> {
 
+	
 	@Override
-	public T createFromAlphabets(List<Alphabet> alphs, List<Element> remains) {
-		Transducer func = createTransitionFuncTransducer(alphs);
+	public XMLTransducer getTransducerForStructureNode(String s,
+			List<Alphabet> alphs) {
+		if (s == TRANS_SET){
+			return createTransitionFuncTransducer(alphs);
+		}
 		return null;
 	}
 
 	@Override
-	public void addFunctionSets(Map<Object, Transducer> map, T structure) {
-		Transducer func = createTransitionFuncTransducer(null);
+	public void addFunctionSets(Map<Object, XMLTransducer> map, T structure) {
+		XMLTransducer func = createTransitionFuncTransducer(null);
 		map.put(structure.getTransitions(), func);
 	}
 

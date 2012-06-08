@@ -23,8 +23,8 @@ public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 	public T fromSubStructureList(List<Element> list) {
 		List<Object> subComp = new ArrayList<Object>();
 		for(Element child: list){
-			Transducer t = 
-					TransducerFactory.getTransducer(child);
+			XMLTransducer t = 
+					StructureTransducer.getStructureTransducer(child);
 			subComp.add(t.fromStructureRoot(child));
 		}
 		return buildStructure(subComp.toArray());
@@ -35,18 +35,18 @@ public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 	@Override
 	public Element appendComponentsToRoot(Document doc, T structure, Element root) {
 		
-		Map<Object, Transducer> transMap = createTransducerMap(structure);
+		Map<Object, XMLTransducer> transMap = createTransducerMap(structure);
 		
-		for(Entry<Object, Transducer> e: transMap.entrySet()){
+		for(Entry<Object, XMLTransducer> e: transMap.entrySet()){
 			root.appendChild(e.getValue().toXMLTree(doc, e.getKey()));
 		}
 		return root;
 	};
 	
-	public Map<Object, Transducer> createTransducerMap(T structure) {
-		Map<Object, Transducer> map = new HashMap<Object, Transducer>();
+	public Map<Object, XMLTransducer> createTransducerMap(T structure) {
+		Map<Object, XMLTransducer> map = new HashMap<Object, XMLTransducer>();
 		for (Object o: getConstituentComponents(structure)){
-			Transducer t = TransducerFactory.getTransducerForStructure(o);
+			XMLTransducer t = TransducerFactory.getTransducerForStructure(o);
 			map.put(o, t);
 		}
 		return map;

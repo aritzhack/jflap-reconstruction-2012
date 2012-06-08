@@ -19,11 +19,6 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	}
 	
 	@Override
-	public String getTag() {
-		return "start_state";
-	}
-
-	@Override
 	public StartState fromStructureRoot(Element root) {
 		Element state_ele = XMLHelper.getChildWithTag(root, myStateTransducer.getTag());
 		State s = myStateTransducer.fromStructureRoot(state_ele);
@@ -36,6 +31,11 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 		State s = structure.toStateObject();
 		root.appendChild(myStateTransducer.toXMLTree(doc, s));
 		return root;
+	}
+
+	@Override
+	public String getTypeTag() {
+		return START_STATE;
 	}
 
 
