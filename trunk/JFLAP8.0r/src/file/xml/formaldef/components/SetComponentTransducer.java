@@ -2,6 +2,7 @@ package file.xml.formaldef.components;
 
 import model.formaldef.components.SetComponent;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,16 +31,16 @@ public abstract class SetComponentTransducer<T extends Copyable> extends Structu
 	public abstract String getSubNodeTag();
 	
 	@Override
-	public Element appendComponentsToRoot(SetComponent<T> structure,
-			Element root) {
+	public Element appendComponentsToRoot(Document doc,
+			SetComponent<T> structure, Element root) {
 		for (T item: structure){
-			root.appendChild(createSubNode(item));
+			root.appendChild(createSubNode(doc, item));
 		}
 		return root;
 	}
 
 
-	public abstract Element createSubNode(T item);
+	public abstract Element createSubNode(Document doc, T item);
 
 
 }

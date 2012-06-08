@@ -2,6 +2,8 @@ package test;
 
 import java.util.Arrays;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
@@ -99,13 +101,6 @@ public class PDATest extends TestHarness{
 		Grammar CFG = ((PDAtoCFGConverter) converter).getConvertedGrammar();
 		
 		outPrintln(CFG.toString());
-		//remove useless productions
-		converter = new UselessProductionRemover(CFG);
-		converter.stepToCompletion();
-		
-		CFG = ((GrammarTransformAlgorithm) converter).getTransformedGrammar();
-		outPrintln("No Useless productions: \n" + CFG.toString());
-		
 		//Now trim
 		CFG.trimAlphabets();
 		outPrintln("Alphabets Trimmed: \n" + CFG.toString());

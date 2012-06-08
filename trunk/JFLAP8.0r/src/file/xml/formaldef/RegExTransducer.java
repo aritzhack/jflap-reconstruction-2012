@@ -2,6 +2,7 @@ package file.xml.formaldef;
 
 import java.util.Map;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -39,14 +40,14 @@ public class RegExTransducer extends FormalDefinitionTransducer<RegularExpressio
 	
 
 	@Override
-	public Element appendComponentsToRoot(RegularExpression structure,
-			Element root) {
-		root.appendChild(createExpressionElement(structure.getExpression()));
-		return super.appendComponentsToRoot(structure, root);
+	public Element appendComponentsToRoot(Document doc,
+			RegularExpression structure, Element root) {
+		root.appendChild(createExpressionElement(doc, structure.getExpression()));
+		return super.appendComponentsToRoot(doc, structure, root);
 	}
 
-	private Node createExpressionElement(SymbolString exp) {
-		return XMLHelper.createElement(EXPRESSION_TAG, exp.toNondelimitedString(), null);
+	private Node createExpressionElement(Document doc, SymbolString exp) {
+		return XMLHelper.createElement(doc, EXPRESSION_TAG, exp.toNondelimitedString(), null);
 	}
 
 	@Override

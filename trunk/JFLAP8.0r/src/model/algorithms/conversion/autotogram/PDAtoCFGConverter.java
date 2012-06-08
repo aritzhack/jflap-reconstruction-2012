@@ -157,7 +157,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 	public AlgorithmStep[] initializeAllSteps() {
 		LinkedList<AlgorithmStep> steps = new LinkedList<AlgorithmStep>();
 		steps.addAll(Arrays.asList(super.initializeAllSteps()));
-		steps.add(new ThinProductions());
+		steps.add(new ThinProductionsAndAlphabets());
 		return steps.toArray(new AlgorithmStep[0]);
 	}
 	
@@ -170,7 +170,7 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 	 * @author Julian
 	 *
 	 */
-	private class ThinProductions extends AlgorithmExecutingStep<UselessProductionRemover>{
+	private class ThinProductionsAndAlphabets extends AlgorithmExecutingStep<UselessProductionRemover>{
 
 		
 		@Override
@@ -182,8 +182,9 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		public void updateDataInMetaAlgorithm() {
 			Grammar g = this.getAlgorithm().getTransformedGrammar();
 			getConvertedGrammar().getProductionSet().retainAll(g.getProductionSet());
+			getConvertedGrammar().trimAlphabets();
 		}
 		
 	}
-
+	
 }

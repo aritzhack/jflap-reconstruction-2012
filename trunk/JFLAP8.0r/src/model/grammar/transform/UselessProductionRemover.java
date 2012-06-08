@@ -65,18 +65,16 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 			throw new AlgorithmException("No start productions derive terminals." +
 												" Therefore this grammar cannot derive any strings " +
 												"and cannot be transformed further.");
+		this.getTransformedGrammar().getProductionSet().clear();
 		this.getTransformedGrammar().setStartVariable(this.getOriginalGrammar().getStartVariable());
 		return true;
 	}
 
 	
-	////////Step 1: Get productions which derive terminals/////
-	
 	private void constructTerminalDerivationSet() {
 
 		for (Production p : this.getOriginalGrammar().getProductionSet()){
 			if(this.checkDerivesTerminals(p)){
-				
 				myFullDerivesTerminals.add(p);
 			}
 		}

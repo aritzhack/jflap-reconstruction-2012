@@ -2,8 +2,10 @@ package file.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -58,9 +60,9 @@ public class XMLHelper {
 	 *            if the element should have no children
 	 * @return a new element
 	 */
-	public static Element createElement(String name, Object text, 
+	public static Element createElement(Document doc, String name, Object text, 
 									Map<String, Object> attributes ) {
-        Element e = docFactory.createElement(name);
+        Element e = doc.createElement(name);
 		// Set the attributes.
 		if (attributes != null) {
 			for(Entry<String, Object> entry: attributes.entrySet()){
@@ -69,12 +71,12 @@ public class XMLHelper {
 		}
 		// Add the text element.
 		if (text != null)
-			e.appendChild(createTextNode(text.toString()));
+			e.appendChild(createTextNode(doc, text.toString()));
 		return e;
 	}
 	
-	public static Node createTextNode(String string) {
-		return docFactory.createTextNode(string);
+	public static Node createTextNode(Document doc, String string) {
+		return doc.createTextNode(string);
 	}
 
 	/**
@@ -112,8 +114,8 @@ public class XMLHelper {
 	 *            the comment text
 	 * @return a comment node
 	 */
-	public static Comment createComment(String comment) {
-		return docFactory.createComment(comment);
+	public static Comment createComment(Document doc, String comment) {
+		return doc.createComment(comment);
 	}
 	
 	
@@ -145,8 +147,8 @@ public class XMLHelper {
 	 * @param value = value of new child node (i.e. <CODE> Node.setNodeValue(contents) </CODE>)
 	 * @param doc = element source
 	 */
-	public static void appendChildNode(Element ele, String tag, Object value) {
-		Node n = createElement(tag, value, null);
+	public static void appendChildNode(Document doc, Element ele, String tag, Object value) {
+		Node n = createElement(doc, tag, value, null);
 		ele.appendChild(n);
 	}
 
@@ -156,6 +158,33 @@ public class XMLHelper {
 
 	public static Document parse(File f) throws SAXException, IOException {
 		return docBuilder.parse(f);
+	}
+
+	public static Element getChildWithTag(Element parent, String tag) {
+		NodeList list = parent.getElementsByTagName(tag);
+		if (list.getLength() == 0) return null;
+		return (Element) list.item(0);
+	}
+
+	public static List<Element> getChildArray(Element root, String tag) {
+		NodeList list = root.getElementsByTagName(tag);
+		List<Element> structures = new ArrayList<Element>();
+		for(int i =0; i < list.getLength(); i++){
+			Element child = (Element) list.item(i);
+			structures.add(child);
+		}
+		return structures;
+	}
+
+	public static List<Element> getElementChildren(Element root) {
+		NodeList list = root.getChildNodes();
+		List<Element> children = new ArrayList<Element>();
+		for(int i =0; i < list.getLength(); i++){
+			Node child = list.item(i);
+			if (child instanceof Element)
+				children.add((Element) child);
+		} 
+		return children;
 	}
 	
 	

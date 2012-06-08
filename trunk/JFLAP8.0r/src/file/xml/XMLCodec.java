@@ -49,7 +49,7 @@ import javax.xml.transform.stream.StreamResult;
  * @author Thomas Finley, Henry Qin
  */
 
-public abstract class XMLCodec extends Codec {
+public class XMLCodec extends Codec {
 
 	/**
 	 * Determines which files this FileFilter will allow. We are only allowing files with extension XML and jff.
@@ -59,7 +59,7 @@ public abstract class XMLCodec extends Codec {
 	public boolean accept(File f){
 		if (f.isDirectory()) return true;
 		boolean b = false;
-		for (String s: new String[]{".xml",".jff",".jdef"})
+		for (String s: new String[]{JFLAPConstants.JFF_SUFFIX,".jdef"})
 			b = (b || f.getName().endsWith(s));
 		return true;
 	} 
@@ -118,7 +118,7 @@ public abstract class XMLCodec extends Codec {
 			StructureTransducer transducer = 
 					TransducerFactory.getTransducerForStructure(structure);
 
-			Element dom = transducer.toXMLTree(structure);
+			Element dom = transducer.toXMLTree(doc, structure);
 			doc.appendChild(dom);
 
 			XMLPrettier.makePretty(doc);
@@ -140,7 +140,7 @@ public abstract class XMLCodec extends Codec {
 	private Document createBasicJFFDoc() {
 		Document doc = XMLHelper.newDocument();
 		
-		Node versionTag = XMLHelper.createComment("Created with JFLAP "
+		Node versionTag = XMLHelper.createComment(doc, "Created with JFLAP "
 				+ JFLAPConstants.VERSION + ".");
 		doc.appendChild(versionTag);
 		return doc;
@@ -159,15 +159,6 @@ public abstract class XMLCodec extends Codec {
 	 */
 	public boolean canEncode(Serializable structure) {
 		return true;
-	}
-
-	/**
-	 * Returns the description of this codec.
-	 * 
-	 * @return the description of this codec
-	 */
-	public String getDescription() {
-		return "JFLAP 7 File";
 	}
 
 	/**
@@ -201,6 +192,11 @@ public abstract class XMLCodec extends Codec {
 
 			}
 		};
+	}
+
+	@Override
+	public String getDescription() {
+		return "A codec for XML/.jff format files";
 	}
 
 }
