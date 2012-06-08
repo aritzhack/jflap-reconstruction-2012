@@ -6,7 +6,7 @@ import java.util.List;
 import model.algorithms.conversion.regextofa.DeExpressionifier;
 import model.automata.State;
 import model.automata.TransitionSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
@@ -19,14 +19,14 @@ public abstract class FourStateDeX extends DeExpressionifier {
 	}
 
 	@Override
-	public List<FSTransition> adjustTransitionSet(
-			FSTransition trans, GeneralizedTransitionGraph gtg) {
+	public List<FSATransition> adjustTransitionSet(
+			FSATransition trans, GeneralizedTransitionGraph gtg) {
 		
 		SymbolString input = trans.getInput();
 		SymbolString before = RegularExpression.getFirstOperand(input, getOperatorAlphabet());
 		SymbolString after = input.subList(before.size()+getShiftFromFirstOp());
 
-		TransitionSet<FSTransition> transSet = gtg.getTransitions();
+		TransitionSet<FSATransition> transSet = gtg.getTransitions();
 		
 		transSet.remove(trans);
 		
@@ -35,15 +35,15 @@ public abstract class FourStateDeX extends DeExpressionifier {
 		State s3 = gtg.getStates().createAndAddState();
 		State s4 = gtg.getStates().createAndAddState();
 
-		transSet.add(new FSTransition(s1, s2, before));
-		transSet.add(new FSTransition(s3, s4, after));
+		transSet.add(new FSATransition(s1, s2, before));
+		transSet.add(new FSATransition(s3, s4, after));
 		
 		return createLambdaTransitions(new State[]{s1,s2,s3,s4},trans);
 	}
 
 	protected abstract int getShiftFromFirstOp();
 
-	protected abstract List<FSTransition> createLambdaTransitions(State[] states,
-														FSTransition trans);
+	protected abstract List<FSATransition> createLambdaTransitions(State[] states,
+														FSATransition trans);
 
 }

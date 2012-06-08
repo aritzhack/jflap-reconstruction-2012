@@ -1,5 +1,6 @@
 package file.xml;
 
+import java.lang.Thread.State;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,37 +20,43 @@ import org.w3c.dom.Text;
 import debug.JFLAPDebug;
 
 import file.DataException;
-import file.xml.formaldef.FSATransducer;
-import file.xml.formaldef.RegExTransducer;
+import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.components.specific.alphabet.InputAlphabetTransducer;
 import file.xml.formaldef.components.specific.states.FinalStateSetTransducer;
 import file.xml.formaldef.components.specific.states.StartStateTransducer;
 import file.xml.formaldef.components.specific.states.StateSetTransducer;
+import file.xml.formaldef.components.specific.states.StateTransducer;
+import file.xml.formaldef.components.specific.transitions.FromStateTransducer;
+import file.xml.formaldef.components.specific.transitions.ToStateTransducer;
+import file.xml.formaldef.regex.RegExTransducer;
 
 public class TransducerFactory {
 
-	private static Map<Class, StructureTransducer> myClassToTransducerMap;
+	private static Map<Class, Transducer> myClassToTransducerMap;
 	
 	static{
-		myClassToTransducerMap = new HashMap<Class, StructureTransducer>();
+		myClassToTransducerMap = new HashMap<Class, Transducer>();
 		addMapping(RegularExpression.class, new RegExTransducer());
 		addMapping(FiniteStateAcceptor.class, new FSATransducer());
 		addMapping(FinalStateSet.class, new FinalStateSetTransducer());
 		addMapping(InputAlphabet.class, new InputAlphabetTransducer());
 		addMapping(StateSet.class, new StateSetTransducer());
 		addMapping(StartState.class, new StartStateTransducer());
+		addMapping(State.class, new StateTransducer());
+		addMapping(State.class, new FromStateTransducer());
+		addMapping(State.class, new ToStateTransducer());
 	}
 
-	public static void addMapping(Class c, StructureTransducer struct) {
+	public static void addMapping(Class c, Transducer struct) {
 		myClassToTransducerMap.put(c,struct);
 	}
 	
-	public static <T> StructureTransducer<T> getTransducerForStructure(T object){
+	public static <T> Transducer<T> getTransducerForStructure(T object){
 		return myClassToTransducerMap.get(object.getClass());
 	}
 	
-	public static StructureTransducer getTransducerForTag(String tag){
-		for (StructureTransducer trans: myClassToTransducerMap.values())
+	public static Transducer getTransducerForTag(String tag){
+		for (Transducer trans: myClassToTransducerMap.values())
 		{
 			if (trans.getTag().equals(tag))
 				return trans;
@@ -69,7 +76,7 @@ public class TransducerFactory {
 	 *             if the document does not map to a transducer, or if it does
 	 *             not contain a "type" tag at all
 	 */
-	public static StructureTransducer getTransducer(Element root) {
+	public static Transducer getTransducer(Element root) {
 		// Check for the type tag.
 		NodeList structureNodes = root.getElementsByTagName(StructureTransducer.STRUCTURE_TYPE_NAME);
 		

@@ -6,7 +6,6 @@ import model.formaldef.components.symbols.Symbol;
 
 public class InputAlphabetTransducer extends AlphabetTransducer{
 
-	private static final String INPUT = "input";
 
 	@Override
 	public InputAlphabet createEmptyComponent() {
@@ -14,8 +13,9 @@ public class InputAlphabetTransducer extends AlphabetTransducer{
 	}
 
 	@Override
-	public String getAlphabetSpecificTag() {
-		return INPUT;
+	public String getTag() {
+		return INPUT_ALPH;
 	}
+
 
 }

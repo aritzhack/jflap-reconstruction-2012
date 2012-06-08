@@ -9,11 +9,11 @@ import model.automata.acceptors.FinalStateSet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public class FiniteStateAcceptor extends Acceptor<FSTransition> {
+public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 
 	public FiniteStateAcceptor(StateSet states, 
 									InputAlphabet langAlph,
-									TransitionSet<FSTransition> functions, 
+									TransitionSet<FSATransition> functions, 
 									StartState start,
 									FinalStateSet finalStates) {
 		super(states, langAlph, functions, start, finalStates);
@@ -22,7 +22,7 @@ public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 	public FiniteStateAcceptor() {
 		this(new StateSet(),
 				new InputAlphabet(),
-				new TransitionSet<FSTransition>(),
+				new TransitionSet<FSATransition>(),
 				new StartState(),
 				new FinalStateSet());
 	}
@@ -41,13 +41,13 @@ public class FiniteStateAcceptor extends Acceptor<FSTransition> {
 	public FiniteStateAcceptor alphabetAloneCopy() {
 		return new FiniteStateAcceptor(new StateSet(), 
 						this.getInputAlphabet(), 
-						new TransitionSet<FSTransition>(), 
+						new TransitionSet<FSATransition>(), 
 						new StartState(), 
 						new FinalStateSet());
 	}
 
 	public static boolean hasAllSingleSymbolInput(FiniteStateAcceptor dfa) {
-		for (FSTransition trans : dfa.getTransitions()){
+		for (FSATransition trans : dfa.getTransitions()){
 			if (trans.getInput().size() > 1){
 				return false;
 			}

@@ -36,10 +36,4 @@ public abstract class AlphabetTransducer extends SetComponentTransducer<Symbol> 
 		return mySymbolTransducer.toXMLTree(doc, item);
 	}
 	
-	@Override
-	public String getTag() {
-		return ALPH_TAG_BASE + "_" + getAlphabetSpecificTag();
-	}
-
-	public abstract String getAlphabetSpecificTag();
 }

@@ -8,7 +8,7 @@ import debug.JFLAPDebug;
 
 import model.algorithms.conversion.regextofa.DeExpressionifier;
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
@@ -24,16 +24,16 @@ public class KleeneStarDeX extends DeExpressionifier {
 	}
 
 	@Override
-	public List<FSTransition> adjustTransitionSet(
-			FSTransition trans, GeneralizedTransitionGraph gtg) {
+	public List<FSATransition> adjustTransitionSet(
+			FSATransition trans, GeneralizedTransitionGraph gtg) {
 		SymbolString input = trans.getInput();
 		trans.setInput(input.subList(0,input.size()-1));
-		List<FSTransition> toAdd = new ArrayList<FSTransition>();
+		List<FSATransition> toAdd = new ArrayList<FSATransition>();
 		//do forward lambda transition
-		toAdd.add(new FSTransition(trans.getFromState(), 
+		toAdd.add(new FSATransition(trans.getFromState(), 
 												trans.getToState()));
 		//do backward lambdaTransition
-		toAdd.add(new FSTransition(trans.getToState(), 
+		toAdd.add(new FSATransition(trans.getToState(), 
 											trans.getFromState()));
 		
 		return toAdd;

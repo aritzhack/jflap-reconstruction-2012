@@ -7,7 +7,7 @@ import debug.JFLAPDebug;
 
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -102,7 +102,7 @@ public class SLR1DFA extends FiniteStateAcceptor {
 	public SLR1DFAState addToStateAndTrans(SLR1DFAState from, Symbol s,
 			Set<SLR1Production> toSet) {
 		SLR1DFAState to = getSLR1stateForSet(toSet);
-		FSTransition trans = new FSTransition(from, to, s);
+		FSATransition trans = new FSATransition(from, to, s);
 		this.getTransitions().add(trans);
 		return to;
 	}
@@ -124,9 +124,9 @@ public class SLR1DFA extends FiniteStateAcceptor {
 	}
 
 	private Set<Symbol> getSymbolsNeeded(SLR1DFAState s) {
-		Set<FSTransition> trans = this.getTransitions().getTransitionsFromState(s);
+		Set<FSATransition> trans = this.getTransitions().getTransitionsFromState(s);
 		Set<Symbol> needed = s.getSymbolsForTransition();
-		for (FSTransition t: trans){
+		for (FSATransition t: trans){
 			needed.remove(t.getInput().getFirst());
 		}
 		return needed;

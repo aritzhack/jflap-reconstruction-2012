@@ -28,7 +28,7 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -78,19 +78,19 @@ public class FSATest extends TestHarness{
 		Symbol ONE = new Terminal("1");
 		Symbol ZERO = new Terminal("0");
 		
-		FSTransition t0 = new FSTransition(q0, q1, new SymbolString(ZERO));
-		FSTransition t1 = new FSTransition(q0, q3, new SymbolString(ONE));
-		FSTransition t2 = new FSTransition(q1, q2, new SymbolString(ZERO));
-		FSTransition t3 = new FSTransition(q1, q4, new SymbolString(ONE));
-		FSTransition t4 = new FSTransition(q2, q1, new SymbolString(ZERO));
-		FSTransition t5 = new FSTransition(q2, q4, new SymbolString(ONE));
-		FSTransition t6 = new FSTransition(q3,q2, new SymbolString(ZERO));
-		FSTransition t7 = new FSTransition(q3, q4, new SymbolString(ONE));
-		FSTransition t8 = new FSTransition(q4, q4, new SymbolString(ONE));
-		FSTransition t9 = new FSTransition(q4, q4, new SymbolString(ZERO));
+		FSATransition t0 = new FSATransition(q0, q1, new SymbolString(ZERO));
+		FSATransition t1 = new FSATransition(q0, q3, new SymbolString(ONE));
+		FSATransition t2 = new FSATransition(q1, q2, new SymbolString(ZERO));
+		FSATransition t3 = new FSATransition(q1, q4, new SymbolString(ONE));
+		FSATransition t4 = new FSATransition(q2, q1, new SymbolString(ZERO));
+		FSATransition t5 = new FSATransition(q2, q4, new SymbolString(ONE));
+		FSATransition t6 = new FSATransition(q3,q2, new SymbolString(ZERO));
+		FSATransition t7 = new FSATransition(q3, q4, new SymbolString(ONE));
+		FSATransition t8 = new FSATransition(q4, q4, new SymbolString(ONE));
+		FSATransition t9 = new FSATransition(q4, q4, new SymbolString(ZERO));
 
 		
-		fsa.getTransitions().addAll((Arrays.asList(new FSTransition[]{t0,t1,t2,t3,t4,t5,t6,t7,t8,t9})));
+		fsa.getTransitions().addAll((Arrays.asList(new FSATransition[]{t0,t1,t2,t3,t4,t5,t6,t7,t8,t9})));
 
 		fsa.trimAlphabets();
 		
@@ -123,7 +123,7 @@ public class FSATest extends TestHarness{
 		
 		//CONVERT NFA to DFA
 		FiniteStateAcceptor nfa = fsa.copy();
-		nfa.getTransitions().add(new FSTransition(q0, q4, new SymbolString(ONE)));
+		nfa.getTransitions().add(new FSATransition(q0, q4, new SymbolString(ONE)));
 		converter = new NFAtoDFAConverter(nfa);
 		converter.stepToCompletion();
 		FiniteStateAcceptor dfa = ((NFAtoDFAConverter) converter).getDFA();
@@ -134,7 +134,7 @@ public class FSATest extends TestHarness{
 		dfa = fsa.copy();
 		State q5 = dfa.getStates().createAndAddState();
 		State q6 = dfa.getStates().createAndAddState();
-		dfa.getTransitions().add(new FSTransition(q5, q4, new SymbolString(ONE)));
+		dfa.getTransitions().add(new FSATransition(q5, q4, new SymbolString(ONE)));
 
 		outPrintln("Base FSA for minimization testing:\n" + dfa.toString());
 		

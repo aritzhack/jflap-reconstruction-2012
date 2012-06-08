@@ -7,7 +7,7 @@ import debug.JFLAPDebug;
 
 import model.automata.State;
 import model.automata.TransitionSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.CloseGroup;
@@ -32,14 +32,14 @@ public class UnionDeX extends FourStateDeX{
 	}
 
 	@Override
-	protected List<FSTransition> createLambdaTransitions(
-			State[] s, FSTransition trans) {
-		ArrayList<FSTransition> toAdd = new ArrayList<FSTransition>();
+	protected List<FSATransition> createLambdaTransitions(
+			State[] s, FSATransition trans) {
+		ArrayList<FSATransition> toAdd = new ArrayList<FSATransition>();
 
-		toAdd.add(new FSTransition(trans.getFromState(), s[0]));
-		toAdd.add(new FSTransition(trans.getFromState(), s[2]));
-		toAdd.add(new FSTransition(s[1], trans.getToState()));
-		toAdd.add(new FSTransition(s[3], trans.getToState()));
+		toAdd.add(new FSATransition(trans.getFromState(), s[0]));
+		toAdd.add(new FSATransition(trans.getFromState(), s[2]));
+		toAdd.add(new FSATransition(s[1], trans.getToState()));
+		toAdd.add(new FSATransition(s[3], trans.getToState()));
 
 		return toAdd;
 	}

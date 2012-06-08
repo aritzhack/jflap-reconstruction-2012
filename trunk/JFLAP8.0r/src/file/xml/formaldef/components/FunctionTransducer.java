@@ -13,6 +13,7 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.SymbolString;
 import file.xml.Transducer;
+import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.single.SymbolStringTransducer;
 
@@ -28,30 +29,37 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 	@Override
 	public T fromStructureRoot(Element root) {
 		List<Element> eleChildren = XMLHelper.getElementChildren(root);
-		Map<String, SymbolString> valueMap = new HashMap<String, SymbolString>();
+		Map<String, Object> valueMap = new HashMap<String, Object>();
 		for (Element e: eleChildren){
 			String tag = e.getTagName();
 			Alphabet[] alphs = 
 					FunctionAlphabetFactory.discerneAlphabets(tag, myAlphs);
-			SymbolStringTransducer trans = new SymbolStringTransducer(tag, alphs);
+			Transducer trans;
+			if (alphs.length > 0)
+				trans = new SymbolStringTransducer(tag, alphs);
+			else
+				trans = TransducerFactory.getTransducerForTag(tag);
 			valueMap.put(tag, trans.fromStructureRoot(e));			
 		}
 		return createFunction(valueMap);
 	}
 
-	public abstract T createFunction(Map<String, SymbolString> valueMap);
+	public abstract T createFunction(Map<String, Object> valueMap);
 	
 	@Override
 	public Element toXMLTree(Document doc, T structure) {
-		Map<String, SymbolString> tagToValue = createTagToValueMap(structure);
+		Map<String, Object> tagToValue = createTagToValueMap(structure);
 		Element root = XMLHelper.createElement(doc, getTag(), null, null);
-		for (Entry<String, SymbolString> e: tagToValue.entrySet()){
-			SymbolStringTransducer transducer = new SymbolStringTransducer(e.getKey());
-			root.appendChild(transducer.toXMLTree(doc, e.getValue()));
+		for (Entry<String, Object> e: tagToValue.entrySet()){
+			String tag = e.getKey();
+			Transducer trans = TransducerFactory.getTransducerForTag(tag);
+			if (trans == null)
+				trans = new SymbolStringTransducer(e.getKey());
+			root.appendChild(trans.toXMLTree(doc, e.getValue()));
 		}
 		return root;
 	}
 
-	public abstract Map<String, SymbolString> createTagToValueMap(T structure);
+	public abstract Map<String, Object> createTagToValueMap(T structure);
 
 }

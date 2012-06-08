@@ -12,6 +12,9 @@ public interface XMLTags {
 		TM_WRITE_TAG ="write",
 		RHS_TAG = "rhs",
 		LHS_TAG = "lhs",
-		TRANSITION_TAG = "transition";;
+		TRANSITION_TAG = "transition",
+		FROM_STATE = "from",
+		TO_STATE = "to",
+		INPUT_ALPH = "input";
 	
 }

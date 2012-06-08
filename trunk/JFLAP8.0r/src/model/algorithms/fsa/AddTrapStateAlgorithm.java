@@ -14,7 +14,7 @@ import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.automata.InputAlphabet;
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.DeterminismChecker;
 import model.automata.determinism.FSADeterminismChecker;
@@ -27,7 +27,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	private static final String TRAP = "TRAP";
 	private FiniteStateAcceptor myNewDFA;
 	private State myTrapState;
-	private Set<FSTransition> myTransitionsNeeded;
+	private Set<FSATransition> myTransitionsNeeded;
 
 	public AddTrapStateAlgorithm(FiniteStateAcceptor fd) {
 		super(fd);
@@ -67,7 +67,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	public boolean reset() throws AlgorithmException {
 		myNewDFA = (FiniteStateAcceptor) this.getDFA().copy();
 		myTrapState = null;
-		myTransitionsNeeded = new TreeSet<FSTransition>();
+		myTransitionsNeeded = new TreeSet<FSATransition>();
 		return true;
 	}
 
@@ -96,7 +96,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	}
 
 	public boolean addTransition(State from, Symbol s){
-		for (FSTransition trans: myTransitionsNeeded.toArray(new FSTransition[0])){
+		for (FSATransition trans: myTransitionsNeeded.toArray(new FSATransition[0])){
 			if (trans.getFromState().equals(from) &&
 					trans.getInput().startsWith(s)){
 				if (!addTransition(trans))
@@ -115,42 +115,42 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		return !getAllTransitionsNeeded().isEmpty();
 	}
 
-	private boolean addTransition(FSTransition trans) {
+	private boolean addTransition(FSATransition trans) {
 		if (!myNewDFA.getTransitions().add(trans))
 			return false;
 		return myTransitionsNeeded.remove(trans);
 	}
 
-	private Set<FSTransition> getAllTransitionsNeeded() {
-		Set<FSTransition> toAdd = new TreeSet<FSTransition>();
+	private Set<FSATransition> getAllTransitionsNeeded() {
+		Set<FSATransition> toAdd = new TreeSet<FSATransition>();
 		for (State s: myNewDFA.getStates()){
 			toAdd.addAll(getTransitionsNeededFor(s));
 		}
 		return toAdd;
 	}
 
-	private Collection<FSTransition> getTransitionsNeededFor(State from) {
-		Collection<FSTransition> trans = myNewDFA.getTransitions().getTransitionsFromState(from);
+	private Collection<FSATransition> getTransitionsNeededFor(State from) {
+		Collection<FSATransition> trans = myNewDFA.getTransitions().getTransitionsFromState(from);
 		
-		Set<FSTransition> needed = new TreeSet<FSTransition>();
+		Set<FSATransition> needed = new TreeSet<FSATransition>();
 		
 		for (Symbol s: myNewDFA.getInputAlphabet()){
 			boolean exists = false;
-			for (FSTransition t: trans){
+			for (FSATransition t: trans){
 				if (t.getInput().startsWith(s)){
 					exists = true;
 					break;
 				}
 			}
 			if (!exists)
-				needed.add(new FSTransition(from, myTrapState, new SymbolString(s)));
+				needed.add(new FSATransition(from, myTrapState, new SymbolString(s)));
 		}
 		
 		return needed;
 	}
 
 	private boolean addAllTransitionsNeeded() {
-		for (FSTransition trans: myTransitionsNeeded.toArray(new FSTransition[0])){
+		for (FSATransition trans: myTransitionsNeeded.toArray(new FSATransition[0])){
 			if (!addTransition(trans))
 				return false;
 		}
@@ -165,7 +165,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		
 		int transNum = fsa.getInputAlphabet().size();
 		for (State s: fsa.getStates()){
-			Set<FSTransition> fromSet = fsa.getTransitions().getTransitionsFromState(s);
+			Set<FSATransition> fromSet = fsa.getTransitions().getTransitionsFromState(s);
 			if (fromSet.size() != transNum)
 				return true;
 		}

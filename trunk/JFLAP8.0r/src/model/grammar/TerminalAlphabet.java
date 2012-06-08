@@ -36,7 +36,9 @@ public class TerminalAlphabet extends Alphabet {
 	
 	@Override
 	public boolean add(Symbol e) {
-		return super.add(new Terminal(e.getString()));
+		if (!(e instanceof Terminal))
+			e = new Terminal(e.getString());
+		return super.add(e);
 	}
 
 

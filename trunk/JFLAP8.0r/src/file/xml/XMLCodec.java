@@ -78,7 +78,7 @@ public class XMLCodec extends Codec {
 	public Object decode(File file) {
 		try {
 			Document doc = XMLHelper.parse(file);
-			StructureTransducer transducer = TransducerFactory.getTransducer(doc.getDocumentElement());
+			Transducer transducer = TransducerFactory.getTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
 		} catch (IOException e) {
 			throw new FileParseException("Could not open file to read!");
@@ -115,7 +115,7 @@ public class XMLCodec extends Codec {
 	public File encode(Object structure, File file, Map parameters) {
 		Document doc = createBasicJFFDoc();
 		try {
-			StructureTransducer transducer = 
+			Transducer transducer = 
 					TransducerFactory.getTransducerForStructure(structure);
 
 			Element dom = transducer.toXMLTree(doc, structure);

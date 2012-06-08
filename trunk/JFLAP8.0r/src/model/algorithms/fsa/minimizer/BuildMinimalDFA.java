@@ -14,7 +14,7 @@ import model.algorithms.SteppableAlgorithm;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
 
@@ -23,7 +23,7 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 	private MinimizeTreeModel myTreeModel;
 	private FiniteStateAcceptor myMinimalDFA;
 	private Map<State, MinimizeTreeNode> myStateToNodeMap;
-	private Set<FSTransition> myTransitionsNeeded;
+	private Set<FSATransition> myTransitionsNeeded;
 
 	public BuildMinimalDFA(MinimizeTreeModel model) {
 		myTreeModel = model;
@@ -54,12 +54,12 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 		return true;
 	}
 	
-	private Set<FSTransition> findAllTransitionsNeeded() {
-		Set<FSTransition> needed = new TreeSet<FSTransition>();
-		for (FSTransition trans: getOriginalDFA().getTransitions()){
+	private Set<FSATransition> findAllTransitionsNeeded() {
+		Set<FSATransition> needed = new TreeSet<FSATransition>();
+		for (FSATransition trans: getOriginalDFA().getTransitions()){
 			State from = getGroupStateForState(trans.getFromState());
 			State to = getGroupStateForState(trans.getToState());
-			needed.add(new FSTransition(from, to, trans.getInput()));
+			needed.add(new FSATransition(from, to, trans.getInput()));
 		}
 		return needed;
 	}
@@ -77,7 +77,7 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 		return myTreeModel.getDFA();
 	}
 	
-	public boolean addTransitionToDFA(FSTransition trans){
+	public boolean addTransitionToDFA(FSATransition trans){
 		if (!myTransitionsNeeded.remove(trans)){
 			return false;
 		}
@@ -134,7 +134,7 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 
 		@Override
 		public boolean execute() throws AlgorithmException {
-			FSTransition toAdd = (FSTransition) myTransitionsNeeded.toArray()[0];
+			FSATransition toAdd = (FSATransition) myTransitionsNeeded.toArray()[0];
 			return addTransitionToDFA(toAdd);
 		}
 

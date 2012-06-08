@@ -36,7 +36,9 @@ public class VariableAlphabet extends Alphabet{
 
 	@Override
 	public boolean add(Symbol e) {
-		return super.add(new Variable(e.getString()));
+		if (!(e instanceof Variable))
+			e = new Variable(e.getString());
+		return super.add(e);
 	}
 
 	@Override

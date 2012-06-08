@@ -23,7 +23,7 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
@@ -32,8 +32,8 @@ import model.regex.RegularExpression;
 public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<RegularExpression> {
 
 	private GeneralizedTransitionGraph myGTG;
-	private List<FSTransition> myExpressionTransitions;
-	private List<FSTransition> myRemainingLambaTransitions;
+	private List<FSATransition> myExpressionTransitions;
+	private List<FSATransition> myRemainingLambaTransitions;
 	private List<DeExpressionifier> myDeExpressionifiers;
 
 	public RegularExpressionToNFAConversion(RegularExpression re) {
@@ -76,7 +76,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 	@Override
 	public boolean reset() throws AlgorithmException {
 		myGTG = new GeneralizedTransitionGraph(this.getRE());
-		myRemainingLambaTransitions = new ArrayList<FSTransition>();
+		myRemainingLambaTransitions = new ArrayList<FSATransition>();
 		updateExpressionTransitions();
 		return true;
 	}
@@ -89,20 +89,20 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 	}
 
 	private void updateExpressionTransitions() {
-		myExpressionTransitions = new ArrayList<FSTransition>();
-		for (FSTransition t: myGTG.getTransitions()){
+		myExpressionTransitions = new ArrayList<FSATransition>();
+		for (FSATransition t: myGTG.getTransitions()){
 			if (isExpressionTransition(t))
 				myExpressionTransitions.add(t);
 		}
 	}
 
-	private boolean isExpressionTransition(FSTransition t) {
+	private boolean isExpressionTransition(FSATransition t) {
 		return t.getInput().containsAny(this.getRE().getOperators().toArray(new Symbol[0]));
 	}
 
 	
 	public void addLambdaTransition(State from, State to){
-		for(FSTransition trans: myRemainingLambaTransitions){
+		for(FSATransition trans: myRemainingLambaTransitions){
 			if (trans.getFromState().equals(from) &&
 					trans.getToState().equals(to)){
 				myGTG.getTransitions().add(trans);
@@ -120,7 +120,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		myRemainingLambaTransitions.clear();
 	}
 
-	public void beginDeExpressionify(FSTransition t) {
+	public void beginDeExpressionify(FSATransition t) {
 		checkCanBeginDeExpressionify(t);
 		
 		for (DeExpressionifier dex: myDeExpressionifiers){
@@ -135,7 +135,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		
 	}
 
-	private void checkCanBeginDeExpressionify(FSTransition t) {
+	private void checkCanBeginDeExpressionify(FSATransition t) {
 		if (this.isDeExpressingifying())
 			throw new AlgorithmException("You are already de-Expressionizing an expression.");
 		else if (!myExpressionTransitions.contains(t)){
@@ -149,7 +149,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		return !myRemainingLambaTransitions.isEmpty();
 	}
 
-	public List<FSTransition> getExpressionTransitions() {
+	public List<FSATransition> getExpressionTransitions() {
 		return myExpressionTransitions;
 	}
 	
@@ -180,7 +180,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		@Override
 		public boolean execute() throws AlgorithmException {
 
-			FSTransition t = getExpressionTransitions().get(0);
+			FSATransition t = getExpressionTransitions().get(0);
 			beginDeExpressionify(t);
 			
 			return true;

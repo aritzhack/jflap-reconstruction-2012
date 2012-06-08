@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -54,6 +54,6 @@ public abstract class OutputFunction implements LanguageFunction {
 	 * @param trans
 	 * @return
 	 */
-	public abstract boolean matches(FSTransition trans);
+	public abstract boolean matches(FSATransition trans);
 	
 }

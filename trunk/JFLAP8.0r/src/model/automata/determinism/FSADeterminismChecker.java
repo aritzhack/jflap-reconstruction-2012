@@ -6,27 +6,27 @@ import java.util.LinkedList;
 
 import model.automata.Automaton;
 import model.automata.Transition;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class FSADeterminismChecker extends DeterminismChecker<FSTransition> {
+public class FSADeterminismChecker extends DeterminismChecker<FSATransition> {
 
 	@Override
-	protected SymbolString retrieveApplicableString(FSTransition trans) {
+	protected SymbolString retrieveApplicableString(FSATransition trans) {
 		return trans.getInput();
 	}
 	
 	@Override
-	public boolean isDeterministic(Automaton<FSTransition> m) {
+	public boolean isDeterministic(Automaton<FSATransition> m) {
 		return super.isDeterministic(m) &&
 				getLambdaTransitions(m).isEmpty();
 	}
 	
-	public Collection<FSTransition> getLambdaTransitions(Automaton<FSTransition> m){
-		Collection<FSTransition> lambdas = new ArrayList<FSTransition>();
-		for (FSTransition t: m.getTransitions()){
+	public Collection<FSATransition> getLambdaTransitions(Automaton<FSATransition> m){
+		Collection<FSATransition> lambdas = new ArrayList<FSATransition>();
+		for (FSATransition t: m.getTransitions()){
 			if (t.isLambdaTransition()){
 				lambdas.add(t);
 			}
