@@ -14,6 +14,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
+import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
@@ -36,6 +40,16 @@ public class StringGenerator {
 		this(g, DEFAULT_NUMBER_TO_GENERATE);
 	}
 	
+	public StringGenerator (FiniteStateAcceptor fsa) {
+		this(new FSAtoRegGrammarConversion(fsa).getConvertedGrammar());
+	}
+	
+	
+	public StringGenerator (PushdownAutomaton pda) {
+		this(new PDAtoCFGConverter(pda).getConvertedGrammar());
+	}
+	
+	
 	public StringGenerator (Grammar g, int numberToGenerate) {
 		myGrammar = g;
 		myNumberToGenerate = numberToGenerate;
@@ -48,8 +62,6 @@ public class StringGenerator {
 		myDerivationsQueue.add(d);
 		
 	}
-	
-	
 
 	
 	public void generateStrings () {
@@ -58,6 +70,7 @@ public class StringGenerator {
 			if (myDerivationsQueue.isEmpty()) 
 				break;
 		}
+		
 		ArrayList<SymbolString> stringsList = new ArrayList<SymbolString>(myStringsInLanguage);
 		Collections.sort(stringsList, new StringComparator());
 		System.out.println("Strings: " + stringsList);
@@ -68,7 +81,7 @@ public class StringGenerator {
 		
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 
-		while (!myDerivationsQueue.isEmpty()) {
+		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
 			
@@ -87,10 +100,15 @@ public class StringGenerator {
 						
 							myStringsInLanguage.add(str);
 						}
-						temp.add(tempDerivation);
 						
+						if (myStringsInLanguage.size() >= myNumberToGenerate)
+							break loop;
+						
+						temp.add(tempDerivation);
 					}
 				}
+				
+
 			}
 		}
 		myDerivationsQueue.addAll(temp);
