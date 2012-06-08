@@ -1,4 +1,4 @@
-package file.xml.formaldef;
+package file.xml.formaldef.regex;
 
 import java.util.Map;
 
@@ -8,6 +8,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import file.xml.XMLHelper;
+import file.xml.formaldef.FormalDefinitionTransducer;
 
 import model.automata.InputAlphabet;
 import model.formaldef.components.symbols.SymbolString;

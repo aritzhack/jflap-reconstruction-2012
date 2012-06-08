@@ -7,7 +7,7 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.SymbolString;
 
 public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
@@ -25,7 +25,7 @@ public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
 		this.setStartState(start);
 		this.getFinalStateSet().add(end);
 
-		FSTransition trans = new FSTransition(start, 
+		FSATransition trans = new FSATransition(start, 
 				end, 
 				myRegEx.getExpression());
 		this.getTransitions().add(trans);
@@ -48,10 +48,10 @@ public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
 	public FiniteStateAcceptor createNFAFromGTG(){
 		StateSet states = (StateSet) this.getStates().copy();
 		InputAlphabet inputAlph = (InputAlphabet) myRegEx.getInputAlphabet().copy();
-		TransitionSet<FSTransition> transitions = 
-				(TransitionSet<FSTransition>) this.getTransitions().copy();
+		TransitionSet<FSATransition> transitions = 
+				(TransitionSet<FSATransition>) this.getTransitions().copy();
 		
-		for (FSTransition t: transitions){
+		for (FSATransition t: transitions){
 			if (isLambaTransition(t)){
 				t.setInput(new SymbolString());
 			}
@@ -72,7 +72,7 @@ public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
 		return nfa;
 	}
 
-	private boolean isLambaTransition(FSTransition t) {
+	private boolean isLambaTransition(FSATransition t) {
 		return t.getInput().contains(myRegEx.getOperators().getEmptySub());
 	}
 

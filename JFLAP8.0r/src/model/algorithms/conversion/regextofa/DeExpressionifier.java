@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.algorithms.AlgorithmException;
 import model.automata.TransitionSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
@@ -36,7 +36,7 @@ public abstract class DeExpressionifier {
 	 * @param trans
 	 * @return
 	 */
-	public boolean isApplicable(FSTransition trans){
+	public boolean isApplicable(FSATransition trans){
 		SymbolString input = trans.getInput();
 		SymbolString first = RegularExpression.getFirstOperand(input, myOpAlph);
 		return isApplicable(first, input.subList(first.size()));
@@ -62,8 +62,8 @@ public abstract class DeExpressionifier {
 	 * @param transSet
 	 * @return
 	 */
-	public abstract List<FSTransition> adjustTransitionSet(
-											FSTransition trans,
+	public abstract List<FSATransition> adjustTransitionSet(
+											FSATransition trans,
 											GeneralizedTransitionGraph gtg);
 	
 	

@@ -18,7 +18,7 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.symbols.Symbol;
@@ -110,7 +110,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		if (to == null)
 			to = createAndAddDFAState(array);
 
-		FSTransition trans = new FSTransition(from, to, new SymbolString(sym));
+		FSATransition trans = new FSATransition(from, to, new SymbolString(sym));
 		this.getDFA().getTransitions().add(trans);
 		
 		myStatesToSymbolsMap.get(from).expansionComplete(sym);
@@ -150,7 +150,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		State[] linkedStates = getLinkedStates(s);
 		Set<State> toStates = new TreeSet<State>();
 		for (State state: linkedStates){
-			for (FSTransition tran: findTransitionsFromStateOnSym(state, sym)){
+			for (FSATransition tran: findTransitionsFromStateOnSym(state, sym)){
 				State to = tran.getToState();
 				Set<State> closure = ClosureHelper.takeClosure(to, getNFA());
 				toStates.addAll(closure);
@@ -159,10 +159,10 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		return toStates;
 	}
 
-	private List<FSTransition> findTransitionsFromStateOnSym(State state, Symbol sym) {
-		List<FSTransition> list = new ArrayList<FSTransition>();
+	private List<FSATransition> findTransitionsFromStateOnSym(State state, Symbol sym) {
+		List<FSATransition> list = new ArrayList<FSATransition>();
 		for (State s: ClosureHelper.takeClosure(state, getNFA())){
-			for (FSTransition trans : getNFA().getTransitions().getTransitionsFromState(s)){
+			for (FSATransition trans : getNFA().getTransitions().getTransitionsFromState(s)){
 				if (trans.getInput().startsWith(sym)){
 					list.add(trans);
 				}

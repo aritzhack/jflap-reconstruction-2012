@@ -19,7 +19,7 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -37,8 +37,8 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 	private GeneralizedTransitionGraph myGTG;
 	private RegularExpression myRegEx;
-	private List<FSTransition> newLambdaTransitions;
-	private List<FSTransition> myCollapseList;
+	private List<FSATransition> newLambdaTransitions;
+	private List<FSATransition> myCollapseList;
 	public List<State> myStatesToCollapse;
 
 
@@ -70,7 +70,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	public boolean reset() throws AlgorithmException {
 		myRegEx = new RegularExpression((InputAlphabet) getFA().getInputAlphabet().copy());
 		myGTG = new GeneralizedTransitionGraph(getFA());
-		newLambdaTransitions = new ArrayList<FSTransition>();
+		newLambdaTransitions = new ArrayList<FSATransition>();
 		myCollapseList = getTransitionCollapseList();
 		myStatesToCollapse = getStatesToCollapse();
 		return true;
@@ -100,11 +100,11 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		
 		State end = finalSet.first();
 		
-		TransitionSet<FSTransition> transitions = getGTG().getTransitions();
+		TransitionSet<FSATransition> transitions = getGTG().getTransitions();
 		
-		FSTransition t1 = transitions.getTransitionsFromStateToState(start, start).iterator().next();
-		FSTransition t2 = transitions.getTransitionsFromStateToState(start, end).iterator().next();
-		FSTransition t3 = transitions.getTransitionsFromStateToState(end, end).iterator().next();
+		FSATransition t1 = transitions.getTransitionsFromStateToState(start, start).iterator().next();
+		FSATransition t2 = transitions.getTransitionsFromStateToState(start, end).iterator().next();
+		FSATransition t3 = transitions.getTransitionsFromStateToState(end, end).iterator().next();
 		
 		SymbolString exp = new SymbolString(t2.getInput());
 		if (!isEmptySetTransition(t1)){
@@ -130,7 +130,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		State newFinal = myGTG.getStates().createAndAddState();
 		FinalStateSet finalStates = myGTG.getFinalStateSet();
 		for(State s: finalStates){
-			newLambdaTransitions.add(new FSTransition(s, newFinal, myRegEx.getOperators().getEmptySub()));
+			newLambdaTransitions.add(new FSATransition(s, newFinal, myRegEx.getOperators().getEmptySub()));
 		}
 		
 		return finalStates.add(newFinal);
@@ -144,13 +144,13 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return getOriginalDefinition();
 	}
 
-	private List<FSTransition> getTransitionCollapseList() {
+	private List<FSATransition> getTransitionCollapseList() {
 		StateSet states = getGTG().getStates();
-		ArrayList<FSTransition> collapseTo = new ArrayList<FSTransition>();
-		TransitionSet<FSTransition> trans = getGTG().getTransitions();
+		ArrayList<FSATransition> collapseTo = new ArrayList<FSATransition>();
+		TransitionSet<FSATransition> trans = getGTG().getTransitions();
 		for (State s1: states){
 			for(State s2: states){
-				Set<FSTransition> fromTo = trans.getTransitionsFromStateToState(s1, s2);
+				Set<FSATransition> fromTo = trans.getTransitionsFromStateToState(s1, s2);
 				if (fromTo.size() > 1){
 					collapseTo.add(fromTo.iterator().next());
 				}
@@ -159,14 +159,14 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return collapseTo;
 	}
 
-	private List<FSTransition> getEmptyTransitionsNeeded() {
+	private List<FSATransition> getEmptyTransitionsNeeded() {
 		StateSet states = getGTG().getStates();
-		ArrayList<FSTransition> toAdd = new ArrayList<FSTransition>();
-		TransitionSet<FSTransition> transSet = getGTG().getTransitions();
+		ArrayList<FSATransition> toAdd = new ArrayList<FSATransition>();
+		TransitionSet<FSATransition> transSet = getGTG().getTransitions();
 		for (State from: states){
 			for(State to: states){
 				if(transSet.getTransitionsFromStateToState(from, to).isEmpty())
-					toAdd.add(new FSTransition(from, 
+					toAdd.add(new FSATransition(from, 
 							to, 
 							new SymbolString(EMPTY_SET_SYMBOL)));
 			}
@@ -175,7 +175,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	private boolean addAllEmptyTransitions(){
-		List<FSTransition> emptyTrans = getEmptyTransitionsNeeded();
+		List<FSATransition> emptyTrans = getEmptyTransitionsNeeded();
 		if (emptyTrans.isEmpty()) return false;
 		boolean added = getGTG().getTransitions().addAll(emptyTrans);
 		if (added)
@@ -183,8 +183,8 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return added;	
 	}
 
-	public FSTransition addEmptyTransition(State from, State to){
-		for (FSTransition t: getEmptyTransitionsNeeded()){
+	public FSATransition addEmptyTransition(State from, State to){
+		for (FSATransition t: getEmptyTransitionsNeeded()){
 			if (t.getToState().equals(to) && t.getFromState().equals(from)){
 				getGTG().getTransitions().add(t);
 				return t;
@@ -211,18 +211,18 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		if (!myStatesToCollapse.contains(s))
 			return false;
 		myStatesToCollapse.remove(s);
-		Collection<FSTransition> toAdd = getTransitionsForCollapseState(s);
+		Collection<FSATransition> toAdd = getTransitionsForCollapseState(s);
 
 		return getGTG().getStates().remove(s) && doTransitionAdditions(toAdd);
 		
 	}
 
-	private boolean doTransitionAdditions(Collection<FSTransition> toAdd) {
+	private boolean doTransitionAdditions(Collection<FSATransition> toAdd) {
 		
-		TransitionSet<FSTransition> transSet = this.getGTG().getTransitions();
+		TransitionSet<FSATransition> transSet = this.getGTG().getTransitions();
 		
-		for (FSTransition t: toAdd){
-			Set<FSTransition> toRemove = 
+		for (FSATransition t: toAdd){
+			Set<FSATransition> toRemove = 
 					transSet.getTransitionsFromStateToState(t.getFromState(), t.getToState());
 			transSet.removeAll(toRemove);
 		}
@@ -231,8 +231,8 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return getGTG().getTransitions().addAll(toAdd);
 	}
 
-	public Collection<FSTransition> getTransitionsForCollapseState(State k) {
-		ArrayList<FSTransition> list = new ArrayList<FSTransition>();
+	public Collection<FSATransition> getTransitionsForCollapseState(State k) {
+		ArrayList<FSATransition> list = new ArrayList<FSATransition>();
 		StateSet states = getGTG().getStates();
 		for (State p : states) {
 			
@@ -245,7 +245,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 					continue;
 				
 				SymbolString exp = getExpression(p, q, k);
-				list.add(new FSTransition(p, q, exp));
+				list.add(new FSATransition(p, q, exp));
 			}
 		}
 		return list;
@@ -255,11 +255,11 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		if (from.equals(to))
 			return false;
 		
-		TransitionSet<FSTransition> transitions = getGTG().getTransitions();
-		Set<FSTransition> pk = 
+		TransitionSet<FSATransition> transitions = getGTG().getTransitions();
+		Set<FSATransition> pk = 
 				transitions.getTransitionsFromStateToState(from, to);
 		
-		FSTransition test = (FSTransition) pk.toArray()[0];
+		FSATransition test = (FSATransition) pk.toArray()[0];
 
 		if (isEmptySetTransition(test))
 			return false;
@@ -268,7 +268,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		
 	}
 
-	private boolean isEmptySetTransition(FSTransition test) {
+	private boolean isEmptySetTransition(FSATransition test) {
 		return isEmptySetTransition(test.getInput());
 	}
 
@@ -378,9 +378,9 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	 *         and <CODE>toState</CODE> in <CODE>automaton</CODE>.
 	 */
 	private SymbolString getExpressionBetweenStates(State fromState, State toState) {
-		Set<FSTransition> transitions = getGTG().getTransitions()
+		Set<FSATransition> transitions = getGTG().getTransitions()
 				.getTransitionsFromStateToState(fromState, toState);
-		FSTransition trans = transitions.toArray(new FSTransition[0])[0];
+		FSATransition trans = transitions.toArray(new FSATransition[0])[0];
 		return new SymbolString(trans.getInput());
 	}
 
@@ -398,7 +398,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		boolean added = this.getGTG().getTransitions().addAll(newLambdaTransitions);
 
 		if (added){
-			for (FSTransition t: newLambdaTransitions){
+			for (FSATransition t: newLambdaTransitions){
 				this.getGTG().getFinalStateSet().remove(t.getFromState());
 			}
 			newLambdaTransitions.clear();
@@ -411,13 +411,13 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 	private boolean collapseAllTransitions() {
 		if (myCollapseList.isEmpty()) return false;
-		for (FSTransition trans : myCollapseList.toArray(new FSTransition[0]) ){
+		for (FSATransition trans : myCollapseList.toArray(new FSATransition[0]) ){
 			this.collapseTransitionsOn(trans);
 		}
 		return true;
 	}
 
-	public boolean collapseTransitionsOn(FSTransition trans) {
+	public boolean collapseTransitionsOn(FSATransition trans) {
 
 		if (!shouldCollapse(trans)){
 			return false;
@@ -425,8 +425,8 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		removeCollapse(trans);
 
-		TransitionSet<FSTransition> transSet = getGTG().getTransitions();
-		Set<FSTransition> fromTo = 
+		TransitionSet<FSATransition> transSet = getGTG().getTransitions();
+		Set<FSATransition> fromTo = 
 				transSet.getTransitionsFromStateToState(trans.getFromState(), 
 						trans.getToState());
 
@@ -434,7 +434,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		SymbolString regexLabel = new SymbolString();
 		Symbol union = myRegEx.getOperators().getUnionOperator();
-		for (FSTransition t: fromTo){
+		for (FSATransition t: fromTo){
 			if (isEmptySetTransition(t)) 
 				continue;
 			regexLabel.add(union);
@@ -446,23 +446,23 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		regexLabel = regexLabel.subList(1);
 
-		FSTransition collapsed = new FSTransition(trans.getFromState(), 
+		FSATransition collapsed = new FSATransition(trans.getFromState(), 
 				trans.getToState(),
 				regexLabel);
 
 		return transSet.add(collapsed);
 	}
 
-	private boolean isLambdaTransition(FSTransition t) {
+	private boolean isLambdaTransition(FSATransition t) {
 		return t.getInput().isEmpty();
 	}
 
-	private void removeCollapse(FSTransition trans) {
+	private void removeCollapse(FSATransition trans) {
 		myCollapseList.remove(getCollapseTransition(trans));
 	}
 
-	private FSTransition getCollapseTransition(FSTransition trans) {
-		for (FSTransition t: myCollapseList){
+	private FSATransition getCollapseTransition(FSATransition trans) {
+		for (FSATransition t: myCollapseList){
 			if (t.getToState().equals(trans.getToState()) &&
 					t.getFromState().equals(trans.getFromState())){
 				return t;
@@ -471,7 +471,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return null;
 	}
 
-	private boolean shouldCollapse(FSTransition trans) {
+	private boolean shouldCollapse(FSATransition trans) {
 		return getCollapseTransition(trans) != null;
 	}
 

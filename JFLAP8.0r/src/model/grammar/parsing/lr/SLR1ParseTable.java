@@ -11,7 +11,7 @@ import universe.preferences.JFLAPPreferences;
 
 import model.automata.State;
 import model.automata.acceptors.Acceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
@@ -90,8 +90,8 @@ public class SLR1ParseTable {
 	}
 
 	public void addAllRulesForState(SLR1DFAState from) {
-		Set<FSTransition> trans = mySLR1DFA.getTransitions().getTransitionsFromState(from);
-		for (FSTransition t: trans){
+		Set<FSATransition> trans = mySLR1DFA.getTransitions().getTransitionsFromState(from);
+		for (FSATransition t: trans){
 			Symbol s = t.getInput().getFirst();
 			SLR1DFAState to = (SLR1DFAState) t.getToState();
 			SLR1rule newRule;

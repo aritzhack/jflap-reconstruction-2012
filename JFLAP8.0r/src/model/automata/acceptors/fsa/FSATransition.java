@@ -8,18 +8,18 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.EmptySub;
 
-public class FSTransition extends Transition {
+public class FSATransition extends Transition {
 
 	
-	public FSTransition(State from, State to, SymbolString input) {
+	public FSATransition(State from, State to, SymbolString input) {
 		super(from, to, input);
 	}
 
-	public FSTransition(State from, State to) {
+	public FSATransition(State from, State to) {
 		this(from, to, new SymbolString());
 	}
 
-	public FSTransition(State from, State to, Symbol s) {
+	public FSATransition(State from, State to, Symbol s) {
 		this(from, to, new SymbolString(s));
 	}
 
@@ -35,8 +35,8 @@ public class FSTransition extends Transition {
 	}
 
 	@Override
-	public FSTransition copy() {
-		return new FSTransition(this.getFromState().copy(), 
+	public FSATransition copy() {
+		return new FSATransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
 									this.getInput().copy());
 	}

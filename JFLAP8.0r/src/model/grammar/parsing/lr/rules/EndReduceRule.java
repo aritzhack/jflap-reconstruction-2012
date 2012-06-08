@@ -1,7 +1,7 @@
 package model.grammar.parsing.lr.rules;
 
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.parsing.lr.SLR1DFAState;
 

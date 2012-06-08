@@ -7,19 +7,19 @@ import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.symbols.Symbol;
 
-public abstract class Transducer<T extends OutputFunction> extends Automaton<FSTransition> {
+public abstract class Transducer<T extends OutputFunction> extends Automaton<FSATransition> {
 
 
 	public Transducer(StateSet states, 
 					InputAlphabet langAlph,
 					OutputAlphabet outputAlph,
-					TransitionSet<FSTransition> functions, 
+					TransitionSet<FSATransition> functions, 
 					StartState start,
 					OutputFunctionSet<T> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
@@ -31,7 +31,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FST
 		try {
 					return clz.cast(clz.getConstructors()[0].newInstance(new StateSet()	,																		this.getInputAlphabet(),
 																			this.getOutputAlphabet(),
-																			new TransitionSet<FSTransition>(),
+																			new TransitionSet<FSATransition>(),
 																			new StartState(),
 																			new OutputFunctionSet<T>()));
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FST
 					return clz.cast(clz.getConstructors()[0].newInstance(this.getStates().copy(),
 																			this.getInputAlphabet().copy(),
 																			this.getOutputAlphabet().copy(),
-																			new TransitionSet<FSTransition>().copy(),
+																			new TransitionSet<FSATransition>().copy(),
 																			new StartState(this.getStartState().copy()),
 																			this.getOutputFunctionSet().copy()));
 		} catch (Exception e) {

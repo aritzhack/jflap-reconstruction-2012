@@ -1,7 +1,7 @@
 package model.automata.simulate.configurations;
 
 import model.automata.State;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.simulate.Configuration;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.mealy.MealyMachine;

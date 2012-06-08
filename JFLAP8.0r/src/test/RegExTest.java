@@ -9,7 +9,7 @@ import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.AutomatonSimulator;

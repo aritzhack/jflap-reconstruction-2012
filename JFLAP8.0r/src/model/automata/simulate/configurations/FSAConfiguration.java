@@ -2,13 +2,13 @@ package model.automata.simulate.configurations;
 
 import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.simulate.Configuration;
 import model.formaldef.components.symbols.SymbolString;
 
 
 public class FSAConfiguration extends InputUsingConfiguration<FiniteStateAcceptor, 
-																FSTransition> {
+																FSATransition> {
 
 	public FSAConfiguration(FiniteStateAcceptor a, State s, int pos, SymbolString input) {
 		super(a, s, pos, input);
@@ -20,7 +20,7 @@ public class FSAConfiguration extends InputUsingConfiguration<FiniteStateAccepto
 	}
 
 	@Override
-	protected Configuration<FiniteStateAcceptor,FSTransition> createInputConfig(
+	protected Configuration<FiniteStateAcceptor,FSATransition> createInputConfig(
 			FiniteStateAcceptor a, 
 			State s, 
 			int ppos, 
@@ -38,14 +38,14 @@ public class FSAConfiguration extends InputUsingConfiguration<FiniteStateAccepto
 
 	@Override
 	protected int getNextSecondaryPosition(int i,
-			FSTransition trans) {
+			FSATransition trans) {
 		//return nothing, this will never be called
 		return 0;
 	}
 
 	@Override
 	protected SymbolString[] assembleUpdatedStrings(SymbolString[] clones,
-			FSTransition trans) {
+			FSATransition trans) {
 		//return nothing, this will never be called
 		return null;
 	}

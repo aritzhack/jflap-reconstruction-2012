@@ -16,7 +16,7 @@ import model.automata.StateSet;
 import model.automata.Transition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
@@ -26,7 +26,7 @@ import model.grammar.Production;
 import model.grammar.StartVariable;
 import model.grammar.typetest.GrammarType;
 
-public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcceptor, FSTransition> {
+public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcceptor, FSATransition> {
 
 	private State myFinalState;
 
@@ -54,7 +54,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	
 	
 	@Override
-	public FSTransition convertProduction(Production p) {
+	public FSATransition convertProduction(Production p) {
 		Variable lhsVar = (Variable) p.getLHS().getFirst();
 		SymbolString rhs = p.getRHS();
 		
@@ -72,7 +72,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 			to = this.getStateForVariable((Variable) p.getRHS().getLast());
 			input = rhs.subList(0, rhs.size()-1);
 		}
-		return new FSTransition(from, to, input);
+		return new FSATransition(from, to, input);
 	}
 
 	

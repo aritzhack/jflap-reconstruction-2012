@@ -11,7 +11,7 @@ import file.xml.XMLTags;
 
 import model.automata.InputAlphabet;
 import model.automata.Transition;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.automata.transducers.OutputAlphabet;

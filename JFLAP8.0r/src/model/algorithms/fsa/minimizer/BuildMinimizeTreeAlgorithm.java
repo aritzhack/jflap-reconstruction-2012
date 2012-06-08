@@ -48,7 +48,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -212,8 +212,8 @@ public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<Finite
 	 * 		group of states that this state goes to on sym
 	 */
 	public MinimizeTreeNode getGroupFromStateOnSymbol(State s, Symbol sym) {
-		Set<FSTransition> fromSet = this.getDFA().getTransitions().getTransitionsFromState(s);
-		for (FSTransition trans: fromSet) {
+		Set<FSATransition> fromSet = this.getDFA().getTransitions().getTransitionsFromState(s);
+		for (FSATransition trans: fromSet) {
 			if (trans.getInput().startsWith(sym)) {
 				return getGroupForState(trans.getToState());
 			}

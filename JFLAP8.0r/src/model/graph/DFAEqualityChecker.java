@@ -25,7 +25,7 @@ import java.util.Map;
 
 import model.automata.State;
 import model.automata.acceptors.Acceptor;
-import model.automata.acceptors.fsa.FSTransition;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -69,9 +69,9 @@ public class DFAEqualityChecker {
 				return false;
 		}
 
-		Map<SymbolString, FSTransition> labelToTrans1 = new HashMap<SymbolString, FSTransition>(), labelToTrans2 = new HashMap();
-		FSTransition[] t1 = a1.getTransitions().getTransitionsFromState(state1).toArray(new FSTransition[0]);
-		FSTransition[] t2 = a2.getTransitions().getTransitionsFromState(state2).toArray(new FSTransition[0]);
+		Map<SymbolString, FSATransition> labelToTrans1 = new HashMap<SymbolString, FSATransition>(), labelToTrans2 = new HashMap();
+		FSATransition[] t1 = a1.getTransitions().getTransitionsFromState(state1).toArray(new FSATransition[0]);
+		FSATransition[] t2 = a2.getTransitions().getTransitionsFromState(state2).toArray(new FSATransition[0]);
 		// If they're not even the same length...
 		if (t1.length != t2.length)
 			return false;
@@ -83,7 +83,7 @@ public class DFAEqualityChecker {
 		// corresponding transition in state2, if it exists.
 		for (int i = 0; i < t1.length; i++) {
 			SymbolString label = t1[i].getInput();
-			FSTransition counterpart = labelToTrans2.get(label);
+			FSATransition counterpart = labelToTrans2.get(label);
 			// Does the same transition exist in the other automaton?
 			if (counterpart == null)
 				return false;
