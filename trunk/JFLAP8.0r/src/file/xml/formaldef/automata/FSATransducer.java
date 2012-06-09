@@ -40,9 +40,12 @@ public class FSATransducer extends AutomatonTransducer<FiniteStateAcceptor> {
 	@Override
 	public TransitionSetTransducer createTransitionFuncTransducer(
 			List<Alphabet> alphs) {
-		InputAlphabet inputAlph = null;
-		if (alphs != null)
-			inputAlph = (InputAlphabet) alphs.get(0);
+		return createFSATransitionTransducer(alphs);
+	}
+
+	public static TransitionSetTransducer createFSATransitionTransducer(
+			List<Alphabet> alphs) {
+		InputAlphabet inputAlph = retrieveAlphabet(alphs, InputAlphabet.class);
 		FSATransitionTransducer single = 
 				new FSATransitionTransducer(inputAlph);
 		TransitionSetTransducer<FSATransition> ducer = 

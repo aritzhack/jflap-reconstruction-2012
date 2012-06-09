@@ -38,6 +38,8 @@ public interface XMLTags {
 	public static final String OUTPUT_ALPH_TAG = "output_alph";
 	public static final String STACK_ALPH = "stack_alph";
 	public static final String TAPE_ALPH = "tape_alph";
+	public static final String BOSS_TAG = "BOS_symbol";
+	public static final String TM_BLANK_TAG = "blank_symbol";
 
 
 

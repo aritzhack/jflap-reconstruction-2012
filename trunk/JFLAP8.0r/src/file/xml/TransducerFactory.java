@@ -14,6 +14,15 @@ import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.acceptors.pda.BottomOfStackSymbol;
+import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.acceptors.pda.StackAlphabet;
+import model.automata.transducers.OutputAlphabet;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.moore.MooreMachine;
+import model.automata.turing.BlankSymbol;
+import model.automata.turing.TapeAlphabet;
+import model.automata.turing.TuringMachine;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.StartVariable;
@@ -27,7 +36,13 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import file.xml.formaldef.automata.FSATransducer;
+import file.xml.formaldef.automata.MealyMachineTransducer;
+import file.xml.formaldef.automata.MooreMachineTransducer;
+import file.xml.formaldef.automata.PDATransducer;
 import file.xml.formaldef.components.alphabet.InputAlphabetTransducer;
+import file.xml.formaldef.components.alphabet.OutputAlphabetTransducer;
+import file.xml.formaldef.components.alphabet.StackAlphabetTransducer;
+import file.xml.formaldef.components.alphabet.TapeAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.TerminalsTransducer;
 import file.xml.formaldef.components.alphabet.VariablesTransducer;
 import file.xml.formaldef.components.states.FinalStateSetTransducer;
@@ -36,6 +51,8 @@ import file.xml.formaldef.components.states.StartStateTransducer;
 import file.xml.formaldef.components.states.StateSetTransducer;
 import file.xml.formaldef.components.states.StateTransducer;
 import file.xml.formaldef.components.states.ToStateTransducer;
+import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
+import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
 import file.xml.formaldef.regex.ExpressionStringTransducer;
@@ -47,7 +64,7 @@ public class TransducerFactory{
 	
 	static{
 		myClassToTransducerMap = new HashMap<Class, LinkedHashSet<XMLTransducer>>();
-		addMapping(RegularExpression.class, new RegExTransducer());
+		//FSA
 		addMapping(FiniteStateAcceptor.class, new FSATransducer());
 		addMapping(FinalStateSet.class, new FinalStateSetTransducer());
 		addMapping(InputAlphabet.class, new InputAlphabetTransducer());
@@ -56,10 +73,30 @@ public class TransducerFactory{
 		addMapping(State.class, new StateTransducer(),
 								new FromStateTransducer(), 
 								new ToStateTransducer());
+		//PDA
+		addMapping(PushdownAutomaton.class, new PDATransducer());
+		addMapping(StackAlphabet.class, new StackAlphabetTransducer());
+		addMapping(BottomOfStackSymbol.class, new BottomOfStackSymbolTransducer());
+		
+		//Moore and Mealy
+		addMapping(MooreMachine.class, new MooreMachineTransducer());
+		addMapping(MealyMachine.class, new MealyMachineTransducer());
+		addMapping(OutputAlphabet.class, new OutputAlphabetTransducer());
+		
+		//TM - Need to add the TMTransitionFunction stuff too
+//		addMapping(TuringMachine.class, new TuringMachineTransducer());
+		addMapping(TapeAlphabet.class, new TapeAlphabetTransducer());
+		addMapping(BlankSymbol.class, new BlankSymbolTransducer());
+		
+		//Grammar
 		addMapping(Grammar.class, new GrammarTransducer());
 		addMapping(TerminalAlphabet.class, new TerminalsTransducer());
 		addMapping(VariableAlphabet.class, new VariablesTransducer());
 		addMapping(StartVariable.class, new StartVariableTransducer());
+		
+		//RegEx
+		addMapping(RegularExpression.class, new RegExTransducer());
+
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {
