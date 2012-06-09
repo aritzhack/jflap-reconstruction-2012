@@ -1,5 +1,6 @@
-package file.xml.formaldef.components.single;
+package file.xml.formaldef.components.specific.symbols;
 
+import file.xml.formaldef.components.SingleNodeTransducer;
 import model.formaldef.components.symbols.Symbol;
 
 public class SymbolTransducer extends SingleNodeTransducer<Symbol> {

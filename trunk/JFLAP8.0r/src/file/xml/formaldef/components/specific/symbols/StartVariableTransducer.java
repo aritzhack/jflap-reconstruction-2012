@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.grammar;
+package file.xml.formaldef.components.specific.symbols;
 
 import model.grammar.StartVariable;
 import file.xml.formaldef.components.SpecialSymbolTransducer;

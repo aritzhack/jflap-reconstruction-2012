@@ -7,10 +7,9 @@ import org.w3c.dom.Element;
 
 import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
-import file.xml.formaldef.components.FunctionSetTransducer;
-import file.xml.formaldef.components.specific.transitions.FSATransitionTransducer;
-import file.xml.formaldef.components.specific.transitions.TransitionSetTransducer;
-import file.xml.formaldef.components.specific.transitions.TransitionTransducer;
+import file.xml.formaldef.components.specific.functions.FunctionSetTransducer;
+import file.xml.formaldef.components.specific.functions.TransitionSetTransducer;
+import file.xml.formaldef.components.specific.functions.TransitionTransducer;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -25,15 +24,15 @@ public class FSATransducer extends AutomatonTransducer<FiniteStateAcceptor> {
 
 	@Override
 	public FiniteStateAcceptor buildStructure(Object[] subComp) {
-		return new FiniteStateAcceptor((StateSet) subComp[0], 
-										(InputAlphabet) subComp[1], 
-										(TransitionSet<FSATransition>) subComp[2], 
-										(StartState) subComp[3], 
-										(FinalStateSet) subComp[4]);
+		return new FiniteStateAcceptor(retrieveTarget(StateSet.class,subComp), 
+				retrieveTarget(InputAlphabet.class, subComp), 
+				retrieveTarget(TransitionSet.class, subComp), 
+				retrieveTarget(StartState.class, subComp), 
+				retrieveTarget(FinalStateSet.class, subComp));
 	}
 
 	@Override
-	public String getTypeTag() {
+	public String getTag() {
 		return FSA_TAG;
 	}
 

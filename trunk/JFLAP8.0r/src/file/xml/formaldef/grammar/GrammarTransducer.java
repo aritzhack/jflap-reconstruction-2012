@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.grammar;
+package file.xml.formaldef.grammar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
+import file.xml.formaldef.components.specific.functions.ProductionSetTransducer;
+import file.xml.formaldef.components.specific.functions.ProductionTransducer;
 
 public class GrammarTransducer extends FormalDefinitionTransducer<Grammar> {
 

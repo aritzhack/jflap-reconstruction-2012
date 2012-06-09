@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 
 import file.xml.StructureTransducer;
 import file.xml.XMLTransducer;
-import file.xml.formaldef.components.single.SymbolStringTransducer;
+import file.xml.formaldef.components.specific.symbols.SymbolStringTransducer;
 
 public class ExpressionStringTransducer extends StructureTransducer<SymbolString> {
 

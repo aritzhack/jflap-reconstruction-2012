@@ -1,4 +1,4 @@
-package file.xml.formaldef.components;
+package file.xml.formaldef.components.specific.functions;
 
 import model.automata.Transition;
 import model.automata.TransitionSet;
@@ -9,6 +9,8 @@ import model.formaldef.components.functionset.function.LanguageFunction;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import file.xml.formaldef.components.SetComponentTransducer;
 
 
 import util.Copyable;
