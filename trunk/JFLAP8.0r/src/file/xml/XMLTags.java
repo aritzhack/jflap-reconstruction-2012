@@ -5,8 +5,8 @@ public interface XMLTags {
 	public static final String
 	
 		TRANS_INPUT_TAG = "input",
-		PDA_POP_TAG = "pop",
-		PDA_PUSH_TAG = "push",
+		POP_TAG = "pop",
+		PUSH_TAG = "push",
 		OUTPUT_TAG = "output",
 		TM_READ_TAG = "read",
 		TM_WRITE_TAG ="write",
@@ -23,7 +23,8 @@ public interface XMLTags {
 		STRUCTURE_TAG = "structure",
 		FSA_TAG="fsa",
 		FINAL_STATESET_TAG = "final_states",
-		OUTPUT_FUNC_SET = "output_set";
+		OUTPUT_FUNC_SET = "output_set",
+		OUTPUT_FUNC_TAG = "output_func";
 	
 	public static final String ID_TAG = "id";
 	public static final String NAME_TAG = "name";
@@ -34,6 +35,11 @@ public interface XMLTags {
 	public static final String PROD_SET_TAG = "production_set";
 	public static final String EXPRESSION_TAG = "exp";
 	public static final String REGEX = "regex";
+	public static final String OUTPUT_ALPH_TAG = "output_alph";
+	public static final String STACK_ALPH = "stack_alph";
+	public static final String TAPE_ALPH = "tape_alph";
+
+
 
 
 

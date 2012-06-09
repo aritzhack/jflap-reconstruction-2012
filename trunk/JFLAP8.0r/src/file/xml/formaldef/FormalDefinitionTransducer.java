@@ -20,7 +20,7 @@ import file.xml.MetaTransducer;
 import file.xml.StructureTransducer;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
-import file.xml.formaldef.components.specific.alphabet.AlphabetTransducer;
+import file.xml.formaldef.components.alphabet.AlphabetTransducer;
 
 public abstract class FormalDefinitionTransducer<T extends FormalDefinition> extends MetaTransducer<T> {
 
