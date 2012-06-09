@@ -33,14 +33,14 @@ import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.components.specific.alphabet.InputAlphabetTransducer;
 import file.xml.formaldef.components.specific.alphabet.TerminalsTransducer;
 import file.xml.formaldef.components.specific.alphabet.VariablesTransducer;
-import file.xml.formaldef.components.specific.grammar.GrammarTransducer;
-import file.xml.formaldef.components.specific.grammar.StartVariableTransducer;
 import file.xml.formaldef.components.specific.states.FinalStateSetTransducer;
+import file.xml.formaldef.components.specific.states.FromStateTransducer;
 import file.xml.formaldef.components.specific.states.StartStateTransducer;
 import file.xml.formaldef.components.specific.states.StateSetTransducer;
 import file.xml.formaldef.components.specific.states.StateTransducer;
-import file.xml.formaldef.components.specific.transitions.FromStateTransducer;
-import file.xml.formaldef.components.specific.transitions.ToStateTransducer;
+import file.xml.formaldef.components.specific.states.ToStateTransducer;
+import file.xml.formaldef.components.specific.symbols.StartVariableTransducer;
+import file.xml.formaldef.grammar.GrammarTransducer;
 import file.xml.formaldef.regex.ExpressionStringTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
 
