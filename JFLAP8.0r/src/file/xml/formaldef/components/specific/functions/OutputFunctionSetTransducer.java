@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.output;
+package file.xml.formaldef.components.specific.functions;
 
 import model.automata.transducers.OutputFunction;
 import model.automata.transducers.OutputFunctionSet;
@@ -8,8 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import util.Copyable;
-import file.xml.formaldef.components.FunctionSetTransducer;
-import file.xml.formaldef.components.FunctionTransducer;
 
 public class OutputFunctionSetTransducer<T extends OutputFunction> extends FunctionSetTransducer<T> {
 

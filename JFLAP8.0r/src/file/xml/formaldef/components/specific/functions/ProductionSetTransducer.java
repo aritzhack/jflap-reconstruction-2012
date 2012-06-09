@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.grammar;
+package file.xml.formaldef.components.specific.functions;
 
 import model.formaldef.components.SetComponent;
 import model.grammar.Production;
@@ -8,8 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import util.Copyable;
-import file.xml.formaldef.components.FunctionSetTransducer;
-import file.xml.formaldef.components.FunctionTransducer;
 
 public class ProductionSetTransducer extends FunctionSetTransducer<Production> {
 

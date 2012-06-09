@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.transitions;
+package file.xml.formaldef.automata;
 
 import java.util.Map;
 
@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 
 import util.Copyable;
 import file.xml.XMLHelper;
+import file.xml.formaldef.components.specific.functions.TransitionTransducer;
 
 public class FSATransitionTransducer extends TransitionTransducer<FSATransition> {
 

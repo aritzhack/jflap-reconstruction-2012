@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.transitions;
+package file.xml.formaldef.components.specific.functions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,7 @@ import model.formaldef.components.symbols.SymbolString;
 import model.util.UtilFunctions;
 import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
-import file.xml.formaldef.components.FunctionTransducer;
-import file.xml.formaldef.components.single.SymbolStringTransducer;
+import file.xml.formaldef.components.specific.symbols.SymbolStringTransducer;
 
 public abstract class TransitionTransducer<T extends Transition> extends FunctionTransducer<T> {
 

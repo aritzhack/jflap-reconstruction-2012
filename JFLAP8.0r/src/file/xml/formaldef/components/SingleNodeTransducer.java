@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.single;
+package file.xml.formaldef.components;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

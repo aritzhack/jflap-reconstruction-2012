@@ -1,4 +1,4 @@
-package file.xml.formaldef.components;
+package file.xml.formaldef.components.specific.functions;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import model.formaldef.components.symbols.SymbolString;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
-import file.xml.formaldef.components.single.SymbolStringTransducer;
+import file.xml.formaldef.components.specific.symbols.SymbolStringTransducer;
 
 public abstract class FunctionTransducer<T extends LanguageFunction> implements XMLTransducer<T> {
 

@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.single;
+package file.xml.formaldef.components.specific.symbols;
 
 import java.util.Arrays;
 
@@ -8,6 +8,7 @@ import model.formaldef.components.symbols.SymbolString;
 import org.w3c.dom.Element;
 
 import debug.JFLAPDebug;
+import file.xml.formaldef.components.SingleNodeTransducer;
 
 public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 

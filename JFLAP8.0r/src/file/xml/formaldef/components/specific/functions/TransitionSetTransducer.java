@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.specific.transitions;
+package file.xml.formaldef.components.specific.functions;
 
 import model.automata.Transition;
 import model.automata.TransitionSet;
@@ -8,8 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import util.Copyable;
-import file.xml.formaldef.components.FunctionSetTransducer;
-import file.xml.formaldef.components.FunctionTransducer;
 
 public class TransitionSetTransducer<T extends Transition> extends FunctionSetTransducer<T> {
 

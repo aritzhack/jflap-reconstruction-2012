@@ -8,7 +8,7 @@ import org.w3c.dom.Element;
 
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.SetComponentTransducer;
-import file.xml.formaldef.components.single.SymbolTransducer;
+import file.xml.formaldef.components.specific.symbols.SymbolTransducer;
 
 import util.Copyable;
 
