@@ -1,4 +1,4 @@
-package file.xml.formaldef.components.functions;
+package file.xml.formaldef.components.functions.productions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +13,8 @@ import model.grammar.VariableAlphabet;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import file.xml.formaldef.components.functions.FunctionTransducer;
 
 
 public class ProductionTransducer extends FunctionTransducer<Production> {
