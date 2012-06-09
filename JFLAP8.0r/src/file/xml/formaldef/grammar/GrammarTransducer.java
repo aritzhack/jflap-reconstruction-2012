@@ -35,14 +35,8 @@ public class GrammarTransducer extends FormalDefinitionTransducer<Grammar> {
 	}
 
 	private ProductionSetTransducer createProductionSetTransducer(List<Alphabet> alphs) {
-		VariableAlphabet vars = null;
-		TerminalAlphabet terms = null;
-		for (Alphabet alph: alphs){
-			if (alph instanceof VariableAlphabet)
-				vars = (VariableAlphabet) alph;
-			else if (alph instanceof TerminalAlphabet)
-				terms = (TerminalAlphabet) alph;
-		}
+		VariableAlphabet vars = retrieveAlphabet(alphs, VariableAlphabet.class);
+		TerminalAlphabet terms = retrieveAlphabet(alphs, TerminalAlphabet.class);
 		
 		ProductionTransducer trans = new ProductionTransducer(vars, terms);
 		return new ProductionSetTransducer(trans);

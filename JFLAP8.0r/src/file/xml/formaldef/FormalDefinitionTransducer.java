@@ -78,5 +78,13 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	public abstract void addFunctionSetsToMap(Map<Object, XMLTransducer> map, T structure);
 	
 
+	public static <T extends Alphabet> T retrieveAlphabet(List<Alphabet> alphs,
+															Class<T> target){
+		for (Alphabet alph: alphs){
+			if (target.isAssignableFrom(alph.getClass()))
+				return (T) alph;
+		}
+		return null;
+	}
 
 }
