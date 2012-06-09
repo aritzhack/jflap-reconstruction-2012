@@ -7,9 +7,10 @@ import org.w3c.dom.Element;
 
 import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
-import file.xml.formaldef.components.specific.functions.FunctionSetTransducer;
-import file.xml.formaldef.components.specific.functions.TransitionSetTransducer;
-import file.xml.formaldef.components.specific.functions.TransitionTransducer;
+import file.xml.formaldef.components.functions.FunctionSetTransducer;
+import file.xml.formaldef.components.functions.transitions.FSATransitionTransducer;
+import file.xml.formaldef.components.functions.transitions.TransitionSetTransducer;
+import file.xml.formaldef.components.functions.transitions.TransitionTransducer;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;

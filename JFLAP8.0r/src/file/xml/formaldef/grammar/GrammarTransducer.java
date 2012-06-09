@@ -14,8 +14,8 @@ import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
-import file.xml.formaldef.components.specific.functions.ProductionSetTransducer;
-import file.xml.formaldef.components.specific.functions.ProductionTransducer;
+import file.xml.formaldef.components.functions.productions.ProductionSetTransducer;
+import file.xml.formaldef.components.functions.productions.ProductionTransducer;
 
 public class GrammarTransducer extends FormalDefinitionTransducer<Grammar> {
 

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import file.xml.XMLTransducer;
-import file.xml.formaldef.components.specific.functions.FunctionSetTransducer;
-import file.xml.formaldef.components.specific.functions.OutputFunctionSetTransducer;
+import file.xml.formaldef.components.functions.FunctionSetTransducer;
+import file.xml.formaldef.components.functions.output.OutputFunctionSetTransducer;
 import model.automata.acceptors.Acceptor;
 import model.automata.transducers.Transducer;
 import model.formaldef.components.alphabets.Alphabet;

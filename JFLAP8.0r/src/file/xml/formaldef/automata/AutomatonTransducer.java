@@ -14,8 +14,8 @@ import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
 import file.xml.formaldef.FormalDefinitionTransducer;
-import file.xml.formaldef.components.specific.functions.FunctionSetTransducer;
-import file.xml.formaldef.components.specific.functions.TransitionSetTransducer;
+import file.xml.formaldef.components.functions.FunctionSetTransducer;
+import file.xml.formaldef.components.functions.transitions.TransitionSetTransducer;
 
 public abstract class AutomatonTransducer<T extends Automaton> extends FormalDefinitionTransducer<T> {
 

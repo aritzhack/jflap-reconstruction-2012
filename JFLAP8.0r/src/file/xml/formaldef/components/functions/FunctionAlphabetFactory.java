@@ -30,8 +30,8 @@ public class FunctionAlphabetFactory implements XMLTags{
 	static {
 		MAP = new TreeMap<String, Class<? extends Alphabet>[]>();
 		addMapping(TRANS_INPUT_TAG, InputAlphabet.class);
-		addMapping(PDA_POP_TAG, StackAlphabet.class);
-		addMapping(PDA_PUSH_TAG, StackAlphabet.class);
+		addMapping(POP_TAG, StackAlphabet.class);
+		addMapping(PUSH_TAG, StackAlphabet.class);
 		addMapping(OUTPUT_TAG, OutputAlphabet.class);
 		addMapping(TM_READ_TAG, TapeAlphabet.class);
 		addMapping(TM_WRITE_TAG, TapeAlphabet.class);
