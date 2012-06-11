@@ -72,6 +72,7 @@ public class LL1Parser extends Parser {
 	public boolean isAccept() {
 		Symbol eos = JFLAPPreferences.getEndOfStringMarker();
 		return isDone() && 
+				myStack.isEmpty() &&
 				myUnprocessedInput.size() == 1 &&
 				myUnprocessedInput.getFirst().equals(eos) ;
 	}
@@ -114,6 +115,10 @@ public class LL1Parser extends Parser {
 		return myDerivation;
 	}
 	
+	public SymbolString getStack() {
+		return new SymbolString(myStack);
+	}
+
 	public Terminal removeMatchingTerminal() {
 		myUnprocessedInput.removeFirst();
 		return (Terminal) myStack.pollFirst();
