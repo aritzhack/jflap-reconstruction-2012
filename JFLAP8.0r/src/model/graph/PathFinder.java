@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -34,6 +36,8 @@ public class PathFinder {
 	public <T> List<T> findPath(T from, T to) {
 		List<T> path = recurseForPath(from, to);
 		clear();
+		JFLAPDebug.print(path);
+		if (path.size() < 2 && !from.equals(to)) return null;
 		return path;
 	}
 
