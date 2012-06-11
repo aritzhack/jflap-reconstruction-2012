@@ -46,7 +46,7 @@ public class FileTester extends TestHarness {
 		
 		//SAVE AND LOAD GRAMMAR
 		Grammar g = createGrammar();
-		f = new File(toSave + "/grammar.jff");
+		f = new File(toSave + "/LL1grammar.jff");
 		outPrintln("Before import:\n" + g.toString());
 		codec.encode(g, f, null);
 		g = (Grammar) codec.decode(f);
@@ -137,18 +137,19 @@ public class FileTester extends TestHarness {
 		Variable B = new Variable("B");
 		Terminal a = new Terminal("a");
 		Terminal b = new Terminal("b");
-
+		Terminal c = new Terminal("c");
+		Terminal d = new Terminal("d");
+		
 		//ex7.6cnf-a.jff
-		g.getVariables().addAll(S,A,B );
-		g.getTerminals().addAll(a,b);
-		prod.add(new Production(S, a,S,b));
-		prod.add(new Production(S, a,A,b));
+		g.getVariables().addAll( S,A,B );
+		g.getTerminals().addAll(a,b,c,d);
+		prod.add(new Production(S, a,A,d,B));
 		prod.add(new Production(A, a,A));
-		prod.add(new Production(A, B));
-		prod.add(new Production(B, b));
+		prod.add(new Production(A, c));
+		prod.add(new Production(B, b, B));
 		prod.add(new Production(B));
-		prod.add(new Production(B, B, B, B, B, B));
 		g.setStartVariable(S);
+		
 		
 		return g;
 	}

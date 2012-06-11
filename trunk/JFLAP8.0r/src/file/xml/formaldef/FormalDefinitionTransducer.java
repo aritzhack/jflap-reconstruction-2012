@@ -80,6 +80,7 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 
 	public static <T extends Alphabet> T retrieveAlphabet(List<Alphabet> alphs,
 															Class<T> target){
+		if (alphs == null) return null;
 		for (Alphabet alph: alphs){
 			if (target.isAssignableFrom(alph.getClass()))
 				return (T) alph;
