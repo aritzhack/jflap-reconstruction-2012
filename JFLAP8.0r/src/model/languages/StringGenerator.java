@@ -1,9 +1,11 @@
 package model.languages;
 
 /**
- * Utility class for generating a set of strings
- * in a language given a restricted grammar 
+ * Utility class for generating sentences
+ * in a language given a grammar 
  * for the language
+ * 
+ * @author Ian McMahon
  */
 
 import java.util.*;
@@ -14,7 +16,6 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.grammar.parsing.*;
-import model.grammar.parsing.brute.*;
 import model.grammar.parsing.cyk.CYKParser;
 import model.grammar.parsing.ll.LL1Parser;
 import model.grammar.transform.CNFConverter;
@@ -23,23 +24,30 @@ import model.grammar.typetest.matchers.*;
 public class StringGenerator {
 
 	private Grammar myGrammar;
-
+	private int LARGE_NUMBER = 100000;
 	private Queue<Derivation> myDerivationsQueue;
 	private Set<SymbolString> myStringsInLanguage, myPossibleStrings;
 
 	private int myNumberToGenerate, currentStringLength, maxLHSsize;
 
 	public StringGenerator(FiniteStateAcceptor fsa) {
-		this(new FSAtoRegGrammarConversion(fsa).getConvertedGrammar());
+		FSAtoRegGrammarConversion converter = new FSAtoRegGrammarConversion(fsa);
+		converter.stepToCompletion();
+		initialize(converter.getConvertedGrammar());
 	}
 
 	public StringGenerator(PushdownAutomaton pda) {
-		this(new PDAtoCFGConverter(pda).getConvertedGrammar());
+		PDAtoCFGConverter converter = new PDAtoCFGConverter(pda);
+		converter.stepToCompletion();
+		initialize(converter.getConvertedGrammar());
 	}
 
 	public StringGenerator(Grammar g) {
+		initialize(g);
+	}
+	
+	private void initialize(Grammar g){
 		myGrammar = g;
-		myNumberToGenerate = g.getTerminals().size();
 
 		myDerivationsQueue = new LinkedList<Derivation>();
 		myStringsInLanguage = new HashSet<SymbolString>();
@@ -54,22 +62,36 @@ public class StringGenerator {
 				maxLHSsize = p.getLHS().size();
 			}
 		}
-
 	}
 
 	private void clear() {
+		currentStringLength = 0;
 		myDerivationsQueue.clear();
 		myPossibleStrings.clear();
 		myStringsInLanguage.clear();
 	}
 
+	/**
+	 * Generates the default number of strings (the number of terminals in the TerminalAlphabet)
+	 * using a brute force method.
+	 */
 	public List<SymbolString> generateStringsBrute(){
 		return generateStringsBrute(myGrammar.getTerminals().size());
 	}
+	
+	/**
+	 * Generates the default number of strings (the number of terminals in the TerminalAlphabet)
+	 * using either CYK or LL parsing.
+	 */
 	public List<SymbolString> generateContextFreeStrings(){
 		return generateContextFreeStrings(myGrammar.getTerminals().size());
 	}
 	
+	/**
+	 * Generates the specified number of sentences using a brute force algorithm.
+	 * @param numberToGenerate
+	 * 			the number of sentences/strings this method will return
+	 */
 	public List<SymbolString> generateStringsBrute(int numberToGenerate) {
 		clear();
 		myNumberToGenerate = numberToGenerate;
@@ -83,6 +105,12 @@ public class StringGenerator {
 		return generate();
 	}
 
+	/**
+	 * Generates the first <CODE>numberToGenerate</CODE> sentences/strings that this language can produce,
+	 * using LL or CYK parsing.
+	 * @param numberToGenerate
+	 * 			the number of sentences/strings this method will return.
+	 */
 	public List<SymbolString> generateContextFreeStrings(int numberToGenerate) {
 		clear();
 		myNumberToGenerate = numberToGenerate;
@@ -93,6 +121,10 @@ public class StringGenerator {
 		return generate();
 	}
 
+	/**
+	 * Returns a sorted list consisting of every SymbolString that has been put into <CODE>myStringsInLanguage</CODE>.
+	 * Sorts based on length, followed by the natural order of SymbolStrings.
+	 */
 	private List<SymbolString> generate() {
 		ArrayList<SymbolString> stringsList = new ArrayList<SymbolString>(
 				myStringsInLanguage);
@@ -100,21 +132,40 @@ public class StringGenerator {
 		return stringsList;
 	}
 	
-	public List<SymbolString> generateStringsOfLength(int n){
+	/**
+	 * Generates every string of specified length that can be produced by the language.
+	 * @param length
+	 * 			the length of the strings desired.
+	 */
+	public List<SymbolString> generateStringsOfLength(int length){
+		return generateStringsOfLength(length, LARGE_NUMBER);
+	}
+	
+	/**
+	 *  Generates up to numberToGenerate strings of the specified length that the language can produce.
+	 * @param length
+	 * 			the length of the strings desired.
+	 * @param numberToGenerate
+	 * 			the maximum number of strings to generate.
+	 */
+	public List<SymbolString> generateStringsOfLength(int length, int numberToGenerate){
 		clear();
+		myNumberToGenerate = numberToGenerate;
 		checkForCorrectParser();
 		for (Symbol terminal : myGrammar.getTerminals()) {
 			myPossibleStrings.add(new SymbolString(terminal));
 		}
-		for(int i=1;i<n;i++){
+		for(int i=1;i<length;i++){
 			getNextLengthStrings();
 		}
 		parsePossibleStrings();
 		return generate();
 	}
 
+	/**
+	 * Brute force method that generates strings as it finds them, based on the BruteParser algorithm.
+	 */
 	private boolean makeNextReplacement() {
-
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
@@ -142,6 +193,9 @@ public class StringGenerator {
 		return true;
 	}
 
+	/**
+	 * Tracks the length of strings to deal with passing in the correct strings to the parsers.
+	 */
 	private void parseNextLengthStrings() {
 		if (currentStringLength > 0) {
 			if (currentStringLength == 1) {
@@ -156,6 +210,10 @@ public class StringGenerator {
 		currentStringLength++;
 	}
 
+	/**
+	 * Modifies <CODE>myPossibleStrings</CODE> to consist of every possible string of the next length by 
+	 * adding each terminal to the end of each existing possibility.
+	 */
 	private void getNextLengthStrings() {
 		List<SymbolString> tempList = new ArrayList<SymbolString>();
 		tempList.addAll(myPossibleStrings);
@@ -169,6 +227,10 @@ public class StringGenerator {
 		}
 	}
 	
+	/**
+	 * Using LL or CKY parsing (based on grammar type) checks every possible string and adds any strings that
+	 * the language can produce to <CODE>myStringsInLanguage</CODE>.
+	 */
 	private void parsePossibleStrings(){
 		Parser parser;
 		if(new LL1Checker().matchesGrammar(myGrammar)){
@@ -178,12 +240,16 @@ public class StringGenerator {
 			parser = new CYKParser(myGrammar);
 		}
 		for (SymbolString string : myPossibleStrings) {
-			if (parser.quickParse(string) && myStringsInLanguage.size() < myNumberToGenerate) {
-				myStringsInLanguage.add(string);
-			}
+			if(myStringsInLanguage.size() >= myNumberToGenerate) break;
+				if (parser.quickParse(string)) {
+					myStringsInLanguage.add(string);
+				}
 		}
 	}
 	
+	/**
+	 * Converts a context free grammar to CNF if it is not in LL(1) form.
+	 */
 	private void checkForCorrectParser(){
 		if(!new ContextFreeChecker().matchesGrammar(myGrammar)) throw new ParserException("The grammar is not Context-Free."+
 				" Try the brute generation instead.");
@@ -194,6 +260,9 @@ public class StringGenerator {
 			}	
 	}
 	
+	/**
+	 * Comparator for sorting the returned ArrayList in the <CODE>generate()</CODE> method.
+	 */
 	private class StringComparator implements Comparator<SymbolString> {
 
 		@Override
