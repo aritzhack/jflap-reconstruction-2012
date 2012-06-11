@@ -84,8 +84,15 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	}
 	
 	public boolean setInput(SymbolString string){
-		myInput = string;
+		if (!isValidInput(string))
+			throw new ParserException("The string must not contain non-terminal symbols.");
+			myInput = string;
 		return resetParserStateOnly();
+	}
+
+	public boolean isValidInput(SymbolString string) {
+		
+		return string == null || getGrammar().getTerminals().containsAll(string);
 	}
 	
 	public SymbolString getInput(){

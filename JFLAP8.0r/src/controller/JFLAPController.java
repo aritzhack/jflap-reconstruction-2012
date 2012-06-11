@@ -14,7 +14,6 @@ import javax.swing.JTabbedPane;
 
 import universe.JFLAPUniverse;
 import view.JFLAPGUIResources;
-import view.JFLAPView;
 import action.windows.CloseButton;
 
 
