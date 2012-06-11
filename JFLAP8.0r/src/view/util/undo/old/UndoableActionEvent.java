@@ -1,5 +1,7 @@
-package view.util.undo;
+package view.util.undo.old;
 
+import view.util.undo.UndoKeeper;
+import view.util.undo.UndoableAction;
 import view.util.undo.UndoKeeper.UndoableActionType;
 
 public class UndoableActionEvent {

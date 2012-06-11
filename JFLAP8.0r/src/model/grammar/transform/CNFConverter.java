@@ -168,7 +168,6 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 		public void updateDataInMetaAlgorithm() {
 			GrammarTransformAlgorithm alg = getAlgorithm();
 			updateProductionsTo(alg.getTransformedGrammar());
-
 		}
 	}
 	

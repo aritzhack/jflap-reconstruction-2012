@@ -79,7 +79,6 @@ public class XMLPrettier {
 	 */
 	public static void makePretty(Document dom) {
 		String newline = System.getProperty("line.separator");
-		JFLAPDebug.print(newline);
 		makePretty(dom, newline, dom.getDocumentElement());
 	}
 

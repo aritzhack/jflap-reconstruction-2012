@@ -4,29 +4,32 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import view.EditingPanel;
 import view.JFLAPGUIResources;
 import view.formaldef.componentpanel.ComponentPanelFactory;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
-import view.util.undo.EditingPanel;
 import view.util.undo.UndoKeeper;
-
+import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public class FormalDefinitionPanel extends EditingPanel implements JFLAPGUIResources{
+public class FormalDefinitionPanel extends EditingPanel implements JFLAPGUIResources {
 
 	
 	private FormalDefinition myDefinition;
 	private boolean amAlphabetOnly;
 	private boolean amMinimized;
 
-	public FormalDefinitionPanel(FormalDefinition fd, boolean editable, boolean alphabetOnly, UndoKeeper keeper) {
-		super(editable, keeper);
+	public FormalDefinitionPanel(FormalDefinition fd, UndoKeeper keeper, boolean editable, boolean alphabetOnly) {
+		super(keeper, editable);
 		this.setLayout(new GridLayout(0,1));
 		this.setDefinition(fd);
 		this.setEditable(editable);
@@ -102,8 +105,14 @@ public class FormalDefinitionPanel extends EditingPanel implements JFLAPGUIResou
 
 	public void setDefinition(FormalDefinition fd) {
 		myDefinition = fd;
-		myDefinition.addListener(this);
 		this.update();
 	}
-	
+
+
+	@Override
+	public Describable getObjectToSave() {
+		return myDefinition;
+	}
+
+
 }

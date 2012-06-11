@@ -46,7 +46,6 @@ public class FunctionAlphabetFactory implements XMLTags{
 	public static Alphabet[] discerneAlphabets(String tag, Alphabet ... alphs){
 		Class<? extends Alphabet>[] applicable = MAP.get(tag);
 		if (applicable == null) return new Alphabet[0];
-		JFLAPDebug.print(tag);
 		List<Alphabet> found = new ArrayList<Alphabet>();
 		for (Alphabet a: alphs){
 			for (Class<? extends Alphabet> clz: applicable){

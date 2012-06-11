@@ -55,10 +55,8 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 		for (Entry<String, Object> e: tagToValue.entrySet()){
 			String tag = e.getKey();
 			XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
-			JFLAPDebug.print(tag);
 			if (trans == null)
 				trans = new SymbolStringTransducer(e.getKey());
-			JFLAPDebug.print(trans.getClass());
 			root.appendChild(trans.toXMLTree(doc, e.getValue()));
 		}
 		return root;

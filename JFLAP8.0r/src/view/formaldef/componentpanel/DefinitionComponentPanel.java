@@ -8,9 +8,9 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import view.EditingPanel;
 import view.JFLAPGUIResources;
 import view.util.SuperMouseAdapter;
-import view.util.undo.EditingPanel;
 import view.util.undo.UndoKeeper;
 
 import model.formaldef.components.FormalDefinitionComponent;
@@ -20,8 +20,8 @@ public abstract class DefinitionComponentPanel<T extends FormalDefinitionCompone
 	private T myComponent;
 	private JLabel myLabel;
 
-	public DefinitionComponentPanel(T comp, boolean editable, UndoKeeper keeper) {
-		super(editable, keeper);
+	public DefinitionComponentPanel(T comp, UndoKeeper keeper, boolean editable) {
+		super(keeper, editable);
 		this.setComponent(comp);
 		this.addMouseListener(new SuperMouseAdapter() {
 

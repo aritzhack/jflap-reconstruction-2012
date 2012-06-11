@@ -162,7 +162,6 @@ public class XMLCodec extends Codec {
 	 */
 	private StructureTransducer getRootTransducer(Element root) {
 		// Check for the type tag.
-		JFLAPDebug.print(StructureTransducer.retrieveTypeTag(root));
 //		NodeList structureNodes = root.getElementsByTagName(XMLTags.STRUCTURE_TAG);
 //		
 //		if (structureNodes.getLength() > 1)

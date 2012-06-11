@@ -18,55 +18,62 @@
 
 
 
-package view.util.undo;
+package view.util.undo.old;
 
 
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
 
+import view.util.undo.UndoKeeper;
+
 import errors.BooleanWrapper;
-
-
-
+import errors.JFLAPError;
 
 
 
 /**
- * Redo time.
+ * First, let's make it work, then we'll make the interface so you don't have to click undo and then click randomly.
  * 
  * @author Henry Qin
  */
 
-public class RedoButton extends UndoRelatedButton {
-	
-	public RedoButton(UndoKeeper keeper){
-		super(new RedoAction(keeper));
+public class UndoButton extends UndoRelatedButton {
+
+	public UndoButton(UndoKeeper keeper) {
+		super(new UndoAction(keeper));
 	}
+
 
 	@Override
 	public String getText() {
 		return "";
 	}
-	
+
+
+
 	@Override
 	public Icon getIcon() {
-		java.net.URL url = getClass().getResource("/ICON/redo.jpg");
+		java.net.URL url = getClass().getResource("/ICON/undo2.jpg");
 		return new javax.swing.ImageIcon(url);
 	}
 
 
+
 	@Override
 	protected Iterable<? extends Action> getActionList() {
-		return ((UndoKeeperAction)this.getAction()).getKeeper().getRedos();
+		return ((UndoKeeperAction)this.getAction()).getKeeper().getUndos();
 	}
-	
+
+
 	@Override
 	protected boolean doMultiAction(int n) {
-		return ((UndoKeeperAction)this.getAction()).getKeeper().redoLast(n);
+		return ((UndoKeeperAction)this.getAction()).getKeeper().undoLast(n);
 	}
+	
 
 }

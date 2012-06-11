@@ -64,8 +64,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	 
 	@Override
 	public boolean isOfTargetForm(Production p) {
-		return GrammarUtil.derivesLambda(p, 
-										this.getOriginalGrammar());
+		return GrammarUtil.derivesLambda(p, this.getOriginalGrammar());
 	}
 
 	@Override
@@ -78,11 +77,11 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 		
 		ProductionSet prods = this.getTransformedGrammar().getProductionSet();
 		Set<Production> varOnRHS = prods.getProductionsWithSymbolOnRHS(lhs);
-		
 		for (Production pRHS : varOnRHS) {
 
 				toAdd.addAll(doAllPossibleSubs(pRHS,lhs));
 		}
+
 		return toAdd;
 	}
 

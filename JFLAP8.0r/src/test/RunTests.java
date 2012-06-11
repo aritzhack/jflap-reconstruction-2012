@@ -11,7 +11,7 @@ public class RunTests {
 
 	public static Class[] myTests = new Class[]{
 //		PDATest.class,
-//		RegExTest.class, 
+		RegExTest.class, 
 //		FSATest.class, 
 //		GrammarTest.class,
 		ParserTest.class,

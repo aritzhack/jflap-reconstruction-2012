@@ -1,8 +1,10 @@
-package view.util.undo;
+package view.util.undo.old;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+
+import view.util.undo.UndoKeeper;
 
 public abstract class UndoKeeperAction extends AbstractAction implements UndoableActionListener {
 

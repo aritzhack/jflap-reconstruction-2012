@@ -1,4 +1,4 @@
-package view.util.undo;
+package view.util.undo.old;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,11 +7,14 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import view.util.undo.UndoKeeper;
+import view.util.undo.UndoableAction;
+
 public class UndoingActionMenu extends JPopupMenu implements ActionListener{
 
 	private UndoKeeper myKeeper;
 
-	public UndoingActionMenu(UndoKeeper keeper, UndoableAction ... actions){
+	public UndoingActionMenu(UndoKeeper keeper, EditingPanel UndoableAction ... actions){
 		myKeeper = keeper;
 		for (UndoableAction a : actions){
 

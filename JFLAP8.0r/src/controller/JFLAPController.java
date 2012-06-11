@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -12,8 +13,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
+import model.util.JFLAPConstants;
+
 import universe.JFLAPUniverse;
+import view.EditingPanel;
 import view.JFLAPGUIResources;
+import view.PrimaryEditingPane;
+import view.Saveable;
+import action.save.SaveAction;
+import action.save.SaveActionEvent;
 import action.windows.CloseButton;
 
 
@@ -21,24 +29,33 @@ public class JFLAPController extends JFrame {
 
 	private int myID;
 	private JTabbedPane myTabbedPane;
+	private PrimaryEditingPane myPrimaryView;
 
 	//-----------Initialize Controller-----------//
-	public JFLAPController(int id, JComponent primaryView) {
-		super("JFLAP");
+	public JFLAPController(int id, PrimaryEditingPane view) {
+		super();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		myID = id;
-		setUpForView(primaryView);
+		setUpForView(view);
+	}
+	
+	@Override
+	public String getName() {
+		return "JFLAP " + JFLAPConstants.VERSION + 
+				" (" + myPrimaryView.getFile().getName() + ")";
 	}
 
-	private void setUpForView(JComponent primaryView) {
-		setUpMenu(primaryView);
+	private void setUpForView(PrimaryEditingPane primaryView) {
+		myPrimaryView = primaryView;
+		this.setUpMenu(primaryView);
 		initListeners();		
 		myTabbedPane = new JTabbedPane();
-		myTabbedPane.add(primaryView);
 		this.add(myTabbedPane);
+		myTabbedPane.add(primaryView);
+
 	}
 
-	private void setUpMenu(JComponent primaryView) {
+	private void setUpMenu(PrimaryEditingPane primaryView) {
 		JMenuBar bar = ControllerMenuFactory.createMenuForView(primaryView);
 		bar.add(Box.createGlue());
 		bar.add(new CloseButton(this));
@@ -61,7 +78,7 @@ public class JFLAPController extends JFrame {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof JFLAPController) && ((JFLAPController) obj).getID() == this.getID();
+		return ((JFLAPController) obj).getID() == this.getID();
 	}
 
 	//-------------------------Adding new windows---------------------//
@@ -71,15 +88,16 @@ public class JFLAPController extends JFrame {
 		myTabbedPane.add(comp);
 		myTabbedPane.setSelectedComponent(comp);
 		if (myTabbedPane.getTabCount() > 1)
-			myTabbedPane.setEnabledAt(0, false);
+			setPrimaryState(false);
 		distributeTabChangedEvent();
 	}
 	
+
+	private void setPrimaryState(boolean b) {
+		myTabbedPane.setEnabledAt(0, b);
+		myPrimaryView.setEditable(b);
+	}
 	
-
-
-
-
 	//-----------Close controller and associated windows--------------//	
 
 	/**
@@ -116,28 +134,29 @@ public class JFLAPController extends JFrame {
 	 */
 	private int closeTab(int selectedIndex, boolean save) {
 		Component c = myTabbedPane.getTabComponentAt(selectedIndex);
-		if (c instanceof JFLAPView && save){
-			if (!promptAndSave((JFLAPView) c))
+		if (c instanceof EditingPanel && save){
+			if (!promptAndSave((EditingPanel) c))
 				return selectedIndex;
 		}
 		myTabbedPane.remove(selectedIndex);
 		
 		int n = myTabbedPane.getTabCount();
 		if (n == 1)
-			myTabbedPane.setEnabledAt(n-1, true);
+			setPrimaryState(true);
 		myTabbedPane.setSelectedIndex(n-1);
 		distributeTabChangedEvent();
 		return n-1;
 	}
 
-	private boolean promptAndSave(JFLAPView view) {
+	private boolean promptAndSave(EditingPanel view) {
 		int result = JOptionPane.showConfirmDialog(this, "Save " + view.getName()
 				+ " before closing?");
 		if (result == 2) {
 			return false;
 		}
 		if (result == 0){
-			view.save();
+			Action a = new SaveAction();
+			a.actionPerformed(new SaveActionEvent(view));
 		}
 		return true;
 	}

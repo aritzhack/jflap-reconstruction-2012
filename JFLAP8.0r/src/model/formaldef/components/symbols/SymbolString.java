@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
+import debug.JFLAPDebug;
+
 
 
 import universe.preferences.JFLAPPreferences;
@@ -310,14 +312,12 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public SymbolString replaceAll(Symbol toReplace, SymbolString replaceWith) {
-		boolean replaced = false;
 		SymbolString toReturn = new SymbolString(this);
 		for (int i = 0; i < toReturn.size(); i++){
 			int oldSize = toReturn.size();
 			toReturn = toReturn.replace(toReplace, replaceWith);
 			if( oldSize != toReturn.size()){
 					i += replaceWith.size()-1;
-					replaced = true;
 			}
 		}
 		return toReturn;
@@ -325,6 +325,8 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 
 	public SymbolString replace(Symbol toReplace, SymbolString replaceWith) {
 		int index = this.indexOf(toReplace);
+		if (index < 0)
+			return new SymbolString(this);
 		return replace(index, replaceWith);
 	}
 
