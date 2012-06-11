@@ -39,20 +39,6 @@ public class RegExTransducer extends FormalDefinitionTransducer<RegularExpressio
 		return regex;
 	}
 
-	
-	
-
-	@Override
-	public Element appendComponentsToRoot(Document doc,
-			RegularExpression structure, Element root) {
-		root.appendChild(createExpressionElement(doc, structure.getExpression()));
-		return super.appendComponentsToRoot(doc, structure, root);
-	}
-
-	private Node createExpressionElement(Document doc, SymbolString exp) {
-		return XMLHelper.createElement(doc, EXPRESSION_TAG, exp.toNondelimitedString(), null);
-	}
-
 	@Override
 	public String getTag() {
 		return REGEX;
