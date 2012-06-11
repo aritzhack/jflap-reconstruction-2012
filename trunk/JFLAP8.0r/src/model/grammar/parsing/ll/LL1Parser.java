@@ -52,7 +52,7 @@ public class LL1Parser extends Parser {
 	
 	@Override
 	public boolean resetParserStateOnly() {
-		myUnprocessedInput = this.getInput();
+		myUnprocessedInput = new SymbolString(this.getInput());
 		if (myUnprocessedInput != null)
 			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
 		myDerivation = new Derivation(createEmptyStart());
