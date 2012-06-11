@@ -68,7 +68,7 @@ public class ParserTest extends GrammarTest {
 		LL1Parser ll1parse = new LL1Parser(g);
 		boolean accepts = ll1parse.quickParse(SymbolString.createFromString(in, g));
 		outPrintln("LL1 Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
-		
+		JFLAPDebug.print(ll1parse.getStack());
 		//prepare and execute SLR parse
 		prod.clear();
 		prod.add(new Production(S, A));
