@@ -78,6 +78,7 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 			return toAdd;
 		
 		DependencyGraph graph = myDependencyGraphStep.getAlgorithm().getDependencyGraph();
+		JFLAPDebug.print(graph);
 
 		Variable[] dep = graph.getAllDependencies(lhsVar);
 		for(Variable v: dep){
@@ -85,7 +86,6 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 				toAdd.add(new Production(lhsVar, prod.getRHS()));
 			}
 		}
-
 		return toAdd;
 	}
 	
