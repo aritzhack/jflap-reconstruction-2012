@@ -13,23 +13,21 @@ import model.automata.acceptors.fsa.*;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.components.symbols.*;
 import model.grammar.*;
-import model.grammar.parsing.Derivation;
+import model.grammar.parsing.*;
 import model.grammar.parsing.brute.*;
+import model.grammar.parsing.cyk.CYKParser;
+import model.grammar.parsing.ll.LL1Parser;
+import model.grammar.transform.CNFConverter;
+import model.grammar.typetest.matchers.*;
 
 public class StringGenerator {
-
-	public static final int DEFAULT_NUMBER_TO_GENERATE = 5;
 
 	private Grammar myGrammar;
 
 	private Queue<Derivation> myDerivationsQueue;
 	private Set<SymbolString> myStringsInLanguage, myPossibleStrings;
 
-	private int myNumberToGenerate, currentStringLength,maxLHSsize;
-
-	public StringGenerator(Grammar g) {
-		this(g, DEFAULT_NUMBER_TO_GENERATE);
-	}
+	private int myNumberToGenerate, currentStringLength, maxLHSsize;
 
 	public StringGenerator(FiniteStateAcceptor fsa) {
 		this(new FSAtoRegGrammarConversion(fsa).getConvertedGrammar());
@@ -39,9 +37,9 @@ public class StringGenerator {
 		this(new PDAtoCFGConverter(pda).getConvertedGrammar());
 	}
 
-	public StringGenerator(Grammar g, int numberToGenerate) {
+	public StringGenerator(Grammar g) {
 		myGrammar = g;
-		myNumberToGenerate = numberToGenerate;
+		myNumberToGenerate = g.getTerminals().size();
 
 		myDerivationsQueue = new LinkedList<Derivation>();
 		myStringsInLanguage = new HashSet<SymbolString>();
@@ -58,40 +56,63 @@ public class StringGenerator {
 		}
 
 	}
-	
-	public void clear(){
+
+	private void clear() {
 		myDerivationsQueue.clear();
-		myDerivationsQueue.add(new Derivation(new Production(new SymbolString(), new SymbolString(myGrammar.getStartVariable()))));
 		myPossibleStrings.clear();
 		myStringsInLanguage.clear();
 	}
 
-	public List<SymbolString> generateStringsBrute() {
+	public List<SymbolString> generateStringsBrute(){
+		return generateStringsBrute(myGrammar.getTerminals().size());
+	}
+	public List<SymbolString> generateContextFreeStrings(){
+		return generateContextFreeStrings(myGrammar.getTerminals().size());
+	}
+	
+	public List<SymbolString> generateStringsBrute(int numberToGenerate) {
 		clear();
+		myNumberToGenerate = numberToGenerate;
+		myDerivationsQueue.add(new Derivation(new Production(
+				new SymbolString(), new SymbolString(myGrammar
+						.getStartVariable()))));
 		while (myStringsInLanguage.size() < myNumberToGenerate) {
 			makeNextReplacement();
 		}
 
-		ArrayList<SymbolString> stringsList = new ArrayList<SymbolString>(
-				myStringsInLanguage);
-		Collections.sort(stringsList, new StringComparator());
-		stringsList.add(new SymbolString(new Symbol("...")));
-		return stringsList;
+		return generate();
 	}
-	
-	public List<SymbolString> generateStringsLength(){
-		clear();
-		while (myStringsInLanguage.size() < myNumberToGenerate) {
-			checkStrings();
-		}
 
+	public List<SymbolString> generateContextFreeStrings(int numberToGenerate) {
+		clear();
+		myNumberToGenerate = numberToGenerate;
+		checkForCorrectParser();
+		while (myStringsInLanguage.size() < myNumberToGenerate) {
+			parseNextLengthStrings();
+		}
+		return generate();
+	}
+
+	private List<SymbolString> generate() {
 		ArrayList<SymbolString> stringsList = new ArrayList<SymbolString>(
 				myStringsInLanguage);
 		Collections.sort(stringsList, new StringComparator());
-		stringsList.add(new SymbolString(new Symbol("...")));
 		return stringsList;
 	}
 	
+	public List<SymbolString> generateStringsOfLength(int n){
+		clear();
+		checkForCorrectParser();
+		for (Symbol terminal : myGrammar.getTerminals()) {
+			myPossibleStrings.add(new SymbolString(terminal));
+		}
+		for(int i=1;i<n;i++){
+			getNextLengthStrings();
+		}
+		parsePossibleStrings();
+		return generate();
+	}
+
 	private boolean makeNextReplacement() {
 
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
@@ -103,50 +124,36 @@ public class StringGenerator {
 					SymbolString LHS = result.subList(i, j + 1);
 					for (Production p : myGrammar.getProductionSet()
 							.getProductionsWithLHS(LHS)) {
-						if(myStringsInLanguage.size()>= myNumberToGenerate) break loop;
-							Derivation tempDerivation = d.copy();
-							tempDerivation.addStep(p, result.indexOf(LHS, i));
-							temp.add(tempDerivation);
-							if(tempDerivation.createResult().getSymbolsOfClass(Variable.class).size()==0){
-								myStringsInLanguage.add(tempDerivation.createResult());
-							}
+						if (myStringsInLanguage.size() >= myNumberToGenerate)
+							break loop;
+						Derivation tempDerivation = d.copy();
+						tempDerivation.addStep(p, result.indexOf(LHS, i));
+						temp.add(tempDerivation);
+						if (tempDerivation.createResult()
+								.getSymbolsOfClass(Variable.class).size() == 0) {
+							myStringsInLanguage.add(tempDerivation
+									.createResult());
 						}
 					}
 				}
 			}
+		}
 		myDerivationsQueue.addAll(temp);
 		return true;
 	}
 
-	private class StringComparator implements Comparator<SymbolString> {
-
-		@Override
-		public int compare(SymbolString s1, SymbolString s2) {
-			if (s1.size() != s2.size())
-				return s1.size() - s2.size();
-			return s1.toString().compareTo(s2.toString());
-		}
-
-	}
-
-	private void checkStrings() {
-		
-			if (currentStringLength == 0) {
-			} else if (currentStringLength == 1) {
+	private void parseNextLengthStrings() {
+		if (currentStringLength > 0) {
+			if (currentStringLength == 1) {
 				for (Symbol terminal : myGrammar.getTerminals()) {
 					myPossibleStrings.add(new SymbolString(terminal));
 				}
 			} else {
 				getNextLengthStrings();
 			}
-			BruteParser parser = new RestrictedBruteParser(myGrammar);
-			for (SymbolString string : myPossibleStrings) {
-				if (parser.quickParse(string) && myStringsInLanguage.size() < myNumberToGenerate) {
-					myStringsInLanguage.add(string);
-				}
-			}
-			currentStringLength++;
-		
+			parsePossibleStrings();
+		}
+		currentStringLength++;
 	}
 
 	private void getNextLengthStrings() {
@@ -160,5 +167,41 @@ public class StringGenerator {
 			}
 			myPossibleStrings.remove(string);
 		}
+	}
+	
+	private void parsePossibleStrings(){
+		Parser parser;
+		if(new LL1Checker().matchesGrammar(myGrammar)){
+			parser = new LL1Parser(myGrammar);
+		}
+		else{
+			parser = new CYKParser(myGrammar);
+		}
+		for (SymbolString string : myPossibleStrings) {
+			if (parser.quickParse(string) && myStringsInLanguage.size() < myNumberToGenerate) {
+				myStringsInLanguage.add(string);
+			}
+		}
+	}
+	
+	private void checkForCorrectParser(){
+		if(!new ContextFreeChecker().matchesGrammar(myGrammar)) throw new ParserException("The grammar is not Context-Free."+
+				" Try the brute generation instead.");
+			if(!new LL1Checker().matchesGrammar(myGrammar)){
+				CNFConverter converter = new CNFConverter(myGrammar);
+				converter.stepToCompletion();
+				myGrammar = converter.getTransformedGrammar();
+			}	
+	}
+	
+	private class StringComparator implements Comparator<SymbolString> {
+
+		@Override
+		public int compare(SymbolString s1, SymbolString s2) {
+			if (s1.size() != s2.size())
+				return s1.size() - s2.size();
+			return s1.compareTo(s2);
+		}
+
 	}
 }
