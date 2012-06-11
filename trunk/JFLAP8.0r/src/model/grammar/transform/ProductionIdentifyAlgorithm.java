@@ -39,9 +39,10 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	private void populateIdentifyMap() {
 		for (Production p: this.getOriginalGrammar().getProductionSet()){
-			if(isOfTargetForm(p))
-				myIdentifyMap.add(new IdentifyWrapper(p, 
+			if(isOfTargetForm(p)){
+				myIdentifyMap.add(new IdentifyWrapper(p,
 						shouldRemove(p)));
+			}
 		}
 	}
 
@@ -125,8 +126,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 	public Set<Production> getAllRemovesLeft() {
 		Set<Production> toRemove = new TreeSet<Production>();
 		for (IdentifyWrapper wrap: myIdentifyMap){
-			if (wrap.shouldRemove)
-				toRemove.add(wrap.prod);
+			toRemove.add(wrap.prod);
 		}
 		return toRemove;
 	}
@@ -168,6 +168,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 		if (prod == null)
 			return new BooleanWrapper(false, 
 					"The production " + p + " does not need to be removed.");
+		
 		myIdentifyMap.remove(prod);
 		myToAddSet.addAll(getProductionsToAddForRemoval(p));
 		if (prod.shouldRemove)

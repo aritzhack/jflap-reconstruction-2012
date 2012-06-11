@@ -1,14 +1,17 @@
 package view;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
 
-public interface Saveable {
+public interface Saveable<T> {
 
-	public boolean save(File f);
+	public T getObjectToSave();
 	
 	public boolean shouldBeSaved();
+	
+	public Map<String, Object> getSaveParameters();
 
 }

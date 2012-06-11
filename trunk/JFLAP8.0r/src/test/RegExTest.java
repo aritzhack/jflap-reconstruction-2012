@@ -1,7 +1,11 @@
 package test;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
+import file.xml.XMLCodec;
+
+import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.fsa.DFAtoRegularExpressionConverter;
 import model.algorithms.fsa.NFAtoDFAConverter;
@@ -16,6 +20,8 @@ import model.automata.simulate.AutomatonSimulator;
 import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
+import model.grammar.transform.CNFConverter;
 import model.regex.RegularExpression;
 
 public class RegExTest extends TestHarness{
@@ -23,30 +29,12 @@ public class RegExTest extends TestHarness{
 
 	@Override
 	public void runTest() {
-		InputAlphabet input = new InputAlphabet();
-		RegularExpression regex = new RegularExpression(input);
-
-		for (char i = 'a'; i <= 'z'; i++){
-			regex.getInputAlphabet().add(new Symbol(Character.toString(i)));
-		}
-
-		outPrintln(regex.toString());
-
-		//try removing a symbol
-		regex.getInputAlphabet().remove(new Symbol("a"));
-		outPrintln("Removed a: \n" + regex.toString());
-
-		//try adding a symbol
-		regex.getInputAlphabet().add(new Symbol("a"));
-		outPrintln("Add a: \n" + regex.toString());
+		String toSave = System.getProperties().getProperty("user.dir") +"/filetest";
+		File f = new File(toSave + "/regEx.jff");
+		RegularExpression regex = (RegularExpression) new XMLCodec().decode(f);
 
 		//set regex
 		String in = "((a+b)*+c)";
-		regex.setTo(in);
-		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
-
-		//trim alphabets
-		regex.trimAlphabets();
 		
 		//try matching!
 		boolean matches = regex.matches(in = "aaaaaaaab");
@@ -63,11 +51,26 @@ public class RegExTest extends TestHarness{
 		FiniteStateAcceptor fsa = converter.getCompletedNFA();
 		outPrintln(fsa.toString());
 
+		//convertToGrammar
+		FSAtoRegGrammarConversion c1 = new FSAtoRegGrammarConversion(fsa);
+		c1.stepToCompletion();
+		Grammar g1 = c1.getConvertedGrammar();
+		outPrintln("Grammar from regex: " + g1.toString());
+
+		
+		//convert grammar to CNF
+		CNFConverter c25 = new CNFConverter(g1);
+		c25.stepToCompletion();
+		Grammar g2 = c25.getTransformedGrammar();
+		outPrintln("Grammar to CNF: " + g2.toString());
+
+		
 		//convert to DFA for conversion back to rex
 		NFAtoDFAConverter c2 = new NFAtoDFAConverter(fsa);
 		c2.stepToCompletion();
 		FiniteStateAcceptor dfa = c2.getDFA();
 		outPrintln("NFA converted to DFA:\n" + dfa.toString());
+
 		
 		//test input on DFA to confirm equivalence
 		AutoSimulator sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);

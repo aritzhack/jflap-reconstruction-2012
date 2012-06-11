@@ -20,7 +20,7 @@ import view.formaldef.componentpanel.DefinitionComponentPanel;
 import view.formaldef.componentpanel.SetComponentBar;
 import view.util.undo.UndoKeeper;
 import view.util.undo.UndoableAction;
-import view.util.undo.UndoingActionMenu;
+import view.util.undo.old.UndoingActionMenu;
 
 public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T> {
 

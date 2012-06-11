@@ -17,7 +17,6 @@ public interface JFLAPGUIResources {
 	public static final Color DEFAULT_SWING_BG = UIManager.getColor ( "Panel.background" ),
 								  SPECIAL_SYMBOL = new Color(235, 235, 150),
 								  BAR_SELECTED = new Color(140, 175, 255);
-	public static final String TAB_CHANGED = "tab_change_event";
 	
 	//STATE CONSTANTS//
 	/** The default radius of a state. */

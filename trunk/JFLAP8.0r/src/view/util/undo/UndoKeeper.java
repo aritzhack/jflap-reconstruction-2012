@@ -9,6 +9,10 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.undo.UndoManager;
 
+import view.EditingPanel;
+import view.util.undo.old.UndoableActionEvent;
+import view.util.undo.old.UndoableActionListener;
+
 import errors.BooleanWrapper;
 
 
@@ -17,8 +21,8 @@ import errors.BooleanWrapper;
 
 public class UndoKeeper{
 
-	private Deque<UndoableAction> myUndoQueue;
-	private Deque<UndoableAction> myRedoQueue ;
+	private Deque<ActionWrapper> myUndoQueue;
+	private Deque<ActionWrapper> myRedoQueue ;
 	private ArrayList<UndoableActionListener> myListeners;
 
 	public enum UndoableActionType{
@@ -27,8 +31,8 @@ public class UndoKeeper{
 
 	public UndoKeeper() {
 		myListeners = new ArrayList<UndoableActionListener>();
-		myUndoQueue = new LinkedList<UndoableAction>();
-		myRedoQueue = new LinkedList<UndoableAction>();
+		myUndoQueue = new LinkedList<ActionWrapper>();
+		myRedoQueue = new LinkedList<ActionWrapper>();
 	}
 
 	public boolean addUndoableActionListener(UndoableActionListener listener){
@@ -40,14 +44,16 @@ public class UndoKeeper{
 			l.actionPerformed(event);
 	}
 	
-	public void registerAction(UndoableAction act) {
-		myUndoQueue.push(act);
+	public void registerAction(UndoableAction act, EditingPanel pane) {
+		ActionWrapper wrap = new ActionWrapper(act, pane);
+		myUndoQueue.push(wrap);
 		myRedoQueue.clear();
 	}
 
-	public void registerAndExecuteAction(UndoableAction action){
+	public void registerAndExecuteAction(UndoableAction action, EditingPanel pane){
+		this.registerAction(action, pane);
 		action.redo();
-		this.registerAction(action);
+		pane.update();
 		
 	}
 
@@ -60,18 +66,20 @@ public class UndoKeeper{
 		return genericAct(n, myUndoQueue, myRedoQueue, UndoableActionType.UNDO);
 	}
 
-	public boolean genericAct(int n, Deque<UndoableAction> from, Deque<UndoableAction> to, UndoableActionType help) {
+	public boolean genericAct(int n, Deque<ActionWrapper> from, Deque<ActionWrapper> to, UndoableActionType help) {
 		boolean test = true;
 //		JFLAPUniverse.getActiveController().getView().clearTemporaryStates();
 		while (!from.isEmpty() && n > 0){
+			ActionWrapper wrap = from.peek();
 			switch(help){
-			case UNDO: test = from.peek().undo(); break;
-			case REDO: test = from.peek().redo(); break;
+			case UNDO: test = wrap.action.undo(); break;
+			case REDO: test = wrap.action.redo(); break;
 			}
 			if (!test) break;
-			this.broadcastUndoableEvent(new UndoableActionEvent(this, help, from.peek()));
+			this.broadcastUndoableEvent(new UndoableActionEvent(this, help, from.peek().action));
 			to.push(from.pop());
 			n--;
+			wrap.target.update();
 		}
 		return test;
 	}
@@ -93,11 +101,16 @@ public class UndoKeeper{
 		return !myUndoQueue.isEmpty();
 	}
 
-	public Deque<UndoableAction> getUndos() {
-		return myUndoQueue;
+	private class ActionWrapper{
+
+		private UndoableAction action;
+		private EditingPanel target;
+
+		public ActionWrapper(UndoableAction act, EditingPanel pane) {
+			action = act;
+			target = pane;
+		}
+		
 	}
-	
-	public Deque<UndoableAction> getRedos() {
-		return myRedoQueue;
-	}
+
 }

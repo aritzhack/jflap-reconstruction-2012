@@ -38,7 +38,6 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 			if (trans == null)
 				trans = getTransducerForStructureNode(StructureTransducer.retrieveTypeTag(e),
 																alphs);
-			JFLAPDebug.print(e.getAttribute(STRUCTURE_TYPE_ATTR));
 			comps.add(trans.fromStructureRoot(e));
 		}
 		return buildStructure(comps.toArray());

@@ -20,12 +20,8 @@ public abstract class UndoableAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (!setFields(e)) return;
-		boolean bw = this.redo();
+		this.redo();
 	}
-
-	protected abstract boolean setFields(ActionEvent e);
-	
 
 	public abstract boolean undo();
 
