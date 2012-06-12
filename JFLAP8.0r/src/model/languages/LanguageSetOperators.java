@@ -2,9 +2,12 @@ package model.languages;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import model.automata.InputAlphabet;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -78,31 +81,81 @@ public class LanguageSetOperators {
 		}
 		return results;
 	}
-
-
-	public static Collection<SymbolString> concatenate(Set<SymbolString> lang1, Set<SymbolString> lang2) {
-		Collection<SymbolString> results = new ArrayList<SymbolString>();
-		for (SymbolString a : lang1) {
-			for (SymbolString b : lang2) {
-				SymbolString copy = new SymbolString(a);
-				results.add(copy.concat(b));
+	
+	public static Set<SymbolString> concatination(Set<SymbolString> set1, Set<SymbolString> set2){
+		Set<SymbolString> combinedSet = new TreeSet<SymbolString>();
+		for (SymbolString t1 : set1){
+			for (SymbolString t2 : set2){
+				SymbolString temp = (SymbolString) t1.copy().concat(t2);
+				combinedSet.add(temp);
 			}
 		}
-		return results;
+		return createSortedSet(combinedSet);
 	}
-
-
-	public static void main(String[] args) {
-		Set<SymbolString> one = new TreeSet<SymbolString>();
-		one.add(new SymbolString(new Symbol("a")));
-		one.add(new SymbolString(new Symbol("b")));
-
-		Set<SymbolString> two = new TreeSet<SymbolString>();
-		two.add(new SymbolString(new Symbol("cc")));
-		two.add(new SymbolString(new Symbol("dd")));
-
-		//System.out.println(concatenate(one, two));
-		System.out.println(homomorphism(one, new Symbol("a"), new Symbol("x")));
+	
+	public static Set<SymbolString> reverse(Set<SymbolString> set){
+		Set<SymbolString> reversedSet = new TreeSet<SymbolString>();
+		for(SymbolString t : set){
+			SymbolString temp = (SymbolString) t.copy().reverse();
+			reversedSet.add(temp);
+		}
+		return createSortedSet(reversedSet);
 	}
-
+	
+	public static Set<SymbolString> rightQuotient(Set<SymbolString> set1, Set<SymbolString> set2){
+		Set<SymbolString> combinedSet = new TreeSet<SymbolString>();
+		for(SymbolString t1 : set1){
+			for(SymbolString t2 : set2){
+				if(t1.endsWith(t2)){
+					combinedSet.add((SymbolString) t1.subList(0,t1.size()-t2.size()));
+				}
+			}
+		}
+		return createSortedSet(combinedSet);
+	}
+	
+	public static Set<SymbolString> selfConcatination(Set<SymbolString> set, int n){
+		if(n==0) return new TreeSet<SymbolString>();
+		Set<SymbolString> newSet = new TreeSet<SymbolString>(set);
+		for(int i=1; i<n;i++){
+			newSet = concatination(set, newSet);
+		}
+		return createSortedSet(newSet);
+	}
+	
+	public static Set<SymbolString> starClosure(Set<SymbolString> language, int maxConcat){
+		Set<SymbolString> emptySet = new TreeSet<SymbolString>();
+		emptySet.add(new SymbolString());
+		return createSortedSet((SetOperators.union(emptySet, positiveClosure(language,maxConcat))));
+	}
+	
+	public static Set<SymbolString> positiveClosure(Set<SymbolString> language, int maxConcat){
+		Set<SymbolString> tempSet = new TreeSet<SymbolString>();
+		for(int i=1;i<=maxConcat;i++){
+			tempSet = SetOperators.union(tempSet, selfConcatination(language, i));
+		}
+		return createSortedSet(tempSet);
+	}
+	
+	public static Set<SymbolString> createSortedSet(Set<SymbolString> set){
+		Set<SymbolString> sortedSet = new TreeSet<SymbolString>(new SetComparator());
+		sortedSet.addAll(set);
+		return sortedSet;
+	}
+	
+	public static void main (String[] args) {
+		Set<SymbolString> set = new TreeSet<SymbolString>();
+		Alphabet alphs = new InputAlphabet();
+		for(char i='a';i<='z';i++){
+			alphs.add(new Symbol(i+""));
+		}
+		set.add(SymbolString.createFromString("acdc", alphs));
+		set.add(SymbolString.createFromString("bccd", alphs));
+		Set<SymbolString> set2 = new TreeSet<SymbolString>();
+		set2.add(SymbolString.createFromString("ccd", alphs));
+		set2.add(SymbolString.createFromString("d",alphs));
+		set2.add(SymbolString.createFromString("c",alphs));
+		System.out.println(rightQuotient(set, set2));
+	}
 }
+	
