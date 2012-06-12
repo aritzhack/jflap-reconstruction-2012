@@ -2,7 +2,6 @@ package model.languages;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -20,7 +19,7 @@ import model.formaldef.components.symbols.SymbolString;
  * 
  */
 
-@SuppressWarnings("unchecked")
+
 public class LanguageSetOperators {
 
 
@@ -51,12 +50,7 @@ public class LanguageSetOperators {
 	}
 
 	/**
-	 * Returns the Kleene Star operation applied to a set of {@link Symbol}
-	 * sorted by length then in alphabetical order for those of equal length
 	 * 
-	 * Note that because the Kleene Star produces an infinite set, a finite cap
-	 * must be placed on how many strings are generated. If no parameter value
-	 * is specified, a default value will be automatically used.
 	 * 
 	 * @param symbols
 	 *            the characters in an alphabet
@@ -66,16 +60,16 @@ public class LanguageSetOperators {
 	 * 
 	 */
 
-		public static Collection<SymbolString> kleeneStar(int count, Collection<Symbol> symbols) {
-			Collection<SymbolString> symbolsToStrings = new ArrayList<SymbolString>();
-			for (Symbol sym : symbols) {
-				symbolsToStrings.add(new SymbolString(sym));
-			}
-			
-			return kleeneStar(symbolsToStrings, count);
+	public static Collection<SymbolString> kleeneStar(int count, Collection<Symbol> symbols) {
+		Collection<SymbolString> symbolsToStrings = new ArrayList<SymbolString>();
+		for (Symbol sym : symbols) {
+			symbolsToStrings.add(new SymbolString(sym));
 		}
 
-		
+		return kleeneStar(symbolsToStrings, count);
+	}
+
+
 	public static Collection<SymbolString> homomorphism(Set<SymbolString> strings, Symbol original, Symbol replaceWith) {
 		Collection<SymbolString> results = new ArrayList<SymbolString>();
 		for (SymbolString s : strings) {
