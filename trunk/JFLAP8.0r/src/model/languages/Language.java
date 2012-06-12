@@ -1,9 +1,8 @@
 package model.languages;
 
 /**
- * Utility class for generating a set of strings
- * in a language given a restricted grammar 
- * for the language
+ * 
+ * @author Peggy Li
  */
 
 import java.util.Set;
