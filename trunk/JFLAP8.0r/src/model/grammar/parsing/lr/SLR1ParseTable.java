@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import preferences.JFLAPPreferences;
+import util.UtilFunctions;
+
 import debug.JFLAPDebug;
 
-import universe.preferences.JFLAPPreferences;
 
 import model.automata.State;
 import model.automata.acceptors.Acceptor;
@@ -24,7 +26,6 @@ import model.grammar.parsing.lr.rules.ReduceRule;
 import model.grammar.parsing.lr.rules.SLR1rule;
 import model.grammar.parsing.lr.rules.ShiftRule;
 import model.grammar.parsing.lr.rules.StateUsingRule;
-import model.util.UtilFunctions;
 
 public class SLR1ParseTable {
 

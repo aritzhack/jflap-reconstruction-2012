@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import preferences.JFLAPPreferences;
+
 import debug.JFLAPDebug;
 
-import universe.preferences.JFLAPPreferences;
 
 import errors.BooleanWrapper;
 

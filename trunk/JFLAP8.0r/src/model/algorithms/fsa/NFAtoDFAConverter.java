@@ -11,9 +11,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import util.UtilFunctions;
+
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
+import model.ClosureHelper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
@@ -23,8 +26,6 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
-import model.util.ClosureHelper;
-import model.util.UtilFunctions;
 
 public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcceptor>{
 

@@ -5,7 +5,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+import util.UtilFunctions;
+
 
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
@@ -23,7 +25,6 @@ import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.transform.CNFConverter;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.Operator;
-import model.util.UtilFunctions;
 
 public class RegularExpression extends FormalDefinition {
 

@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import preferences.JFLAPPreferences;
+
 import debug.JFLAPDebug;
 
-import universe.preferences.JFLAPPreferences;
 
 import model.automata.State;
 import model.formaldef.components.symbols.Symbol;

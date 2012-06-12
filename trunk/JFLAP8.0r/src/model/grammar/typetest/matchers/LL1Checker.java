@@ -3,7 +3,8 @@ package model.grammar.typetest.matchers;
 import java.util.Set;
 import java.util.TreeSet;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+
 
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;

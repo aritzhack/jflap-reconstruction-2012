@@ -3,7 +3,8 @@ package model.automata;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+
 
 import errors.BooleanWrapper;
 

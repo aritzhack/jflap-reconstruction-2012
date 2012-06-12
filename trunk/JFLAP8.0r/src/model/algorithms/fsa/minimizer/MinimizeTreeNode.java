@@ -31,12 +31,13 @@ import java.util.TreeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import util.UtilFunctions;
+
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;
-import model.util.UtilFunctions;
 
 /**
  * The Minimize Tree Node object is merely a default mutable tree node with an

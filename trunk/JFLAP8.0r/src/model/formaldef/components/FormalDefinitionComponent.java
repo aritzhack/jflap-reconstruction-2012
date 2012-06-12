@@ -7,7 +7,8 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
-import util.Copyable;
+import oldnewstuff.util.Copyable;
+
 
 import model.formaldef.ChangingObject;
 import model.formaldef.Describable;

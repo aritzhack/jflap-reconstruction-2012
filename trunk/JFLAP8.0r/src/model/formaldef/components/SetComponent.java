@@ -6,9 +6,10 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import oldnewstuff.util.Copyable;
+
 import model.formaldef.components.symbols.Symbol;
 
-import util.Copyable;
 
 import errors.BooleanWrapper;
 

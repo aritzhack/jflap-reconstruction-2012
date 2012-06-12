@@ -3,6 +3,8 @@ package model.automata;
 import java.awt.FontFormatException;
 import java.util.Set;
 
+import util.UtilFunctions;
+
 import debug.JFLAPDebug;
 
 import model.formaldef.FormalDefinition;
@@ -12,7 +14,6 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
-import model.util.UtilFunctions;
 
 public abstract class Automaton<T extends Transition> extends FormalDefinition{
 

@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 import debug.JFLAPDebug;
 
+import model.JFLAPConstants;
 import model.formaldef.Describable;
-import model.util.JFLAPConstants;
 
 public abstract class SteppableAlgorithm implements Describable, JFLAPConstants {
 

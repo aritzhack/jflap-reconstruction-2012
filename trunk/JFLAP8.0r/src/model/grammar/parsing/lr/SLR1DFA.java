@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import debug.JFLAPDebug;
 
+import model.ClosureHelper;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.fsa.FSATransition;
@@ -14,7 +15,6 @@ import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
-import model.util.ClosureHelper;
 
 public class SLR1DFA extends FiniteStateAcceptor {
 

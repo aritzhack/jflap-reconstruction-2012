@@ -22,7 +22,8 @@ package model.pumping;
 
 import java.io.Serializable;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+
 
 
 

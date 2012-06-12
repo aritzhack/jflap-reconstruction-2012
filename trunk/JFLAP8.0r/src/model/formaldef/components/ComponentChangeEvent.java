@@ -2,7 +2,8 @@ package model.formaldef.components;
 
 import javax.swing.event.ChangeEvent;
 
-import model.util.UtilFunctions;
+import util.UtilFunctions;
+
 
 public class ComponentChangeEvent extends ChangeEvent{
 

@@ -1,6 +1,6 @@
 package model.regex;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;

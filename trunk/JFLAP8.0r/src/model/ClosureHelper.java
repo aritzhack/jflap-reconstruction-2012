@@ -1,4 +1,4 @@
-package model.util;
+package model;
 
 import java.util.Set;
 import java.util.TreeSet;

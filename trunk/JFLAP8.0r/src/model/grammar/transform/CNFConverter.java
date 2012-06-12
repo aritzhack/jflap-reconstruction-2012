@@ -5,11 +5,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import oldnewstuff.main.JFLAP;
+
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
 
-import main.JFLAP;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;

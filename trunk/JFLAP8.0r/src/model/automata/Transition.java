@@ -5,7 +5,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
-import util.Copyable;
+import oldnewstuff.util.Copyable;
+
 
 
 

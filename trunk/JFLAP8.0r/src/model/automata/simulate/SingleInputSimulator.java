@@ -8,9 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import oldnewstuff.util.Copyable;
+
 import debug.JFLAPDebug;
 
-import util.Copyable;
 
 import model.algorithms.AlgorithmException;
 import model.automata.Automaton;

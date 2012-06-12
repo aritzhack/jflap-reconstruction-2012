@@ -2,9 +2,10 @@ package model.automata;
 
 import java.lang.reflect.Constructor;
 
-import util.Copyable;
+import oldnewstuff.util.Copyable;
 
-import model.util.JFLAPConstants;
+
+import model.JFLAPConstants;
 
 
 
