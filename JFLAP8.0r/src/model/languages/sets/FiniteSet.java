@@ -1,37 +1,38 @@
 package model.languages.sets;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+
+import model.formaldef.components.symbols.SymbolString;
+import model.languages.SetComparator;
 
 /**
  * 
  * @author Peggy Li
- * @param <T>
- *
  */
 
-public class FiniteSet<T> implements AbstractJflapSet {
+public class FiniteSet implements AbstractJflapSet {
 	
 	private String myDescription;
-	private Set<T> myElements;
+	private Set<SymbolString> myElements;
 	
 	public FiniteSet () {
-		myElements = new HashSet<T>();
+		myElements = new TreeSet<SymbolString>(new SetComparator());
 	}
 	
 	
-	public void add (T element) {
+	public void add (SymbolString element) {
 		myElements.add(element);
 	}
 	
-	public void allAll (T... elements) {
-		for (T e : elements) {
+	public void allAll (SymbolString... elements) {
+		for (SymbolString e : elements) {
 			this.add(e);
 		}
 	}
 	
-	public Collection<T> getElements () {
+	public Collection<SymbolString> getElements () {
 		return myElements;
 	}
 	

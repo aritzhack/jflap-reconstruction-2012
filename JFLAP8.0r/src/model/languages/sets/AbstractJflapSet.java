@@ -1,5 +1,7 @@
 package model.languages.sets;
 
+import model.formaldef.components.symbols.SymbolString;
+
 /**
  * Provides a generic interface for set classes in JFLAP to implement
  * 
@@ -12,6 +14,11 @@ package model.languages.sets;
  */
 
 public interface AbstractJflapSet {
+	
+	
+	public void add(SymbolString stringToAdd);
+	
+	public void allAll(SymbolString... stringsToAdd);
 	
 	/**
 	 * Allows a user to provide a brief description of the set
