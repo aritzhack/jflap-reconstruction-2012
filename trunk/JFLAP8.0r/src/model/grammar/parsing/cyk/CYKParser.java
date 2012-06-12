@@ -264,4 +264,9 @@ public class CYKParser extends Parser {
 		return super.setInput(string);
 	}
 
+	
+	public Set<CYKParseNode>[][] getParseTable() {
+		return myParseTable;
+	}
+	
 }
