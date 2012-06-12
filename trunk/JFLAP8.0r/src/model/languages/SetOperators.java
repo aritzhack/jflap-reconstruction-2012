@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * A collection of useful operations that can be done on generic sets (though for some, the items in the sets
- * must extend Comparable.
+ * must extend Comparable.)
  * @author Ian McMahon
  *
  */

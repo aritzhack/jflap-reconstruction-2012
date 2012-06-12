@@ -11,6 +11,7 @@ package model.languages;
 import java.util.*;
 
 import model.algorithms.conversion.autotogram.*;
+import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.automata.acceptors.fsa.*;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.formaldef.components.symbols.*;
@@ -20,6 +21,7 @@ import model.grammar.parsing.cyk.CYKParser;
 import model.grammar.parsing.ll.LL1Parser;
 import model.grammar.transform.CNFConverter;
 import model.grammar.typetest.matchers.*;
+import model.regex.RegularExpression;
 
 public class StringGenerator {
 
@@ -41,6 +43,14 @@ public class StringGenerator {
 		converter.stepToCompletion();
 		initialize(converter.getConvertedGrammar());
 	}
+	
+	public StringGenerator(RegularExpression regex){
+		RegularExpressionToNFAConversion nfa = new RegularExpressionToNFAConversion(regex);
+		nfa.stepToCompletion();
+		FSAtoRegGrammarConversion converter = new FSAtoRegGrammarConversion(nfa.getCompletedNFA());
+		converter.stepToCompletion();
+		initialize(converter.getConvertedGrammar());
+	}
 
 	public StringGenerator(Grammar g) {
 		initialize(g);
@@ -48,7 +58,7 @@ public class StringGenerator {
 	
 	private void initialize(Grammar g){
 		myGrammar = g;
-
+		
 		myDerivationsQueue = new LinkedList<Derivation>();
 		myStringsInLanguage = new HashSet<SymbolString>();
 		myPossibleStrings = new TreeSet<SymbolString>();
@@ -251,7 +261,7 @@ public class StringGenerator {
 	 * Converts a context free grammar to CNF if it is not in LL(1) form.
 	 */
 	private void checkForCorrectParser(){
-		if(!new ContextFreeChecker().matchesGrammar(myGrammar)) throw new ParserException("The grammar is not Context-Free."+
+		if(! new ContextFreeChecker().matchesGrammar(myGrammar)) throw new ParserException("The grammar is not Context-Free."+
 				" Try the brute generation instead.");
 			if(!new LL1Checker().matchesGrammar(myGrammar)){
 				CNFConverter converter = new CNFConverter(myGrammar);
