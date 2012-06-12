@@ -10,68 +10,105 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 /**
- * Operators that may be performed on sets of strings in languages
- * or symbols that comprise the language's alphabet
+ * Operators that may be performed on a language (set of strings) but not
+ * necessarily on sets consisting of generic objects
  * 
- * Separate from {@link SetOperators} because not all operators
- * necessarily can be applied to all objects in a set
+ * Note: works only with sets of SymbolStrings. Strings, Symbols, etc. should be
+ * converted to SymbolStrings first.
  * 
  * @author Peggy Li
- *
+ * 
  */
 
+@SuppressWarnings("unchecked")
 public class LanguageSetOperators {
 
 
-	/*
-	 * Currently works only with SymbolStrings
-	 */
+	public static Collection<SymbolString> kleeneStar (Collection<SymbolString> strings, int count) {
+		Collection<SymbolString> results = new ArrayList<SymbolString>(strings);
+		ArrayList<SymbolString> prev = new ArrayList<SymbolString>();
+		prev.addAll(strings);
 
-	@SuppressWarnings("unchecked")
-	public synchronized static <T extends SymbolString> Set<T> kleeneStar(Set<T> set, int count) {
-
-		Collection<T> concats = new ArrayList<T>(set);
-		ArrayList<T> prev = new ArrayList<T>();
 		loop: while (true) {
-			for (T a : set) {
-				prev.addAll(set);
-				ArrayList<T> temp = new ArrayList<T>();
-				for (T b : prev) {
-					temp.add((T) new SymbolString(a).concat(b));
+			for (SymbolString s : strings) {
+
+				ArrayList<SymbolString> temp = new ArrayList<SymbolString>();
+				for (SymbolString p : prev) {
+					temp.add(new SymbolString(s).concat(p));
 				}
-				if (concats.size() >= count)
+
+				if (results.size() >= count)
 					break loop;
 
-				concats.addAll(temp);
+				results.addAll(temp);
 				prev.clear();
 				prev.addAll(temp);
 			}
 		}
-		Set<T> result = new TreeSet<T>();
-		result.add((T) new SymbolString());
-		result.addAll(concats);
-		return result;
 
+		results.add(new SymbolString());
+		return results;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T extends SymbolString> Set<T> homomorphism (Set<T> set, Symbol original, Symbol replaceWith) {
-		Set<T> result = new HashSet<T>();
-		for (SymbolString s : set) {
-			T temp = (T) new SymbolString(s);
-			temp.replaceAll(original, replaceWith);
-			result.add(temp);
+	/**
+	 * Returns the Kleene Star operation applied to a set of {@link Symbol}
+	 * sorted by length then in alphabetical order for those of equal length
+	 * 
+	 * Note that because the Kleene Star produces an infinite set, a finite cap
+	 * must be placed on how many strings are generated. If no parameter value
+	 * is specified, a default value will be automatically used.
+	 * 
+	 * @param symbols
+	 *            the characters in an alphabet
+	 * @param count
+	 *            number of strings to generate
+	 * @return <code>count</code> number of strings formed from Kleene Star
+	 * 
+	 */
+
+		public static Collection<SymbolString> kleeneStar(int count, Collection<Symbol> symbols) {
+			Collection<SymbolString> symbolsToStrings = new ArrayList<SymbolString>();
+			for (Symbol sym : symbols) {
+				symbolsToStrings.add(new SymbolString(sym));
+			}
+			
+			return kleeneStar(symbolsToStrings, count);
 		}
-		return result;
-	}
-	
-	
-	public static void main (String[] args) {
-		Set<SymbolString> set = new TreeSet<SymbolString>();
-		set.add(new SymbolString(new Symbol("a")));
-		set.add(new SymbolString(new Symbol("b")));
-		System.out.println(kleeneStar(set, 5));
+
+		
+	public static Collection<SymbolString> homomorphism(Set<SymbolString> strings, Symbol original, Symbol replaceWith) {
+		Collection<SymbolString> results = new ArrayList<SymbolString>();
+		for (SymbolString s : strings) {
+			SymbolString replaced = s.replaceAll(original, replaceWith);
+			results.add(replaced);
+		}
+		return results;
 	}
 
+
+	public static Collection<SymbolString> concatenate(Set<SymbolString> lang1, Set<SymbolString> lang2) {
+		Collection<SymbolString> results = new ArrayList<SymbolString>();
+		for (SymbolString a : lang1) {
+			for (SymbolString b : lang2) {
+				SymbolString copy = new SymbolString(a);
+				results.add(copy.concat(b));
+			}
+		}
+		return results;
+	}
+
+
+	public static void main(String[] args) {
+		Set<SymbolString> one = new TreeSet<SymbolString>();
+		one.add(new SymbolString(new Symbol("a")));
+		one.add(new SymbolString(new Symbol("b")));
+
+		Set<SymbolString> two = new TreeSet<SymbolString>();
+		two.add(new SymbolString(new Symbol("cc")));
+		two.add(new SymbolString(new Symbol("dd")));
+
+		//System.out.println(concatenate(one, two));
+		System.out.println(homomorphism(one, new Symbol("a"), new Symbol("x")));
+	}
 
 }
