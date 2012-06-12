@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import util.UtilFunctions;
+
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
@@ -27,7 +29,6 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.typetest.GrammarType;
-import model.util.UtilFunctions;
 
 public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends Transition> 
 																		extends FormalDefinitionAlgorithm<Grammar> {

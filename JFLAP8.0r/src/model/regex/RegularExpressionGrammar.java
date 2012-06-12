@@ -1,7 +1,7 @@
 package model.regex;
 
+import oldnewstuff.main.JFLAP;
 import debug.JFLAPDebug;
-import main.JFLAP;
 import model.automata.InputAlphabet;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;

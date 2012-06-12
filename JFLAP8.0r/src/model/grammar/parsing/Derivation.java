@@ -7,14 +7,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import util.Copyable;
+import oldnewstuff.util.Copyable;
+import util.UtilFunctions;
+
 
 import debug.JFLAPDebug;
 
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
-import model.util.UtilFunctions;
 
 public class Derivation implements Copyable{
 

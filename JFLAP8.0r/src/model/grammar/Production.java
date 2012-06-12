@@ -5,13 +5,13 @@ import java.util.TreeSet;
 
 
 
+import model.JFLAPConstants;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
-import model.util.JFLAPConstants;
 
 public class Production implements LanguageFunction, Comparable<Production>, JFLAPConstants{
 

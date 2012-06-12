@@ -1,6 +1,6 @@
 package model.automata.simulate;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;

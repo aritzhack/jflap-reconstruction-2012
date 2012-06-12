@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+import util.UtilFunctions;
+
 
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -14,7 +16,6 @@ import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.FirstFollowTable;
-import model.util.UtilFunctions;
 
 public class LL1ParseTable {
 

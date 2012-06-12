@@ -1,5 +1,6 @@
 package model.grammar.parsing.ll;
 
+import preferences.JFLAPPreferences;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.symbols.Symbol;
@@ -12,7 +13,6 @@ import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
-import universe.preferences.JFLAPPreferences;
 
 
 public class LL1Parser extends Parser {

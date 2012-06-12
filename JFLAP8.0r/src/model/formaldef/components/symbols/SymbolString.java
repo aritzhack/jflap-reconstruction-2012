@@ -12,19 +12,20 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
+import oldnewstuff.util.Copyable;
+import preferences.JFLAPPreferences;
+import util.UtilFunctions;
+
 import debug.JFLAPDebug;
 
 
 
-import universe.preferences.JFLAPPreferences;
-import util.Copyable;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.UnionOperator;
-import model.util.UtilFunctions;
 
 
 

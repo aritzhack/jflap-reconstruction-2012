@@ -3,6 +3,7 @@ package model.formaldef;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Observer;
@@ -12,8 +13,10 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import util.Copyable;
+import oldnewstuff.util.Copyable;
 
+
+import model.JFLAPConstants;
 import model.formaldef.components.ChangeTypes;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.ComponentChangeListener;
@@ -22,7 +25,6 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
-import model.util.JFLAPConstants;
 import errors.BooleanWrapper;
 
 
@@ -119,7 +121,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		return new ArrayList<Character>(Arrays.asList(new Character[]{' '}));
 	}
 
-	public AbstractCollection<Alphabet> getAlphabets() {
+	public Collection<Alphabet> getAlphabets() {
 		AbstractCollection<Alphabet> alphs = new ArrayList<Alphabet>();
 
 		for (FormalDefinitionComponent comp : this.getComponents()){

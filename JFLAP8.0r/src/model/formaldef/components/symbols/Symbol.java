@@ -4,9 +4,10 @@ package model.formaldef.components.symbols;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import oldnewstuff.util.Copyable;
+
 import model.regex.EmptySub;
 
-import util.Copyable;
 
 public class Symbol implements Comparable<Symbol>, Copyable{
 
