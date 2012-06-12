@@ -72,4 +72,14 @@ public class CYKParseNode {
 	public int getK(){
 		return k;
 	}
+	
+	
+	/**
+	 * Returns a string representation of the node
+	 */
+	public String toString() {
+		if (LHS == null)
+			return "[ ]";
+		return LHS.toString();
+	}
 }
