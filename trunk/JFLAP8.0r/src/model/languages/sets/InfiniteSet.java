@@ -6,7 +6,7 @@ package model.languages.sets;
  *
  */
 
-public abstract class InfiniteSet {
+public abstract class InfiniteSet implements AbstractJflapSet {
 	
 	
 

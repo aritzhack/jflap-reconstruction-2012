@@ -19,7 +19,8 @@ public interface AbstractJflapSet {
 	 * example: 	"Set of even numbers less than 40
 	 * 				"Strings from alphabet {a, b} where n(a) > 2*n(b)"
 	 */
-	public void setDescription();
+	public void setDescription(String description);
+	
 	
 	/**
 	 * Returns a brief description of the elements in the set, if one exists
@@ -27,6 +28,8 @@ public interface AbstractJflapSet {
 	 * @return description of the set
 	 */
 	public String getDescription();
+	
+
 	
 	
 
