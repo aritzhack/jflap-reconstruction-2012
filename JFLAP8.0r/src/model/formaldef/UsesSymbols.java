@@ -3,6 +3,7 @@ package model.formaldef;
 import java.util.Set;
 
 
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 
 /**
@@ -18,5 +19,7 @@ public interface UsesSymbols {
 
 	public Set<Symbol> getUniqueSymbolsUsed();
 	
-	public boolean purgeOfSymbol(Symbol s);
+//	public boolean purgeOfSymbol(Alphabet a, Symbol s);
+//	
+//	public void applyModification(Symbol from, Symbol to);
 }
