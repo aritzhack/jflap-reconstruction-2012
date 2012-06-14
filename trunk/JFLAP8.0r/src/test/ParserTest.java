@@ -1,5 +1,6 @@
 package test;
 
+import util.UtilFunctions;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.formaldef.components.symbols.SymbolString;
@@ -19,7 +20,6 @@ import model.grammar.parsing.lr.SLR1ParseTable;
 import model.grammar.parsing.lr.SLR1Parser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
-import model.util.UtilFunctions;
 
 public class ParserTest extends GrammarTest {
 

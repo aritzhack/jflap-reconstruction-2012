@@ -2,6 +2,8 @@ package test;
 
 import java.util.Arrays;
 
+import util.UtilFunctions;
+
 import debug.JFLAPDebug;
 
 import model.algorithms.SteppableAlgorithm;
@@ -27,7 +29,6 @@ import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.transform.GrammarTransformAlgorithm;
 import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
-import model.util.UtilFunctions;
 
 public class PDATest extends TestHarness{
 
