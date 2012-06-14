@@ -7,17 +7,15 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import util.Copyable;
 
 import file.xml.formaldef.components.SetComponentTransducer;
 
 
+import util.Copyable;
 
-public abstract class FunctionSetTransducer<T extends LanguageFunction<T>> extends SetComponentTransducer<T> {
+public abstract class FunctionSetTransducer<T extends LanguageFunction> extends SetComponentTransducer<T> {
 
 	
 	private FunctionTransducer<T> mySubTransducer;

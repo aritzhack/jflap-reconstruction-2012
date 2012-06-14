@@ -15,7 +15,6 @@ import debug.JFLAPDebug;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import file.xml.MetaTransducer;
 import file.xml.StructureTransducer;
@@ -62,7 +61,7 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	public FormalDefinitionComponent[] getConstituentComponents(T structure) {
 		Set<FormalDefinitionComponent> comps = new HashSet<FormalDefinitionComponent>();
 		for (FormalDefinitionComponent  comp: structure.getComponents()){
-			if (comp instanceof FunctionSet) continue;
+			if (comp instanceof LanguageFunction) continue;
 			comps.add(comp);
 		}
 		return comps.toArray(new FormalDefinitionComponent[0]);

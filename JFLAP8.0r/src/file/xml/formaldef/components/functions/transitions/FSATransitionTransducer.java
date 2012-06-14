@@ -9,12 +9,10 @@ import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import util.Copyable;
-
 import file.xml.XMLHelper;
 
 public class FSATransitionTransducer extends TransitionTransducer<FSATransition> {
