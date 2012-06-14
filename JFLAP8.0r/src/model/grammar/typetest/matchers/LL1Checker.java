@@ -3,7 +3,7 @@ package model.grammar.typetest.matchers;
 import java.util.Set;
 import java.util.TreeSet;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 
 
 import model.formaldef.components.symbols.Symbol;

@@ -3,13 +3,10 @@ package model.grammar;
 import java.util.Set;
 import java.util.TreeSet;
 
-import errors.BooleanWrapper;
+import util.JFLAPConstants;
 
 
 
-import model.JFLAPConstants;
-import model.change.events.SetToEvent;
-import model.change.rules.applied.BasicProductionRule;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
@@ -17,7 +14,7 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 
-public class Production extends LanguageFunction<Production> implements Comparable<Production>, JFLAPConstants{
+public class Production implements LanguageFunction, Comparable<Production>, JFLAPConstants{
 
 	/** the left hand side of the production. */
 	protected SymbolString myLHS;
@@ -34,21 +31,12 @@ public class Production extends LanguageFunction<Production> implements Comparab
 	 *            the right hand side of the production rule.
 	 */
 	public Production(SymbolString lhs, SymbolString rhs) {
-		this.setFunctionRule(new BasicProductionRule());
-		myLHS = lhs;
-		myRHS = rhs;
-		BooleanWrapper be = this.getRule().checkRule(this);
-		if (be.isError())
-			throw new GrammarException(be.getMessage());
+		setLHS(lhs);
+		setRHS(rhs);
 	}
 
 	public Production(){
 		this(new SymbolString(), new SymbolString());
-	}
-	
-	private Production(SymbolString lhs, SymbolString rhs, boolean no){
-		myLHS = lhs;
-		myRHS = rhs;
 	}
 	
 	public Production(Symbol lhs, Symbol ... rhs) {
@@ -66,13 +54,9 @@ public class Production extends LanguageFunction<Production> implements Comparab
 	 * @param rhs
 	 *            the right hand side
 	 */
-	public boolean setRHS(SymbolString rhs) {
-		return setTo(this.getLHS(), rhs);
-		
-	}
-
-	private boolean setTo(SymbolString lhs, SymbolString rhs) {
-		return applyChange(new ProductionSetToEvent(lhs, rhs));
+	public void setRHS(SymbolString rhs) {
+		checkBadSymbols(rhs);
+		myRHS = rhs;
 	}
 
 	/**
@@ -80,13 +64,27 @@ public class Production extends LanguageFunction<Production> implements Comparab
 	 * 
 	 * @param lhs
 	 *            the left hand side
-	 * @return 
 	 */
-	public boolean setLHS(SymbolString lhs) {
-		return setTo(lhs, this.getRHS());
-
+	public void setLHS(SymbolString lhs) {
+		checkBadSymbols(lhs);
+		myLHS = lhs;
 	}
 
+	private void checkBadSymbols(SymbolString lhs) {
+		if (containsBadSymbol(lhs))
+			throw new ProductionException("The SymbolString set as the LHS or RHS " +
+					"in a production cannot contain non-terminal/non-variable " +
+					"symbols.");
+	}
+
+	private boolean containsBadSymbol(SymbolString side) {
+		for (Symbol s: side){
+			if (!(Grammar.isTerminal(s) ||
+					Grammar.isVariable(s)))
+				return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Returns a string representation of the left hand side of the production
@@ -244,6 +242,11 @@ public class Production extends LanguageFunction<Production> implements Comparab
 		return this.getLHS().isEmpty() && this.getRHS().isEmpty();
 	}
 
+	public boolean purgeOfSymbol(Symbol s) {
+		boolean lhs = this.getLHS().purgeOfSymbol(s); 
+		return this.getRHS().purgeOfSymbol(s) || lhs;
+	}
+
 	
 	public Object[] toArray() {
 		return new Object[]{
@@ -272,40 +275,12 @@ public class Production extends LanguageFunction<Production> implements Comparab
 
 	@Override
 	public Production copy() {
-		return new Production(getLHS().copy(), getRHS().copy());
+		return new Production(this.getLHS().copy(), this.getRHS().copy());
 	}
 	
 	public boolean isLambdaProduction() {
 		return this.getRHS().isEmpty();
 	}
 
-	@Override
-	public boolean setTo(Production other) {
-		return setTo(other.getLHS(), other.getRHS());
-	}
 
-	private class ProductionSetToEvent extends SetToEvent<Production, Production>{
-
-
-		public ProductionSetToEvent(SymbolString lhs, SymbolString rhs) {
-			super(Production.this, Production.this.copy(), new Production(lhs, rhs, true));
-
-		}
-
-
-		@Override
-		public String getName() {
-			return "Edit Production";
-		}
-
-
-		@Override
-		public boolean applyChange() {
-			Production.this.myLHS = getTo().getLHS();
-			Production.this.myRHS = getTo().getRHS();
-			return true;
-		}
-		
-	}
-	
 }

@@ -9,8 +9,6 @@ import util.Copyable;
 
 
 
-
-import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -28,7 +26,7 @@ import model.graph.GraphHelper;
  * @author Thomas Finley, Henry Qin
  */
 
-public abstract class Transition<T extends Transition<T>> extends LanguageFunction<T> implements Comparable<T>{
+public abstract class Transition implements LanguageFunction, Comparable<Transition>{
 
 	/** The states this transition goes between. */
 	private State myFrom;
@@ -183,10 +181,10 @@ public abstract class Transition<T extends Transition<T>> extends LanguageFuncti
 		return getInput().getUniqueSymbolsUsed();
 	}
 
-//	@Override
-//	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-//		return getInput().purgeOfSymbol(null, s);
-//	}
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		return getInput().purgeOfSymbol(s);
+	}
 
 	@Override
 	public int compareTo(Transition o) {
@@ -198,8 +196,4 @@ public abstract class Transition<T extends Transition<T>> extends LanguageFuncti
 		return compare;
 	}
 
-//	@Override
-//	public void applyModification(Symbol from, Symbol to) {
-//		this.getInput().applyModification(from, to);
-//	}
 }

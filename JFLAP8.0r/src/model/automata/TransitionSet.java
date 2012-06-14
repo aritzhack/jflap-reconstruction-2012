@@ -123,7 +123,7 @@ public class TransitionSet<T extends Transition> extends FunctionSet<T> {
 
 	public void purgeofInputSymbol(Symbol s){
 		for (Transition t: this){
-			t.getInput().purgeOfSymbol(null, s);
+			t.getInput().purgeOfSymbol(s);
 		}
 	}
 	

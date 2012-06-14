@@ -1,5 +1,6 @@
 package model.automata.acceptors;
 
+import javax.swing.event.ChangeEvent;
 
 import debug.JFLAPDebug;
 
@@ -10,10 +11,9 @@ import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
 import model.automata.TransitionSet;
-import model.change.ChangeEvent;
-import model.change.events.RemoveEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 
 public abstract class Acceptor<T extends Transition> extends Automaton<T> {
@@ -32,24 +32,18 @@ public abstract class Acceptor<T extends Transition> extends Automaton<T> {
 	}
 	
 	@Override
-	protected void doStateRemoval(State s) {
-		super.doStateRemoval(s);
-		this.getFinalStateSet().remove(s);
-	}
-	
-	@Override
-	public void componentChanged(ChangeEvent event) {
+	public void componentChanged(ComponentChangeEvent event) {
 		FinalStateSet finalStates = getFinalStateSet();
 		if (event.comesFrom(finalStates) &&
 				event.getType() == ITEM_ADDED){
-			State added = ((RemoveEvent<State>) event).getToRemove();
+			State added = (State) event.getArg(0);
 			if(!this.getStates().contains(added)){
 				finalStates.remove(added);
 				throw new FormalDefinitionException("A final state must first be a part " +
 						"of the state set of the accepter.");
 			}
 				
-		} 		
+		}
 		super.componentChanged(event);
 	}
 }

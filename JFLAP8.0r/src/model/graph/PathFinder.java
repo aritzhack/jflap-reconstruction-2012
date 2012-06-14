@@ -36,6 +36,7 @@ public class PathFinder {
 	public <T> List<T> findPath(T from, T to) {
 		List<T> path = recurseForPath(from, to);
 		clear();
+		JFLAPDebug.print(path);
 		if (path.size() < 2 && !from.equals(to)) return null;
 		return path;
 	}

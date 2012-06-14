@@ -1,7 +1,7 @@
 package model.grammar.parsing;
 
-import util.Copyable;
 import errors.BooleanWrapper;
+import util.Copyable;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;

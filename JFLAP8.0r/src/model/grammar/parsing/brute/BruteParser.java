@@ -102,8 +102,7 @@ public abstract class BruteParser extends Parser {
 	private void initializeQueue() {
 		myDerivationsQueue = new LinkedList<Derivation>();
 
-		SymbolString start = 
-				new SymbolString(getGrammar().getStartVariable().toSymbolObject());
+		SymbolString start = new SymbolString(getGrammar().getStartVariable());
 		Derivation d = new Derivation(new Production(new SymbolString(), start));
 		myDerivationsQueue.add(d);
 		myNodesGenerated++;

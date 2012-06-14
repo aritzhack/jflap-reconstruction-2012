@@ -40,7 +40,7 @@ public class CFGtoPDAConverterLL extends CFGtoPDAConverter {
 	@Override
 	protected boolean setUpTransitions() {
 		Symbol bos = this.getConvertedAutomaton().getBottomOfStackSymbol();
-		Variable start = this.getGrammar().getStartVariable().toSymbolObject();
+		Variable start = this.getGrammar().getStartVariable();
 		TransitionSet<PDATransition> transitions = this.getConvertedAutomaton().getTransitions();
 		
 		

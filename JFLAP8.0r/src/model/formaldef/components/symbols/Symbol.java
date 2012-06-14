@@ -1,13 +1,14 @@
 package model.formaldef.components.symbols;
 
 
-import debug.JFLAPDebug;
-import model.change.events.SetToEvent;
-import model.formaldef.components.SetSubComponent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 import model.regex.EmptySub;
 
+import util.Copyable;
 
-public class Symbol extends SetSubComponent<Symbol>{
+public class Symbol implements Comparable<Symbol>, Copyable{
 
 	private String myString;
 	
@@ -15,10 +16,6 @@ public class Symbol extends SetSubComponent<Symbol>{
 		myString = s;
 	}
 	
-	public Symbol(Character c) {
-		this("" + c);
-	}
-
 	/**
 	 * Returns the string associated with this symbol. In
 	 * speacial cases, this may not be used for the actual
@@ -83,49 +80,7 @@ public class Symbol extends SetSubComponent<Symbol>{
 		}
 		
 	}
-
-	@Override
-	public String getDescriptionName() {
-		return "Symbol";
-	}
-
-	@Override
-	public String getDescription() {
-		return "This is a symbol!";
-	}
-
-	@Override
-	public boolean setTo(Symbol other) {
-		return applyChange(new SymbolSetToEvent(other));
-	}
 	
-	private class SymbolSetToEvent extends SetToEvent<Symbol, Symbol>{
-
-		public SymbolSetToEvent(Symbol to) {
-			super(Symbol.this, Symbol.this.copy(), to);
-		}
-
-		@Override
-		public boolean undo() {
-			return setTo(getFrom());
-		}
-
-		@Override
-		public boolean redo() {
-			return setTo(getTo());
-		}
-
-		@Override
-		public String getName() {
-			return "Set " + getDescriptionName();
-		}
-
-		@Override
-		public boolean applyChange() {
-			Symbol.this.myString = this.getTo().myString;
-			return true;
-		}
-		
-	}
+	
 }
 

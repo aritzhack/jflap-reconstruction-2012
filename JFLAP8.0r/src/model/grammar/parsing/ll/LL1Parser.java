@@ -1,6 +1,6 @@
 package model.grammar.parsing.ll;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.symbols.Symbol;
@@ -58,14 +58,14 @@ public class LL1Parser extends Parser {
 			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
 		}
 		myDerivation = new Derivation(createEmptyStart());
-		myStack = new SymbolString(getGrammar().getStartVariable().toSymbolObject());
+		myStack = new SymbolString(getGrammar().getStartVariable());
 		mySymbolsToAdd = new SymbolString();
 		return true;
 	}
 
 	private Production createEmptyStart() {
 		return new Production(new SymbolString(),
-							new SymbolString(getGrammar().getStartVariable().toSymbolObject()));
+							new SymbolString(getGrammar().getStartVariable()));
 	}
 
 	@Override

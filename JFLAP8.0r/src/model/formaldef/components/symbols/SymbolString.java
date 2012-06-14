@@ -12,14 +12,14 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
-import preferences.JFLAPPreferences;
-import util.Copyable;
-import util.UtilFunctions;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
 
 
+import util.Copyable;
+import util.UtilFunctions;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
@@ -187,41 +187,20 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		
 	}
 
-//	@Override
-//	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-//		boolean result = false;
-//		while (this.contains(s)){
-//			result = this.remove(s) || result;
-//		}
-//		return result;
-//	}
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		boolean result = false;
+		while (this.contains(s)){
+			result = this.remove(s) || result;
+		}
+		return result;
+	}
 
 	@Override
 	public Set<Symbol> getUniqueSymbolsUsed() {
 		return new TreeSet<Symbol>(this);
 	}
 
-	/**
-	 * Creates a symbol string based on individual characters.
-	 * Will split into termals and variables if grammar is true;
-	 * @param in
-	 * @return
-	 */
-	public static SymbolString createFromString(String in, boolean grammar){
-		SymbolString newSS = new SymbolString();
-		for(int i = 0; i < in.length(); i++){
-			Character c = in.charAt(i);
-			Symbol s = new Symbol(c);
-			if (grammar && Character.isUpperCase(c)){
-				s = new Variable(s.getString());
-			} else if (grammar){
-				s = new Terminal(s.getString());
-			}
-			newSS.add(s);
-		}
-		return newSS;
-	}
-	
 	public static SymbolString createFromString(String in,
 			FormalDefinition def) {
 		return createFromString(in, def.getAlphabets().toArray(new Alphabet[0]));
@@ -367,11 +346,6 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	public boolean startsWith(Symbol ... symbols) {
 		return this.startsWith(new SymbolString(symbols));
 	}
-
-//	@Override
-//	public void applyModification(Symbol from, Symbol to) {
-//		this.replaceAll(from, to);
-//	}
 
 
 }

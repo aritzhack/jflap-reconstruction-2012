@@ -4,11 +4,10 @@ import java.util.Set;
 
 import model.automata.State;
 import model.automata.Transition;
-import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class PDATransition extends Transition<PDATransition> {
+public class PDATransition extends Transition {
 
 	private SymbolString myPop;
 	private SymbolString myPush;
@@ -45,18 +44,17 @@ public class PDATransition extends Transition<PDATransition> {
 
 
 
-//	@Override
-//	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-//		if (a instanceof StackAlphabet){
-//			boolean purgePop = myPop.purgeOfSymbol(a, s);
-//			boolean purgePush = myPush.purgeOfSymbol(a, s);
-//			return purgePop || purgePush;
-//		}
-//		
-//		
-//		
-//		return super.purgeOfSymbol(a, s);
-//	}
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		
+		boolean purgePop = s.equals(this.getPop());
+		if (purgePop)
+			s.setString("");
+		
+		boolean purgePush = this.getPush().purgeOfSymbol(s);
+		
+		return super.purgeOfSymbol(s) || purgePop || purgePush;
+	}
 
 
 
@@ -124,14 +122,6 @@ public class PDATransition extends Transition<PDATransition> {
 	public String getLabelText() {
 		return this.getInput() + "|" + this.getPop() + ";" + this.getPush();
 	}
-
-
-
-//	@Override
-//	public void applyModification(Symbol from, Symbol to) {
-//		this.getPop().applyModification(from, to);
-//		this.getPush().applyModification(from, to);
-//	}
 	
 	
 

@@ -3,7 +3,7 @@ package model.automata;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 
 
 import errors.BooleanWrapper;
@@ -28,11 +28,6 @@ public class StateSet extends SetComponent<State> {
 		return 'Q';
 	}
 
-	@Override
-	public boolean remove(Object o) {
-		return conditionalDistributeChange(super.remove(o), new RemoveStateEvent(this, (State) o));
-	}
-	
 	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(true);

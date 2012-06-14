@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 import debug.JFLAPDebug;

@@ -3,12 +3,9 @@ package model.grammar;
 import java.util.Set;
 import java.util.TreeSet;
 
-import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 
 public class ProductionSet extends FunctionSet<Production> {
 
@@ -27,10 +24,6 @@ public class ProductionSet extends FunctionSet<Production> {
 		return "The set of production rules for a grammar.";
 	}
 
-	@Override
-	public ProductionSet copy() {
-		return (ProductionSet) super.copy();
-	}
 	/**
 	 * Retrieve all productions in this {@link ProductionSet}
 	 * of the form:
@@ -71,25 +64,6 @@ public class ProductionSet extends FunctionSet<Production> {
 	@Override
 	public Production[] toArray() {
 		return super.toArray(new Production[0]);
-	}
-
-	public Set<Variable> getVariablesUsed() {
-		return getSymbolsOfType(Variable.class);
-	}
-
-	public Set<Terminal> getTerminalsUsed() {
-		return getSymbolsOfType(Terminal.class);
-	}
-
-	private <T extends Symbol> Set<T> getSymbolsOfType(Class<T> clz) {
-		Set<Symbol> used = this.getUniqueSymbolsUsed();
-		Set<T> toReturn = new TreeSet<T>();
-		for (Symbol s: used){
-			if (clz.isAssignableFrom(s.getClass()))
-				toReturn.add(clz.cast(s));
-		}
-		
-		return toReturn;
 	}
 
 }

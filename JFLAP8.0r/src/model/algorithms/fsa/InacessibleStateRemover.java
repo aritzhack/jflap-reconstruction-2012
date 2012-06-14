@@ -83,6 +83,7 @@ public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton
 	}
 
 	public static State[] findAllInacessibleStates(Automaton m) {
+		JFLAPDebug.print(m);
 		State start = m.getStartState();
 		Set<State> inaccessible = new TreeSet<State>();
 		PathFinder finder = new PathFinder(m);
@@ -90,6 +91,7 @@ public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton
 			if (finder.findPath(start, target) == null)
 				inaccessible.add(target);
 		}
+		JFLAPDebug.print(inaccessible);
 		return inaccessible.toArray(new State[0]);
 	}
 

@@ -43,8 +43,7 @@ public class SLR1DFA extends FiniteStateAcceptor {
 			s_prime += "'";
 		}
 		Variable newStart = new Variable(s_prime);
-		Production start = new Production(newStart, 
-					modified.getStartVariable().toSymbolObject());
+		Production start = new Production(newStart, modified.getStartVariable());
 		modified.getVariables().add(newStart);
 		modified.getProductionSet().add(start);
 		modified.setStartVariable(newStart);

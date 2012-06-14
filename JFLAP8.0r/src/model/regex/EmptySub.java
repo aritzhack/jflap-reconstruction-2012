@@ -1,6 +1,6 @@
 package model.regex;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
 
