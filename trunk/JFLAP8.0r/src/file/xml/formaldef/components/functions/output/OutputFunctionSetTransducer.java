@@ -4,20 +4,18 @@ import model.automata.transducers.OutputFunction;
 import model.automata.transducers.OutputFunctionSet;
 import model.formaldef.components.SetComponent;
 
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import util.Copyable;
 
 import file.xml.formaldef.components.functions.FunctionSetTransducer;
 import file.xml.formaldef.components.functions.FunctionTransducer;
 
+import util.Copyable;
 
-public class OutputFunctionSetTransducer<T extends OutputFunction> extends FunctionSetTransducer<OutputFunction> {
+public class OutputFunctionSetTransducer<T extends OutputFunction> extends FunctionSetTransducer<T> {
 
 
-	public OutputFunctionSetTransducer(OutputFunctionTransducer trans) {
+	public OutputFunctionSetTransducer(FunctionTransducer<T> trans) {
 		super(trans);
 	}
 
@@ -27,7 +25,7 @@ public class OutputFunctionSetTransducer<T extends OutputFunction> extends Funct
 	}
 
 	@Override
-	public OutputFunctionSet createEmptyComponent() {
+	public SetComponent<T> createEmptyComponent() {
 		return new OutputFunctionSet<T>();
 	}
 
