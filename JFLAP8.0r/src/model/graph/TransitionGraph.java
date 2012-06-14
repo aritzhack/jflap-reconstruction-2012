@@ -22,12 +22,11 @@ package model.graph;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
+import model.change.ChangeEvent;
+import model.change.ChangeListener;
 
 
 /**
