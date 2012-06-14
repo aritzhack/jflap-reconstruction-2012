@@ -8,7 +8,7 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.regex.EmptySub;
 
-public class FSATransition extends Transition {
+public class FSATransition extends Transition<FSATransition> {
 
 	
 	public FSATransition(State from, State to, SymbolString input) {

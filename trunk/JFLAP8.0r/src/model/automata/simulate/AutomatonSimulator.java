@@ -1,6 +1,6 @@
 package model.automata.simulate;
 
-import oldnewstuff.util.Copyable;
+import util.Copyable;
 import model.automata.Automaton;
 import model.formaldef.Describable;
 import model.formaldef.components.symbols.SymbolString;

@@ -17,10 +17,10 @@ import model.automata.Transition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
+import model.change.rules.GroupingRule;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
-import model.formaldef.rules.GroupingRule;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.StartVariable;
@@ -103,7 +103,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 		
 		StateSet states = this.getConvertedAutomaton().getStates();
 		State startState = this.getConvertedAutomaton().getStartState();
-		Variable startVar = this.getGrammar().getStartVariable();
+		Variable startVar = this.getGrammar().getStartVariable().toSymbolObject();
 		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
 		
 		//do all non-final states

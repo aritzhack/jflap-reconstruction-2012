@@ -5,11 +5,12 @@ import java.util.Set;
 
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public abstract class OutputFunction implements LanguageFunction {
+public abstract class OutputFunction extends LanguageFunction<OutputFunction> {
 
 	private State myState;
 	private SymbolString myOutput;
@@ -25,8 +26,10 @@ public abstract class OutputFunction implements LanguageFunction {
 	}
 
 	@Override
-	public boolean purgeOfSymbol(Symbol s) {
-		return myOutput.purgeOfSymbol(s);
+	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
+		if (a instanceof OutputAlphabet)
+			return myOutput.purgeOfSymbol(a,s);
+		return false;
 	}
 	
 	public State getState(){
@@ -47,6 +50,11 @@ public abstract class OutputFunction implements LanguageFunction {
 		} 
 	}
 
+	@Override
+	public void applyModification(Symbol from, Symbol to) {
+		this.getOutput().applyModification(from, to);
+	}
+	
 	/**
 	 * Checks to see if this output function is associated
 	 * with the transition passed in as an argument. This

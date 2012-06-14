@@ -12,4 +12,9 @@ public class Terminal extends Symbol {
 		return !(o instanceof Variable) && super.equals(o);
 	}
 
+	@Override
+	public String getDescriptionName() {
+		return "Terminal";
+	}
+	
 }
