@@ -1,4 +1,4 @@
-package model.change.events;
+package oldnewstuff.model.change.events;
 
 import model.formaldef.components.Settable;
 import model.formaldef.components.symbols.SpecialSymbol;

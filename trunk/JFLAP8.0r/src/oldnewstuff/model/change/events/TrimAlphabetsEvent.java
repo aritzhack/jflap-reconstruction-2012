@@ -1,4 +1,4 @@
-package model.change.events;
+package oldnewstuff.model.change.events;
 
 import java.util.Map;
 import java.util.Map.Entry;
