@@ -1,6 +1,6 @@
-package model.change.events;
+package oldnewstuff.model.change.events;
 
-import model.change.ChangeEvent;
+import oldnewstuff.model.change.ChangeEvent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.symbols.Symbol;

@@ -1,13 +1,13 @@
-package model.change.interactions;
+package oldnewstuff.model.change.interactions;
 
-import model.change.ChangeDistributor;
-import model.change.ChangeEvent;
-import model.change.ChangeListener;
-import model.change.ChangeRelated;
-import model.change.ChangeTypes;
-import model.change.ChangeDistributingObject;
-import model.change.events.CompoundUndoableChangeEvent;
-import model.change.events.UndoableChangeEvent;
+import oldnewstuff.model.change.ChangeDistributingObject;
+import oldnewstuff.model.change.ChangeDistributor;
+import oldnewstuff.model.change.ChangeEvent;
+import oldnewstuff.model.change.ChangeListener;
+import oldnewstuff.model.change.ChangeRelated;
+import oldnewstuff.model.change.ChangeTypes;
+import oldnewstuff.model.change.events.CompoundUndoableChangeEvent;
+import oldnewstuff.model.change.events.UndoableChangeEvent;
 
 /**
  * An abstract interaction class which is responsible for applying the 
