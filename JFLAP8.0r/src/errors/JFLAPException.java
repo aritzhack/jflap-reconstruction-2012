@@ -19,7 +19,7 @@ import model.formaldef.FormalDefinition;
  * @author Julian
  *
  */
-public abstract class JFLAPException extends RuntimeException {
+public class JFLAPException extends RuntimeException {
 
 	public JFLAPException() {
 		super();

@@ -7,12 +7,13 @@ import java.util.Map.Entry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import util.UtilFunctions;
+
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.Transition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
-import model.util.UtilFunctions;
 import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.functions.FunctionTransducer;

@@ -4,12 +4,14 @@ import model.formaldef.components.SetComponent;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import util.Copyable;
+
 import file.xml.formaldef.components.functions.FunctionSetTransducer;
 
-import util.Copyable;
 
 public class ProductionSetTransducer extends FunctionSetTransducer<Production> {
 
