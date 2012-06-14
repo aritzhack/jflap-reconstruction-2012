@@ -1,6 +1,6 @@
 package model.grammar.parsing.lr;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;

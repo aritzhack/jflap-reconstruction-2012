@@ -1,32 +1,9 @@
 package model.grammar;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-
-import debug.JFLAPDebug;
-
-import preferences.JFLAPPreferences;
 
 import errors.BooleanWrapper;
-import model.change.interactions.CustomModeSymbolModifiedInteraction;
-import model.change.interactions.CustomModeSymbolRemovedInteraction;
-import model.change.interactions.DefaultAddProductionInteraction;
-import model.change.interactions.DefaultRemoveProductionInteraction;
-import model.change.rules.FormalDefinitionRule;
-import model.change.rules.GroupingRule;
-import model.change.rules.IdenticalItemRule;
-import model.change.rules.applied.CustomModeProductionSetRule;
-import model.change.rules.applied.CustomModeStartVariableRule;
-import model.change.rules.applied.DefaultModeInUseRule;
-import model.change.rules.applied.DefaultModeStartSymbolRule;
-import model.change.rules.applied.DisallowedCharacterRule;
-import model.change.rules.applied.TerminalGroupingRule;
-import model.change.rules.applied.TermsVersusVarsIdenticalRule;
-import model.change.rules.applied.VariableGroupingRule;
-import model.change.rules.applied.VarsVersusTermsIdenticalRule;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -35,6 +12,13 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
+import model.formaldef.rules.AlphabetRule;
+import model.formaldef.rules.GroupingRule;
+import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.formaldef.rules.applied.TerminalGroupingRule;
+import model.formaldef.rules.applied.TermsVersusVarsIdenticalRule;
+import model.formaldef.rules.applied.VariableGroupingRule;
+import model.formaldef.rules.applied.VarsVersusTermsIdenticalRule;
 import model.grammar.typetest.GrammarType;
 
 /**
@@ -52,6 +36,7 @@ import model.grammar.typetest.GrammarType;
  */
 public class Grammar extends FormalDefinition{
 
+	private StartVariable myStartVariable;
 	private GroupingPair myGrouping;
 
 	/**
@@ -66,10 +51,8 @@ public class Grammar extends FormalDefinition{
 					ProductionSet functions,
 					StartVariable startVar) {
 		super(variables, terminals, functions, startVar);
-		if (!JFLAPPreferences.isUserDefinedMode()){
-			this.getStartVariable().setTo(JFLAPPreferences.getDefaultStartVariable());
-			this.getVariables().add(JFLAPPreferences.getDefaultStartVariable());
-		}
+		myStartVariable = startVar;
+		setUpRules();
 	}
 	
 	public Grammar(){
@@ -79,15 +62,17 @@ public class Grammar extends FormalDefinition{
 				new StartVariable());
 	}
 
+	private void setUpRules() {
+		DisallowedCharacterRule disallowed = new DisallowedCharacterRule(this);
+		this.getVariables().addRules(disallowed, new VarsVersusTermsIdenticalRule(getTerminals()));
+		this.getTerminals().addRules(disallowed, new TermsVersusVarsIdenticalRule(getVariables()));
+	}
 
 	private void addGroupingPairRules(GroupingPair gp) {
 		if (gp == null) return;
-		VariableAlphabet vars = getVariables();
-		vars.addRules(new VariableGroupingRule(ITEM_ADD, gp),
-						new VariableGroupingRule(ITEM_MODIFY, gp));
-		TerminalAlphabet terms =  getTerminals();
-		terms.addRules(new TerminalGroupingRule(ITEM_ADD, gp),
-										new TerminalGroupingRule(ITEM_MODIFY, gp));
+		
+		this.getVariables().addRules(new VariableGroupingRule(gp));
+		this.getTerminals().addRules(new TerminalGroupingRule(gp));
 		
 	}
 
@@ -162,18 +147,19 @@ public class Grammar extends FormalDefinition{
 	 * Returns the start variable for this grammar
 	 * @return
 	 */
-	public StartVariable getStartVariable(){
-		return getComponentOfClass(StartVariable.class);
+	public Variable getStartVariable(){
+		return getComponentOfClass(StartVariable.class).toSymbolObject();
 	}
-	
-	
 	
 	/**
 	 * Sets the StartVariable to the {@link Variable} v;
 	 * @param s
 	 */
-	public boolean setStartVariable(Variable s){
-		return this.getStartVariable().setTo(s);
+	public void setStartVariable(Variable s){
+		if (!this.getVariables().contains(s))
+			throw new GrammarException("To set the start symbol, it must " +
+					"first be in the Variable Alphabet");
+		myStartVariable.setTo(s);
 	}
 
 	@Override
@@ -193,8 +179,6 @@ public class Grammar extends FormalDefinition{
 	public ProductionSet getProductionSet(){
 		return getComponentOfClass(ProductionSet.class);
 	}
-	
-	
 
 	/**
 	 * Returns true if and only if the variable alphabet has a grouping rule,
@@ -218,7 +202,7 @@ public class Grammar extends FormalDefinition{
 	public Production[] getStartProductions() {
 		ProductionSet startProds = new ProductionSet();
 		for (Production p : this.getProductionSet()){
-			if (p.isStartProduction(this.getStartVariable().toSymbolObject()))
+			if (p.isStartProduction(this.getStartVariable()))
 					startProds.add(p);
 		}
 		return startProds.toArray(new Production[0]);
@@ -234,10 +218,10 @@ public class Grammar extends FormalDefinition{
 
 	@Override
 	public Grammar copy() {
-		return new Grammar(this.getVariables().copy(),
-							this.getTerminals().copy(),
-							this.getProductionSet().copy(),
-							this.getStartVariable().copy());
+		Grammar g = this.alphabetAloneCopy();
+		g.getProductionSet().addAll(this.getProductionSet());
+		g.setStartVariable(this.getStartVariable());
+		return g;
 	}
 
 	public static boolean isStartVariable(Variable a, Grammar gram) {
@@ -247,53 +231,6 @@ public class Grammar extends FormalDefinition{
 	public static boolean isStartProduction(Production p, Grammar g){
 		SymbolString lhs = p.getLHS();
 		return lhs.size() == 1 && lhs.contains(g.getStartVariable());
-	}
-
-
-
-	@Override
-	public void setUpDefaultRulesAndInteractions() {
-		super.setUpDefaultRulesAndInteractions();
-		ProductionSet prods = this.getProductionSet();
-		//add rules
-		StartVariable start = getStartVariable();
-		start.addRules(new DefaultModeStartSymbolRule());
-		
-		//add interactions
-		prods.addInteractions(new DefaultAddProductionInteraction(this));
-		prods.addInteractions(new DefaultRemoveProductionInteraction(this));
-		
-	}
-
-	@Override
-	public void setUpUserDefinedRulesAndInteractions() {
-		VariableAlphabet vars = this.getVariables();
-		TerminalAlphabet terms = this.getTerminals();
-		ProductionSet prods = this.getProductionSet();
-		StartVariable start = getStartVariable();
-		
-		start.addRules(new CustomModeStartVariableRule(vars));
-		prods.addRules(new CustomModeProductionSetRule(ITEM_ADD, vars, terms),
-						new CustomModeProductionSetRule(ITEM_MODIFY, vars, terms));
-		vars.addInteractions(new CustomModeSymbolRemovedInteraction(this),
-							new CustomModeSymbolModifiedInteraction(this));
-		terms.addInteractions(new CustomModeSymbolRemovedInteraction(this),
-					new CustomModeSymbolModifiedInteraction(this));
-//		this.getTerminals().addRules(new TermsVersusVarsIdenticalRule(getVariables()));
-	}
-
-	@Override
-	public Set<Symbol> getUniqueSymbolsUsed(Alphabet alph) {
-		ProductionSet prods = this.getProductionSet();
-		if (alph instanceof VariableAlphabet){
-			Set<Variable> vars = prods.getVariablesUsed();
-			vars.add(this.getStartVariable().toSymbolObject());
-			return new TreeSet<Symbol>(vars);
-		}
-		else if(alph instanceof TerminalAlphabet)
-			return  new TreeSet<Symbol>(prods.getTerminalsUsed());
-				
-		return new HashSet<Symbol>();
 	}
 
 

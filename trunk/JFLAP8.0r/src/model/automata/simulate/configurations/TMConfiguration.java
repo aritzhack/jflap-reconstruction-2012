@@ -2,7 +2,7 @@ package model.automata.simulate.configurations;
 
 import java.util.LinkedList;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
 
 
 import model.automata.State;

@@ -7,19 +7,13 @@ import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 
-import model.change.ChangeEvent;
-import model.change.ChangeListener;
-import model.change.ChangeDistributingObject;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
-import model.grammar.Production;
 
-public abstract class FunctionSet<T extends LanguageFunction<T>> extends SetComponent<T> implements UsesSymbols,
-																									ChangeListener{
+public abstract class FunctionSet<T extends LanguageFunction> extends SetComponent<T> implements UsesSymbols{
 
 	@Override
 	public BooleanWrapper isComplete() {
@@ -32,11 +26,21 @@ public abstract class FunctionSet<T extends LanguageFunction<T>> extends SetComp
 		
 		TreeSet<Symbol> used = new TreeSet<Symbol>();
 		
-		for (LanguageFunction<T> f: this){
+		for (LanguageFunction f: this){
 			used.addAll(f.getUniqueSymbolsUsed());
 		}
 		return used;
 	}
-
-
+	
+	
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		boolean result = false;
+		for (LanguageFunction f: this){
+			result = f.purgeOfSymbol(s) || result;
+		}
+		return result;
+	}
+	
+	
 }

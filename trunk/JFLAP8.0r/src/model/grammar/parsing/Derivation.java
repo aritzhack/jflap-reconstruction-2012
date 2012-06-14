@@ -10,7 +10,6 @@ import java.util.List;
 import util.Copyable;
 import util.UtilFunctions;
 
-
 import debug.JFLAPDebug;
 
 import model.formaldef.components.symbols.SymbolString;

@@ -3,12 +3,7 @@ package model.regex;
 import oldnewstuff.main.JFLAP;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
-import model.change.ChangeDistributor;
-import model.change.ChangeEvent;
-import model.change.ChangeListener;
-import model.change.events.CompoundUndoableChangeEvent;
-import model.change.events.SetComponentEvent;
-import model.change.interactions.Interaction;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
@@ -48,11 +43,10 @@ public class RegularExpressionGrammar extends Grammar {
 	public RegularExpressionGrammar(InputAlphabet alph,
 			OperatorAlphabet ops) {
 		myInputAlph = alph;
+		myInputAlph.addListener(this);
 		myOperatorAlph = ops;
 		TerminalAlphabet terms = this.getTerminals();
 		terms.addAll(ops);
-		myInputAlph.addInteractions(new RegExGrammarAddInteraction(),
-									new RegExGrammarModifyInteraction());
 		this.setVariableGrouping(new GroupingPair('<', '>'));
 		this.getVariables().addAll(START, EXPRESSION);
 		this.setStartVariable(START);
@@ -143,47 +137,27 @@ public class RegularExpressionGrammar extends Grammar {
 	
 	@Override
 	public RegularExpressionGrammar copy(){
-		RegularExpressionGrammar g = new RegularExpressionGrammar(myInputAlph, myOperatorAlph);
+		RegularExpressionGrammar g = (RegularExpressionGrammar) super.copy();
 		ProductionSet prods = g.getProductionSet();
 		prods.clear();
 		prods.addAll(this.getProductionSet());
 		return g;
 	}
 
-	private class RegExGrammarAddInteraction extends Interaction{
-
-		public RegExGrammarAddInteraction() {
-			super(ITEM_ADD, RegularExpressionGrammar.this);
-		}
-
-		@Override
-		protected void addAndApplyInteractions(ChangeEvent e,
-				CompoundUndoableChangeEvent event) {
-			SetComponentEvent<Symbol> e2 = (SetComponentEvent<Symbol>) e;
-			for (Symbol item: e2.getItems())
-				addProduction(item);
-				
-		}
-		
-	}
-	
-	private class RegExGrammarModifyInteraction extends Interaction{
-
-		public RegExGrammarModifyInteraction() {
-			super(ITEM_MODIFY, RegularExpressionGrammar.this);
-		}
-
-		@Override
-		protected void addAndApplyInteractions(ChangeEvent e,
-				CompoundUndoableChangeEvent event) {
-			SetComponentEvent<Symbol> e2 = (SetComponentEvent<Symbol>) e;
-			for (Symbol item: e2.getItems()){
-				removeProductionForSymbol(item);
-				addProductionForSymbol(item);
+	@Override
+	public void componentChanged(ComponentChangeEvent event) {
+		if (event.comesFrom(myInputAlph)){
+			switch (event.getType()){
+			case ALPH_SYMBOL_MODIFY: break;
+				//propagate modify to regex grammar if need be.
+			case ITEM_ADDED:
+				this.inputSymbolAdded((Symbol)event.getArg(0));
+				break;
+			case ITEM_REMOVED:
+				this.inputSymbolRemoved((Symbol)event.getArg(0));
+				break;
 			}
-				
 		}
-		
+		super.componentChanged(event);
 	}
-	
 }

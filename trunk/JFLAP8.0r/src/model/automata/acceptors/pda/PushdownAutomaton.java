@@ -8,13 +8,13 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
-import model.change.ChangeEvent;
-import model.change.rules.applied.BottomOfStackSymbolRule;
 import model.formaldef.FormalDefinition;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.rules.applied.BottomOfStackSymbolRule;
 
 public class PushdownAutomaton extends Acceptor<PDATransition> {
 
@@ -29,7 +29,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 								BottomOfStackSymbol bottom,
 								FinalStateSet finalStates) {
 		super(states, inputAlph, stackAlph, functions, start, bottom, finalStates);
-		this.getStackAlphabet().addInteractions(new BottomOfStackSymbolRule(bottom));
+		this.getStackAlphabet().addRules(new BottomOfStackSymbolRule(bottom));
 		myBotOfStackSymbol = bottom;
 		setBottomOfStackSymbol(bottom.toSymbolObject());
 		
@@ -88,13 +88,22 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 
 	public void purgeofStackSymbol(Symbol s){
 		for (PDATransition t: this.getTransitions()){
-			t.getPop().purgeOfSymbol(null, s);
-			t.getPush().purgeOfSymbol(null, s);
+			t.getPop().purgeOfSymbol(s);
+			t.getPush().purgeOfSymbol(s);
 		}
-		distributeChange();
+		distributeChanged();
 	}
 	
 	
+	@Override
+	public void componentChanged(ComponentChangeEvent event) {
+
+		if (event.comesFrom(getStackAlphabet()) && event.getType() == ITEM_REMOVED){
+			this.purgeofStackSymbol((Symbol) event.getArg(0));
+		}
+		else super.componentChanged(event);
+	}
+
 	@Override
 	public PushdownAutomaton copy() {
 		return new PushdownAutomaton(this.getStates().copy(),

@@ -1,17 +1,30 @@
 package model.regex;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import preferences.JFLAPPreferences;
+import oldnewstuff.universe.preferences.JFLAPPreferences;
+import util.UtilFunctions;
+
+
+import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
 import model.automata.InputAlphabet;
 import model.formaldef.FormalDefinition;
+import model.formaldef.FormalDefinitionException;
+import model.formaldef.UsesSymbols;
+import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.grammar.Grammar;
+import model.grammar.parsing.brute.RestrictedBruteParser;
+import model.grammar.transform.CNFConverter;
+import model.regex.operators.OpenGroup;
+import model.regex.operators.Operator;
 
 public class RegularExpression extends FormalDefinition {
 
@@ -233,6 +246,11 @@ public class RegularExpression extends FormalDefinition {
 		SymbolString temp = getExpression();
 		temp.removeAll(myOperatorAlphabet);
 		return new TreeSet<Symbol>(temp);
+	}
+	
+	@Override
+	public boolean purgeOfSymbol(Symbol s) {
+		return myRegEx.purgeOfSymbol(s) || super.purgeOfSymbol(s);
 	}
 	
 	@Override

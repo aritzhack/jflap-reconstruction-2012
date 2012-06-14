@@ -3,14 +3,12 @@ package model.automata;
 import java.lang.reflect.Constructor;
 
 import util.Copyable;
-
-
-import model.JFLAPConstants;
-import model.formaldef.components.SetSubComponent;
+import util.JFLAPConstants;
 
 
 
-public class State extends SetSubComponent<State> implements JFLAPConstants, Comparable<State>{
+
+public class State implements JFLAPConstants, Comparable<State>, Copyable{
 
 	private String myLabel;
 
@@ -105,21 +103,6 @@ public class State extends SetSubComponent<State> implements JFLAPConstants, Com
 	@Override
 	public int hashCode() {
 		return (int) (Math.pow(2, this.getID()));
-	}
-
-
-
-	@Override
-	public String getDescriptionName() {
-		return "State";
-	}
-
-
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 
