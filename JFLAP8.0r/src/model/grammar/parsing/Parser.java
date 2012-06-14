@@ -1,6 +1,6 @@
 package model.grammar.parsing;
 
-import oldnewstuff.util.Copyable;
+import util.Copyable;
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;

@@ -17,6 +17,7 @@ import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.StartVariable;
 
 public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
@@ -66,7 +67,8 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 												" Therefore this grammar cannot derive any strings " +
 												"and cannot be transformed further.");
 		this.getTransformedGrammar().getProductionSet().clear();
-		this.getTransformedGrammar().setStartVariable(this.getOriginalGrammar().getStartVariable());
+		StartVariable var = this.getTransformedGrammar().getStartVariable();
+		var.setTo(this.getOriginalGrammar().getStartVariable().toSymbolObject());
 		return true;
 	}
 
@@ -125,7 +127,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 
 	private boolean noStartProductionsDeriveTerms() {
-		Variable var = this.getOriginalGrammar().getStartVariable();
+		Variable var = this.getOriginalGrammar().getStartVariable().toSymbolObject();
 		return !myVarsDeriveTerms.contains(var);
 	}
 
@@ -206,11 +208,11 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 	}
 	
 	private boolean isUnreachable(Production p) {
-		if (p.isStartProduction(this.getTransformedGrammar().getStartVariable()))
+		if (p.isStartProduction(this.getTransformedGrammar().getStartVariable().toSymbolObject()))
 			return false;
 		DependencyGraph graph = myConstructDependencyGraphStep.getAlgorithm().getDependencyGraph();
 		Variable lhs = (Variable) p.getLHS().getFirst();
-		Variable start = this.getTransformedGrammar().getStartVariable();
+		Variable start = this.getTransformedGrammar().getStartVariable().toSymbolObject();
 		Variable[] startDependencies = graph.getAllDependencies(start);
 		if (Arrays.asList(startDependencies).contains(lhs))
 			return false;
