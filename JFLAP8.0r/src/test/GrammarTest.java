@@ -1,12 +1,8 @@
 package test;
 
-import preferences.JFLAPPreferences;
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
-import model.undo.UndoKeeper;
 import model.automata.InputAlphabet;
-import model.change.rules.FormalDefinitionRule;
-import model.change.rules.Rule;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
@@ -14,6 +10,7 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
+import model.formaldef.rules.AlphabetRule;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
@@ -31,7 +28,6 @@ public class GrammarTest extends TestHarness {
 
 	@Override
 	public void runTest() {
-		JFLAPPreferences.setUserDefinedMode(true);
 		TerminalAlphabet terms = new TerminalAlphabet();
 		VariableAlphabet vars = new VariableAlphabet();
 		ProductionSet prod = new ProductionSet();
@@ -58,18 +54,9 @@ public class GrammarTest extends TestHarness {
 		prod.add(new Production(B));
 		prod.add(new Production(B, B, B, B, B, B));
 		g.setStartVariable(S);
-		UndoKeeper keeper = new UndoKeeper();
-		g.addListener(keeper);
+		
 		outPrintln("Initial Grammar:\n" + g.toString());
 		
-		//remove symbol
-		g.getVariables().modify(A, B);
-		outPrintln("Remove A:\n" + g.toString());
-
-		//undo
-		keeper.undoLast();
-		outPrintln("UNDO:\n" + g.toString());
-
 		//Remove lambda productions
 		LambdaProductionRemover r1 = new LambdaProductionRemover(g);
 		r1.stepToCompletion();
@@ -116,7 +103,7 @@ public class GrammarTest extends TestHarness {
 						"\tDescription: " + alph.getDescription() + "\n"+
 						"\tRules: " + "\n";
 		
-		for (Rule rule: alph.getRules()){
+		for (AlphabetRule rule: alph.getRules()){
 			ruleString += "\t\t" + rule.toString() + "\n";
 		}
 		

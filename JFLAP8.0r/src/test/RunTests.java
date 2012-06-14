@@ -2,8 +2,6 @@ package test;
 
 import javax.swing.JOptionPane;
 
-import preferences.JFLAPPreferences;
-
 import debug.JFLAPDebug;
 
 import errors.JFLAPError;
@@ -13,15 +11,14 @@ public class RunTests {
 
 	public static Class[] myTests = new Class[]{
 //		PDATest.class,
-//		RegExTest.class, 
+		RegExTest.class, 
 //		FSATest.class, 
-		GrammarTest.class,
+//		GrammarTest.class,
 //		ParserTest.class,
-		FileTester.class
+//		FileTester.class
 	};
 	
 	public static void main(String[] args) {
-		JFLAPPreferences.setUserDefinedMode(false);
 		for (Class c: myTests)
 			tryTest(c);
 	}
@@ -33,6 +30,7 @@ public class RunTests {
 		}catch(Exception e){
 			if (e instanceof JFLAPException)
 				showMessage((JFLAPException) e);
+			else
 				e.printStackTrace();
 		}
 	}
