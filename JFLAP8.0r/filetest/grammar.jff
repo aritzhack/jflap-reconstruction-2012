@@ -3,6 +3,12 @@
 		<symbol>A</symbol>&#13;
 		<symbol>B</symbol>&#13;
 		<symbol>S</symbol>&#13;
+		<symbol>D</symbol>&#13;
+		<symbol>C</symbol>&#13;
+		<symbol>ORANGE</symbol>&#13;
+		<symbol>MOO</symbol>&#13;
+		<symbol>RAG</symbol>&#13;
+		<symbol>HOOT</symbol>&#13;
 	</structure>&#13;
 	<structure type="start_var">&#13;
 		<value>S</value>&#13;
@@ -10,6 +16,7 @@
 	<structure type="terminal_alph">&#13;
 		<symbol>a</symbol>&#13;
 		<symbol>b</symbol>&#13;
+		<symbol>zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz</symbol>&#13;
 	</structure>&#13;
 	<structure type="production_set">&#13;
 		<production>&#13;
