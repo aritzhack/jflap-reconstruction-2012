@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import util.UtilFunctions;
+
 import file.xml.XMLCodec;
 
 import model.algorithms.SteppableAlgorithm;
@@ -31,7 +33,6 @@ import model.languages.StringGenerator;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;
-import model.util.UtilFunctions;
 
 public class StringGeneratorTest {
 

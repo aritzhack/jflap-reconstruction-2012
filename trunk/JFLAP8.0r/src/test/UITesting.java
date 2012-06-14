@@ -5,9 +5,6 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import oldnewstuff.view.JFLAPView;
-import oldnewstuff.view.formaldef.ExplicitDefinitionPanel;
-import oldnewstuff.view.formaldef.FormalDefinitionView;
 import preferences.JFLAPPreferences;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
@@ -15,7 +12,6 @@ import model.grammar.Grammar;
 import model.regex.RegularExpression;
 import errors.ThrowableCatcher;
 import file.xml.XMLCodec;
-import gui.undo.UndoKeeper;
 
 public class UITesting {
 
