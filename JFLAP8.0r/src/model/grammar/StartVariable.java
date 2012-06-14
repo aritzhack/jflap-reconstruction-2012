@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
@@ -20,6 +22,7 @@ public class StartVariable extends SpecialSymbol{
 	public StartVariable(Variable v) {
 		super(v);
 	}
+	
 	
 	public StartVariable(){
 		this ((Variable)null);
@@ -46,13 +49,17 @@ public class StartVariable extends SpecialSymbol{
 	}
 
 	@Override
-	public void setTo(Symbol s) {
+	public boolean setTo(Symbol s) {
 		if (s == null ) 
-			super.setTo(s);
+			return super.setTo(s);
 		else
-			super.setTo(new Variable(s.getString()));
+			return super.setTo(new Variable(s.getString()));
+		
 	}
 	
-	
+	@Override
+	public StartVariable copy() {
+		return (StartVariable) super.copy();
+	}
 	
 }
