@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import oldnewstuff.util.Copyable;
+import util.Copyable;
 import util.UtilFunctions;
 
 

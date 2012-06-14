@@ -27,7 +27,7 @@ public class UnrestrictedBruteParser extends BruteParser{
 	 *         method is NOT gauranteed to return <CODE>null</CODE>)
 	 */
 	private static Grammar optimize(Grammar grammar) {
-		Variable startVariable = grammar.getStartVariable();
+		Variable startVariable = grammar.getStartVariable().toSymbolObject();
 		Production[] prods = grammar.getProductionSet().toArray();
 		// Which symbols in the grammar may possibly lead to just
 		// terminals? First, we just add all those symbols with just
@@ -56,7 +56,7 @@ public class UnrestrictedBruteParser extends BruteParser{
 			}
 		} while (changed);
 		Grammar g = grammar.alphabetAloneCopy();
-		g.setStartVariable(grammar.getStartVariable());
+		g.setStartVariable(grammar.getStartVariable().toSymbolObject());
 		// Need to find a production with just the start var on LHS.
 		int i;
 		for (i = 0; i < prods.length; i++){

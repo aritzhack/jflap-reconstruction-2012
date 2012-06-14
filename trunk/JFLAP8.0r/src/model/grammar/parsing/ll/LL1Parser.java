@@ -58,14 +58,14 @@ public class LL1Parser extends Parser {
 			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
 		}
 		myDerivation = new Derivation(createEmptyStart());
-		myStack = new SymbolString(getGrammar().getStartVariable());
+		myStack = new SymbolString(getGrammar().getStartVariable().toSymbolObject());
 		mySymbolsToAdd = new SymbolString();
 		return true;
 	}
 
 	private Production createEmptyStart() {
 		return new Production(new SymbolString(),
-							new SymbolString(getGrammar().getStartVariable()));
+							new SymbolString(getGrammar().getStartVariable().toSymbolObject()));
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	@Override
 	public Set<Production> getProductionsToAddForRemoval(Production p) {
 		Set<Production> toAdd = new TreeSet<Production>();
-		Symbol start = this.getOriginalGrammar().getStartVariable();
+		Symbol start = this.getOriginalGrammar().getStartVariable().toSymbolObject();
 		Symbol lhs = p.getLHS().getFirst();
 		if (lhs.equals(start))
 			return toAdd;
