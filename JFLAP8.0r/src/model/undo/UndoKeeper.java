@@ -15,12 +15,10 @@ import javax.swing.undo.UndoManager;
 
 import debug.JFLAPDebug;
 
-import model.change.ChangeEvent;
-import model.change.ChangeListener;
-import model.change.events.UndoableChangeEvent;
 
-import oldnewstuff.view.EditingView;
-import oldnewstuff.view.JFLAPView;
+import oldnewstuff.model.change.ChangeEvent;
+import oldnewstuff.model.change.ChangeListener;
+import oldnewstuff.model.change.events.UndoableChangeEvent;
 import util.Copyable;
 
 
