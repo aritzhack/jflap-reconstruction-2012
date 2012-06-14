@@ -9,10 +9,11 @@ import model.automata.transducers.OutputFunction;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.SymbolString;
-import model.util.UtilFunctions;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import util.UtilFunctions;
 
 import file.xml.formaldef.components.functions.FunctionTransducer;
 

@@ -5,7 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import model.util.JFLAPConstants;
+import model.JFLAPConstants;
 
 import file.xml.XMLCodec;
 

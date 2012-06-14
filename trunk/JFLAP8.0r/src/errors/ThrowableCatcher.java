@@ -43,6 +43,10 @@ public class ThrowableCatcher {
 	 *            the throwable we are trying to catch
 	 */
 	public void handle(Throwable throwable) {
+		if (throwable instanceof JFLAPException){
+			JFLAPError.show(throwable.getMessage(), "Error");
+			return;
+		}
 		String message = null;
 		String report = null;
 		try {

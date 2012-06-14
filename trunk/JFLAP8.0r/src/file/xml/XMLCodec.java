@@ -28,7 +28,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.*;
 
 
-import model.util.JFLAPConstants;
+import model.JFLAPConstants;
 
 import org.w3c.dom.*;
 

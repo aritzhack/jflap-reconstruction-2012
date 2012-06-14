@@ -1,6 +1,8 @@
 package file.xml.formaldef.components;
 
 import model.formaldef.components.SetComponent;
+import model.formaldef.components.SetSubComponent;
+
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,9 +11,10 @@ import org.w3c.dom.NodeList;
 
 import util.Copyable;
 
+
 import file.xml.StructureTransducer;
 
-public abstract class SetComponentTransducer<T extends Copyable> extends StructureTransducer<SetComponent<T>> {
+public abstract class SetComponentTransducer<T extends SetSubComponent<T>> extends StructureTransducer<SetComponent<T>> {
 
 	@Override
 	public SetComponent<T> fromStructureRoot(Element root) {
