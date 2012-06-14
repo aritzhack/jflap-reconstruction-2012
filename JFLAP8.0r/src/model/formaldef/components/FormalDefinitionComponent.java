@@ -1,5 +1,6 @@
 package model.formaldef.components;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Observable;
@@ -7,10 +8,16 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
-import oldnewstuff.util.Copyable;
+import util.Copyable;
 
 
-import model.formaldef.ChangingObject;
+import model.change.AdvancedChangingObject;
+import model.change.ChangeEvent;
+import model.change.ChangeListener;
+import model.change.ChangeTypes;
+import model.change.ChangeDistributingObject;
+import model.change.rules.Rule;
+import model.change.rules.FormalDefinitionRule;
 import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import errors.BooleanWrapper;
@@ -21,20 +28,8 @@ import errors.BooleanWrapper;
  * @author Julian Genkins
  *
  */
-public abstract class FormalDefinitionComponent extends ChangingObject implements Describable, Copyable, ChangeTypes{
+public abstract class FormalDefinitionComponent extends AdvancedChangingObject implements Describable, Copyable, ChangeTypes{
 
-	
-	public void distributeChange(int type, Object ... args){
-		ComponentChangeEvent event = new ComponentChangeEvent(this.getClass(), type, args);
-		super.distributeChanged(event);
-	}
-	
-	public boolean conditionalDistributeChange(boolean cond, int type, Object ... args){
-		if (cond) 
-			distributeChange(type, args);
-		return cond;
-	}
-	
 	/**
 	 * Every {@link FormalDefinitionComponent} is traditionally
 	 * associated with a single character abbreviation.
@@ -59,6 +54,8 @@ public abstract class FormalDefinitionComponent extends ChangingObject implement
 	 */
 	@Override
 	public abstract FormalDefinitionComponent copy();
+
+
 	
 	
 }

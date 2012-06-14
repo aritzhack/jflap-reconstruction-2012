@@ -1,91 +1,26 @@
 package model.formaldef.components.alphabets;
 
 
-import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 
-import model.automata.InputAlphabet;
-import model.formaldef.components.FormalDefinitionComponent;
+import model.change.rules.Rule;
+import model.change.rules.applied.BaseRule;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
-import model.formaldef.rules.AlphabetRule;
-import model.formaldef.rules.GroupingRule;
-import model.formaldef.rules.applied.BaseRule;
 
 
 
 public abstract class Alphabet extends SetComponent<Symbol>{
 	
 	
-
-	private Set<AlphabetRule> myRules;
-	
-	public Alphabet(){
-		myRules = new TreeSet<AlphabetRule>();
-		this.addRules(new BaseRule());
-	}
-	
-	
-
-	@Override
-	public boolean add(Symbol s) {
-		this.checkRules(AlphabetActionType.ADD, s);
-		return super.add(s);
-	}
-
-	@Override
-	public boolean remove(Object s) {
-		this.checkRules(AlphabetActionType.REMOVE, (Symbol) s);
-		return super.remove(s);
-	}
-	
-	@Override
-	public boolean removeAll(Collection<? extends Object> symbols) {
-		boolean removed = false;
-		for (Object s: symbols){
-			removed = this.remove((Symbol) s) || removed;
-		}
-		return removed;
-	}
-
-	public boolean equals(Object o){
-		if (!super.equals(o))
-			return false;
-		Alphabet other = (Alphabet) o;
-		return Arrays.equals(super.toArray(), other.toArray());
-		
-	}
 	
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(!this.isEmpty(), "The " + this.toString() + 
 				" is incomplete because it is empty.");
-	}
-
-	
-	public boolean addAll(Symbol... symbols) {
-		return this.addAll(Arrays.asList(symbols));
-	}
-
-	
-	public boolean modify(Symbol oldSymbol, Symbol newSymbol) {
-		this.checkRules(AlphabetActionType.MODIFY, oldSymbol, newSymbol);
-		this.getByString(oldSymbol.toString()).setString(newSymbol.toString());
-		this.distributeChange(ALPH_SYMBOL_MODIFY, oldSymbol, newSymbol);
-		return true;
 	}
 
 	public boolean containsSymbolWithString(String... strings) {
@@ -126,13 +61,13 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 	}
 	
 	@Override
-	public Alphabet clone() {
+	public Alphabet copy() {
 		
 		try {
 			Alphabet alph = this.getClass().newInstance();
 			for (Symbol s: this)
 				alph.add((Symbol) s.copy());
-			for (AlphabetRule rule: this.getRules())
+			for (Rule rule: this.getRules())
 				alph.addRules(rule);
 			return alph;
 		} catch (Exception e) {
@@ -170,19 +105,8 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 		return strings;
 	}
 
-	public <T extends GroupingRule> GroupingRule getRuleOfClass(Class<T> clz) {
-		for (AlphabetRule rule : this.getRules()){
-			if (clz.isAssignableFrom(rule.getClass()))
-				return clz.cast(rule);
-		}
-		return null;
-	}
-	
 	public abstract String getSymbolName();
 
-	public AlphabetRule[] getRules() {
-		return myRules.toArray(new AlphabetRule[0]);
-	}
 
 	@Override
 	public int hashCode() {
@@ -193,31 +117,6 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 		return (1+hash);
 	}
 
-	public boolean removeRule(AlphabetRule rule){
-		return myRules.remove(rule);
-	}
-
-	public boolean addRules(AlphabetRule ... rules){
-		return myRules.addAll(Arrays.asList(rules));
-	}
-
-	private void checkRules(AlphabetActionType type, Symbol ... symbols) throws AlphabetException{
-			for (AlphabetRule rule : myRules){
-				BooleanWrapper bw = new BooleanWrapper(true);
-				switch (type){
-				case ADD: 
-					bw = rule.canAdd(this, symbols[0]); break;
-				case REMOVE:
-					bw = rule.canRemove(this, symbols[0]); break;
-				case MODIFY:
-					bw = rule.canModify(this, symbols[0], symbols[1]); break;
-				}
-				
-				if (bw.isError())
-					throw new AlphabetException(bw.getMessage());
-				
-			}
-	}
 
 	public static boolean addCopiedSymbols(Alphabet alph,
 			Symbol[] toAdd) {
@@ -229,6 +128,4 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 	}
 
 
-	
-	
 }

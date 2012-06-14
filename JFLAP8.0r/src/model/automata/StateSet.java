@@ -29,6 +29,11 @@ public class StateSet extends SetComponent<State> {
 	}
 
 	@Override
+	public boolean remove(Object o) {
+		return conditionalDistributeChange(super.remove(o), new RemoveStateEvent(this, (State) o));
+	}
+	
+	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(true);
 	}

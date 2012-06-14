@@ -1,6 +1,6 @@
 package model.formaldef.components.alphabets;
 
-public enum AlphabetActionType {
+public enum FormalDefinitionActionType {
 
 	ADD,MODIFY,REMOVE;
 	
