@@ -12,6 +12,7 @@ import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
+import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
@@ -22,7 +23,6 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
-import model.grammar.transform.UselessProductionRemover;
 
 public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAutomaton,PDAVariableMapping, PDATransition>{
 
