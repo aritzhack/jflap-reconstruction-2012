@@ -1,5 +1,6 @@
 package model.automata.turing;
 
+import model.automata.AutomatonException;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.Transition;
@@ -14,11 +15,28 @@ public class TuringMachineTransition extends Transition<TuringMachineTransition>
 	private SymbolString[] myReads;
 
 	public TuringMachineTransition(State from, 
+										State to,
+										Symbol read,
+										Symbol write,
+										TuringMachineMove move){
+		this(from, to, 
+				new Symbol[]{read},
+				new Symbol[]{write},
+				new TuringMachineMove[]{move} );
+	}
+	
+	public TuringMachineTransition(State from, 
 							State to, 
 							Symbol[] read, 
 							Symbol[] write, 
 							TuringMachineMove[] move) {
 		super(from, to);
+		
+		if (!(read.length == write.length && 
+				write.length == move.length))
+			throw new AutomatonException("The turing machine transition cannot" +
+					" be created with unequal numbers of reads/writes/moves.");
+		
 		myReads = new SymbolString[read.length];
 		myWrites = new SymbolString[write.length];
 		myMoves = new TuringMachineMove[move.length];
