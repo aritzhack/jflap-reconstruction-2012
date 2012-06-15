@@ -263,6 +263,23 @@ public class CYKParser extends Parser {
 		}
 		return super.setInput(string);
 	}
+	
+	public Set<Symbol> getNodeAtIndex(int row, int col){
+		int previousRow = myStartIndex-1;
+		int previousCol = previousRow + myIncrement;
+		if(myStartIndex-1==-1){
+			previousRow = getInput().size()-myIncrement;
+			previousCol = previousRow+myIncrement-1;
+		}
+		if(myParseTable[row][col]!= null && row==previousRow &&col==previousCol){
+			Set<Symbol> set = new TreeSet<Symbol>();
+			for(CYKParseNode node : myParseTable[row][col]){
+				set.add(node.getLHS());
+			}
+			return set;
+		}
+		return null;
+	}
 
 	
 	public Set<CYKParseNode>[][] getParseTable() {
