@@ -8,11 +8,10 @@ import java.util.Set;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
-import model.algorithms.FormalDefinitionAlgorithm;
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.ConversionAlgorithm;
 import model.automata.Automaton;
 import model.automata.SingleInputTransition;
+import model.automata.Transition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
 import model.formaldef.components.symbols.Symbol;
@@ -25,7 +24,7 @@ import errors.BooleanWrapper;
 
 public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, 
 														 S extends VariableMapping, 
-															E extends SingleInputTransition<E>> 
+															E extends Transition<E>> 
 																			extends ConversionAlgorithm<T, Grammar> {
 	/**
 	 * The {@link Map} of {@link VariableMapping} to {@link Variable}
@@ -37,7 +36,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	 * The set of {@link SingleInputTransition} from the {@link Automaton} that
 	 * have already been converted to productions.
 	 */
-	private HashSet<SingleInputTransition<E>> myConvertedTransitions;
+	private HashSet<Transition<E>> myConvertedTransitions;
 
 	
 	
@@ -138,7 +137,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	@Override
 	public boolean reset() throws AlgorithmException{
 		myMappedVariables = new HashMap<S, Variable>();
-		myConvertedTransitions = new HashSet<SingleInputTransition<E>>();
+		myConvertedTransitions = new HashSet<Transition<E>>();
 		return super.reset();
 	}
 
