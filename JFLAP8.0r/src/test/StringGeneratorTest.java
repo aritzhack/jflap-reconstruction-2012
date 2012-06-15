@@ -23,6 +23,9 @@ import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
+import model.grammar.TerminalAlphabet;
+import model.languages.Language;
+import model.languages.samplelanguages.OddLetterLanguage;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.*;
 import model.grammar.transform.CNFConverter;
@@ -133,10 +136,10 @@ public class StringGeneratorTest {
 //		
 //		System.out.println(ans.toString());
 //		
-//		InputAlphabet in = new InputAlphabet();
-//		for (char i = 'a'; i <= 'z'; i++){
-//			input.add(new Symbol(Character.toString(i)));
-//		}
+		TerminalAlphabet input = new TerminalAlphabet();
+		for (char i = 'a'; i <= 'd'; i++){
+			input.add(new Terminal(Character.toString(i)));
+		}
 //		in.add(new Symbol(Character.toString('a')));
 //		in.add(new Symbol(Character.toString('b')));
 //		RegularExpressionGrammar grammar = new RegularExpressionGrammar(in, new OperatorAlphabet());
@@ -147,12 +150,15 @@ public class StringGeneratorTest {
 //		System.out.println("Strings2: "+UtilFunctions.createDelimitedString(gen2.generateContextFreeStrings(9),"\n"));
 //		System.out.println("Strings3: "+UtilFunctions.createDelimitedString(gen2.generateStringsOfLength(5), "\n"));
 //		
-		XMLCodec codec = new XMLCodec();
-		RegularExpression regex = (RegularExpression) codec.decode(new File(System.getProperties().getProperty("user.dir") +"/filetest/regEx.jff"));
-		StringGenerator LLgen = new StringGenerator(regex);
-
-		List<SymbolString> list = LLgen.generateStringsOfLength(8);
-		System.out.println(UtilFunctions.createDelimitedString(list, "\n"));
+//		XMLCodec codec = new XMLCodec();
+//		RegularExpression regex = (RegularExpression) codec.decode(new File(System.getProperties().getProperty("user.dir") +"/filetest/regEx.jff"));
+//		StringGenerator LLgen = new StringGenerator(regex);
+//
+//		List<SymbolString> list = LLgen.generateStringsOfLength(8);
+//		System.out.println(UtilFunctions.createDelimitedString(list, "\n"));
+		
+		Language lang = new OddLetterLanguage(input, new Terminal("a"));
+		System.out.println(lang.getStrings(50));
 	}
 	
 }
