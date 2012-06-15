@@ -48,7 +48,7 @@ public class CustomModeProductionSetRule extends SetComponentRule<Production> {
 
 	private BooleanWrapper checkValid(List<Production> items) {
 		for (Production p: items){
-			Set<Symbol> used = p.getUniqueSymbolsUsed();
+			Set<Symbol> used = p.getSymbolsUsedForAlphabet(a);
 			used.removeAll(myVars);
 			used.removeAll(myTerms);
 			if (!used.isEmpty()){

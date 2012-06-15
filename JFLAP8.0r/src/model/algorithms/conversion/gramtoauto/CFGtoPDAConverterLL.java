@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;

@@ -27,7 +27,7 @@ import javax.swing.event.ChangeListener;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 
 
 /**
@@ -39,7 +39,7 @@ import model.automata.Transition;
  *
  * @param <T>
  */
-public class TransitionGraph<T extends Transition> extends DirectedGraph<State> 
+public class TransitionGraph<T extends SingleInputTransition<T>> extends DirectedGraph<State> 
 														implements ChangeListener {	
 
 	private Automaton<T> myAutomaton;

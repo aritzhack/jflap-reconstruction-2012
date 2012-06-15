@@ -54,5 +54,18 @@ public class UtilFunctions {
 		List<T> list = Arrays.asList(array);
 		return list.subList(start, end).toArray(array);
 	}
+
+
+	public static int metaCompare(Comparable[] c1,
+			Comparable[] c2) {
+		int compare = new Integer(c1.length).compareTo(c2.length);
+		if (compare != 0) return compare;
+		for(int i = 0; i < c1.length; i++){
+			compare = c1[i].compareTo(c2[i]);
+			if (compare != 0) break;
+
+		}
+		return compare;
+	}
 	
 }

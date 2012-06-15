@@ -7,7 +7,7 @@ import java.awt.geom.QuadCurve2D.Double;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 
 
 

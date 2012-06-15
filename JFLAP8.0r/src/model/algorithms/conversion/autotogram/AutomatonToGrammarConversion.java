@@ -11,7 +11,7 @@ import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
 import model.automata.Automaton;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
 import model.formaldef.components.symbols.Symbol;
@@ -22,7 +22,7 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import errors.BooleanWrapper;
 
-public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S extends VariableMapping, E extends Transition> 
+public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S extends VariableMapping, E extends SingleInputTransition<E>> 
 																			extends FormalDefinitionAlgorithm<T> {
 	/**
 	 * The {@link Grammar} that is being created from the {@link Automaton};
@@ -36,10 +36,10 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	private Map<S, Variable> myMappedVariables;
 
 	/**
-	 * The set of {@link Transition} from the {@link Automaton} that
+	 * The set of {@link SingleInputTransition} from the {@link Automaton} that
 	 * have already been converted to productions.
 	 */
-	private HashSet<Transition> myConvertedTransitions;
+	private HashSet<SingleInputTransition<E>> myConvertedTransitions;
 
 	
 	
@@ -150,7 +150,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		myConvertedGrammar.setVariableGrouping(gp);
 		
 		myMappedVariables = new HashMap<S, Variable>();
-		myConvertedTransitions = new HashSet<Transition>();
+		myConvertedTransitions = new HashSet<SingleInputTransition<E>>();
 		
 		return true;
 	}

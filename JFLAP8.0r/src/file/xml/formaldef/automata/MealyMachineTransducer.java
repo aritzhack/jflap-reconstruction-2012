@@ -30,7 +30,7 @@ public class MealyMachineTransducer extends TransducerTransducer<MealyMachine> {
 	}
 
 	@Override
-	public OutputFunctionSetTransducer createOutputSetTransducer(
+	public OutputFunctionSetTransducer<MealyOutputFunction> createOutputSetTransducer(
 			List<Alphabet> alphs) {
 		OutputAlphabet output = retrieveAlphabet(alphs, OutputAlphabet.class);
 		InputAlphabet input	= retrieveAlphabet(alphs, InputAlphabet.class);

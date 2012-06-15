@@ -21,7 +21,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 					OutputAlphabet outputAlph,
 					TransitionSet<FSATransition> functions, 
 					StartState start,
-					OutputFunctionSet<T> outputFunctions) {
+					OutputFunctionSet outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 
@@ -33,7 +33,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 																			this.getOutputAlphabet(),
 																			new TransitionSet<FSATransition>(),
 																			new StartState(),
-																			new OutputFunctionSet<T>()));
+																			new OutputFunctionSet()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -43,7 +43,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 		return this.getComponentOfClass(OutputAlphabet.class);
 	}
 	
-	public OutputFunctionSet<T> getOutputFunctionSet(){
+	public OutputFunctionSet getOutputFunctionSet(){
 		return this.getComponentOfClass(OutputFunctionSet.class);
 	}
 	
@@ -61,7 +61,8 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 	public void componentChanged(ComponentChangeEvent event) {
 		OutputAlphabet output = this.getOutputAlphabet();
 		if (event.comesFrom(output) && event.getType() == ITEM_REMOVED){
-			this.getOutputFunctionSet().purgeOfSymbol((Symbol) event.getArg(0));
+			this.getOutputFunctionSet().purgeOfSymbol(getOutputAlphabet(), 
+												(Symbol) event.getArg(0));
 		}
 		else 
 			super.componentChanged(event);

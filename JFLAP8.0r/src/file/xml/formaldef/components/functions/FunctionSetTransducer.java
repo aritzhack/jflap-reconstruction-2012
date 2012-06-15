@@ -1,6 +1,6 @@
 package file.xml.formaldef.components.functions;
 
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;

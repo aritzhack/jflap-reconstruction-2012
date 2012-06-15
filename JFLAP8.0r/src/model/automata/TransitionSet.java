@@ -15,7 +15,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 
-public class TransitionSet<T extends Transition> extends FunctionSet<T> {
+public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 
 	private TreeMap<State, Set<T>> transitionsFromStateMap;
 
@@ -121,12 +121,6 @@ public class TransitionSet<T extends Transition> extends FunctionSet<T> {
 		return true;
 	}
 
-	public void purgeofInputSymbol(Symbol s){
-		for (Transition t: this){
-			t.getInput().purgeOfSymbol(s);
-		}
-	}
-	
 	@Override
 	public void clear() {
 		super.clear();

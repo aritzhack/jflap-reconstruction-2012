@@ -3,11 +3,12 @@ package model.automata.acceptors.pda;
 import java.util.Set;
 
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class PDATransition extends Transition {
+public class PDATransition extends SingleInputTransition<PDATransition> {
 
 	private SymbolString myPop;
 	private SymbolString myPush;
@@ -35,27 +36,12 @@ public class PDATransition extends Transition {
 
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
-		Set<Symbol> used = super.getUniqueSymbolsUsed();
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
+		Set<Symbol> used = super.getSymbolsUsedForAlphabet(a);
 		used.addAll(this.getPop());
 		used.addAll(this.getPush());
 		return used;
 	}
-
-
-
-	@Override
-	public boolean purgeOfSymbol(Symbol s) {
-		
-		boolean purgePop = s.equals(this.getPop());
-		if (purgePop)
-			s.setString("");
-		
-		boolean purgePush = this.getPush().purgeOfSymbol(s);
-		
-		return super.purgeOfSymbol(s) || purgePop || purgePush;
-	}
-
 
 
 	public SymbolString getPop() {
@@ -87,7 +73,7 @@ public class PDATransition extends Transition {
 	}
 	
 	@Override
-	public int compareTo(Transition o) {
+	public int compareTo(PDATransition o) {
 		int comp;
 		if ((comp = super.compareTo(o)) != 0) return comp;
 		
@@ -121,6 +107,25 @@ public class PDATransition extends Transition {
 	@Override
 	public String getLabelText() {
 		return this.getInput() + "|" + this.getPop() + ";" + this.getPush();
+	}
+
+
+
+	
+	@Override
+	public SymbolString[] getPartsForAlphabet(Alphabet a) {
+		if (a instanceof StackAlphabet){
+			return new SymbolString[]{this.getPop(), this.getPush()};
+		}
+		return super.getPartsForAlphabet(a);
+	}
+
+
+
+	@Override
+	public boolean isLambdaTransition() {
+		
+		return false;
 	}
 	
 	

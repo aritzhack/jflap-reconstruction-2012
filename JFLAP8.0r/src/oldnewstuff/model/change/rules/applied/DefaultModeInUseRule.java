@@ -39,7 +39,7 @@ public class DefaultModeInUseRule extends SetComponentRule<Symbol> {
 
 	@Override
 	public BooleanWrapper checkRemove(SetComponentEvent<Symbol> event) {
-		Set<Symbol> inUse = myDefinition.getUniqueSymbolsUsed();
+		Set<Symbol> inUse = myDefinition.getSymbolsUsedForAlphabet(a);
 		inUse.retainAll(event.getItems());
 		return new BooleanWrapper(inUse.isEmpty(), 
 									"In Default Mode, you may not remove symbols that" +

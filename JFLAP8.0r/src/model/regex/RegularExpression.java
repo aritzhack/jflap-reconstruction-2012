@@ -242,15 +242,17 @@ public class RegularExpression extends FormalDefinition {
 	}
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		SymbolString temp = getExpression();
 		temp.removeAll(myOperatorAlphabet);
 		return new TreeSet<Symbol>(temp);
 	}
 	
 	@Override
-	public boolean purgeOfSymbol(Symbol s) {
-		return myRegEx.purgeOfSymbol(s) || super.purgeOfSymbol(s);
+	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
+		if (a instanceof InputAlphabet)
+			return myRegEx.removeEach(s);
+		return super.purgeOfSymbol(a, s);
 	}
 	
 	@Override

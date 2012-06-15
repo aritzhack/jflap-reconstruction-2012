@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.StartVariable;
 
 public abstract class SpecialSymbol extends FormalDefinitionComponent implements UsesSymbols {
@@ -57,12 +58,12 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	}
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		return new TreeSet<Symbol>(Arrays.asList(new Symbol[]{mySymbol}));
 	}
 
 	@Override
-	public boolean purgeOfSymbol(Symbol s) {
+	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
 		if (this.equals(s)){
 			this.clear();
 			return true;

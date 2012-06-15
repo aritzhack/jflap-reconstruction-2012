@@ -17,7 +17,7 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 			OutputAlphabet outputAlph,
 			TransitionSet<FSATransition> functions,
 			StartState start,
-			OutputFunctionSet<MealyOutputFunction> outputFunctions) {
+			OutputFunctionSet outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 

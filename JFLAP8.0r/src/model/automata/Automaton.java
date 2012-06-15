@@ -1,21 +1,12 @@
 package model.automata;
 
-import java.awt.FontFormatException;
-import java.util.Set;
-
-import util.UtilFunctions;
-
-import debug.JFLAPDebug;
-
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 
-public abstract class Automaton<T extends Transition> extends FormalDefinition{
+public abstract class Automaton<T extends Transition<T>> extends FormalDefinition{
 
 	public Automaton(FormalDefinitionComponent ... comps) {
 		super(comps); 
@@ -57,7 +48,7 @@ public abstract class Automaton<T extends Transition> extends FormalDefinition{
 			transSet.removeForState(s);
 		}
 		else if (event.comesFrom(getInputAlphabet()) && event.getType() == ITEM_REMOVED){
-			this.getTransitions().purgeofInputSymbol((Symbol) event.getArg(0));
+			this.getTransitions().purgeOfSymbol(getInputAlphabet(),((Symbol) event.getArg(0)));
 		}
 		else super.componentChanged(event);
 	}

@@ -72,7 +72,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	
 	private void constructTerminalDerivationSet() {
-
+		
 		for (Production p : this.getOriginalGrammar().getProductionSet()){
 			if(this.checkDerivesTerminals(p)){
 				myFullDerivesTerminals.add(p);
@@ -101,7 +101,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 				return false;
 			}
 		}
-		myVarsDeriveTerms.add((Variable) p.getLHS().getFirst());
+		myVarsDeriveTerms.addAll(p.getVariablesOnLHS());
 		return true;
 	}
 
@@ -112,9 +112,8 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 			return true;
 		}
 		
-		SymbolString lhs = new SymbolString(v);
 		ProductionSet productions = this.getOriginalGrammar().getProductionSet();
-		for (Production prod: productions.getProductionsWithLHS(lhs)){
+		for (Production prod: productions.getProductionsWithSymbolOnLHS(v)){
 			Set<Production> temp = new TreeSet<Production>(history);
 			if (checkDerivesTerminals(prod, temp)){
 				return true;
@@ -219,6 +218,11 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	public int getNumberInaccessibleProductionsLeft() {
 		return getRemainingInaccessibleProductions().length;
+	}
+	
+	@Override
+	public BooleanWrapper[] checkOfProperForm(Grammar g) {
+		return new BooleanWrapper[0];
 	}
 
 

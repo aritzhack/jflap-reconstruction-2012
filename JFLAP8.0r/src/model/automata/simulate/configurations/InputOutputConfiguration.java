@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
 import model.automata.transducers.Transducer;
@@ -42,7 +42,7 @@ public abstract class InputOutputConfiguration<S extends Transducer<T>, T extend
 
 	private SymbolString getOutputForTransition(
 			FSATransition trans){
-		return this.getAutomaton().getOutputFunctionSet().getOuputForTransition(trans);
+		return this.getAutomaton().getOutputFunctionSet().getOutputForTransition(trans);
 	}
 
 	@Override

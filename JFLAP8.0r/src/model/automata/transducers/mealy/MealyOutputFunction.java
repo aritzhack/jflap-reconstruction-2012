@@ -1,11 +1,13 @@
 package model.automata.transducers.mealy;
 
+import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 
-public class MealyOutputFunction extends OutputFunction {
+public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 
 	private SymbolString myInput;
 
@@ -29,14 +31,34 @@ public class MealyOutputFunction extends OutputFunction {
 		return myInput;
 	}
 	
-	public void setInput(SymbolString s){
-		myInput = s;
+	public boolean setInput(SymbolString s){
+		return myInput.setTo(s);
+	}
+	
+	@Override
+	public boolean setTo(OutputFunction other) {
+		setInput(((MealyOutputFunction) other).getInput());
+		return super.setTo(other);
+	}
+	
+	@Override
+	public SymbolString[] getPartsForAlphabet(Alphabet a) {
+		if (a instanceof InputAlphabet)
+			return new SymbolString[]{getInput()};
+		return super.getPartsForAlphabet(a);
 	}
 	
 	@Override
 	public boolean matches(FSATransition trans) {
 		return this.getInput().equals(trans.getInput()) &&
 				this.getState().equals(trans.getFromState());
+	}
+
+	@Override
+	public int compareTo(OutputFunction o) {
+		int compare = super.compareTo(o);
+		if (compare != 0) return compare;
+		return this.getInput().compareTo(((MealyOutputFunction) o).getInput());
 	}
 
 }

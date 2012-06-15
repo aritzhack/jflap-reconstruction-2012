@@ -4,13 +4,13 @@ import java.lang.reflect.Constructor;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.simulate.Configuration;
 import model.formaldef.components.symbols.SymbolString;
 
 
 public abstract class SingleSecondaryConfiguration<S extends Automaton<T>, 
-														T extends Transition> 
+														T extends SingleInputTransition<T>> 
 															  extends InputUsingConfiguration<S, T> {
 
 	public SingleSecondaryConfiguration(S a, State s, int pos, SymbolString input,

@@ -78,8 +78,8 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	}
 
 	public void trimAlphabets(){
-		Set<Symbol> used = this.getUniqueSymbolsUsed();
 		for (Alphabet a: this.getAlphabets()){
+			Set<Symbol> used = this.getSymbolsUsedForAlphabet(a);
 			a.retainAll(used);
 		}
 	}
@@ -147,17 +147,18 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 
 	public Set<Symbol> getUnusedSymbols() {
 		Set<Symbol> symbols = this.getAllSymbolsInAlphabets();
-		symbols.removeAll(this.getUniqueSymbolsUsed());
+		for (Alphabet a: this.getAlphabets())
+			symbols.removeAll(this.getSymbolsUsedForAlphabet(a));
 		return symbols;
 	}
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		TreeSet<Symbol> used = new TreeSet<Symbol>();
 
 		for (FormalDefinitionComponent f: this.getComponents()){
 			if (f instanceof UsesSymbols)
-				used.addAll(((UsesSymbols) f).getUniqueSymbolsUsed());
+				used.addAll(((UsesSymbols) f).getSymbolsUsedForAlphabet(a));
 		}
 
 		return used;
@@ -172,11 +173,11 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	}
 
 	@Override
-	public boolean purgeOfSymbol(Symbol s){
+	public boolean purgeOfSymbol(Alphabet a, Symbol s){
 		boolean result = false;
 		for (FormalDefinitionComponent f: this.getComponents()){
 			if (f instanceof UsesSymbols)
-				result = ((UsesSymbols) f).purgeOfSymbol(s) || result;
+				result = ((UsesSymbols) f).purgeOfSymbol(a, s) || result;
 		}
 		this.distributeChanged();
 		return result;
@@ -194,7 +195,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 			if (event.comesFrom(a)){
 				switch (event.getType()){
 				case ITEM_REMOVED: 
-					this.purgeOfSymbol((Symbol) event.getArg(0));
+					this.purgeOfSymbol(a, (Symbol) event.getArg(0));
 
 				}
 			}

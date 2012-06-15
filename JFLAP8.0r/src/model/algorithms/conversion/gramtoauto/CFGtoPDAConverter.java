@@ -9,7 +9,7 @@ import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;

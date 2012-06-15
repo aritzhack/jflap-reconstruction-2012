@@ -4,7 +4,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.SymbolString;
 
-public class OutputFunctionSet<T extends OutputFunction> extends FunctionSet<T> {
+public class OutputFunctionSet<T extends OutputFunction<T>> extends FunctionSet<T> {
 
 	@Override
 	public Character getCharacterAbbr() {
@@ -21,8 +21,8 @@ public class OutputFunctionSet<T extends OutputFunction> extends FunctionSet<T> 
 		return "The set of functions that determine the output of a transducer.";
 	}
 
-	public SymbolString getOuputForTransition(FSATransition trans) {
-		for (T func: this){
+	public SymbolString getOutputForTransition(FSATransition trans) {
+		for (OutputFunction func: this){
 			if (func.matches(trans))
 				return func.getOutput();
 		}

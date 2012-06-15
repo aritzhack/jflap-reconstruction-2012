@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import model.automata.Automaton;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.components.symbols.Symbol;

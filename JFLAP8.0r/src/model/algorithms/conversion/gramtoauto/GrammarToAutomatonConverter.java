@@ -20,7 +20,7 @@ import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -30,7 +30,7 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.typetest.GrammarType;
 
-public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends Transition> 
+public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends SingleInputTransition<S>> 
 																		extends FormalDefinitionAlgorithm<Grammar> {
 
 	

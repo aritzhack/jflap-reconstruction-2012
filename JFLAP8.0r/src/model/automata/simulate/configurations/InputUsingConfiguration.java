@@ -2,13 +2,13 @@ package model.automata.simulate.configurations;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.simulate.Configuration;
 import model.formaldef.components.symbols.SymbolString;
 
 
 public abstract class InputUsingConfiguration<S extends Automaton<T>, 
-										T extends Transition> 
+										T extends SingleInputTransition<T>> 
 																	extends Configuration<S,T> {
 
 	public InputUsingConfiguration(S a, State s, int pos, SymbolString input, SymbolString ... strings) {
