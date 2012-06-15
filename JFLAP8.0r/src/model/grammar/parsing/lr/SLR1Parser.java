@@ -116,12 +116,12 @@ public class SLR1Parser extends Parser {
 		else if(current instanceof ReduceRule){
 			int i = ((ReduceRule)current).getProductionIndex();
 			Production p = myTable.getProductionForIndex(i);
-			for (int k = 0; k< p.getRHS().size(); k++){
+			for (int k = 0; k< p.getRHS().length; k++){
 				myStack.pollFirst();
 				myStack.pollFirst();
 			}
 			nextState = getStateForID((Integer) myStack.peekFirst());
-			nextCol = p.getLHS().getFirst();
+			nextCol = p.getLHS()[0];
 			myDerivation.add(p);
 		}
 		else{

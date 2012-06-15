@@ -229,8 +229,8 @@ public class Grammar extends FormalDefinition{
 	}
 	
 	public static boolean isStartProduction(Production p, Grammar g){
-		SymbolString lhs = p.getLHS();
-		return lhs.size() == 1 && lhs.contains(g.getStartVariable());
+		return p.getLHS().length == 1
+				&& p.containsSymbolOnLHS(g.getStartVariable());
 	}
 
 

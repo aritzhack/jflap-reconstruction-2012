@@ -292,16 +292,16 @@ public class FirstFollowTable {
 	 * @param rhs
 	 * @return
 	 */
-	public Set<Terminal> retrieveFirstSet(SymbolString rhs) {
+	public Set<Terminal> retrieveFirstSet(Symbol[] rhs) {
 		if (!this.isComplete())
 			throw new ParserException("The FIRST/FOLLOW table must be " +
 					"complete before you may use it to retrieve info.");
 		Set<Terminal> first = new TreeSet<Terminal>();
 		Terminal empty = JFLAPPreferences.getSubForEmptyString();
 		first.add(empty);
-		for (int i = 0; i< rhs.size(); i++){
+		for (int i = 0; i< rhs.length; i++){
 			first.remove(empty);
-			Symbol s = rhs.get(i);
+			Symbol s = rhs[i];
 			if (Grammar.isTerminal(s)){
 				first.add((Terminal) s);
 				break;
@@ -388,7 +388,7 @@ public class FirstFollowTable {
 		return recursiveFirst(v, g, new TreeSet<Variable>());
 	}
 	
-	private static Set<Terminal> recursiveFirst(SymbolString ss, Grammar g, Set<Variable> history){
+	private static Set<Terminal> recursiveFirst(Symbol[] symbols, Grammar g, Set<Variable> history){
 		//Otherwise, check variables on RHS
 		Set<Terminal> first = new TreeSet<Terminal>();
 		Terminal empty = JFLAPPreferences.getSubForEmptyString();
@@ -397,9 +397,9 @@ public class FirstFollowTable {
 //		be removed below anyway
 		first.add(empty);
 		
-		for (int i = 0; i < ss.size(); i++){
+		for (int i = 0; i < symbols.length; i++){
 			first.remove(empty);
-			Symbol sym = ss.get(i);
+			Symbol sym = symbols[i];
 			first.addAll(recursiveFirst(sym, g, history));
 //			if the symbol does not derives lambda, then break out of the loop.
 			if (!GrammarUtil.derivesLambda(sym, g))
@@ -407,8 +407,11 @@ public class FirstFollowTable {
 			
 //			else update history and recurse...you know sym must be a var
 			history = new TreeSet<Variable>(history);
-			history.add((Variable) sym);
-			first.addAll(recursiveFirst(ss.subList(i+1), g, history));
+			history.add((Variable) sym); //i+1
+			first.addAll(
+					recursiveFirst(Arrays.copyOfRange(symbols, i+1, symbols.length),
+					g, 
+					history));
 		}
 		return first;
 	}
@@ -467,16 +470,16 @@ public class FirstFollowTable {
 		
 		for (Production p: prods){
 			Set<Terminal> toAdd = new TreeSet<Terminal>();
-			SymbolString rhs = p.getRHS();
+			Symbol[] rhs = p.getRHS();
 			
 			//find all instances of V on the RHS of p
-			for (int i = 0; i < rhs.size(); i++){
-				Symbol s = rhs.get(i);
+			for (int i = 0; i < rhs.length; i++){
+				Symbol s = rhs[i];
 				if (!s.equals(v)) continue;
 				
 				//Assume of the form A -> vBw
 				
-				SymbolString w = rhs.subList(i+1);
+				Symbol[] w = Arrays.copyOfRange(rhs, i+1, rhs.length);
 				
 				Set<Terminal> firstW = recursiveFirst(w, g, new TreeSet<Variable>());
 				toAdd.addAll(firstW);
@@ -484,7 +487,7 @@ public class FirstFollowTable {
 				//if FIRST(w) contains lambda, then FOLLOW(A) is in FOLLOW(B)
 				if (firstW.contains(empty)){
 					toAdd.remove(empty);
-					Variable A = (Variable) p.getLHS().getFirst();
+					Variable A = (Variable) p.getLHS()[0];
 					toAdd.addAll(recursiveFollow(A,g,history));
 					//also at this point we have exhausted the production
 					break;

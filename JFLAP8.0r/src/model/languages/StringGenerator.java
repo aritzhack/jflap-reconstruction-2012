@@ -68,12 +68,7 @@ public class StringGenerator {
 		SymbolString start = new SymbolString(myGrammar.getStartVariable());
 		Derivation d = new Derivation(new Production(new SymbolString(), start));
 		myDerivationsQueue.add(d);
-		maxLHSsize = 0;
-		for (Production p : g.getProductionSet()) {
-			if (p.getLHS().size() > maxLHSsize) {
-				maxLHSsize = p.getLHS().size();
-			}
-		}
+		maxLHSsize = myGrammar.getProductionSet().getMaxLHSLength();
 	}
 
 	private void clear() {

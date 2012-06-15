@@ -22,6 +22,7 @@ package model.lsystem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -101,13 +103,13 @@ public class LSystem implements Serializable {
 		Map reps = new HashMap();
 		Production[] p = replacements.getProductionSet().toArray(new Production[0]);
 		for (int i = 0; i < p.length; i++) {
-			SymbolString replace = p[i].getLHS();
+			Symbol[] replace = p[i].getLHS();
 			ArrayList currentReplacements = null;
 			if (!reps.containsKey(replace))
 				reps.put(replace, currentReplacements = new ArrayList());
 			else
 				currentReplacements = (ArrayList) reps.get(replace);
-			List currentSubstitution = p[i].getRHS();
+			List currentSubstitution = Arrays.asList(p[i].getRHS());
 			try {
 				List lastSubstitution = (List) currentReplacements
 						.get(currentReplacements.size() - 1);

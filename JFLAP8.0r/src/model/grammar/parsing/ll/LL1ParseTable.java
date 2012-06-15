@@ -19,7 +19,7 @@ import model.grammar.parsing.FirstFollowTable;
 
 public class LL1ParseTable {
 
-	private Set<SymbolString> myTable[][];
+	private Set<Symbol[]> myTable[][];
 	private FirstFollowTable myFirstFollow;
 	private Grammar myGrammar;
 	private Variable[] myRows;
@@ -36,7 +36,7 @@ public class LL1ParseTable {
 		myTable = new Set[myRows.length][myColumns.length];
 		for (int i = 0; i< myRows.length;i++){
 			for (int j = 0; j < myColumns.length; j++){
-				myTable[i][j] = new TreeSet<SymbolString>();
+				myTable[i][j] = new TreeSet<Symbol[]>();
 			}
 		}
 		if (complete)
@@ -67,7 +67,7 @@ public class LL1ParseTable {
 	public boolean addEntryForProduction(Production p) {
 		Set<Terminal> terms = myFirstFollow.retrieveFirstSet(p.getRHS());
 		Terminal empty = JFLAPPreferences.getSubForEmptyString();
-		Variable A = (Variable) p.getLHS().getFirst();
+		Variable A = (Variable) p.getLHS()[0];
 		if (terms.contains(empty)){
 			terms = myFirstFollow.getFollow(A);
 		}
@@ -82,15 +82,15 @@ public class LL1ParseTable {
 		
 	}
 
-	public boolean setValue(SymbolString rhs, Variable a, Terminal t) {
+	public boolean setValue(Symbol[] symbols, Variable a, Terminal t) {
 		int r = getRowForVar(a);
 		int c = getColForTerm(t);
-		return setValue(rhs, r, c);
+		return setValue(symbols, r, c);
 	}
 	
 
 
-	private boolean setValue(SymbolString rhs, int r, int c) {
+	private boolean setValue(Symbol[] rhs, int r, int c) {
 		return myTable[r][c].add(rhs);
 	}
 

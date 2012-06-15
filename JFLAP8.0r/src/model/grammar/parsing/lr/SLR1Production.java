@@ -14,9 +14,9 @@ public class SLR1Production extends Production {
 			myMarkIndex = i;
 	}
 
-	private static SymbolString constructRHS(SymbolString rhs) {
-		if (rhs.isEmpty()){
-			rhs = new SymbolString(JFLAPPreferences.getSubForEmptyString());
+	private static Symbol[] constructRHS(Symbol[] rhs) {
+		if (rhs.length == 0){
+			rhs = new Symbol[]{JFLAPPreferences.getSubForEmptyString()};
 		}
 		return rhs;
 	}
@@ -26,10 +26,10 @@ public class SLR1Production extends Production {
 	}
 	
 	@Override
-	public SymbolString getRHS() {
+	public Symbol[] getRHS() {
 		SymbolString newRHS = new SymbolString(super.getRHS());
 		newRHS.add(myMarkIndex, SLR_MARKER);
-		return newRHS;
+		return newRHS.toArray(new Symbol[0]);
 	}
 	
 	public Production createNormalProduction(){
@@ -49,11 +49,11 @@ public class SLR1Production extends Production {
 		if (isReduceProduction())
 			return null;
 
-		return super.getRHS().get(myMarkIndex);	
+		return super.getRHS()[myMarkIndex];	
 	}
 
 	public boolean isReduceProduction() {
-		return myMarkIndex == super.getRHS().size();
+		return myMarkIndex == super.getRHS().length;
 	}
 
 	public void shiftMarker() {

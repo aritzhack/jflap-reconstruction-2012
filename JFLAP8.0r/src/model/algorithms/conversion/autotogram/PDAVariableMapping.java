@@ -18,7 +18,7 @@ public class PDAVariableMapping extends VariableMapping {
 	
 	@Override
 	public String toString() {
-		return "(" + getFirstState().getName() + mySymbol + getSecondState().getName() + ")";
+		return getFirstState().getName() + mySymbol + getSecondState().getName();
 	}
 
 	public State getSecondState() {

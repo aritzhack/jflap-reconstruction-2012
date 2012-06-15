@@ -89,8 +89,10 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	}
 
 	public boolean doAllAutomaticVariableMappings(){
+		char open = this.getConvertedGrammar().getOpenGroup();
+		char close = this.getConvertedGrammar().getCloseGroup();
 		for (S mapping: this.getUnmappedMappings()){
-			Variable auto = new Variable(mapping.toString());
+			Variable auto = new Variable(open + mapping.toString() + close);
 			BooleanWrapper bw = this.addMapping(mapping, auto);
 			if (bw.isError())
 				throw new AlgorithmException(bw.getMessage());

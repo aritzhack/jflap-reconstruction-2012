@@ -1,6 +1,7 @@
 package model.grammar.typetest.matchers;
 
 import model.formaldef.Describable;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -21,8 +22,8 @@ public abstract class GrammarChecker{
 			return this.matchesLHS(p.getLHS()) && this.matchesRHS(p.getRHS());
 		}
 
-		public abstract boolean matchesRHS(SymbolString rhs);
+		public abstract boolean matchesRHS(Symbol[] symbols);
 
-		public abstract boolean matchesLHS(SymbolString lhs);
+		public abstract boolean matchesLHS(Symbol[] lhs);
 		
 }

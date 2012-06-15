@@ -114,7 +114,7 @@ public class SLR1ParseTable {
 	}
 
 	private void addReduceRules(SLR1DFAState from, SLR1Production p) {
-		Variable A = (Variable) p.getLHS().getFirst();
+		Variable A = (Variable) p.getLHS()[0];
 		if (Grammar.isStartVariable(A, myModifiedGrammar )){
 			addRule(new AcceptRule(), from, 
 					JFLAPPreferences.getEndOfStringMarker());

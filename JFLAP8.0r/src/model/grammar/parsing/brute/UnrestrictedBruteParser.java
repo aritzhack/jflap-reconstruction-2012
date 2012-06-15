@@ -61,7 +61,8 @@ public class UnrestrictedBruteParser extends BruteParser{
 		// Need to find a production with just the start var on LHS.
 		int i;
 		for (i = 0; i < prods.length; i++){
-			if (added[i] && prods[i].getLHS().size()==1 && prods[i].getLHS().getFirst().equals(startVariable)){
+			Symbol[] lhs = prods[i].getLHS();
+			if (added[i] && lhs.length==1 && lhs[0].equals(startVariable)){
 				break;
 			}
 		}

@@ -2,6 +2,9 @@ package model.algorithms.conversion.gramtoauto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
+import util.UtilFunctions;
 
 import model.automata.State;
 import model.automata.TransitionSet;
@@ -56,8 +59,8 @@ public class CFGtoPDAConverterLR extends CFGtoPDAConverter {
 	public PDATransition convertProduction(Production p) {
 		State start = this.getStartState();
 		SymbolString input = new SymbolString(),
-						pop = p.getRHS().reverse(),
-						push = p.getLHS();
+						pop = new SymbolString(UtilFunctions.reverse(p.getRHS())),
+						push = new SymbolString(p.getLHS());
 		
 		return new PDATransition(start, start, input, pop, push);
 	}

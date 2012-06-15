@@ -12,6 +12,7 @@ import util.UtilFunctions;
 
 import debug.JFLAPDebug;
 
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -86,10 +87,10 @@ public class Derivation implements Copyable{
 		result.addAll(myProductions.getFirst().getRHS());
 		
 		for (int i = 1; i < n; i++){
-			SymbolString sub = myProductions.get(i).getRHS();
+			Symbol[] sub = myProductions.get(i).getRHS();
 			int start = mySubstitutions.get(i-1);
-			int end = start + myProductions.get(i).getLHS().size();
-			result = result.replace(start,end, sub);
+			int end = start + myProductions.get(i).getLHS().length;
+			result = result.replace(start, end, sub);
 		}
 		return result;
 	}
