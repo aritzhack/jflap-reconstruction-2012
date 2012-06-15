@@ -70,9 +70,7 @@ public abstract class SingleInputTransition<T extends SingleInputTransition<T>> 
 	
 	@Override
 	public int compareTo(T o) {
-		int compare = this.getFromState().compareTo(o.getFromState());
-		if (compare == 0)
-			compare = this.getToState().compareTo(o.getToState());
+		int compare = super.compareTo(o);
 		if (compare == 0)
 			compare = this.getInput().compareTo(o.getInput());
 		return compare;

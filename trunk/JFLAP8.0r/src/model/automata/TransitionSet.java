@@ -66,8 +66,7 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	@Override
 	public boolean add(T trans){
 		if (!super.add(trans)) return false;
-		
-		
+
 		Set<T> fromList = transitionsFromStateMap.get(trans.getFromState());
 		if (fromList == null){
 			fromList = new TreeSet<T>();

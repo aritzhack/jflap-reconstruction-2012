@@ -1,6 +1,7 @@
 package model.automata;
 
 
+import util.UtilFunctions;
 import model.formaldef.components.functionset.function.LanguageFunction;
 
 public abstract class Transition<T extends Transition<T>> extends AutomatonFunction<T> implements LanguageFunction<T>{
@@ -103,6 +104,12 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 	public boolean equals(Object o) {
 		return this.compareTo((T) o) == 0;
 	}
+	
+	public int compareTo(T o) {
+		return UtilFunctions.metaCompare(
+				new Comparable[]{this.getFromState(), this.getToState()},
+				new Comparable[]{o.getFromState(), o.getToState()});
+	};
 
 	/**
 	 * Returns the hash code for this transition.
