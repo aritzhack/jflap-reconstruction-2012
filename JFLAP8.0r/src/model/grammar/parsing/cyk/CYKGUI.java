@@ -8,11 +8,11 @@ import javax.swing.*;
 import util.UtilFunctions;
 
 import model.JFLAPConstants;
+import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.*;
 import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.grammar.parsing.ParserException;
-import model.grammar.transform.*;
 import model.regex.*;
 
 import java.awt.*;
