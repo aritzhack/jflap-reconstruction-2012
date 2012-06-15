@@ -27,8 +27,10 @@ public class StringGenerator {
 
 	private Grammar myGrammar;
 	private int LARGE_NUMBER = 100000;
+	private final int DEFAULT_NUMBER = 10;
 	private Queue<Derivation> myDerivationsQueue;
 	private Set<SymbolString> myStringsInLanguage, myPossibleStrings;
+	private Parser myParser;
 
 	private int myNumberToGenerate, currentStringLength, maxLHSsize;
 
@@ -86,7 +88,7 @@ public class StringGenerator {
 	 * using a brute force method.
 	 */
 	public List<SymbolString> generateStringsBrute(){
-		return generateStringsBrute(myGrammar.getTerminals().size());
+		return generateStringsBrute(DEFAULT_NUMBER);
 	}
 	
 	/**
@@ -94,7 +96,7 @@ public class StringGenerator {
 	 * using either CYK or LL parsing.
 	 */
 	public List<SymbolString> generateContextFreeStrings(){
-		return generateContextFreeStrings(myGrammar.getTerminals().size());
+		return generateContextFreeStrings(DEFAULT_NUMBER);
 	}
 	
 	/**
@@ -242,16 +244,9 @@ public class StringGenerator {
 	 * the language can produce to <CODE>myStringsInLanguage</CODE>.
 	 */
 	private void parsePossibleStrings(){
-		Parser parser;
-		if(new LL1Checker().matchesGrammar(myGrammar)){
-			parser = new LL1Parser(myGrammar);
-		}
-		else{
-			parser = new CYKParser(myGrammar);
-		}
 		for (SymbolString string : myPossibleStrings) {
 			if(myStringsInLanguage.size() >= myNumberToGenerate) break;
-				if (parser.quickParse(string)) {
+				if (myParser.quickParse(string)) {
 					myStringsInLanguage.add(string);
 				}
 		}
@@ -267,7 +262,10 @@ public class StringGenerator {
 				CNFConverter converter = new CNFConverter(myGrammar);
 				converter.stepToCompletion();
 				myGrammar = converter.getTransformedGrammar();
-			}	
+				myParser = new CYKParser(myGrammar);
+			}	else{
+				myParser = new LL1Parser(myGrammar);
+			}
 	}
 	
 	/**

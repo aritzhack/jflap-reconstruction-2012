@@ -143,6 +143,15 @@ public class LanguageSetOperators {
 		return sortedSet;
 	}
 	
+	public static Set<SymbolString> truncate(Set<SymbolString> set){
+		Set<SymbolString> truncatedSet = new TreeSet<SymbolString>(new SetComparator());
+		for(SymbolString string : set){
+			SymbolString temp = string.subList(0, string.size()-1);
+			truncatedSet.add(temp);
+		}
+		return truncatedSet;
+	}
+	
 	public static void main (String[] args) {
 		Set<SymbolString> set = new TreeSet<SymbolString>();
 		Alphabet alphs = new InputAlphabet();
