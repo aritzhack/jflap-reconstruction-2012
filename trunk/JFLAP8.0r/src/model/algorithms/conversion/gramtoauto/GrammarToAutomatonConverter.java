@@ -16,11 +16,13 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
+import model.algorithms.conversion.ConversionAlgorithm;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.SingleInputTransition;
+import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -31,14 +33,9 @@ import model.grammar.ProductionSet;
 import model.grammar.typetest.GrammarType;
 
 public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends SingleInputTransition<S>> 
-																		extends FormalDefinitionAlgorithm<Grammar> {
+																		extends ConversionAlgorithm<Grammar, T> {
 
-	
-	private T myAutomaton;
-	
-	
 	private ProductionSet myConvertedProductions;
-
 
 	private Set<State> myAutoStates;
 
@@ -81,7 +78,7 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	}
 
 	public T getConvertedAutomaton() {
-		return myAutomaton;
+		return getConvertedDefinition();
 	}
 
 	public boolean convertAllProductions(){
@@ -129,18 +126,14 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 
 	@Override
 	public boolean reset() throws AlgorithmException {
-		myAutomaton = createEmptyAutomaton();
 		myConvertedProductions = new ProductionSet();
-		
+		super.reset();
 		return doSetup();
 	}
 
 
 
 	public abstract boolean doSetup();
-
-	public abstract T createEmptyAutomaton();
-
 
 	public abstract GrammarType[] getValidTypes();
 	
