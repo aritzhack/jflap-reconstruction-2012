@@ -21,6 +21,7 @@ package test;
 
 import java.util.Arrays;
 
+import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.InputAlphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -33,7 +34,6 @@ import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import model.grammar.parsing.cyk.CYKParser;
-import model.grammar.transform.CNFConverter;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;

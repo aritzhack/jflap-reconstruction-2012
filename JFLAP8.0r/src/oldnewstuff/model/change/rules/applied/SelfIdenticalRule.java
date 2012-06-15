@@ -2,10 +2,10 @@ package oldnewstuff.model.change.rules.applied;
 
 import java.util.Collection;
 
-import oldnewstuff.model.change.events.SetComponentEvent;
 import oldnewstuff.model.change.rules.IdenticalItemRule;
 
 import errors.BooleanWrapper;
+import model.change.events.SetComponentEvent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;

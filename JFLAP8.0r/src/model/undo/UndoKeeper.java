@@ -13,12 +13,13 @@ import java.util.TreeSet;
 import javax.swing.Action;
 import javax.swing.undo.UndoManager;
 
+import model.change.events.UndoableChangeEvent;
+
 import debug.JFLAPDebug;
 
 
 import oldnewstuff.model.change.ChangeEvent;
 import oldnewstuff.model.change.ChangeListener;
-import oldnewstuff.model.change.events.UndoableChangeEvent;
 import util.Copyable;
 
 

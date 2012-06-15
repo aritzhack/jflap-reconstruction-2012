@@ -5,10 +5,10 @@ import java.util.List;
 import oldnewstuff.model.change.ChangeDistributor;
 import oldnewstuff.model.change.ChangeEvent;
 import oldnewstuff.model.change.ChangeListener;
-import oldnewstuff.model.change.events.CompoundUndoableChangeEvent;
-import oldnewstuff.model.change.events.SetComponentEvent;
-import oldnewstuff.model.change.events.UndoableChangeEvent;
 
+import model.change.events.CompoundUndoableChangeEvent;
+import model.change.events.SetComponentEvent;
+import model.change.events.UndoableChangeEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;

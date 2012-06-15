@@ -20,7 +20,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	}
 
 	public SpecialSymbol(Symbol s) {
-		this.setTo(s);
+		mySymbol = s;
 	}
 	
 	

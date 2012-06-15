@@ -10,6 +10,8 @@ import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLR;
+import model.algorithms.transform.grammar.GrammarTransformAlgorithm;
+import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -26,8 +28,6 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.brute.RestrictedBruteParser;
-import model.grammar.transform.GrammarTransformAlgorithm;
-import model.grammar.transform.UselessProductionRemover;
 import model.grammar.typetest.GrammarType;
 
 public class PDATest extends TestHarness{

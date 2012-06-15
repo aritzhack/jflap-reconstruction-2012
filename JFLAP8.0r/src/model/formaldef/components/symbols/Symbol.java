@@ -5,6 +5,9 @@ import java.lang.Character.Subset;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import debug.JFLAPDebug;
+
+import model.automata.turing.BlankSymbol;
 import model.formaldef.components.SetSubComponent;
 import model.regex.EmptySub;
 

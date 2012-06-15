@@ -1,7 +1,7 @@
 package model.formaldef.components;
 
 import oldnewstuff.model.change.ChangeApplyingObject;
-import oldnewstuff.model.change.events.SetToEvent;
+import model.change.events.SetToEvent;
 import model.formaldef.Describable;
 import util.Copyable;
 
