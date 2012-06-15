@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import util.UtilFunctions;
+
 import errors.BooleanWrapper;
 
 import model.formaldef.UsesSymbols;
@@ -41,6 +43,13 @@ public abstract class FunctionSet<T extends LanguageFunction<T>> extends SetComp
 			result = f.purgeOfSymbol(a, s) || result;
 		}
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		String str = this.getDescriptionName() + "\n\t\t";
+		str += UtilFunctions.createDelimitedString(this, "\n\t\t");
+		return str;
 	}
 	
 	

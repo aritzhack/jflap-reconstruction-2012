@@ -107,9 +107,9 @@ public class TuringMachineTransition extends Transition<TuringMachineTransition>
 		for (int i = 0; i < this.getNumTapes(); i++){
 			label += this.getRead(i) + ";" + 
 					this.getWrite(i) + "," + 
-					this.getMove(i) + "\n";
+					this.getMove(i) + "|";
 		}
-		return label;
+		return label.substring(0,label.length()-1);
 	}
 
 	public int getNumTapes() {
@@ -118,7 +118,9 @@ public class TuringMachineTransition extends Transition<TuringMachineTransition>
 
 	@Override
 	public int compareTo(TuringMachineTransition o) {
-		int compare = new Integer(this.getNumTapes()).compareTo(o.getNumTapes());
+		int compare = super.compareTo(o);
+		if (compare == 0)
+			compare = new Integer(this.getNumTapes()).compareTo(o.getNumTapes());
 		if (compare == 0){
 			for (int i = 0; i < this.getNumTapes(); i++){
 				compare = this.getRead(i).compareTo(o.getRead(i));
