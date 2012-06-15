@@ -71,7 +71,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	public Set<Production> getProductionsToAddForRemoval(Production p) {
 		Set<Production> toAdd = new TreeSet<Production>();
 		Symbol start = this.getOriginalGrammar().getStartVariable();
-		Symbol lhs = p.getLHS().getFirst();
+		Symbol lhs = p.getLHS()[0];
 		if (lhs.equals(start))
 			return toAdd;
 		
@@ -93,7 +93,9 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 		for (int i: getIndeciesOfTarget(pRHS.getRHS(),target)){
 			SymbolString subInto = new SymbolString(pRHS.getRHS());
 			subInto.remove(i);
-			Production substituted = new Production(pRHS.getLHS(),subInto);
+			Production substituted = new Production(
+											new SymbolString(pRHS.getLHS()),
+											subInto);
 			if (!substituted.isLambdaProduction())
 				toAdd.add(substituted);
 			toAdd.addAll(doAllPossibleSubs(substituted, target));
@@ -101,11 +103,11 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 		return toAdd;
 	}
 	
-	private int[] getIndeciesOfTarget(SymbolString rhs, Symbol target) {
-		int[] index = new int[rhs.size()];
+	private int[] getIndeciesOfTarget(Symbol[] symbols, Symbol target) {
+		int[] index = new int[symbols.length];
 		int j = 0;
-		for (int i = 0; i < rhs.size(); i++){
-			if (rhs.get(i).equals(target)){
+		for (int i = 0; i < symbols.length; i++){
+			if (symbols[i].equals(target)){
 				index[j++] = i;
 			}
 		}
@@ -126,7 +128,7 @@ public class LambdaProductionRemover extends ProductionIdentifyAlgorithm {
 	public BooleanWrapper identifyProductionToBeRemoved(Production p) {
 		BooleanWrapper bw = super.identifyProductionToBeRemoved(p) ;
 		if (!bw.isError())
-			myLambdaVariables.add((Variable) p.getLHS().getFirst());
+			myLambdaVariables.add((Variable) p.getLHS()[0]);
 		return bw;
 	}
 

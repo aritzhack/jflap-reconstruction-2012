@@ -9,7 +9,7 @@ import model.formaldef.components.symbols.Variable;
 public class GrammarUtil {
 
 	public static boolean isLambdaProduction(Production p){
-		return p.getRHS().isEmpty();
+		return p.getRHS().length == 0;
 	}
 	
 

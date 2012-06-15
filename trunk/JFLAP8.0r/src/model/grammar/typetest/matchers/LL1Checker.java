@@ -19,12 +19,12 @@ import model.grammar.parsing.FirstFollowTable;
 public class LL1Checker extends GrammarChecker {
 
 	@Override
-	public boolean matchesRHS(SymbolString rhs) {
+	public boolean matchesRHS(Symbol[] rhs) {
 		return throwError();
 	}
 
 	@Override
-	public boolean matchesLHS(SymbolString lhs) {
+	public boolean matchesLHS(Symbol[] lhs) {
 		return throwError();
 	}
 

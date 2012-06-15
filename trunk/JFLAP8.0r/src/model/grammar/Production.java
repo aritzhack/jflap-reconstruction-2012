@@ -49,6 +49,10 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 
 	}
 
+	public Production(Symbol[] lhs, Symbol ... rhs) {
+		this(new SymbolString(lhs), new SymbolString(rhs));
+	}
+
 	/**
 	 * Sets the right hand side of production to <CODE>rhs</CODE>.
 	 * 
@@ -93,8 +97,8 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * 
 	 * @return a string representation of the lhs.
 	 */
-	public SymbolString getLHS() {
-		return myLHS;
+	public Symbol[] getLHS() {
+		return myLHS.toArray(new Symbol[0]);
 	}
 
 	/**
@@ -103,8 +107,8 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * 
 	 * @return a string representation of the rhs.
 	 */
-	public SymbolString getRHS() {
-		return myRHS;
+	public Symbol[] getRHS() {
+		return myRHS.toArray(new Symbol[0]);
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * @return all variables on the left hand side of the production.
 	 */
 	public Set<Variable> getVariablesOnLHS() {
-		return getLHS().getSymbolsOfClass(Variable.class);
+		return myLHS.getSymbolsOfClass(Variable.class);
 	}
 
 	/**
@@ -133,7 +137,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * @return all variables on the right hand side of the production.
 	 */
 	public Set<Variable> getVariablesOnRHS() {
-		return getRHS().getSymbolsOfClass(Variable.class);
+		return myRHS.getSymbolsOfClass(Variable.class);
 	}
 
 	/**
@@ -153,7 +157,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * @return all terminals on the right hand side of the production.
 	 */
 	public Set<Terminal> getTerminalsOnRHS() {
-		return getRHS().getSymbolsOfClass(Terminal.class);
+		return myRHS.getSymbolsOfClass(Terminal.class);
 	}
 
 	/**
@@ -188,7 +192,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * @return all terminals on the left hand side of the production.
 	 */
 	public Set<Terminal> getTerminalsOnLHS() {
-		return getLHS().getSymbolsOfClass(Terminal.class);
+		return myLHS.getSymbolsOfClass(Terminal.class);
 	}
 
 	/**
@@ -220,32 +224,32 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	}
 
 	public boolean isStartProduction(Variable variable) {
-		if (this.getLHS().isEmpty()) return false;
-		return this.getLHS().getFirst().equals(variable);
+		if (myLHS.isEmpty()) return false;
+		return myLHS.getFirst().equals(variable);
 //				&& this.getLHS().size() == 1;
 	}
 	
 	public boolean containsSymbol(Symbol symbol) {
-		return getLHS().contains(symbol) || getRHS().contains(symbol);
+		return myLHS.contains(symbol) || myRHS.contains(symbol);
 	}
 
 	@Override
 	public int compareTo(Production o) {
 		
 		int i = 0;
-		if((i = this.getLHS().compareTo(o.getLHS())) == 0)
-			i = this.getRHS().compareTo(o.getRHS());
+		if((i = myLHS.compareTo(o.myLHS)) == 0)
+			i = this.myRHS.compareTo(o.myRHS);
 		
 		return i;
 	}
 
 	public boolean isEmpty() {
-		return this.getLHS().isEmpty() && this.getRHS().isEmpty();
+		return myLHS.isEmpty() && myRHS.isEmpty();
 	}
 
 	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-		boolean lhs = this.getLHS().removeEach(s); 
-		return this.getRHS().removeEach(s) || lhs;
+		boolean lhs = myLHS.removeEach(s); 
+		return this.myRHS.removeEach(s) || lhs;
 	}
 
 	
@@ -253,7 +257,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 		return new Object[]{
 				this.getLHS().toString(),
 				ARROW,
-				this.getRHS().toString()};
+				this.myRHS.toString()};
 	}
 
 	@Override
@@ -281,20 +285,28 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 
 	@Override
 	public Production copy() {
-		return new Production(this.getLHS().copy(), this.getRHS().copy());
+		return new Production(myLHS.copy(), myLHS.copy());
 	}
 	
 	public boolean isLambdaProduction() {
-		return this.getRHS().isEmpty();
+		return this.myRHS.isEmpty();
 	}
 
 	@Override
 	public boolean setTo(Production other) {
-		return this.setTo(other.getLHS(), other.getRHS());
+		return this.setTo(other.myLHS, other.myRHS);
 	}
 
 	private boolean setTo(SymbolString lhs, SymbolString rhs) {
 		return this.setLHS(lhs) && this.setRHS(rhs);
+	}
+
+	public boolean containsSymbolOnLHS(Symbol s) {
+		return myLHS.contains(s);
+	}
+
+	public boolean containsSymbolOnRHS(Symbol s) {
+		return myRHS.contains(s);
 	}
 
 

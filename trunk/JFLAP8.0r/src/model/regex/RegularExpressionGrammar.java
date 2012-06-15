@@ -1,6 +1,7 @@
 package model.regex;
 
 import oldnewstuff.main.JFLAP;
+import util.UtilFunctions;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.formaldef.components.ComponentChangeEvent;
@@ -101,7 +102,7 @@ public class RegularExpressionGrammar extends Grammar {
 	private boolean removeProductionForSymbol(Symbol s) {
 		ProductionSet productions = this.getProductionSet();
 		for (Production p: productions){
-			if (p.getRHS().contains(s)){
+			if (UtilFunctions.contains(p.getRHS(),s)){
 				return productions.remove(p);
 			}
 		}

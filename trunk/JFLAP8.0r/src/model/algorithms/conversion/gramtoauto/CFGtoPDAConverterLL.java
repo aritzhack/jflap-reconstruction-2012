@@ -31,8 +31,8 @@ public class CFGtoPDAConverterLL extends CFGtoPDAConverter {
 	public PDATransition convertProduction(Production p) {
 		State focus = this.getMiddleState();
 		SymbolString input = new SymbolString(),
-						pop = p.getLHS(),
-						push = p.getRHS();
+						pop = new SymbolString(p.getLHS()),
+						push = new SymbolString(p.getRHS());
 		
 		return new PDATransition(focus, focus, input, pop, push);
 	}

@@ -1,5 +1,6 @@
 package model.grammar.typetest.matchers;
 
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -21,7 +22,7 @@ public class RegChecker extends CNFChecker{
 		}
 
 		@Override
-		public boolean matchesRHS(SymbolString rhs) {
+		public boolean matchesRHS(Symbol[] rhs) {
 			return myLeftLinearChecker.matchesRHS(rhs) || 
 					myRightLinearChecker.matchesRHS(rhs);
 		}

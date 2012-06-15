@@ -44,26 +44,34 @@ public class ProductionSet extends FunctionSet<Production> {
 	public Set<Production> getProductionsWithSymbolOnLHS(Symbol s) {
 		Set<Production> prods = new TreeSet<Production>();
 		for (Production p: this){
-			if (p.getLHS().contains(s))
+			if (p.containsSymbolOnLHS(s))
 				prods.add(p);
 		}
-		
+
 		return prods;
 	}
-	
+
 	public Set<Production> getProductionsWithSymbolOnRHS(Symbol s) {
 		Set<Production> prods = new TreeSet<Production>();
 		for (Production p: this){
-			if (p.getRHS().contains(s))
+			if (p.containsSymbolOnRHS(s))
 				prods.add(p);
 		}
-		
+
 		return prods;
 	}
-	
+
 	@Override
 	public Production[] toArray() {
 		return super.toArray(new Production[0]);
+	}
+
+	public int getMaxLHSLength() {
+		int maxLHSsize = 0;
+		for (Production p : this) {
+			maxLHSsize = Math.max(p.getLHS().length, maxLHSsize);
+		}	
+		return maxLHSsize;
 	}
 
 }

@@ -55,24 +55,24 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	
 	@Override
 	public FSATransition convertProduction(Production p) {
-		Variable lhsVar = (Variable) p.getLHS().getFirst();
-		SymbolString rhs = p.getRHS();
+		Variable lhsVar = (Variable) p.getLHS()[0];
+		Symbol[] rhs = p.getRHS();
 		
 		State from = this.getStateForVariable(lhsVar),
 				to;
 		
-		SymbolString input;
+		Symbol[] input;
 		
-		if (p.getRHS().isEmpty() || 
-				!(p.getRHS().getLast() instanceof Variable)){
+		if (rhs.length == 0 || 
+				!(rhs[rhs.length-1] instanceof Variable)){
 			to = myFinalState;
-			input = p.getRHS();
+			input = rhs;
 		}
 		else {
-			to = this.getStateForVariable((Variable) p.getRHS().getLast());
-			input = rhs.subList(0, rhs.size()-1);
+			to = this.getStateForVariable((Variable) rhs[rhs.length-1]);
+			input = Arrays.copyOfRange(rhs, 0, rhs.length-1);
 		}
-		return new FSATransition(from, to, input);
+		return new FSATransition(from, to, new SymbolString(input));
 	}
 
 	

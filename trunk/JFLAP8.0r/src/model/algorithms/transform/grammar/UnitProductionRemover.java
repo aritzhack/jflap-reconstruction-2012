@@ -71,8 +71,8 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 	@Override
 	public Set<Production> getProductionsToAddForRemoval(Production p) {
 		Set<Production> toAdd = new TreeSet<Production>();
-		Variable lhsVar = (Variable) p.getLHS().getFirst();
-		Variable rhsVar = (Variable) p.getRHS().getFirst();
+		Variable lhsVar = (Variable) p.getLHS()[0];
+		Variable rhsVar = (Variable) p.getRHS()[0];
 		
 		if (lhsVar.equals(rhsVar))
 			return toAdd;
@@ -100,8 +100,8 @@ public class UnitProductionRemover extends ProductionIdentifyAlgorithm {
 	
 	
 	private boolean isUnitProduction(Production p) {
-		SymbolString rhs = p.getRHS();
-		return rhs.size() == 1 && Grammar.isVariable(rhs.getFirst());
+		Symbol[] rhs = p.getRHS();
+		return rhs.length == 1 && Grammar.isVariable(rhs[0]);
 	}
 	
 	private class ConstructDependencyGraphStep extends AlgorithmExecutingStep<ConstructDependencyGraph>{

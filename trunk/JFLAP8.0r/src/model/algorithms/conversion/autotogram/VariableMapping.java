@@ -6,7 +6,6 @@ public abstract class VariableMapping {
 	public abstract String toString();
 	
 	
-	
 	@Override
 	public abstract boolean equals(Object arg0);
 	

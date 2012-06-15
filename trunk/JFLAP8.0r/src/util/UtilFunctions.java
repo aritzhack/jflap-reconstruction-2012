@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.automata.State;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 
 public class UtilFunctions {
@@ -66,6 +67,22 @@ public class UtilFunctions {
 
 		}
 		return compare;
+	}
+
+
+	public static <T> T[] reverse(T[] array) {
+		T[] sub = Arrays.copyOf(array, array.length);
+		for (int i = 0; i< array.length; i++){
+			sub[i] = array[array.length-i-1];
+		}
+		return sub;
+	}
+
+
+	public static boolean contains(Symbol[] rhs, Symbol s) {
+		for (Symbol o: rhs)
+			if (o.equals(s)) return true;
+		return false;
 	}
 	
 }

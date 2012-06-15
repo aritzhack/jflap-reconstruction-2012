@@ -13,7 +13,7 @@ public class FSAVariableMapping extends VariableMapping {
 
 	@Override
 	public String toString() {
-		return "(" + this.getState().getName() + ")";
+		return this.getState().getName();
 	}
 
 	public State getState() {

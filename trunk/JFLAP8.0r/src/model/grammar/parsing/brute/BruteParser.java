@@ -38,12 +38,8 @@ public abstract class BruteParser extends Parser {
 	public BruteParser(Grammar g) {
 		super(g);
 		mySmallerSet = Collections.unmodifiableSet(smallerSymbols(g));
-		maxLHSsize = 0;
-		for (Production p : g.getProductionSet()) {
-			if (p.getLHS().size() > maxLHSsize) {
-				maxLHSsize = p.getLHS().size();
-			}
-		}
+		maxLHSsize = g.getProductionSet().getMaxLHSLength();
+		
 	}
 
 	@Override
@@ -152,22 +148,22 @@ public abstract class BruteParser extends Parser {
 	}
 
 	public boolean isPossibleDerivation(SymbolString derivation) {
-		return minimumLength(derivation, mySmallerSet) <= getInput()
-				.size();
+		int min = minimumLength(derivation.toArray(new Symbol[0]), mySmallerSet) ;
+		return min <= getInput().size();
 	}
 
 	/**
 	 * Given a string and a smaller set, this returns the minimum length that
 	 * the string can derive as indicated by the smaller set.
 	 * 
-	 * @param symbolString
+	 * @param right
 	 *            the string to get the "smaller"
 	 * @param smaller
 	 *            the "smaller" set, as returned by {@link #smallerSymbols}
 	 */
-	public int minimumLength(SymbolString symbolString, Set<Symbol> smaller) {
+	public int minimumLength(Symbol[] right, Set<Symbol> smaller) {
 		int length = 0;
-		for (Symbol s: symbolString)
+		for (Symbol s: right)
 			if (!smaller.contains(s))
 				length++;
 		return length;
@@ -176,16 +172,16 @@ public abstract class BruteParser extends Parser {
 	/**
 	 * Counts the number of characters in a given string.
 	 * 
-	 * @param str
+	 * @param left
 	 *            the string
 	 * @param c
 	 *            the character
 	 * @return the number of occurrences of the character in the string
 	 */
-	private int count(SymbolString str, Symbol s) {
+	private int count(Symbol[] left, Symbol s) {
 		int count = 0;
-		for (int i = 0; i < str.size(); i++)
-			if (str.get(i).equals(s))
+		for (int i = 0; i < left.length; i++)
+			if (left[i].equals(s))
 				count++;
 		return count;
 	}
@@ -208,13 +204,13 @@ public abstract class BruteParser extends Parser {
 		do {
 			added = false;
 			for (int i = 0; i < prods.length; i++) {
-				SymbolString left = prods[i].getLHS();
-				SymbolString right = prods[i].getRHS();
+				Symbol[] left = prods[i].getLHS();
+				Symbol[] right = prods[i].getRHS();
 				int rightLength = minimumLength(right, smaller);
 				int leftLength = minimumLength(left, smaller);
 				if (leftLength > rightLength) {
-					for (int j = 0; j < left.size(); j++) {
-						Symbol symbol = left.get(j);
+					for (int j = 0; j < left.length; j++) {
+						Symbol symbol = left[j];
 						if (smaller.contains(symbol))
 							continue;
 						if (count(left, symbol) <= count(right, symbol))

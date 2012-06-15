@@ -95,7 +95,7 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 	}
 
 	private void doVariableSplit(Production p) {
-		SymbolString oldRHS = p.getRHS();
+		SymbolString oldRHS = new SymbolString(p.getRHS());
 		SymbolString newRHS = oldRHS.subList(0,oldRHS.size()-2);
 		
 		Variable newVar = getAndAddNextDVar();
@@ -127,20 +127,20 @@ public class CNFConverter extends GrammarTransformAlgorithm {
 	}
 
 	private void doTerminalSubstitution(Production p) {
-		SymbolString rhs = p.getRHS();
-		for (int i = 0; i < rhs.size(); i++ ){
-			Symbol curr = rhs.get(i);
+		Symbol[] rhs = p.getRHS();
+		for (int i = 0; i < rhs.length; i++ ){
+			Symbol curr = rhs[i];
 			if (Grammar.isTerminal(curr)){
 				Variable var = myTermToVarMap.get(curr);
 				if (var == null)
 					var = createAndAddNextTermVar((Terminal) curr);
-				rhs = rhs.replace(i, var);
+				rhs[i] = var;
 				Production newProd = new Production(var, curr);
 				getTransformedGrammar().getProductionSet().add(newProd);
 			}
 				
 		}
-		p.setRHS(rhs);
+		p.setRHS(new SymbolString(rhs));
 	}
 
 	private Variable createAndAddNextTermVar(Terminal curr) {

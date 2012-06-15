@@ -26,8 +26,8 @@ public class CYKParseNode {
 	 * 		the index at which the two RHS variables are split.
 	 */
 	public CYKParseNode(Production p, int k){
-		LHS = (Variable) p.getLHS().getFirst();
-		RHS = p.getRHS();
+		LHS = (Variable) p.getLHS()[0];
+		RHS = new SymbolString(p.getRHS());
 		this.k = k;
 	}
 	

@@ -273,9 +273,9 @@ public class CYKGUI extends JFrame {
 			SymbolString[][] array = new SymbolString[myParser.getGrammar().getProductionSet().size()][3];
 			ArrayList<Production> list = new ArrayList<Production>(myParser.getGrammar().getProductionSet());
 			for(int i=0;i<list.size();i++){
-				array[i][0] = list.get(i).getLHS();
+				array[i][0] = new SymbolString(list.get(i).getLHS());
 				array[i][1] = new SymbolString(new Symbol("->"));
-				array[i][2] = list.get(i).getRHS();
+				array[i][2] = new SymbolString(list.get(i).getRHS());
 			}
 			grammarTable = new JTable();
 			grammarTable.setModel(new DefaultTableModel( array,

@@ -1,5 +1,7 @@
 package model.grammar.typetest.matchers;
 
+import java.util.Arrays;
+
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
@@ -11,13 +13,13 @@ public class ContextFreeChecker extends GrammarChecker{
 
 
 		@Override
-		public boolean matchesRHS(SymbolString rhs) {
+		public boolean matchesRHS(Symbol[] rhs) {
 			return true;
 		}
 
 		@Override
-		public boolean matchesLHS(SymbolString lhs) {
-			return lhs.size() == 1 && lhs.getFirst() instanceof Variable;
+		public boolean matchesLHS(Symbol[] lhs) {
+			return lhs.length == 1 && lhs[0] instanceof Variable;
 		}
 		
 		
@@ -31,46 +33,46 @@ public class ContextFreeChecker extends GrammarChecker{
 		 * first symbol (true) is the one alone or if the last 
 		 * symbol (false) is the one alone.
 		 * 
-		 * @param ss
+		 * @param rhs
 		 * @param first
 		 * @param second
 		 * @param first_dominant
 		 * @return
 		 */
-		public static boolean checkLinear(SymbolString ss,
+		public static boolean checkLinear(Symbol[] rhs,
 											Class<? extends Symbol> first,
 											Class<? extends Symbol> second, 
 											boolean first_dominant){
 			
-			if (ss.isEmpty()){
+			if (rhs.length == 0){
 				return false;
 			}
 			
 			if ((first_dominant && 
-					!(first.isAssignableFrom(ss.getFirst().getClass()))) ||
-					!(second.isAssignableFrom(ss.getLast().getClass()))){
+					!(first.isAssignableFrom(rhs[0].getClass()))) ||
+					!(second.isAssignableFrom(rhs[rhs.length-1].getClass()))){
 				return false;
 			}
 			
-			if (ss.size() == 1) return true;
+			if (rhs.length == 1) return true;
 			
 			Class<? extends Symbol> repeated;
-			SymbolString subString;
+			Symbol[] subString;
 			
 			if(first_dominant){
 				repeated = second;
-				subString = ss.subList(1);
+				subString = Arrays.copyOfRange(rhs, 1, rhs.length);
 			}
 			else {
 				repeated = first;
-				subString = ss.subList(0, ss.size()-1);
+				subString = Arrays.copyOfRange(rhs, 0, rhs.length-1);
 			}
 			
 			return containsOnly(subString, repeated);
 			
 		}
 
-		public static boolean containsOnly(SymbolString subString,
+		public static boolean containsOnly(Symbol[] subString,
 				Class<? extends Symbol> repeated) {
 			
 			for (Symbol symbol: subString){
