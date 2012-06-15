@@ -12,6 +12,7 @@ import util.UtilFunctions;
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
+import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.InputAlphabet;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
@@ -22,7 +23,6 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.brute.RestrictedBruteParser;
-import model.grammar.transform.CNFConverter;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.Operator;
 
