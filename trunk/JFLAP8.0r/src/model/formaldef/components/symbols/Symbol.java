@@ -1,14 +1,16 @@
 package model.formaldef.components.symbols;
 
 
+import java.lang.Character.Subset;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import model.formaldef.components.SetSubComponent;
 import model.regex.EmptySub;
 
 import util.Copyable;
 
-public class Symbol implements Comparable<Symbol>, Copyable{
+public class Symbol implements SetSubComponent<Symbol>{
 
 	private String myString;
 	
@@ -79,6 +81,22 @@ public class Symbol implements Comparable<Symbol>, Copyable{
 			throw new RuntimeException("Problem cloning " + this.toString());
 		}
 		
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "Symbol";
+	}
+
+	@Override
+	public String getDescription() {
+		return "A symbol!";
+	}
+
+	@Override
+	public boolean setTo(Symbol other) {
+		myString = other.getString();
+		return true;
 	}
 	
 	
