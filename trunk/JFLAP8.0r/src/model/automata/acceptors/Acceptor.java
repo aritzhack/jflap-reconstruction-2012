@@ -9,6 +9,7 @@ import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
+import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.formaldef.FormalDefinition;
@@ -16,7 +17,7 @@ import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 
-public abstract class Acceptor<T extends Transition> extends Automaton<T> {
+public abstract class Acceptor<T extends Transition<T>> extends Automaton<T> {
 
 
 	public Acceptor(FormalDefinitionComponent ...comps) {

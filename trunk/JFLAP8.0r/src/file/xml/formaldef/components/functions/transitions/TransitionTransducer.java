@@ -11,7 +11,7 @@ import util.UtilFunctions;
 
 import model.automata.InputAlphabet;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
 import file.xml.XMLTransducer;
@@ -19,7 +19,7 @@ import file.xml.XMLHelper;
 import file.xml.formaldef.components.functions.FunctionTransducer;
 import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
-public abstract class TransitionTransducer<T extends Transition> extends FunctionTransducer<T> {
+public abstract class TransitionTransducer<T extends SingleInputTransition> extends FunctionTransducer<T> {
 
 	
 	public TransitionTransducer(InputAlphabet alph, Alphabet ... alphs){

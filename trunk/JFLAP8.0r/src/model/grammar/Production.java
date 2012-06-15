@@ -7,6 +7,7 @@ import util.JFLAPConstants;
 
 
 
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
@@ -14,13 +15,13 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 
-public class Production implements LanguageFunction, Comparable<Production>, JFLAPConstants{
+public class Production implements LanguageFunction<Production>, JFLAPConstants{
 
 	/** the left hand side of the production. */
-	protected SymbolString myLHS;
+	private SymbolString myLHS;
 
 	/** the right hand side of the production. */
-	protected SymbolString myRHS;
+	private SymbolString myRHS;
 
 	/**
 	 * Creates an instance of <CODE>Production</CODE>.
@@ -31,8 +32,8 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 *            the right hand side of the production rule.
 	 */
 	public Production(SymbolString lhs, SymbolString rhs) {
-		setLHS(lhs);
-		setRHS(rhs);
+		myLHS = lhs;
+		myRHS = rhs;
 	}
 
 	public Production(){
@@ -54,9 +55,9 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @param rhs
 	 *            the right hand side
 	 */
-	public void setRHS(SymbolString rhs) {
+	public boolean setRHS(SymbolString rhs) {
 		checkBadSymbols(rhs);
-		myRHS = rhs;
+		return myRHS.setTo(rhs);
 	}
 
 	/**
@@ -65,9 +66,9 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	 * @param lhs
 	 *            the left hand side
 	 */
-	public void setLHS(SymbolString lhs) {
+	public boolean setLHS(SymbolString lhs) {
 		checkBadSymbols(lhs);
-		myLHS = lhs;
+		return myLHS.setTo(lhs);
 	}
 
 	private void checkBadSymbols(SymbolString lhs) {
@@ -242,9 +243,9 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 		return this.getLHS().isEmpty() && this.getRHS().isEmpty();
 	}
 
-	public boolean purgeOfSymbol(Symbol s) {
-		boolean lhs = this.getLHS().purgeOfSymbol(s); 
-		return this.getRHS().purgeOfSymbol(s) || lhs;
+	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
+		boolean lhs = this.getLHS().removeEach(s); 
+		return this.getRHS().removeEach(s) || lhs;
 	}
 
 	
@@ -256,10 +257,15 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	}
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
-		Set<Symbol> used = getLHS().getUniqueSymbolsUsed();
-		used.addAll(getRHS().getUniqueSymbolsUsed());
-		return used;
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
+		Set<Symbol> set = new TreeSet<Symbol>();
+		if (a instanceof VariableAlphabet){
+			set.addAll(getVariablesUsed());
+		}
+		else if (a instanceof TerminalAlphabet){
+			set.addAll(getTerminalsUsed());
+		}
+		return set;
 	}
 
 	@Override
@@ -280,6 +286,15 @@ public class Production implements LanguageFunction, Comparable<Production>, JFL
 	
 	public boolean isLambdaProduction() {
 		return this.getRHS().isEmpty();
+	}
+
+	@Override
+	public boolean setTo(Production other) {
+		return this.setTo(other.getLHS(), other.getRHS());
+	}
+
+	private boolean setTo(SymbolString lhs, SymbolString rhs) {
+		return this.setLHS(lhs) && this.setRHS(rhs);
 	}
 
 

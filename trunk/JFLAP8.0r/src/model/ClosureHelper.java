@@ -7,7 +7,7 @@ import util.JFLAPConstants;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.grammar.Grammar;
@@ -19,7 +19,7 @@ public class ClosureHelper implements JFLAPConstants{
 	public static TreeSet<State> takeClosure(State s, Automaton m){
 		TreeSet<State> closure = new TreeSet<State>();
 
-		TransitionSet<? extends Transition> set = m.getTransitions();
+		TransitionSet<? extends SingleInputTransition> set = m.getTransitions();
 
 		closure.add(s);
 		boolean changed = true;
@@ -27,7 +27,7 @@ public class ClosureHelper implements JFLAPConstants{
 		while (changed){
 			changed = false;
 			for (State state: new TreeSet<State>(closure)){
-				for (Transition t: set.getTransitionsFromState(state)){
+				for (SingleInputTransition t: set.getTransitionsFromState(state)){
 					if (t.isLambdaTransition()){
 						changed = closure.add(t.getToState()) || changed;
 					}

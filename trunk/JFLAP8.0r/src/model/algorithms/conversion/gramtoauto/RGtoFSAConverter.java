@@ -13,7 +13,7 @@ import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;

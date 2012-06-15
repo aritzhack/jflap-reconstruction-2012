@@ -1,20 +1,21 @@
-package model.automata.turing;
+package oldnewstuff;
 
 import java.util.Set;
 
 import model.automata.InputAlphabet;
 import model.formaldef.UsesSymbols;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 
 public class TuringMachineInputAlphabet extends InputAlphabet implements UsesSymbols{
 
 	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
+	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		return this;
 	}
 
 	@Override
-	public boolean purgeOfSymbol(Symbol s) {
+	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
 		return this.remove(s);
 	}
 	

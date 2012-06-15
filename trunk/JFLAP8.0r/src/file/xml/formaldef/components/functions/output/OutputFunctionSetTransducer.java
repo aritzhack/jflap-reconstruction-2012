@@ -12,7 +12,7 @@ import file.xml.formaldef.components.functions.FunctionTransducer;
 
 import util.Copyable;
 
-public class OutputFunctionSetTransducer<T extends OutputFunction> extends FunctionSetTransducer<T> {
+public class OutputFunctionSetTransducer<T extends OutputFunction<T>> extends FunctionSetTransducer<T> {
 
 
 	public OutputFunctionSetTransducer(FunctionTransducer<T> trans) {

@@ -86,20 +86,12 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		return getComponentOfClass(StackAlphabet.class);
 	}
 
-	public void purgeofStackSymbol(Symbol s){
-		for (PDATransition t: this.getTransitions()){
-			t.getPop().purgeOfSymbol(s);
-			t.getPush().purgeOfSymbol(s);
-		}
-		distributeChanged();
-	}
-	
-	
 	@Override
 	public void componentChanged(ComponentChangeEvent event) {
 
 		if (event.comesFrom(getStackAlphabet()) && event.getType() == ITEM_REMOVED){
-			this.purgeofStackSymbol((Symbol) event.getArg(0));
+			this.getTransitions().purgeOfSymbol(getStackAlphabet(), 
+												(Symbol) event.getArg(0));
 		}
 		else super.componentChanged(event);
 	}

@@ -18,7 +18,7 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 							OutputAlphabet outputAlph,
 							TransitionSet<FSATransition> functions,
 							StartState start,
-							OutputFunctionSet<MooreOutputFunction> outputFunctions) {
+							OutputFunctionSet outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 
@@ -29,7 +29,6 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -7,13 +7,14 @@ import java.util.List;
 
 import model.automata.Automaton;
 import model.automata.State;
+import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.formaldef.components.symbols.SymbolString;
 
 
-public abstract class Configuration<S extends Automaton<T>, T extends Transition> {
+public abstract class Configuration<S extends Automaton<T>, T extends Transition<T>> {
 
 	private State myState;
 	private T myTransitionTo;

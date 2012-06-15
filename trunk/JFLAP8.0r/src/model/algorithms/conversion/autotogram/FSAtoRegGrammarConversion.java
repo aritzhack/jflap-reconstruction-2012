@@ -14,7 +14,7 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;

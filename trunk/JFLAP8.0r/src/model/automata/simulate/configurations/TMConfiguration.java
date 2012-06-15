@@ -8,6 +8,7 @@ import oldnewstuff.universe.preferences.JFLAPPreferences;
 import model.automata.State;
 import model.automata.simulate.Configuration;
 import model.automata.turing.TuringMachine;
+import model.automata.turing.TuringMachineMove;
 import model.automata.turing.TuringMachineTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -73,7 +74,7 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 	@Override
 	protected boolean canMoveAlongTransition(TuringMachineTransition trans) {
 		for (int i = 0; i < super.getNumOfSecondary(); i++){
-			if (!isValidMoveForTape(i, trans.getReadForTape(i)))
+			if (!isValidMoveForTape(i, trans.getRead(i)))
 				return false;
 		}
 		return true;
@@ -93,15 +94,15 @@ public class TMConfiguration extends Configuration<TuringMachine, TuringMachineT
 	@Override
 	protected int getNextSecondaryPosition(int i,
 			TuringMachineTransition trans) {
-		int move = trans.getMoveForTape(i);
-		return this.getPositionForIndex(i) + move;
+		TuringMachineMove move = trans.getMove(i);
+		return this.getPositionForIndex(i) + move.int_move;
 	}
 
 	@Override
 	protected SymbolString[] assembleUpdatedStrings(SymbolString[] clones,
 			TuringMachineTransition trans) {
 		for (int i = 0; i < this.getNumOfSecondary(); i++){
-			SymbolString writeString = trans.getWriteForTape(i);
+			SymbolString writeString = trans.getWrite(i);
 			Symbol write;
 			if (writeString.isEmpty())
 				write = this.getAutomaton().getBlankSymbol();

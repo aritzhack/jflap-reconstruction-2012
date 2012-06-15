@@ -37,26 +37,27 @@ public class UnrestrictedBruteParser extends BruteParser{
 		boolean[] added = new boolean[prods.length];
 		for (int i = 0; i < prods.length; i++) {
 			added[i] = false;
-			if (prods[i].getVariablesOnRHS().size() == 0) {
-				terminating.addAll(prods[i].getUniqueSymbolsUsed());
+			if (prods[i].getVariablesOnRHS().isEmpty()) {
+				terminating.addAll(prods[i].getVariablesOnLHS());
 				added[i] = true;
 			}
 		}
 		// Repeat
-		boolean changed;
-		do {
+		boolean changed = true;
+		while(changed){
 			changed = false;
-			// If a production has only "terminating" variables, add it.
+			// If a production has only "terminating" variables, add all symbols.
 			for (int i = 0; i < prods.length; i++) {
 				Set<Variable> l = prods[i].getVariablesOnRHS();
 				if (!added[i] && terminating.containsAll(l)) {
-					terminating.addAll(prods[i].getUniqueSymbolsUsed());
+					terminating.addAll(prods[i].getVariablesOnLHS());
 					added[i] = changed = true;
 				}
 			}
-		} while (changed);
+		} 
 		Grammar g = grammar.alphabetAloneCopy();
 		g.setStartVariable(grammar.getStartVariable());
+		
 		// Need to find a production with just the start var on LHS.
 		int i;
 		for (i = 0; i < prods.length; i++){
@@ -64,6 +65,7 @@ public class UnrestrictedBruteParser extends BruteParser{
 				break;
 			}
 		}
+		
 		if (i == prods.length)
 			return null;
 		

@@ -5,7 +5,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
 import model.formaldef.components.symbols.SymbolString;
 
-public class MooreOutputFunction extends OutputFunction {
+public class MooreOutputFunction extends OutputFunction<MooreOutputFunction> {
 
 	public MooreOutputFunction(State s,SymbolString output) {
 		super(s, output);

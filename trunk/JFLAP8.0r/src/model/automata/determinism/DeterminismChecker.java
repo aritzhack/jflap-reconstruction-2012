@@ -9,11 +9,11 @@ import java.util.Set;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
 import model.formaldef.components.symbols.SymbolString;
 
-public abstract class DeterminismChecker<T extends Transition> {
+public abstract class DeterminismChecker<T extends SingleInputTransition<T>> {
 
 	
 	public DeterminismChecker(){

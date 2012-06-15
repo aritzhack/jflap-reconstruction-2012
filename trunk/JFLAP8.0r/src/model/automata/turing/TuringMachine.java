@@ -1,5 +1,6 @@
 package model.automata.turing;
 
+import oldnewstuff.TuringMachineInputAlphabet;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -21,8 +22,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	private BlankSymbol myBlank;
-
-
+	private int myNumTapes;
 
 	public TuringMachine(StateSet states,
 							TapeAlphabet tapeAlph,
@@ -30,8 +30,10 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 							TuringMachineInputAlphabet inputAlph,
 							TransitionSet<TuringMachineTransition> functions,
 							StartState start,
-							FinalStateSet finalStates) {
+							FinalStateSet finalStates, 
+							int numTapes) {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
+		myNumTapes = numTapes;
 		setBlankSymbol(blank);
 
 		this.getInputAlphabet().addRules(new TuringMachineRule(this));
@@ -58,7 +60,8 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 									(TuringMachineInputAlphabet) this.getInputAlphabet(), 
 									new TransitionSet<TuringMachineTransition>(), 
 									new StartState(), 
-									new FinalStateSet());
+									new FinalStateSet(),
+									myNumTapes);
 	}
 
 
@@ -113,7 +116,8 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 				this.getInputAlphabet().copy(), 
 				this.getTransitions().copy(), 
 				new StartState(this.getStartState().copy()), 
-				this.getFinalStateSet().copy());
+				this.getFinalStateSet().copy(),
+				myNumTapes);
 	}
 
 

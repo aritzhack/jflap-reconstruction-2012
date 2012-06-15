@@ -23,6 +23,7 @@ import util.UtilFunctions;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
+import model.formaldef.components.Settable;
 import model.formaldef.components.alphabets.Alphabet;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.UnionOperator;
@@ -31,7 +32,9 @@ import model.regex.operators.UnionOperator;
 
 
 
-public class SymbolString extends LinkedList<Symbol> implements Comparable<SymbolString>, UsesSymbols, Copyable {
+public class SymbolString extends LinkedList<Symbol> implements Comparable<SymbolString>, 
+																Copyable,
+																Settable<SymbolString>{
 
 	public SymbolString(String in, FormalDefinition def){
 		super();
@@ -187,19 +190,6 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		
 	}
 
-	@Override
-	public boolean purgeOfSymbol(Symbol s) {
-		boolean result = false;
-		while (this.contains(s)){
-			result = this.remove(s) || result;
-		}
-		return result;
-	}
-
-	@Override
-	public Set<Symbol> getUniqueSymbolsUsed() {
-		return new TreeSet<Symbol>(this);
-	}
 
 	public static SymbolString createFromString(String in,
 			FormalDefinition def) {
@@ -345,6 +335,26 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 
 	public boolean startsWith(Symbol ... symbols) {
 		return this.startsWith(new SymbolString(symbols));
+	}
+
+	public boolean removeEach(Symbol s) {
+		boolean changed = false;
+		while(remove(s)) changed = true;
+		return changed;
+	}
+
+	@Override
+	public boolean setTo(SymbolString other) {
+		return setTo(other.toArray(new Symbol[0]));
+	}
+
+	public boolean setTo(Symbol ... symbols) {
+		this.clear();
+		return addAll(symbols);
+	}
+
+	public boolean addAll(Symbol ... symbols) {
+		return addAll(new SymbolString(symbols));
 	}
 
 

@@ -1,50 +1,57 @@
 package model.automata.turing;
 
 import model.automata.State;
+import model.automata.SingleInputTransition;
 import model.automata.Transition;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class TuringMachineTransition extends Transition {
+public class TuringMachineTransition extends Transition<TuringMachineTransition> {
 
-	private Symbol myWrite;
-	private TuringMachineMove myMove;
+	private SymbolString[] myWrites;
+	private TuringMachineMove[] myMoves;
+	private SymbolString[] myReads;
 
 	public TuringMachineTransition(State from, 
 							State to, 
-							Symbol read, 
-							Symbol write, 
-							TuringMachineMove move) {
-		super(from, to, new SymbolString(read));
-		
-		myWrite = write;
-		myMove = move;
-		
-		
+							Symbol[] read, 
+							Symbol[] write, 
+							TuringMachineMove[] move) {
+		super(from, to);
+		myReads = new SymbolString[read.length];
+		myWrites = new SymbolString[write.length];
+		myMoves = new TuringMachineMove[move.length];
+		for (int i = 0; i< this.getNumTapes(); i++){
+			setRead(read[i], i);
+			setWrite(write[i], i);
+			setMove(move[i], i);
+
+		}
 	}
 	
-	public Symbol getWrite(){
-		return myWrite;
+	public SymbolString getWrite(int tape){
+		return myWrites[tape];
 	}
 	
-	public Symbol getRead(){
-		return this.getInput().getFirst();
+	public SymbolString getRead(int tape){
+		return myReads[tape];
 	}
 	
-	public TuringMachineMove getMove(){
-		return myMove;
+	public TuringMachineMove getMove(int tape){
+		return myMoves[tape];
 	}
 	
-	public void setMove(TuringMachineMove move){
-		myMove = move;
+	public void setMove(TuringMachineMove move, int tape){
+		myMoves[tape] = move;
 	}
 	
-	public void setRead(Symbol read){
-		super.setInput(new SymbolString(read));
+	public void setRead(Symbol read, int tape){
+		myReads[tape].setTo(read);
 	}
 	
-	public void setWrite(Symbol write){
-		myWrite = write;
+	public void setWrite(Symbol write, int tape){
+		myWrites[tape].setTo(write);
 	}
 
 	@Override
@@ -61,29 +68,71 @@ public class TuringMachineTransition extends Transition {
 	public TuringMachineTransition copy() {
 		return new TuringMachineTransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
-									this.getRead().copy(),
-									this.getWrite().copy(), 
-									this.getMove());
+									toSymbols(myReads),
+									toSymbols(myWrites),
+									myMoves);
+	}
+
+	private Symbol[] toSymbols(SymbolString[] strings) {
+		Symbol[] symbols = new Symbol[strings.length];
+		for (int i =0; i< strings.length; i++){
+			symbols[i] = strings[i].getFirst();
+		}
+		return symbols;
 	}
 
 	@Override
 	public String getLabelText() {
-		return this.getRead() + ";" + this.getWrite() + "," + this.getMove();
+		String label = "";
+		for (int i = 0; i < this.getNumTapes(); i++){
+			label += this.getRead(i) + ";" + 
+					this.getWrite(i) + "," + 
+					this.getMove(i) + "\n";
+		}
+		return label;
 	}
 
-	public SymbolString getReadForTape(int i) {
-		// TODO Auto-generated method stub
+	public int getNumTapes() {
+		return myReads.length;
+	}
+
+	@Override
+	public int compareTo(TuringMachineTransition o) {
+		int compare = new Integer(this.getNumTapes()).compareTo(o.getNumTapes());
+		if (compare == 0){
+			for (int i = 0; i < this.getNumTapes(); i++){
+				compare = this.getRead(i).compareTo(o.getRead(i));
+				if (compare != 0) return compare;
+				compare = this.getWrite(i).compareTo(o.getWrite(i));
+				if (compare != 0) return compare;
+				compare = this.getMove(i).compareTo(o.getMove(i));
+				if (compare != 0) return compare;
+			}
+		}
+		return compare;
+	}
+
+	@Override
+	public boolean setTo(TuringMachineTransition o) {
+		if ( this.getNumTapes() != o.getNumTapes()) return false;
+		
+		for (int i = 0; i < this.getNumTapes(); i++){
+			this.setRead(o.getRead(i).getFirst(), i);
+			this.setWrite(o.getWrite(i).getFirst(), i);
+			this.setMove(o.getMove(i), i);
+		}
+		return true;
+	}
+
+	@Override
+	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		return null;
 	}
 
-	public int getMoveForTape(int i) {
+	@Override
+	public boolean isLambdaTransition() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public SymbolString getWriteForTape(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }

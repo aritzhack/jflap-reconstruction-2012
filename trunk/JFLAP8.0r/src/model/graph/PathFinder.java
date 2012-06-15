@@ -9,7 +9,7 @@ import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.Transition;
+import model.automata.SingleInputTransition;
 
 /**
  * A helper class that finds simple paths in any automaton
