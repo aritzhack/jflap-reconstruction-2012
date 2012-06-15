@@ -99,8 +99,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	public int getNumTapes() {
-		// TODO Auto-generated method stub
-		return 0;
+		return myNumTapes;
 	}
 
 	@Override
