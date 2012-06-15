@@ -12,10 +12,12 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
+import model.algorithms.conversion.ConversionAlgorithm;
 import model.algorithms.conversion.regextofa.deexpressionifying.ConcatDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.GroupingDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.KleeneStarDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.UnionDeX;
+import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -29,9 +31,8 @@ import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 
-public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<RegularExpression> {
+public class RegularExpressionToNFAConversion extends ConversionAlgorithm<RegularExpression, FiniteStateAcceptor> {
 
-	private GeneralizedTransitionGraph myGTG;
 	private List<FSATransition> myExpressionTransitions;
 	private List<FSATransition> myRemainingLambaTransitions;
 	private List<DeExpressionifier> myDeExpressionifiers;
@@ -75,7 +76,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 
 	@Override
 	public boolean reset() throws AlgorithmException {
-		myGTG = new GeneralizedTransitionGraph(this.getRE());
+		super.reset();
 		myRemainingLambaTransitions = new ArrayList<FSATransition>();
 		updateExpressionTransitions();
 		return true;
@@ -90,10 +91,14 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 
 	private void updateExpressionTransitions() {
 		myExpressionTransitions = new ArrayList<FSATransition>();
-		for (FSATransition t: myGTG.getTransitions()){
+		for (FSATransition t: getGTG().getTransitions()){
 			if (isExpressionTransition(t))
 				myExpressionTransitions.add(t);
 		}
+	}
+
+	private GeneralizedTransitionGraph getGTG() {
+		return (GeneralizedTransitionGraph) super.getConvertedDefinition();
 	}
 
 	private boolean isExpressionTransition(FSATransition t) {
@@ -105,7 +110,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		for(FSATransition trans: myRemainingLambaTransitions){
 			if (trans.getFromState().equals(from) &&
 					trans.getToState().equals(to)){
-				myGTG.getTransitions().add(trans);
+				getGTG().getTransitions().add(trans);
 				myRemainingLambaTransitions.remove(trans);
 				return;
 			}
@@ -116,7 +121,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 	}
 	
 	public void addAllRemainingLambdaTransitions() {
-		myGTG.getTransitions().addAll(myRemainingLambaTransitions);
+		getGTG().getTransitions().addAll(myRemainingLambaTransitions);
 		myRemainingLambaTransitions.clear();
 	}
 
@@ -125,7 +130,7 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		
 		for (DeExpressionifier dex: myDeExpressionifiers){
 			if (dex.isApplicable(t)){
-				myRemainingLambaTransitions.addAll(dex.adjustTransitionSet(t, myGTG));
+				myRemainingLambaTransitions.addAll(dex.adjustTransitionSet(t, getGTG()));
 				updateExpressionTransitions();
 				return;
 			}
@@ -153,12 +158,13 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 		return myExpressionTransitions;
 	}
 	
-	public FiniteStateAcceptor getCompletedNFA(){
-		if (this.isRunning())
-			throw new AlgorithmException("You may not retrieve the NFA until all " +
-					"transitions in the GTG have been de-expressionified.");
+	@Override
+	public FiniteStateAcceptor getConvertedDefinition(){
+//		if (this.isRunning())
+//			throw new AlgorithmException("You may not retrieve the NFA until all " +
+//					"transitions in the GTG have been de-expressionified.");
 		
-		return myGTG.createNFAFromGTG();
+		return getGTG().createNFAFromGTG();
 	}
 
 	
@@ -219,6 +225,11 @@ public class RegularExpressionToNFAConversion extends FormalDefinitionAlgorithm<
 			return !isDeExpressingifying();
 		}
 		
+	}
+
+	@Override
+	public FiniteStateAcceptor createBaseConverted() {
+		return new GeneralizedTransitionGraph(this.getRE());
 	}
 	
 }

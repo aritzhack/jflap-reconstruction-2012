@@ -47,7 +47,7 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 	}
 
 	@Override
-	public PushdownAutomaton createEmptyAutomaton() {
+	public PushdownAutomaton createBaseConverted() {
 		return new PushdownAutomaton();
 	}
 

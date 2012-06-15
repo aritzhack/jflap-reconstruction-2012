@@ -47,7 +47,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	}
 
 	@Override
-	public FiniteStateAcceptor createEmptyAutomaton() {
+	public FiniteStateAcceptor createBaseConverted() {
 		return new FiniteStateAcceptor();
 	}
 

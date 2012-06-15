@@ -10,6 +10,7 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
+import model.algorithms.conversion.ConversionAlgorithm;
 import model.automata.Automaton;
 import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
@@ -22,13 +23,10 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import errors.BooleanWrapper;
 
-public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S extends VariableMapping, E extends SingleInputTransition<E>> 
-																			extends FormalDefinitionAlgorithm<T> {
-	/**
-	 * The {@link Grammar} that is being created from the {@link Automaton};
-	 */
-	private Grammar myConvertedGrammar;
-	
+public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, 
+														 S extends VariableMapping, 
+															E extends SingleInputTransition<E>> 
+																			extends ConversionAlgorithm<T, Grammar> {
 	/**
 	 * The {@link Map} of {@link VariableMapping} to {@link Variable}
 	 * that have already been added.
@@ -58,7 +56,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	}
 	
 	public Grammar getConvertedGrammar(){
-		return myConvertedGrammar;
+		return getConvertedDefinition();
 	}
 	
 	public T getAutomaton(){
@@ -111,15 +109,14 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		}
 		
 		myMappedVariables.put(mapping, var);
-		boolean added = myConvertedGrammar.getVariables().add(var);
+		boolean added = getConvertedGrammar().getVariables().add(var);
 		
 		if (added && isStartMapping(mapping)){
 //			System.out.println("|" + myConvertedGrammar.getStartVariable().getString() + "|");
-			if(myConvertedGrammar.getStartVariable() != null)
+			if(getConvertedGrammar().getStartVariable() != null)
 				throw new AlgorithmException("A Start Variable mapping has already been added " +
 						"to the Converted grammar.");
-			System.out.println(var);
-			myConvertedGrammar.setStartVariable(var);
+			getConvertedGrammar().setStartVariable(var);
 		}
 		
 		return new BooleanWrapper (added, 
@@ -129,30 +126,20 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 	public boolean convertInputAlphabet() {
 		boolean converted = true;
 		for (Symbol s: getAutomaton().getInputAlphabet()){
-			converted = converted && myConvertedGrammar.getTerminals().add(new Terminal(s.toString()));
+			converted = converted && getConvertedGrammar().getTerminals().add(new Terminal(s.toString()));
 		}
 		return converted;
 	}
 
 	public boolean inputAlphabetConverted() {
-		return myConvertedGrammar.getTerminals().size() == getAutomaton().getInputAlphabet().size();
+		return getConvertedGrammar().getTerminals().size() == getAutomaton().getInputAlphabet().size();
 	}
 
 	@Override
 	public boolean reset() throws AlgorithmException{
-		myConvertedGrammar = new Grammar();
-		
-		GroupingPair gp = SpecialSymbolFactory.getBestGrouping(getAutomaton().getInputAlphabet());
-		
-		if (gp == null) 
-			return false;
-		
-		myConvertedGrammar.setVariableGrouping(gp);
-		
 		myMappedVariables = new HashMap<S, Variable>();
 		myConvertedTransitions = new HashSet<SingleInputTransition<E>>();
-		
-		return true;
+		return super.reset();
 	}
 
 	public Set<S> getUnmappedMappings(){
@@ -190,7 +177,13 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 		return terms;
 	}
 	
-	
+	@Override
+	public Grammar createBaseConverted() {
+		Grammar g = new Grammar();
+		GroupingPair gp = SpecialSymbolFactory.getBestGrouping(getAutomaton().getInputAlphabet());
+		g.setVariableGrouping(gp);
+		return g;
+	}
 	
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
@@ -205,6 +198,8 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, S ext
 
 	public abstract Set<S> getAllNecessaryMappings();
 
+	
+	
 	
 	/////////////////////////////////////////////////
 	////////////// Algorithm Steps //////////////////
