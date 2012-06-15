@@ -231,5 +231,9 @@ public class RegularExpressionToNFAConversion extends ConversionAlgorithm<Regula
 	public FiniteStateAcceptor createBaseConverted() {
 		return new GeneralizedTransitionGraph(this.getRE());
 	}
+
+	public FiniteStateAcceptor getCompletedNFA() {
+		return getConvertedDefinition();
+	}
 	
 }

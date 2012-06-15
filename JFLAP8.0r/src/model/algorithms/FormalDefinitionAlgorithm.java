@@ -1,5 +1,7 @@
 package model.algorithms;
 
+import java.util.ArrayList;
+
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 import model.formaldef.FormalDefinition;
@@ -17,7 +19,7 @@ public abstract class FormalDefinitionAlgorithm<T extends FormalDefinition> exte
 			throw new AlgorithmException(bw);
 		}
 		bw = checkOfProperForm(fd);
-
+		bw = getErrors(bw);
 		if (bw.length > 0)
 			throw new AlgorithmException(bw);
 		if (!this.reset())
@@ -25,6 +27,15 @@ public abstract class FormalDefinitionAlgorithm<T extends FormalDefinition> exte
 											"of the " + this.getDescriptionName() + ".");
 	}
 	
+	private BooleanWrapper[] getErrors(BooleanWrapper[] wrappers) {
+		ArrayList<BooleanWrapper> bw = new ArrayList<BooleanWrapper>();
+		for (BooleanWrapper wrap: wrappers){
+			if (wrap.isError())
+				bw.add(wrap);
+		}
+		return bw.toArray(new BooleanWrapper[0]);
+	}
+
 	/**
 	 * Checks to see if the automaton to be converted is
 	 * of the proper form for this algorithm. <code>isComplete()</code>
