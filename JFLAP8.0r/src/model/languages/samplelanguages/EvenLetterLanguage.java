@@ -27,14 +27,16 @@ public class EvenLetterLanguage extends Language{
 		Variable S = new Variable("S"), A = new Variable("A");
 		v.addAll(A,S);
 		
-		p.add(new Production(S,A));
-		p.add(new Production(A, new SymbolString()));
+		p.add(new Production(S,myTerminal,A));
+		p.add(new Production(S, new SymbolString()));
 		for(Symbol terminal : getAlphabet()){
 			if(!terminal.equals(myTerminal)){
-				p.add(new Production(A, A, terminal));
+				p.add(new Production(S, terminal, S));
+				p.add(new Production(A, terminal, A));
+			}else{
+				p.add(new Production(A, myTerminal,S));
 			}
 		}
-		p.add(new Production(A, A,myTerminal,A, myTerminal,A));
 	}
 
 }
