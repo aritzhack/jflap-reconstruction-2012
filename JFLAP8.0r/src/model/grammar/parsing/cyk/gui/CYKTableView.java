@@ -13,11 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import model.algorithms.transform.grammar.CNFConverter;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.cyk.CYKParser;
-import model.grammar.transform.CNFConverter;
 import file.xml.XMLCodec;
 
 @SuppressWarnings("serial")
