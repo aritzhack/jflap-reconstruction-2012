@@ -98,9 +98,6 @@ public class StayOptionRemover extends
 					TuringMachineMove.LEFT);
 			getTransformedDefinition().getTransitions().add(leftReplacement);
 		}
-		getTransformedDefinition().getTransitions().add(new TuringMachineTransition(newState, transition.getToState(), 
-				getOriginalDefinition().getBlankSymbol(), getOriginalDefinition().getBlankSymbol(), 
-				TuringMachineMove.LEFT));
 		return true;
 	}
 }
