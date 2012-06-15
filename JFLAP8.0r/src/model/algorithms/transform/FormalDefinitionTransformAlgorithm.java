@@ -28,11 +28,6 @@ public abstract class FormalDefinitionTransformAlgorithm<T extends FormalDefinit
 		return true;
 	}
 
-	@Override
-	public AlgorithmStep[] initializeAllSteps() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 }
