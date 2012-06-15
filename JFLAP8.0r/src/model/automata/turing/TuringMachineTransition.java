@@ -41,6 +41,8 @@ public class TuringMachineTransition extends Transition<TuringMachineTransition>
 		myWrites = new SymbolString[write.length];
 		myMoves = new TuringMachineMove[move.length];
 		for (int i = 0; i< this.getNumTapes(); i++){
+			myReads[i] = new SymbolString();
+			myWrites[i] = new SymbolString();
 			setRead(read[i], i);
 			setWrite(write[i], i);
 			setMove(move[i], i);
