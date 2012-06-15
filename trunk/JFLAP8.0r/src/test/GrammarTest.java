@@ -2,6 +2,10 @@ package test;
 
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
+import model.algorithms.transform.grammar.CNFConverter;
+import model.algorithms.transform.grammar.LambdaProductionRemover;
+import model.algorithms.transform.grammar.UnitProductionRemover;
+import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
@@ -17,10 +21,6 @@ import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
-import model.grammar.transform.CNFConverter;
-import model.grammar.transform.LambdaProductionRemover;
-import model.grammar.transform.UnitProductionRemover;
-import model.grammar.transform.UselessProductionRemover;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
 

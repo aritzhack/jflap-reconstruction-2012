@@ -1,8 +1,8 @@
 package oldnewstuff.model.change.rules.applied;
 
-import oldnewstuff.model.change.events.SetToEvent;
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
+import model.change.events.SetToEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;

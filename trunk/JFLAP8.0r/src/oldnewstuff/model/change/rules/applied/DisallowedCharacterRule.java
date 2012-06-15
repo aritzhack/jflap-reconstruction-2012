@@ -1,10 +1,10 @@
 package oldnewstuff.model.change.rules.applied;
 
-import oldnewstuff.model.change.events.SetComponentEvent;
-import oldnewstuff.model.change.events.SetComponentModifyEvent;
 import oldnewstuff.model.change.rules.FormalDefinitionUsingRule;
 import oldnewstuff.model.change.rules.SetComponentRule;
 import util.UtilFunctions;
+import model.change.events.SetComponentEvent;
+import model.change.events.SetComponentModifyEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;

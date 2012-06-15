@@ -3,11 +3,11 @@ package oldnewstuff.model.change.rules.applied;
 import java.util.List;
 import java.util.Set;
 
-import oldnewstuff.model.change.events.SetComponentEvent;
-import oldnewstuff.model.change.events.SetComponentModifyEvent;
 import oldnewstuff.model.change.rules.SetComponentRule;
 
 import errors.BooleanWrapper;
+import model.change.events.SetComponentEvent;
+import model.change.events.SetComponentModifyEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.grammar.Production;
 import model.grammar.TerminalAlphabet;

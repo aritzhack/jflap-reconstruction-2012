@@ -10,6 +10,7 @@ import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.fsa.DFAtoRegularExpressionConverter;
 import model.algorithms.fsa.NFAtoDFAConverter;
 import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
+import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
@@ -21,7 +22,6 @@ import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
-import model.grammar.transform.CNFConverter;
 import model.regex.RegularExpression;
 
 public class RegExTest extends TestHarness{

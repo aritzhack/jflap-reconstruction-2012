@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.io.File;
 
+import model.formaldef.components.symbols.PermanentSymbol;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
@@ -38,7 +39,7 @@ public class JFLAPPreferences {
 	
     public static String LAMBDA = "\u03BB";     // Jinghui Lim added stuff
     public static String EPSILON = "\u03B5";    // see MultipleSimulateAction
-    private static char BLANK = '\u25A1';
+    private static String BLANK = "\u25A1";
 	
 	/** The main mask for keystrokes in a menu. */
 	private static int MAIN_MENU_MASK;
@@ -78,7 +79,7 @@ public class JFLAPPreferences {
 	}
 
 	public static Symbol getTMBlankSymbol() {
-		return new Symbol(BLANK + "");
+		return new PermanentSymbol(BLANK );
 	}
 
 	public static OpenGroup getCurrentRegExOpenGroup() {
@@ -138,4 +139,5 @@ public class JFLAPPreferences {
 	}
 
 
+	
 }

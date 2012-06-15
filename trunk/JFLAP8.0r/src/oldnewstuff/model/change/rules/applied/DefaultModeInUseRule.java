@@ -3,13 +3,13 @@ package oldnewstuff.model.change.rules.applied;
 import java.util.Arrays;
 import java.util.Set;
 
-import oldnewstuff.model.change.events.SetComponentEvent;
-import oldnewstuff.model.change.events.SetComponentModifyEvent;
 import oldnewstuff.model.change.rules.SetComponentRule;
 
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
+import model.change.events.SetComponentEvent;
+import model.change.events.SetComponentModifyEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;

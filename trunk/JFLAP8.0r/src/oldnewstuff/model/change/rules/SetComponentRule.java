@@ -3,9 +3,9 @@ package oldnewstuff.model.change.rules;
 import java.lang.Character.Subset;
 
 import oldnewstuff.model.change.ChangeEvent;
-import oldnewstuff.model.change.events.SetComponentEvent;
-import oldnewstuff.model.change.events.SetComponentModifyEvent;
 
+import model.change.events.SetComponentEvent;
+import model.change.events.SetComponentModifyEvent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;

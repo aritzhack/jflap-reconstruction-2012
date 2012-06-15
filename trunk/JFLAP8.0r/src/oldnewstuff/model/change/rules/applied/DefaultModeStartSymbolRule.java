@@ -1,10 +1,10 @@
 package oldnewstuff.model.change.rules.applied;
 
 import oldnewstuff.model.change.ChangeEvent;
-import oldnewstuff.model.change.events.SetToEvent;
 import oldnewstuff.model.change.rules.Rule;
 import preferences.JFLAPPreferences;
 import errors.BooleanWrapper;
+import model.change.events.SetToEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.StartVariable;

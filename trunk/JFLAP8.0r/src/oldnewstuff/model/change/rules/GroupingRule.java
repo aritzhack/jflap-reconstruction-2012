@@ -1,8 +1,8 @@
 package oldnewstuff.model.change.rules;
 
 import oldnewstuff.model.change.ChangeEvent;
-import oldnewstuff.model.change.events.SetComponentEvent;
 import errors.BooleanWrapper;
+import model.change.events.SetComponentEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
