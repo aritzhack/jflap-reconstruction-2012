@@ -268,7 +268,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 
 		@Override
 		public boolean isComplete() {
-			return doAllAutomaticVariableMappings();
+			return variableMappingsComplete();
 		}
 		
 	}
