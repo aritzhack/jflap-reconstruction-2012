@@ -1,20 +1,21 @@
-package model.numbersets;
+package model.numbersets.defined;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 public class MultiplesOfSet extends PredefinedSet {
 	
 	private int myFactor;
-	private ArrayList<Integer> myValues;
+	private Set<Integer> myValues;
 	
 	public MultiplesOfSet (int factor) {
 		myFactor = factor;
-		myValues = new ArrayList<Integer>();
+		myValues = new TreeSet<Integer>();
 	}
 
 	@Override
-	public Collection<Integer> getNumbersInSet() {
+	public Set<Integer> getSet() {
 		return myValues;
 	}
 
@@ -46,7 +47,7 @@ public class MultiplesOfSet extends PredefinedSet {
 	}
 
 	@Override
-	public Collection<Integer> generateNextNumbers(int n) {
+	public Set<Integer> generateNextNumbers(int n) {
 		int buffer = myValues.size();
 		for (int i = buffer; i < n + buffer; i++) {
 			myValues.add(i * myFactor);
@@ -56,9 +57,15 @@ public class MultiplesOfSet extends PredefinedSet {
 	}
 
 	@Override
-	public Collection<Integer> getValuesInRange(int min, int max) {
+	public Set<Integer> getValuesInRange(int min, int max) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

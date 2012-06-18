@@ -1,36 +1,44 @@
-package model.numbersets;
+package model.numbersets.defined;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+/**
+ * @author Peggy Li
+ */
+
+import java.util.Set;
+import java.util.TreeSet;
+
 
 public class FibonacciSet extends PredefinedSet {
 
-	boolean debug = false;
+	/**
+	 * f(n)
+	 */
+	private int current;
+	/**
+	 * f(n-1)
+	 */
+	private int prevFirst;
+	/**
+	 * f(n-2)
+	 */
+	private int prevLast;
 
-	private int current; // f(n)
-	private int prevFirst; // f(n-1)
-	private int prevLast; // f(n-2)
-
-	private ArrayList<Integer> myValues;
+	private Set<Integer> myValues;
 
 	public FibonacciSet() {
 		prevLast = 0;
 		prevFirst = 1;
 
-		myValues = new ArrayList<Integer>();
+		myValues = new TreeSet<Integer>();
 	}
 
 	@Override
-	public Collection<Integer> generateNextNumbers(int n) {
+	public Set<Integer> generateNextNumbers(int n) {
 		for (int i = 0; i < n; i++) {
-
 			if (myValues.size() == 0 && n >= 1)
 				myValues.add(prevLast);
-
 			else if (myValues.size() == 1 && n >= 2)
 				myValues.add(prevFirst);
-
 			else {
 				current = prevFirst + prevLast;
 				myValues.add(current);
@@ -40,7 +48,7 @@ public class FibonacciSet extends PredefinedSet {
 			}
 		}
 
-		return myValues;
+		return copy(myValues);
 	}
 
 	@Override
@@ -63,20 +71,18 @@ public class FibonacciSet extends PredefinedSet {
 
 	@Override
 	public boolean contains(int n) {
-		if (myValues.get(myValues.size() - 1) > n) {
-			return myValues.contains(n);
-		}
-		while (myValues.get(myValues.size() - 1) < n) {
-			generateNextNumbers(1);
-		}
-		return myValues.contains(n);
+		int a = (int) (5 * Math.pow(n, 2) + 4);
+		int b = (int) (5 * Math.pow(n, 2) - 4);
+		return (Math.sqrt(a) == (int) (Math.sqrt(a)) || 
+				Math.sqrt(b) == (int) (Math.sqrt(b)));
 	}
 
 	@Override
 	public void reset() {
+		myValues.clear();
+
 		prevFirst = 1;
 		prevLast = 0;
-
 	}
 
 	private int fibonacci(int n) {
@@ -86,14 +92,17 @@ public class FibonacciSet extends PredefinedSet {
 	}
 
 	@Override
-	public Collection<Integer> getNumbersInSet() {
-		ArrayList<Integer> copy = new ArrayList<Integer>();
-		Collections.copy(copy, myValues);
-		return copy;
+	public int getSize() {
+		return myValues.size();
 	}
 
 	@Override
-	public Collection<Integer> getValuesInRange(int min, int max) {
+	public Set<Integer> getSet() {
+		return copy(myValues);
+	}
+
+	@Override
+	public Set<Integer> getValuesInRange(int min, int max) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,26 +1,28 @@
-package model.numbersets;
+package model.numbersets.defined;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 public class PrimeSet extends PredefinedSet {
 	
-	private ArrayList<Integer> myValues;
+	private Set<Integer> myValues;
 	
 	private int myCurrent;
 	
 	public PrimeSet () {
 		myCurrent = 1;
-		myValues = new ArrayList<Integer>();
+		myValues = new TreeSet<Integer>();
 	}
 
 	@Override
-	public Collection<Integer> getNumbersInSet() {
+	public Set<Integer> getSet() {
 		return myValues;
 	}
 
 	@Override
-	public Collection<Integer> generateNextNumbers(int n) {
+	public Set<Integer> generateNextNumbers(int n) {
 		for (int i = 0; i < n; i++) {
 			myValues.add(getNextPrime());
 		}
@@ -35,21 +37,16 @@ public class PrimeSet extends PredefinedSet {
 		 * be large as the value of n increases.
 		 */
 		
-		while (myValues.size() < n-1 ) {
-			myValues.add(getNextPrime());
+		ArrayList<Integer> primes = new ArrayList<Integer>(myValues);
+		while (primes.size() < n-1 ) {
+			primes.add(getNextPrime());
 		}
-		return myValues.get(n-1);
+		return primes.get(n-1);
 	}
 
 	@Override
 	public boolean contains(int n) {
-		if (myValues.get(myValues.size()-1) > n) {
-			return myValues.contains(n);
-		}
-		while (myValues.get(myValues.size()-1) < n) {
-			generateNextNumbers(1);
-		}
-		return myValues.contains(n);
+		return isPrime(n);
 	}
 
 	@Override
@@ -79,6 +76,8 @@ public class PrimeSet extends PredefinedSet {
 	}
 	
 	private boolean isPrime (int n) {
+		if (n < 2)	return false;
+		
 		for (int i = 2; i <= Math.sqrt(n); i++) {
 			if (n % i == 0)
 				return false;
@@ -87,9 +86,14 @@ public class PrimeSet extends PredefinedSet {
 	}
 
 	@Override
-	public Collection<Integer> getValuesInRange(int min, int max) {
+	public Set<Integer> getValuesInRange(int min, int max) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getSize() {
+		return myValues.size();
 	}
 
 }
