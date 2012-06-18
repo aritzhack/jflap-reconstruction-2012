@@ -4,13 +4,14 @@ import javax.swing.JPanel;
 
 import model.undo.UndoKeeper;
 
-public abstract class EditingPanel extends JPanel implements Updateable{
+public abstract class EditingPanel extends JPanel{
 
 	private UndoKeeper myKeeper;
 	private boolean amEditable;
 	
 	public EditingPanel(UndoKeeper keeper, boolean editable){
 		myKeeper = keeper;
+		amEditable = editable;
 	}
 	
 	public UndoKeeper getKeeper() {

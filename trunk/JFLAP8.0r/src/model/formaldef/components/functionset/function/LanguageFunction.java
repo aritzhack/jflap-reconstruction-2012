@@ -21,8 +21,8 @@ public abstract class LanguageFunction<T extends LanguageFunction<T>> extends Se
 	public boolean applySymbolMod(String from, String to) {
 		List<Symbol> fromList = this.getAllSymbols();
 		for (Symbol s: fromList){
-			if (s.getString().equals(from));
-			s.setString(to);
+			if (s.getString().equals(from))
+				s.setString(to);
 		}
 		distributeChanged();
 		return !fromList.isEmpty();

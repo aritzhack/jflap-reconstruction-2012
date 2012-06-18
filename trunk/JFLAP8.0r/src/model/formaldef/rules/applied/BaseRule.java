@@ -28,8 +28,9 @@ public class BaseRule extends AlphabetRule {
 
 	@Override
 	public BooleanWrapper canRemove(Alphabet a, Symbol oldSymbol) {
-		return new BooleanWrapper(a.contains(oldSymbol), 
-						"This " + a.getDescriptionName() + " does not contain " + "the symbol " + oldSymbol.getString());
+//		return new BooleanWrapper(a.contains(oldSymbol), 
+//						"This " + a.getDescriptionName() + " does not contain " + "the symbol " + oldSymbol.getString());
+		return new BooleanWrapper(true);
 
 	}
 

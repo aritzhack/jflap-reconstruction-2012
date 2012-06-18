@@ -197,7 +197,8 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	
 	@Override
 	public void stateChanged(ChangeEvent event) {
-		this.componentChanged((AdvancedChangeEvent) event);
+		if (event instanceof AdvancedChangeEvent)
+			this.componentChanged((AdvancedChangeEvent) event);
 	}
 
 	public void componentChanged(AdvancedChangeEvent event){
@@ -209,9 +210,9 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 					this.purgeOfSymbols(a, (Collection<Symbol>) event.getArg(0));
 					return;
 				case ITEM_MODIFIED:
-					String from = (String) event.getArg(0);
-					String to = (String) event.getArg(1);
-					applySymbolMod(from, to);
+					Symbol from = (Symbol) event.getArg(0);
+					Symbol to = (Symbol) event.getArg(1);
+					applySymbolMod(from.getString(), to.getString());
 					return;
 				}
 			}

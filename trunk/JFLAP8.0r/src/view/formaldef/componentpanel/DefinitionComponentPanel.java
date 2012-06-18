@@ -17,20 +17,32 @@ import oldnewstuff.view.util.SuperMouseAdapter;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.undo.UndoKeeper;
 
-public abstract class DefinitionComponentPanel<T extends FormalDefinitionComponent> extends JPanel implements JFLAPGUIResources, ChangeListener{
+public abstract class DefinitionComponentPanel<T extends FormalDefinitionComponent> extends EditingPanel implements JFLAPGUIResources, ChangeListener{
 
 	private JLabel myLabel;
+	private T myComp;
+	private UndoKeeper myKeeper;
 
-	public DefinitionComponentPanel(T comp, UndoKeeper keeper) {
+	public DefinitionComponentPanel(T comp, UndoKeeper keeper, boolean editable) {
+		super(keeper, editable);
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		comp.addListener(this);
 		comp.addListener(keeper);
+		myComp = comp;
+		myKeeper = keeper;
 		myLabel = new JLabel();
 		myLabel.setText(comp.getCharacterAbbr() + " = ");
 		this.add(myLabel);
 		this.setToolTipText(comp.getDescriptionName());
 	}
 	
+	public UndoKeeper getKeeper(){
+		return myKeeper;
+	}
+	
+	public T getComponent(){
+		return myComp;
+	}
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		update(e);

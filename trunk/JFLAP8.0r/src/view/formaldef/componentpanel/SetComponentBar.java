@@ -31,7 +31,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
     private JTextComponent myFocus;
     
 	public SetComponentBar(Color highlight) {
-		super(2, HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL_SCROLLBAR_NEVER);
+		super(4, VERTICAL_SCROLLBAR_NEVER, HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		myBar = new JToolBar();
 		myBar.setFloatable(false);
 		myHighlight = highlight;
@@ -39,8 +39,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 	}
 	
 	public void setTo(T ...items){
-		JFLAPDebug.print(Arrays.asList(items));
-		this.removeAll();
+		myBar.removeAll();
 		this.add(items);
 	}
 	

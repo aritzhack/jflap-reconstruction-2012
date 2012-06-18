@@ -14,7 +14,7 @@ import javax.swing.text.JTextComponent;
 
 import debug.JFLAPDebug;
 
-import oldnewstuff.action.alphabets.ModifySymbolAction;
+import view.action.ModifySymbolAction;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
 import view.formaldef.componentpanel.SetComponentBar;
 
@@ -29,14 +29,9 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 
 	private SymbolBar mySymbolBar;
 	private JTextComponent myFocus;
-	private UndoKeeper myKeeper;
-	private boolean modifyAllowed;
 
 	public AlphabetBar(T comp, UndoKeeper keeper, boolean allowModify) {
-		super(comp, keeper);
-		JFLAPDebug.print(comp);
-		myKeeper = keeper;
-		modifyAllowed = allowModify;
+		super(comp, keeper, allowModify);
 		mySymbolBar = new SymbolBar();
 		mySymbolBar.setTo(comp.toArray(new Symbol[0]));
 		setUpLabels();
@@ -68,7 +63,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 	 */
 	public JPopupMenu getBoxMenu(Symbol item) {
 		JPopupMenu menu = new JPopupMenu();
-		menu.add(new ModifySymbolAction(item, myKeeper));
+		menu.add(new ModifySymbolAction(item, getKeeper()));
 		
 		return menu;
 	}
@@ -109,7 +104,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 
 		@Override
 		public void doClickResponse(Symbol item, MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3 && modifyAllowed)
+			if (e.getButton() == MouseEvent.BUTTON3 && isEditable())
 				getBoxMenu(item).show(e.getComponent(), e.getX(), e.getY());
 			else if(e.getButton() == MouseEvent.BUTTON1){
 				addToCurrentTextFocus(item);
