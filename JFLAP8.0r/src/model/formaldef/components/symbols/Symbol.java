@@ -11,7 +11,10 @@ import debug.JFLAPDebug;
 
 import model.automata.turing.BlankSymbol;
 import model.change.events.SetToEvent;
+import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
+import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.AlphabetActionType;
 import model.regex.EmptySub;
 
 import util.Copyable;
@@ -22,6 +25,17 @@ public class Symbol extends SetSubComponent<Symbol>{
 	
 	public Symbol(String s) { 
 		myString = s;
+	}
+	
+	@Override
+	public Alphabet getParent() {
+		return (Alphabet) super.getParent();
+	}
+	
+	@Override
+	public boolean setTo(Symbol other) {
+		getParent().checkRules(AlphabetActionType.MODIFY, this, other);
+		return super.setTo(other);
 	}
 	
 	/**

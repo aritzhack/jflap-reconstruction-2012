@@ -193,7 +193,7 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 		return myRules.addAll(Arrays.asList(rules));
 	}
 
-	private void checkRules(AlphabetActionType type, Symbol ... symbols) throws AlphabetException{
+	public void checkRules(AlphabetActionType type, Symbol ... symbols) throws AlphabetException{
 		for (Symbol s : symbols){
 			for (AlphabetRule rule : myRules){
 				BooleanWrapper bw = new BooleanWrapper(true);
@@ -202,11 +202,15 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 					bw = rule.canAdd(this, s); break;
 				case REMOVE:
 					bw = rule.canRemove(this, s); break;
+				case MODIFY:
+					bw = rule.canModify(this, s, symbols[1]);
 				}
 				if (bw.isError())
 					throw new AlphabetException(bw.getMessage());
 
 			}
+			if (type == AlphabetActionType.MODIFY)
+				break;
 		}
 	}
 

@@ -44,7 +44,6 @@ public class ThrowableCatcher {
 	 */
 	public void handle(Throwable throwable) {
 		if (throwable instanceof JFLAPException){
-			throwable.printStackTrace();
 			JFLAPError.show(throwable.getMessage(), "Error");
 			return;
 		}
