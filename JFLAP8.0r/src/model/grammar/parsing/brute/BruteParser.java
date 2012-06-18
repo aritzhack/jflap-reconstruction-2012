@@ -113,7 +113,6 @@ public abstract class BruteParser extends Parser {
 			SymbolString result = d.createResult();
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = i; j < Math.min(maxLHSsize+i, result.size()); j++) {
-					
 					SymbolString LHS = result.subList(i, j+1);
 					for (Production p : getGrammar().getProductionSet()
 							.getProductionsWithLHS(LHS)) {

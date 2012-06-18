@@ -91,7 +91,6 @@ public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{
 	}
 
 	public boolean isValidInput(SymbolString string) {
-		
 		return string == null || getGrammar().getTerminals().containsAll(string);
 	}
 	

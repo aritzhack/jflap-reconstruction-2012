@@ -1,6 +1,7 @@
 package test;
 
 import model.algorithms.conversion.autotogram.TMtoGrammarConversion;
+import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.algorithms.transform.turing.StayOptionRemover;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -23,12 +24,12 @@ public class TuringTester {
 		StateSet states = new StateSet();
 		states.add(new State("q0",0));
 		states.add(new State("q1",1));
-		states.add(new State("q2",2));
+//		states.add(new State("q2",2));
 		TapeAlphabet tapeAlph = new TapeAlphabet();
-		tapeAlph.addAll(new Symbol("a"), new Symbol("b"));
+		tapeAlph.addAll(new Symbol("a"));
 		BlankSymbol blank = new BlankSymbol();
 		InputAlphabet inputAlph = new InputAlphabet();
-		inputAlph.addAll(new Symbol("a"), new Symbol("b"));
+		inputAlph.addAll(new Symbol("a"));
 		TransitionSet<TuringMachineTransition> functions = new TransitionSet<TuringMachineTransition>();
 		functions.add(new TuringMachineTransition(states.getStateWithID(0), states.getStateWithID(0), new Symbol("a"), new Symbol("a"), TuringMachineMove.RIGHT));
 		functions.add(new TuringMachineTransition(states.getStateWithID(0), states.getStateWithID(1), JFLAPPreferences.getTMBlankSymbol(), JFLAPPreferences.getTMBlankSymbol(), TuringMachineMove.LEFT));
@@ -46,8 +47,11 @@ public class TuringTester {
 //		System.out.println(remover.getTransformedDefinition());
 		TMtoGrammarConversion converter = new TMtoGrammarConversion(tm);
 		converter.stepToCompletion();
-		UnrestrictedBruteParser parser = new UnrestrictedBruteParser(converter.getConvertedDefinition());
-		System.out.println(parser.quickParse(SymbolString.createFromString("a", converter.getConvertedDefinition())));
+//		System.out.println(converter.getConvertedGrammar());
+		UselessProductionRemover remover = new UselessProductionRemover(converter.getConvertedGrammar());
+		remover.stepToCompletion();
+		UnrestrictedBruteParser parser = new UnrestrictedBruteParser(remover.getTransformedGrammar());
+		System.out.println(parser.quickParse(SymbolString.toSingleCharSymbols("b")));
 //		System.out.println(converter.getConvertedDefinition());
 	}
 }
