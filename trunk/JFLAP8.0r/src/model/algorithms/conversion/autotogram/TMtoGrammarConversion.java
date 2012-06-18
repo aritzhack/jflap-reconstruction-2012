@@ -1,5 +1,6 @@
 package model.algorithms.conversion.autotogram;
 
+import java.awt.PageAttributes.OriginType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,6 +45,16 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	public boolean isStartMapping(TMVariableMapping mapping) {
 		return false;
 	}
+	
+	@Override
+	public boolean convertInputAlphabet() {
+		return super.convertInputAlphabet() && getConvertedGrammar().getTerminals().add(new Terminal(getOriginalDefinition().getBlankSymbol().getString()));
+	}
+
+	@Override
+	public boolean inputAlphabetConverted() {
+		return getConvertedGrammar().getTerminals().size() == getAutomaton().getInputAlphabet().size()+1;
+	}
 
 	@Override
 	public Production[] convertTransition(TuringMachineTransition trans) {
@@ -76,7 +87,6 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 				}
 			}
 		}
-
 		return productionList.toArray(new Production[0]);
 	}
 
@@ -123,10 +133,8 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		LinkedList<AlgorithmStep> steps = new LinkedList<AlgorithmStep>();
-		steps.addAll(Arrays.asList(super.initializeAllSteps()));
-		steps.add(2, new CreateAdditionalProductions());
-		return steps.toArray(new AlgorithmStep[0]);
+		AlgorithmStep[] old = super.initializeAllSteps();
+		return new AlgorithmStep[]{old[1], new CreateAdditionalProductions(), old[2]};
 	}
 	
 	private class CreateAdditionalProductions implements AlgorithmStep{
@@ -134,7 +142,7 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 		@Override
 		public String getDescriptionName() {
 			// TODO Auto-generated method stub
-			return null;
+			return "Create Additional Productions";
 		}
 
 		@Override
@@ -166,17 +174,19 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 		char open = getConvertedGrammar().getOpenGroup();
 		char close = getConvertedGrammar().getCloseGroup();
 		Variable S = new Variable(open+s+close), T = new Variable(open+t+close);
+		
 		getConvertedGrammar().setStartVariable(S);
 		
 		Variable Vblankblank = getVarForMapping(new TMVariableMapping(getOriginalDefinition().getBlankSymbol(),getOriginalDefinition().getBlankSymbol()));
 		p.add(new Production(S, T));
 		p.add(new Production(S, Vblankblank, S));
 		p.add(new Production(S, S, Vblankblank));
-		p.add(new Production(new Variable(open+getOriginalDefinition().getBlankSymbol().getString()+close), new SymbolString()));
+		p.add(new Production(new Terminal(getOriginalDefinition().getBlankSymbol().getString()), new SymbolString()));
 		for(Symbol a : getAutomaton().getInputAlphabet()){
 			p.add(new Production(T, T, getVarForMapping(new TMVariableMapping(a,a))));
 			p.add(new Production(T, getVarForMapping(new TMVariableMapping(a, getOriginalDefinition().getStates().getStateWithID(0), a))));
 		}
+		
 		return true;
 	}
 }
