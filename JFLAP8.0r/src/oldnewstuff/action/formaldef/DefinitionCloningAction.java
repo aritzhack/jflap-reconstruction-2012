@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import oldnewstuff.view.formaldef.UsesDefinition;
 import oldnewstuff.view.util.undo.UndoableAction;
+import view.formaldef.UsesDefinition;
 
 import model.formaldef.FormalDefinition;
 

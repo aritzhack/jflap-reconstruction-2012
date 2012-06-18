@@ -1,4 +1,4 @@
-package oldnewstuff.view.formaldef;
+package view.formaldef;
 
 import model.formaldef.FormalDefinition;
 

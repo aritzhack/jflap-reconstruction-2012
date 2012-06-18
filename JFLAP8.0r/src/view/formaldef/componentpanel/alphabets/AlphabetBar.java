@@ -1,4 +1,4 @@
-package oldnewstuff.view.formaldef.componentpanel.alphabets;
+package view.formaldef.componentpanel.alphabets;
 
 import java.awt.Color;
 import java.awt.KeyboardFocusManager;
@@ -7,56 +7,57 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 
+import debug.JFLAPDebug;
+
 import oldnewstuff.action.alphabets.ModifySymbolAction;
-import oldnewstuff.action.alphabets.PromptAndAddSymbols;
-import oldnewstuff.action.alphabets.RemoveSymbolsAction;
-import oldnewstuff.view.formaldef.componentpanel.DefinitionComponentPanel;
-import oldnewstuff.view.formaldef.componentpanel.SetComponentBar;
-import oldnewstuff.view.util.undo.UndoKeeper;
-import oldnewstuff.view.util.undo.UndoableAction;
-import oldnewstuff.view.util.undo.old.UndoingActionMenu;
+import view.formaldef.componentpanel.DefinitionComponentPanel;
+import view.formaldef.componentpanel.SetComponentBar;
 
 
+
+import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
+import model.undo.UndoKeeper;
 
 public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T> {
 
 	private SymbolBar mySymbolBar;
 	private JTextComponent myFocus;
+	private UndoKeeper myKeeper;
+	private boolean modifyAllowed;
 
-	public AlphabetBar(T comp, boolean editable, UndoKeeper keeper) {
-		super(comp, editable, keeper);
+	public AlphabetBar(T comp, UndoKeeper keeper, boolean allowModify) {
+		super(comp, keeper);
+		JFLAPDebug.print(comp);
+		myKeeper = keeper;
+		modifyAllowed = allowModify;
+		mySymbolBar = new SymbolBar();
+		mySymbolBar.setTo(comp.toArray(new Symbol[0]));
 		setUpLabels();
 		setUpFocusManager();
 	}
 
 	private void setUpLabels() {
 		this.add(new JLabel("{"));
-		this.add(getSymbolBar());
+		this.add(mySymbolBar);
 		this.add(new JLabel("}"));
 	}
 	
 	
 	@Override
-	public void update() {
-		this.getSymbolBar().setTo(this.getComponent().toArray(new Symbol[0]));		
+	public void update(ChangeEvent e) {
+		if (e.getSource() instanceof Alphabet){
+			Symbol[] symbols = ((Alphabet) e.getSource()).toArray(new Symbol[0]);
+			mySymbolBar.setTo(symbols);	
+		}
 	}
 
-	private SymbolBar getSymbolBar() {
-		if (mySymbolBar == null)
-			mySymbolBar = new SymbolBar();
-		return mySymbolBar;
-	}
-
-	@Override
-	public JPopupMenu getMenu() {
-		UndoableAction a = new PromptAndAddSymbols(getComponent());
-		return new UndoingActionMenu(getKeeper(), a);
-	}
 
 	/**
 	 * Retrieve the right-click menu linked to the 
@@ -66,10 +67,8 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 	 * @return
 	 */
 	public JPopupMenu getBoxMenu(Symbol item) {
-		T a = this.getComponent();
-		JPopupMenu menu = this.getMenu();
-		menu.add(new RemoveSymbolsAction(a, item));
-		menu.add(new ModifySymbolAction(a, item));
+		JPopupMenu menu = new JPopupMenu();
+		menu.add(new ModifySymbolAction(item, myKeeper));
 		
 		return menu;
 	}
@@ -110,7 +109,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 
 		@Override
 		public void doClickResponse(Symbol item, MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3 && isEditable())
+			if (e.getButton() == MouseEvent.BUTTON3 && modifyAllowed)
 				getBoxMenu(item).show(e.getComponent(), e.getX(), e.getY());
 			else if(e.getButton() == MouseEvent.BUTTON1){
 				addToCurrentTextFocus(item);

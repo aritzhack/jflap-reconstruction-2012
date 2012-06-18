@@ -6,10 +6,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import preferences.JFLAPPreferences;
+import view.grammar.GrammarView;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
 import model.regex.RegularExpression;
+import model.undo.UndoKeeper;
 import errors.ThrowableCatcher;
 import file.xml.XMLCodec;
 
@@ -27,8 +29,8 @@ public class UITesting {
 		String toSave = System.getProperties().getProperty("user.dir") +"/filetest";
 		File f = new File(toSave + "/grammar.jff");
 		
-		Grammar regex = (Grammar) new XMLCodec().decode(f);
-//		frame.add(new GrammarView((Grammar) regex, new UndoKeeper(), true));
+		Grammar gram = (Grammar) new XMLCodec().decode(f);
+		frame.add(new GrammarView(gram, new UndoKeeper(), true));
 		frame.pack();
 		frame.setVisible(true);
 	}

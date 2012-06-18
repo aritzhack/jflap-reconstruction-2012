@@ -7,7 +7,7 @@ import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 import oldnewstuff.action.formaldef.DefinitionCloningAction;
-import oldnewstuff.view.formaldef.UsesDefinition;
+import view.formaldef.UsesDefinition;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;

@@ -1,4 +1,4 @@
-package oldnewstuff.view.formaldef.componentpanel;
+package view.formaldef.componentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -7,12 +7,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.text.JTextComponent;
+
+import debug.JFLAPDebug;
 
 import oldnewstuff.view.JFLAPGUIResources;
 import oldnewstuff.view.util.thinscroller.ThinScrollBarScrollPane;
@@ -36,6 +39,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 	}
 	
 	public void setTo(T ...items){
+		JFLAPDebug.print(Arrays.asList(items));
 		this.removeAll();
 		this.add(items);
 	}

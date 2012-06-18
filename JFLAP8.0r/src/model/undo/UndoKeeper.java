@@ -15,7 +15,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.undo.UndoManager;
 
+import model.change.events.SetToEvent;
 import model.change.events.UndoableEvent;
+import model.formaldef.components.symbols.Symbol;
 
 import debug.JFLAPDebug;
 
@@ -35,6 +37,8 @@ public class UndoKeeper implements ChangeListener{
 	private Deque<IUndoRedo> myRedoQueue ;
 	private Set<UndoKeeperListener> myListeners;
 	private boolean amLocked;
+	private boolean amCombining;
+	private CompoundUndoRedo myCombineAction;
 
 	public enum UndoableActionType{
 		UNDO,REDO;
@@ -47,8 +51,12 @@ public class UndoKeeper implements ChangeListener{
 	}
 
 	public <T extends Copyable> void registerChange(IUndoRedo toAdd){
-		if (amLocked) return;
-		myUndoQueue.push(toAdd);
+		if (amLocked) 
+			return;
+		else if (amCombining)
+			myCombineAction.add(toAdd);
+		else
+			myUndoQueue.push(toAdd);
 	}
 
 	public boolean undoLast(){
@@ -119,6 +127,16 @@ public class UndoKeeper implements ChangeListener{
 	public void clear() {
 		myUndoQueue.clear();
 		myRedoQueue.clear();
+	}
+
+	public void beginCombine(IUndoRedo init) {
+		amCombining = true;
+		myCombineAction = new CompoundUndoRedo(init);
+	}
+
+	public void endCombine() {
+		amCombining = false;
+		registerChange(myCombineAction);
 	}
 
 
