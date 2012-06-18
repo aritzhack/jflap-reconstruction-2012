@@ -2,6 +2,7 @@ package model.automata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +65,15 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	}
 
 	@Override
-	public boolean add(T trans){
-		if (!super.add(trans)) return false;
+	public boolean addAll(Collection<? extends T> c) {
+		if (!super.addAll(c)) return false;
+		for (T trans :c){
+			addToMaps(trans);
+		}
+		return true;
+	}
+
+	private void addToMaps(T trans){
 
 		Set<T> fromList = transitionsFromStateMap.get(trans.getFromState());
 		if (fromList == null){
@@ -76,7 +84,7 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 		if (transitionsFromStateMap.get(trans.getToState()) == null){
 			transitionsFromStateMap.put(trans.getToState(), new TreeSet<T>());
 		}
-		
+
 		Set<T> toList = transitionsToStateMap.get(trans.getToState());
 		if (toList == null){
 			toList = new TreeSet<T>();
@@ -86,23 +94,28 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 		if (transitionsToStateMap.get(trans.getFromState()) == null){
 			transitionsToStateMap.put(trans.getFromState(), new TreeSet<T>());
 		}
-		
-		return true;
 	}
 
 	@Override
-	public boolean remove(Object trans){
-		if (!super.remove(trans)) return false;
-		T t = (T) trans;
+	public boolean removeAll(Collection<?> c) {
+		if (!super.removeAll(c)) return false;
+		for (Object trans :c){
+			removeFromMaps((T) trans);
+		}
+		return true;
+	}
+
+
+	private void removeFromMaps(T t){
 		//update fromStateMap
 		Set<T> fromFromSet = transitionsFromStateMap.get(t.getFromState());
 		Set<T> toToSet = transitionsToStateMap.get(t.getToState());
-		
+
 		fromFromSet.remove(t);
 		toToSet.remove(t);
-		
-//		JFLAPDebug.print(t.getToState(),6);
-//		JFLAPDebug.print(transitionsFromStateMap,1);
+
+		//		JFLAPDebug.print(t.getToState(),6);
+		//		JFLAPDebug.print(transitionsFromStateMap,1);
 
 		if (transitionsFromStateMap.get(t.getToState()).isEmpty() &&
 				toToSet.isEmpty()){
@@ -115,9 +128,7 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 			transitionsFromStateMap.remove(t.getFromState());
 			transitionsToStateMap.remove(t.getFromState());
 		}
-		
-		
-		return true;
+
 	}
 
 	@Override
@@ -136,11 +147,13 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	 * Removes all transitions with a from or to state corresponding
 	 * to the parameter.
 	 * 
-	 * @param s
+	 * @param states
 	 */
-	public void removeForState(State s) {
-		this.removeAll(this.getTransitionsFromState(s));
-		this.removeAll(this.getTransitionsToState(s));
+	public void removeForStates(Collection<State> states) {
+		for (State s: states){
+			this.removeAll(this.getTransitionsFromState(s));
+			this.removeAll(this.getTransitionsToState(s));
+		}
 	}
 
 }

@@ -1,5 +1,8 @@
 package model.grammar;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -7,6 +10,7 @@ import util.JFLAPConstants;
 
 
 
+import model.change.events.SetToEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
@@ -15,7 +19,7 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 
-public class Production implements LanguageFunction<Production>, JFLAPConstants{
+public class Production extends LanguageFunction<Production> implements JFLAPConstants{
 
 	/** the left hand side of the production. */
 	private SymbolString myLHS;
@@ -32,6 +36,8 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 *            the right hand side of the production rule.
 	 */
 	public Production(SymbolString lhs, SymbolString rhs) {
+		checkBadSymbols(lhs);
+		checkBadSymbols(rhs);
 		myLHS = lhs;
 		myRHS = rhs;
 	}
@@ -60,8 +66,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 *            the right hand side
 	 */
 	public boolean setRHS(SymbolString rhs) {
-		checkBadSymbols(rhs);
-		return myRHS.setTo(rhs);
+		return setTo(myLHS, rhs);
 	}
 
 	/**
@@ -71,8 +76,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 *            the left hand side
 	 */
 	public boolean setLHS(SymbolString lhs) {
-		checkBadSymbols(lhs);
-		return myLHS.setTo(lhs);
+		return setTo(lhs, myRHS);
 	}
 
 	private void checkBadSymbols(SymbolString lhs) {
@@ -170,11 +174,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 *         production (i.e. they have identical left and right hand sides).
 	 */
 	public boolean equals(Object production) {
-		if (production instanceof Production) {
-			Production p = (Production) production;
-			return getRHS().equals(p.getRHS()) && getLHS().equals(p.getLHS());
-		}
-		return false;
+		return this.compareTo((Production) production) == 0;
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	 * @return the hashcode for this production
 	 */
 	public int hashCode() {
-		return getRHS().hashCode() * getLHS().hashCode();
+		return myRHS.hashCode() * myLHS.hashCode();
 	}
 
 	/**
@@ -203,25 +203,14 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(getLHS());
+		buffer.append(myLHS);
 		 buffer.append("->");
 //		buffer.append('\u2192');
-		buffer.append(getRHS());
+		buffer.append(myRHS);
 		// buffer.append('\n');
 		return buffer.toString();
 	}
 	
-
-	@Override
-	protected Production clone() {
-		try {
-			return this.getClass().
-							getConstructor(SymbolString.class, SymbolString.class).
-								newInstance(getLHS().clone(), getRHS().clone());
-		} catch (Exception e) {
-			throw new AlphabetException("Error cloning Production");
-		}
-	}
 
 	public boolean isStartProduction(Variable variable) {
 		if (myLHS.isEmpty()) return false;
@@ -246,16 +235,17 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 	public boolean isEmpty() {
 		return myLHS.isEmpty() && myRHS.isEmpty();
 	}
-
-	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-		boolean lhs = myLHS.removeEach(s); 
-		return this.myRHS.removeEach(s) || lhs;
+	
+	@Override
+	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
+		boolean lhs = myLHS.removeAll(s); 
+		return this.myRHS.removeAll(s) || lhs;
 	}
 
 	
 	public Object[] toArray() {
 		return new Object[]{
-				this.getLHS().toString(),
+				this.myLHS.toString(),
 				ARROW,
 				this.myRHS.toString()};
 	}
@@ -279,8 +269,7 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "A production rule for a grammar.";
 	}
 
 	@Override
@@ -292,13 +281,8 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 		return this.myRHS.isEmpty();
 	}
 
-	@Override
-	public boolean setTo(Production other) {
-		return this.setTo(other.myLHS, other.myRHS);
-	}
-
 	private boolean setTo(SymbolString lhs, SymbolString rhs) {
-		return this.setLHS(lhs) && this.setRHS(rhs);
+		return this.setTo(new Production(lhs, rhs));
 	}
 
 	public boolean containsSymbolOnLHS(Symbol s) {
@@ -307,6 +291,19 @@ public class Production implements LanguageFunction<Production>, JFLAPConstants{
 
 	public boolean containsSymbolOnRHS(Symbol s) {
 		return myRHS.contains(s);
+	}
+
+	@Override
+	public List<Symbol> getAllSymbols() {
+		List<Symbol> symbols = new ArrayList<Symbol>(myLHS);
+		symbols.addAll(myRHS);
+		return symbols;
+	}
+
+	@Override
+	protected void applySetTo(Production other) {
+		this.myLHS.setTo(other.myLHS);
+		this.myRHS.setTo(other.myRHS);
 	}
 
 

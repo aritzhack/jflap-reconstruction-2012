@@ -8,8 +8,8 @@ import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.symbols.Symbol;
 
@@ -56,17 +56,6 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 											new StartState(this.getStartState()),
 											this.getOutputFunctionSet()};
 	}
-
-	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-		OutputAlphabet output = this.getOutputAlphabet();
-		if (event.comesFrom(output) && event.getType() == ITEM_REMOVED){
-			this.getOutputFunctionSet().purgeOfSymbol(getOutputAlphabet(), 
-												(Symbol) event.getArg(0));
-		}
-		else 
-			super.componentChanged(event);
-	}
 	
 	@Override
 	public Transducer copy() {
@@ -82,5 +71,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
 
 }

@@ -1,10 +1,12 @@
 package model.regex;
 
+import java.util.Collection;
+
 import oldnewstuff.main.JFLAP;
 import util.UtilFunctions;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
-import model.formaldef.components.ComponentChangeEvent;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
@@ -40,7 +42,7 @@ public class RegularExpressionGrammar extends Grammar {
 	private final Variable START = new Variable("<Start>");
 	private InputAlphabet myInputAlph;
 	private OperatorAlphabet myOperatorAlph;
-	
+
 	public RegularExpressionGrammar(InputAlphabet alph,
 			OperatorAlphabet ops) {
 		myInputAlph = alph;
@@ -57,18 +59,16 @@ public class RegularExpressionGrammar extends Grammar {
 		addProduction(EXPRESSION, ops.getKleeneStar());
 		addProduction(EXPRESSION, EXPRESSION);
 		addProduction(ops.getEmptySub());
-		for (Symbol s: alph){
-			inputSymbolAdded(s);
-		}
+		inputSymbolsAdded(alph);
 	}
 
 	private boolean addProduction(Symbol ... rhs) {
-		
+
 		Production p = new Production(new SymbolString(EXPRESSION),
-										new SymbolString(rhs));
+				new SymbolString(rhs));
 		return this.getProductionSet().add(p);
 	}
-	
+
 	@Override
 	public String getDescriptionName() {
 		return "Regular Expression " + super.getDescriptionName();
@@ -80,15 +80,20 @@ public class RegularExpressionGrammar extends Grammar {
 	 * {@link RegularExpressionGrammar} has alphabets and productions
 	 * which mirror that of the {@link RegularExpression} object itself
 	 * 
-	 * @param s
+	 * @param symbols
 	 * @return
 	 */
-	public boolean inputSymbolRemoved(Symbol s){
-		return removeProductionForSymbol(s) &&
-				this.getTerminals().remove(s) ;
-		
+	public boolean inputSymbolsRemoved(Collection<Symbol> symbols){
+		boolean changed = false;
+		for (Symbol s: symbols){
+			if (removeProductionForSymbol(s) &&
+					this.getTerminals().remove(s))
+				changed = true;
+		}
+		return changed;
+
 	}
-	
+
 	/**
 	 * Removes the production associated with the given input
 	 * symbol s that has been removed from the input alphabet.
@@ -112,30 +117,35 @@ public class RegularExpressionGrammar extends Grammar {
 	/**
 	 * Adds the input symbol s to the terminal alphabet
 	 * and add the correct production to the production set. 
- 	 * is to ensure that the {@link RegularExpressionGrammar} 
- 	 * has alphabets and productions which mirror that of the 
- 	 * {@link RegularExpression} object itself.
+	 * is to ensure that the {@link RegularExpressionGrammar} 
+	 * has alphabets and productions which mirror that of the 
+	 * {@link RegularExpression} object itself.
 	 * 
-	 * @param s
+	 * @param collection
 	 * @return
 	 */
-	public boolean inputSymbolAdded(Symbol s){
+	public boolean inputSymbolsAdded(Collection<Symbol> symbols){
 		TerminalAlphabet terms = this.getTerminals();
-		return terms.add(s) &&
-				addProductionForSymbol(terms.getByString(s.getString()));
-		
+		boolean changed = false;
+		for (Symbol s: symbols){
+			if(terms.add(s) &&
+					addProductionForSymbol(terms.getByString(s.getString())))
+				changed = true;
+		}
+		return true;
+
 	}
 
 	private boolean addProductionForSymbol(Symbol s) {
 		return addProduction(s);
 	}
-	
+
 	@Override
 	public Grammar alphabetAloneCopy() {
-		
+
 		return new RegularExpressionGrammar(myInputAlph, myOperatorAlph);
 	}
-	
+
 	@Override
 	public RegularExpressionGrammar copy(){
 		RegularExpressionGrammar g = (RegularExpressionGrammar) super.copy();
@@ -146,16 +156,16 @@ public class RegularExpressionGrammar extends Grammar {
 	}
 
 	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-		if (event.comesFrom(myInputAlph)){
+	public void componentChanged(AdvancedChangeEvent event) {
+		if (event.comesFrom(myInputAlph.getClass())){
 			switch (event.getType()){
-			case ALPH_SYMBOL_MODIFY: break;
-				//propagate modify to regex grammar if need be.
+			case ITEM_MODIFIED: break;
+			//propagate modify to regex grammar if need be.
 			case ITEM_ADDED:
-				this.inputSymbolAdded((Symbol)event.getArg(0));
+				this.inputSymbolsAdded((Collection<Symbol>)event.getArg(0));
 				break;
 			case ITEM_REMOVED:
-				this.inputSymbolRemoved((Symbol)event.getArg(0));
+				this.inputSymbolsRemoved((Collection<Symbol>)event.getArg(0));
 				break;
 			}
 		}

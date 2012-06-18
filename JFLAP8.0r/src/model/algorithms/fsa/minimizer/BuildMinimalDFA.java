@@ -17,6 +17,7 @@ import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
+import model.formaldef.components.symbols.SymbolString;
 
 public class BuildMinimalDFA extends SteppableAlgorithm {
 
@@ -59,7 +60,7 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 		for (FSATransition trans: getOriginalDFA().getTransitions()){
 			State from = getGroupStateForState(trans.getFromState());
 			State to = getGroupStateForState(trans.getToState());
-			needed.add(new FSATransition(from, to, trans.getInput()));
+			needed.add(new FSATransition(from, to, new SymbolString(trans.getInput())));
 		}
 		return needed;
 	}

@@ -3,6 +3,7 @@ package file.xml.formaldef.regex;
 import model.automata.InputAlphabet;
 import model.automata.transducers.OutputAlphabet;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.ExpressionComponent;
 import model.regex.OperatorAlphabet;
 
 import org.w3c.dom.Document;
@@ -12,7 +13,7 @@ import file.xml.StructureTransducer;
 import file.xml.XMLTransducer;
 import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
-public class ExpressionStringTransducer extends StructureTransducer<SymbolString> {
+public class ExpressionStringTransducer extends StructureTransducer<ExpressionComponent> {
 
 	private SymbolStringTransducer mySymbolStringTransducer;
 
@@ -26,15 +27,16 @@ public class ExpressionStringTransducer extends StructureTransducer<SymbolString
 	}
 
 	@Override
-	public SymbolString fromStructureRoot(Element root) {
+	public ExpressionComponent fromStructureRoot(Element root) {
 		Element e = (Element) root.getElementsByTagName(EXPRESSION_TAG).item(0);
-		return mySymbolStringTransducer.fromStructureRoot(e);
+		SymbolString expression = mySymbolStringTransducer.fromStructureRoot(e);
+		return new ExpressionComponent(expression);
 	}
 
 	@Override
-	public Element appendComponentsToRoot(Document doc, SymbolString structure,
+	public Element appendComponentsToRoot(Document doc, ExpressionComponent structure,
 			Element root) {
-		Element e = mySymbolStringTransducer.toXMLTree(doc, structure);
+		Element e = mySymbolStringTransducer.toXMLTree(doc, structure.getExpression());
 		root.appendChild(e);
 		return root;
 	}

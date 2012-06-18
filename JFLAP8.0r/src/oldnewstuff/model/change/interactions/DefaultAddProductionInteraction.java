@@ -10,7 +10,7 @@ import debug.JFLAPDebug;
 
 import model.change.events.CompoundUndoableChangeEvent;
 import model.change.events.SetComponentEvent;
-import model.change.events.UndoableChangeEvent;
+import model.change.events.UndoableEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -35,7 +35,7 @@ public class DefaultAddProductionInteraction extends Interaction{
 		for (Production p : items){
 			
 			Symbol[] toAdd = p.getVariablesUsed().toArray(new Symbol[0]);
-			UndoableChangeEvent temp = vars.createAddEvent(toAdd);
+			UndoableEvent temp = vars.createAddEvent(toAdd);
 			temp.applyChange();
 			event.addSubEvents(temp);
 			

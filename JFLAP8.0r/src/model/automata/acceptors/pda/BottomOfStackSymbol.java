@@ -1,6 +1,10 @@
 package model.automata.acceptors.pda;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SpecialSymbol;
 import model.formaldef.components.symbols.Symbol;
 
@@ -33,6 +37,10 @@ public class BottomOfStackSymbol extends SpecialSymbol {
 		return "Bottom of Stack Symbol";
 	}
 
+	@Override
+	public Class<? extends Alphabet> getAlphabetClass() {
+		return StackAlphabet.class;
+	}
 	
 	
 }

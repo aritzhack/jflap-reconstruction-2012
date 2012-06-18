@@ -44,8 +44,8 @@ public class ParserTest extends GrammarTest {
 		Terminal d = new Terminal("d");
 		
 		//ex7.6cnf-a.jff
-		addSymbols(g.getVariables(), S,A,B );
-		addSymbols(g.getTerminals(),a,b,c,d);
+//		addSymbols(g.getVariables(), S,A,B );
+//		addSymbols(g.getTerminals(),a,b,c,d);
 		prod.add(new Production(S, a,A,d,B));
 		prod.add(new Production(A, a,A));
 		prod.add(new Production(A, c));
@@ -64,10 +64,11 @@ public class ParserTest extends GrammarTest {
 		outPrintln(table.toString());
 		
 		//try LL1 parser
-		String in = "$";
+		String in = "aacd$";
 		LL1Parser ll1parse = new LL1Parser(g);
 		boolean accepts = ll1parse.quickParse(SymbolString.createFromString(in, g));
 		outPrintln("LL1 Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
+		
 		//prepare and execute SLR parse
 		prod.clear();
 		prod.add(new Production(S, A));
@@ -82,7 +83,7 @@ public class ParserTest extends GrammarTest {
 		
 		//Show DFA
 		SLR1DFA dfa = new SLR1DFA(g);
-		outPrintln(dfa.toString());
+		outPrintln("SLR1 DFA:\n" + dfa.toString());
 		
 		//Show SLR1 parse Table
 		SLR1ParseTable slrTable = new SLR1ParseTable(g);
@@ -107,7 +108,7 @@ public class ParserTest extends GrammarTest {
 
 	@Override
 	public String getTestName() {
-		return null;
+		return "Parser Test";
 	}
 
 }

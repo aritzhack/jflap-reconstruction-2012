@@ -148,7 +148,7 @@ public class Grammar extends FormalDefinition{
 	 * @return
 	 */
 	public Variable getStartVariable(){
-		return getComponentOfClass(StartVariable.class).toSymbolObject();
+		return getComponentOfClass(StartVariable.class).getSymbol();
 	}
 	
 	/**
@@ -156,10 +156,7 @@ public class Grammar extends FormalDefinition{
 	 * @param s
 	 */
 	public void setStartVariable(Variable s){
-		if (!this.getVariables().contains(s))
-			throw new GrammarException("To set the start symbol, it must " +
-					"first be in the Variable Alphabet");
-		myStartVariable.setTo(s);
+		myStartVariable.setSymbol(s);
 	}
 
 	@Override

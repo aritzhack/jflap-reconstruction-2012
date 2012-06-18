@@ -31,7 +31,7 @@ public class GroupingDeX extends DeExpressionifier {
 			FSATransition trans, GeneralizedTransitionGraph gtg) {
 		//May need to grab transition from GTG, not sure if the assumption that
 		//trans is already in the gtg will always hold true.
-		SymbolString input = trans.getInput();
+		SymbolString input = new SymbolString(trans.getInput());
 		trans.setInput(input.subList(1,input.size()-1));
 		return new ArrayList<FSATransition>();
 	}

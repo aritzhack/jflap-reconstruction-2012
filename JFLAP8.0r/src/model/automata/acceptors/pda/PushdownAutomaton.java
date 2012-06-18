@@ -8,8 +8,8 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
@@ -31,7 +31,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		super(states, inputAlph, stackAlph, functions, start, bottom, finalStates);
 		this.getStackAlphabet().addRules(new BottomOfStackSymbolRule(bottom));
 		myBotOfStackSymbol = bottom;
-		setBottomOfStackSymbol(bottom.toSymbolObject());
+		setBottomOfStackSymbol(bottom.getSymbol());
 		
 	}
 	
@@ -70,7 +70,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	}
 
 	public Symbol getBottomOfStackSymbol() {
-		return this.getComponentOfClass(BottomOfStackSymbol.class).toSymbolObject();
+		return this.getComponentOfClass(BottomOfStackSymbol.class).getSymbol();
 	}
 	
 	public void setBottomOfStackSymbol(Symbol s){
@@ -79,21 +79,11 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 		if (s != null && (!stackALph.contains(s) && !stackALph.add(s)))
 			return;
 		
-		myBotOfStackSymbol.setTo(s);
+		myBotOfStackSymbol.setSymbol(s);
 	}
 
 	public StackAlphabet getStackAlphabet() {
 		return getComponentOfClass(StackAlphabet.class);
-	}
-
-	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-
-		if (event.comesFrom(getStackAlphabet()) && event.getType() == ITEM_REMOVED){
-			this.getTransitions().purgeOfSymbol(getStackAlphabet(), 
-												(Symbol) event.getArg(0));
-		}
-		else super.componentChanged(event);
 	}
 
 	@Override

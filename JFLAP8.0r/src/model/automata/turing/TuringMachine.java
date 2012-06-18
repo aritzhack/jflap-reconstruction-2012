@@ -10,8 +10,8 @@ import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PushdownAutomaton;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
@@ -27,7 +27,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	public TuringMachine(StateSet states,
 							TapeAlphabet tapeAlph,
 							BlankSymbol blank,
-							TuringMachineInputAlphabet inputAlph,
+							InputAlphabet inputAlph,
 							TransitionSet<TuringMachineTransition> functions,
 							StartState start,
 							FinalStateSet finalStates, 
@@ -35,9 +35,6 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
 		myNumTapes = numTapes;
 		setBlankSymbol(blank);
-
-		this.getInputAlphabet().addRules(new TuringMachineRule(this));
-
 	}
 	
 
@@ -57,7 +54,7 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 		return new TuringMachine(new StateSet(),
 									this.getTapeAlphabet(), 
 									(BlankSymbol) myBlank.copy(), 
-									(TuringMachineInputAlphabet) this.getInputAlphabet(), 
+									this.getInputAlphabet(), 
 									new TransitionSet<TuringMachineTransition>(), 
 									new StartState(), 
 									new FinalStateSet(),
@@ -67,14 +64,14 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	public Symbol getBlankSymbol() {
-		return getComponentOfClass(BlankSymbol.class).toSymbolObject();
+		return getComponentOfClass(BlankSymbol.class).getSymbol();
 	}
 
 
 
 	private void setBlankSymbol(BlankSymbol blank) {
 		myBlank = blank;
-		this.getTapeAlphabet().add(blank.toSymbolObject());
+		this.getTapeAlphabet().add(blank.getSymbol());
 		this.getTapeAlphabet().addRules(new TuringMachineBlankRule(myBlank));
 	}
 
@@ -86,12 +83,15 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 
 
 	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-		if (event.comesFrom(getTapeAlphabet()) && event.getType() == ITEM_REMOVED){
+	public void componentChanged(AdvancedChangeEvent event) {
+		if (event.comesFrom(TapeAlphabet.class) && event.getType() == ITEM_REMOVED){
 			InputAlphabet input = this.getInputAlphabet();
 			Symbol s = (Symbol) event.getArg(0);
-			if (input.contains(s))
 				input.remove(s);
+		} else if (event.comesFrom(InputAlphabet.class) && event.getType() == ITEM_ADDED){
+			TapeAlphabet tape = this.getTapeAlphabet();
+			Symbol s = (Symbol) event.getArg(0);
+			tape.add(s);
 		}
 		super.componentChanged(event);
 	}

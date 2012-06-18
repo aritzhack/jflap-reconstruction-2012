@@ -60,14 +60,14 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		State from = trans.getFromState();
 		State to = trans.getToState();
 
-		Symbol pop = trans.getPop().getFirst();
+		Symbol pop = trans.getPop()[0];
 		
 		SymbolString input = convertToTerminals(trans.getInput());
-		SymbolString push = trans.getPush();
+		Symbol[] push = trans.getPush();
 		
 		PDAVariableMapping map;
 		
-		if (push.isEmpty()){
+		if (push.length == 0){
 			rhs.addAll(input);
 			map = new PDAVariableMapping(from, pop, to);
 			Variable var = this.getVarForMapping(map);
@@ -86,10 +86,10 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 				var1 = this.getVarForMapping(map);
 				lhs.add(var1);
 				
-				map = new PDAVariableMapping(to, push.get(0), ql);
+				map = new PDAVariableMapping(to, push[0], ql);
 				var1 = this.getVarForMapping(map);
 				
-				map = new PDAVariableMapping(ql, push.get(1), qk);
+				map = new PDAVariableMapping(ql, push[1], qk);
 				var2 = this.getVarForMapping(map);
 				
 				rhs.addAll(input);
@@ -129,19 +129,22 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		}
 		
 		for (PDATransition trans : pda.getTransitions()){
-		
-			if (trans.getPop().isEmpty() || trans.getPop().size() > 1)
+			Symbol[] input = trans.getInput();
+			Symbol[] pop = trans.getPop();
+			Symbol[] push = trans.getPush();
+			
+			if (pop.length == 0 || pop.length > 1)
 				errors.add(new BooleanWrapper(false, 
 						"Every transition must pop 1 symbol: " + trans.toString()));
-			if (trans.getInput().size() > 1)
+			if (input.length > 1)
 				errors.add(new BooleanWrapper(false, 
 							"Every transition must read 1 or 0 input symbols: " + trans.toString()));
-			if(trans.getPush().size() > 2 || trans.getPush().size() == 1)
+			if(push.length > 2 || push.length == 1)
 				errors.add(new BooleanWrapper(false, 
 							"A transition must push 2 or 0 symbols: " + trans.toString()));
 			if (pda.getFinalStateSet().contains(trans.getToState()) &&
-					(!trans.getPop().getFirst().equals(pda.getBottomOfStackSymbol()) ||
-							!trans.getInput().isEmpty()))
+					(!pop[0].equals(pda.getBottomOfStackSymbol()) ||
+							input.length != 0))
 				errors.add(new BooleanWrapper(false, 
 												"Upon entering a final state, the stack must be empty." +
 												" Therefore, you must pop the bottom of stack symbol" +

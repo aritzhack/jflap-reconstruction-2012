@@ -3,6 +3,7 @@ package model.automata;
 import java.awt.Point;
 
 import errors.BooleanWrapper;
+import model.change.events.StartStateSetEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 
 public class StartState extends FormalDefinitionComponent {
@@ -20,7 +21,7 @@ public class StartState extends FormalDefinitionComponent {
 	}
 
 	public StartState(State state) {
-		this.setTo(state);
+		this.setState(state);
 	}
 
 
@@ -48,14 +49,16 @@ public class StartState extends FormalDefinitionComponent {
 	}
 	
 	
-	public void setTo(State start){
+	public boolean setState(State start){
+		StartStateSetEvent e = new StartStateSetEvent(this, myState, start);
 		myState = start;
-		this.distributeChange(START_STATE_CHANGED, myState);
+		this.distributeChange(e);
+		return true;
 	}
 	
 	
 	public void clear(){
-		this.setTo(null);
+		this.setState(null);
 	}
 	
 	@Override
@@ -72,7 +75,7 @@ public class StartState extends FormalDefinitionComponent {
 
 
 
-	public State toStateObject() {
+	public State getState() {
 		return myState;
 	}
 }

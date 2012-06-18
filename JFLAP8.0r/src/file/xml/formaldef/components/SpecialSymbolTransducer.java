@@ -7,7 +7,7 @@ public abstract class SpecialSymbolTransducer<T extends SpecialSymbol>
 
 	@Override
 	public Object retrieveData(T structure) {
-		return structure.toSymbolObject();
+		return structure.getSymbol();
 	}
 
 	

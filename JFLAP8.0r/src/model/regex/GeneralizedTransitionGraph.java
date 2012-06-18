@@ -1,5 +1,6 @@
 package model.regex;
 
+import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -8,6 +9,7 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
@@ -73,7 +75,8 @@ public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
 	}
 
 	private boolean isLambaTransition(FSATransition t) {
-		return t.getInput().contains(myRegEx.getOperators().getEmptySub());
+		Symbol[] input = t.getInput();
+		return input.length > 0 && input[0].equals(myRegEx.getOperators().getEmptySub());
 	}
 
 	public State stateHelper(StateSet states, int id) {

@@ -1,5 +1,6 @@
 package model.automata.transducers.mealy;
 
+import util.UtilFunctions;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
@@ -59,6 +60,23 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 		int compare = super.compareTo(o);
 		if (compare != 0) return compare;
 		return this.getInput().compareTo(((MealyOutputFunction) o).getInput());
+	}
+
+
+	@Override
+	public MealyOutputFunction copy() {
+		return new MealyOutputFunction(getState(), myInput, getOutput());
+	}
+	
+	@Override
+	public SymbolString[] getAllParts() {
+		return UtilFunctions.combine(super.getAllParts(), myInput);
+	}
+	
+	@Override
+	protected void applySetTo(MealyOutputFunction other) {
+		super.applySetTo(other);
+		this.myInput.setTo(other.myInput);
 	}
 
 }

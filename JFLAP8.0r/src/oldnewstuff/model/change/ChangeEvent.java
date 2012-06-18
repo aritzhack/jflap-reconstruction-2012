@@ -25,7 +25,7 @@ public abstract class ChangeEvent implements ChangeTypes{
 	
 	/**
 	 * Returns true if the {@link FormalDefinitionComponent} 
-	 * class associated with this {@link ComponentChangeEvent}
+	 * class associated with this {@link AdvancedChangeEvent}
 	 * is the same as or is a subclass of the passed in 
 	 * <code>FormalDefinitionComponent</code> 
 	 * 

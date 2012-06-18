@@ -24,7 +24,7 @@ public class SLR1DFAState extends State{
 	}
 
 	public boolean matchesSet(Set<SLR1Production> closure) {
-		return myProductions.containsAll(closure);
+		return myProductions.equals(closure);
 	}
 	
 	public SLR1Production[] getProductions(){

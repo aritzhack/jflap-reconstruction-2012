@@ -3,6 +3,8 @@ package test;
 import java.io.File;
 import java.util.Arrays;
 
+import debug.JFLAPDebug;
+
 import util.UtilFunctions;
 
 import model.automata.InputAlphabet;
@@ -85,9 +87,9 @@ public class FileTester extends TestHarness {
 		outPrintln("Testing error/definition completion printouts:");
 		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n") + "\n");
 		
-		for (char i = '0'; i <= '9'; i++){
-			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
-		}
+//		for (char i = '0'; i <= '9'; i++){
+//			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
+//		}
 		
 		//figure 2.18 from the linz book with minor adjustments for non-determinism
 		State q0 = new State("q0", 0);
@@ -142,8 +144,8 @@ public class FileTester extends TestHarness {
 		Terminal d = new Terminal("d");
 		
 		//ex7.6cnf-a.jff
-		g.getVariables().addAll( S,A,B );
-		g.getTerminals().addAll(a,b,c,d);
+//		g.getVariables().addAll( S,A,B );
+//		g.getTerminals().addAll(a,b,c,d);
 		prod.add(new Production(S, a,A,d,B));
 		prod.add(new Production(A, a,A));
 		prod.add(new Production(A, c));
@@ -157,18 +159,11 @@ public class FileTester extends TestHarness {
 	
 	private RegularExpression createRegex() {
 		RegularExpression regex = new RegularExpression(new InputAlphabet());
-		for (char i = 'a'; i <= 'c'; i++){
-			regex.getInputAlphabet().add(new Symbol(Character.toString(i)));
-		}
-
-		outPrintln(regex.toString());
-
 
 		//set regex
 		String in = "((a+b)*+c)";
-		regex.setTo(in);
+		regex.setTo(RegularExpression.toExpression(in, regex, null));
 		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
-
 		//trim alphabets
 		regex.trimAlphabets();
 		return regex;

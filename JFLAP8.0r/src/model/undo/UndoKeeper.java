@@ -11,15 +11,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.Action;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.undo.UndoManager;
 
-import model.change.events.UndoableChangeEvent;
+import model.change.events.UndoableEvent;
 
 import debug.JFLAPDebug;
 
 
-import oldnewstuff.model.change.ChangeEvent;
-import oldnewstuff.model.change.ChangeListener;
 import util.Copyable;
 
 
@@ -72,7 +72,6 @@ public class UndoKeeper implements ChangeListener{
 			if (!test) break;
 			to.push(from.pop());
 			n--;
-			JFLAPDebug.print(wrap.getName());
 
 			broadcastStateChange();
 		}
@@ -113,7 +112,7 @@ public class UndoKeeper implements ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (e instanceof UndoableChangeEvent)
+		if (e instanceof UndoableEvent)
 			this.registerChange((IUndoRedo) e);
 	}
 

@@ -83,6 +83,11 @@ public class RegExTest extends TestHarness{
 		dfa = c4.getMinimizedDFA();
 		outPrintln("Minimized regex DFA:\n" + dfa.toString());
 		
+		//test input on DFA to confirm equivalence
+		sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);
+		sim.beginSimulation(SymbolString.createFromString(in, dfa));
+		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
+		
 		//convert DFA to rex 
 		DFAtoRegularExpressionConverter c3 = new DFAtoRegularExpressionConverter(dfa);
 		c3.stepToCompletion();

@@ -4,14 +4,14 @@ import model.formaldef.components.Settable;
 import model.formaldef.components.symbols.SpecialSymbol;
 import model.formaldef.components.symbols.Symbol;
 
-public abstract class SetToEvent<T extends Settable<S>, S> extends UndoableChangeEvent {
+public class SetToEvent<T extends Settable<T>> extends AdvancedUndoableEvent {
 
-	private S myFrom;
-	private S myTo;
+	private T myFrom;
+	private T myTo;
 	private T myBase;
 
-	public SetToEvent(T source, S from, S to) {
-		super(SET_TO, source);
+	public SetToEvent(T source, T from, T to) {
+		super(source, ITEM_MODIFIED);
 		myBase = source;
 		myFrom = from;
 		myTo = to;
@@ -27,12 +27,22 @@ public abstract class SetToEvent<T extends Settable<S>, S> extends UndoableChang
 		return myBase.setTo(myTo);
 	}
 	
-	public S getFrom(){
+	@Override
+	public T getSource() {
+		return (T) super.getSource();
+	}
+	
+	public T getFrom(){
 		return myFrom;
 	}
 	
-	public S getTo(){
+	public T getTo(){
 		return myTo;
+	}
+
+	@Override
+	public String getName() {
+		return "Set " + myFrom + " to " + myTo;
 	}
 
 }

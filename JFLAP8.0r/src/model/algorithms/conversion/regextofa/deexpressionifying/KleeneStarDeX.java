@@ -26,7 +26,7 @@ public class KleeneStarDeX extends DeExpressionifier {
 	@Override
 	public List<FSATransition> adjustTransitionSet(
 			FSATransition trans, GeneralizedTransitionGraph gtg) {
-		SymbolString input = trans.getInput();
+		SymbolString input = new SymbolString(trans.getInput());
 		trans.setInput(input.subList(0,input.size()-1));
 		List<FSATransition> toAdd = new ArrayList<FSATransition>();
 		//do forward lambda transition

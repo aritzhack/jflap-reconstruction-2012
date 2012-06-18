@@ -8,7 +8,7 @@ import oldnewstuff.model.change.ChangeListener;
 import model.change.events.CompoundUndoableChangeEvent;
 import model.change.events.SetComponentEvent;
 import model.change.events.SetComponentModifyEvent;
-import model.change.events.UndoableChangeEvent;
+import model.change.events.UndoableEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
@@ -45,7 +45,7 @@ public class CustomModeSymbolModifiedInteraction extends Interaction implements 
 
 	@Override
 	public void stateChanged(ChangeEvent event) {
-		myEvent.addSubEvents((UndoableChangeEvent) event);
+		myEvent.addSubEvents((UndoableEvent) event);
 	}
 
 }

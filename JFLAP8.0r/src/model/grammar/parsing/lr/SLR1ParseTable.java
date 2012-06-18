@@ -93,7 +93,7 @@ public class SLR1ParseTable {
 	public void addAllRulesForState(SLR1DFAState from) {
 		Set<FSATransition> trans = mySLR1DFA.getTransitions().getTransitionsFromState(from);
 		for (FSATransition t: trans){
-			Symbol s = t.getInput().getFirst();
+			Symbol s = t.getInput()[0];
 			SLR1DFAState to = (SLR1DFAState) t.getToState();
 			SLR1rule newRule;
 			if (Grammar.isTerminal(s)){

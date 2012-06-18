@@ -76,13 +76,13 @@ public class DFAEqualityChecker {
 		if (t1.length != t2.length)
 			return false;
 		for (int i = 0; i < t1.length; i++) {
-			labelToTrans1.put(t1[i].getInput(), t1[i]);
-			labelToTrans2.put(t2[i].getInput(), t2[i]);
+			labelToTrans1.put(new SymbolString(t1[i].getInput()), t1[i]);
+			labelToTrans2.put(new SymbolString(t2[i].getInput()), t2[i]);
 		}
 		// Now, for each transition from state1, we can find the
 		// corresponding transition in state2, if it exists.
 		for (int i = 0; i < t1.length; i++) {
-			SymbolString label = t1[i].getInput();
+			SymbolString label = new SymbolString(t1[i].getInput());
 			FSATransition counterpart = labelToTrans2.get(label);
 			// Does the same transition exist in the other automaton?
 			if (counterpart == null)

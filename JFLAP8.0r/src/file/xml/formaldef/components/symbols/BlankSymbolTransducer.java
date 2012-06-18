@@ -12,7 +12,7 @@ public class BlankSymbolTransducer extends SpecialSymbolTransducer<BlankSymbol> 
 
 	@Override
 	public BlankSymbol createInstance(String s) {
-		return new BlankSymbol(s);
+		return BlankSymbol.newInstance(s);
 	}
 
 

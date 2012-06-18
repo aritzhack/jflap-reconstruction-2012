@@ -1,11 +1,13 @@
 package model.regex;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import oldnewstuff.universe.preferences.JFLAPPreferences;
+import oldnewstuff.view.Updateable;
 import util.UtilFunctions;
 
 
@@ -14,10 +16,10 @@ import errors.BooleanWrapper;
 
 import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.InputAlphabet;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
-import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -28,33 +30,28 @@ import model.regex.operators.Operator;
 
 public class RegularExpression extends FormalDefinition {
 
-	private SymbolString myRegEx;
 	private RegularExpressionGrammar myGrammar;
 	private OperatorAlphabet myOperatorAlphabet;
-	
+	private ExpressionComponent myExpression;
+
 	public RegularExpression(InputAlphabet alph){
-		super(alph);
-		myOperatorAlphabet = new OperatorAlphabet();
-		myRegEx = new SymbolString();
-		myGrammar = new RegularExpressionGrammar(alph, myOperatorAlphabet);
-//		myGrammar  = createRegexGrammar(alph);
-		
+		this(alph, new ExpressionComponent());
 	}
-	
-	
-//	private RegularExpressionGrammar createRegexGrammar(InputAlphabet alph) {
-//		Grammar g = new RegularExpressionGrammar(alph, myOperatorAlphabet);
-//		CNFConverter conv = new CNFConverter(g);
-//		conv.stepToCompletion();
-//		return (RegularExpressionGrammar) conv.getTransformedGrammar();
-//		
-//	}
+
+
+	public RegularExpression(InputAlphabet alph,
+			ExpressionComponent expression) {
+		super(alph, expression);
+		myExpression = expression;
+		myOperatorAlphabet = new OperatorAlphabet();
+		myGrammar = new RegularExpressionGrammar(alph, myOperatorAlphabet);
+	}
 
 
 	public InputAlphabet getInputAlphabet(){
 		return this.getComponentOfClass(InputAlphabet.class);
 	}
-	
+
 	@Override
 	public String getDescriptionName() {
 		return "Regular Expression";
@@ -74,63 +71,58 @@ public class RegularExpression extends FormalDefinition {
 	public RegularExpression alphabetAloneCopy() {
 		return new RegularExpression(getInputAlphabet());
 	}
-	
-	public void setTo(String in){
-		in = in.replaceAll(JFLAPPreferences.getEmptyStringSymbol(),
-				myOperatorAlphabet.getEmptySub().getString());
 
-		if (!SymbolString.canBeParsed(in, myGrammar)){
-			throw new RegularExpressionException("Invalid input. This string contains symbols" +
-					" that are neither input symbols or operators");
-			
-		}
-		
-		SymbolString s = SymbolString.createFromString(in, myGrammar);
-		
-		setTo(s);
-		
+	//	public void setTo(String in){
+	//		in = in.replaceAll(JFLAPPreferences.getEmptyStringSymbol(),
+	//				myOperatorAlphabet.getEmptySub().getString());
+	//
+	//		if (!SymbolString.canBeParsed(in, myGrammar)){
+	//			throw new RegularExpressionException("Invalid input. This string contains symbols" +
+	//					" that are neither input symbols or operators");
+	//			
+	//		}
+	//		
+	//		SymbolString s = SymbolString.createFromString(in, myGrammar);
+	//		
+	//		setTo(s);
+	//		
+	//
+	//		
+	//	}
 
-		
-	}
-	
 
-	public synchronized void setTo(SymbolString s) {
-		//check all symbols - maybe be redundant if called with setTo(String)
-		if (!myGrammar.getTerminals().containsAll(s)){
-			throw new RegularExpressionException("The input string must contain symbols " +
-					"from the " + this.getInputAlphabet().getDescriptionName() + " or the " +
-					this.getOperators().getDescriptionName() +".");
-		}
-			
-		//check syntax
-
+	public boolean setTo(SymbolString s) {
 		BooleanWrapper format = correctFormat(s);
 		if (format.isError()){
 			throw new RegularExpressionException(format.getMessage());
 		}
-	
-		myRegEx = s;
+		return myExpression.setTo(s);
 
 	}
-
-//	/**
-//	 * Ideal version of the Correct format method. Uses the JFLAP 
-//	 * Infrastructure to parse the input.
-//	 * 
-//	 * @param exp
-//	 * @return
-//	 */
-//	private BooleanWrapper correctFormat(SymbolString exp){
-//		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
-//		parser.parse(exp);
-//		parser.start();
-//		while(parser.isActive()){
-//		}
-//		boolean isInLanguage = parser.getAnswer() != null;
-//		return new BooleanWrapper(isInLanguage, "The input regex, " + exp + " is invalid. " +
-//				"This means it is not in the language of the JFLAP regular expression grammar.");
-//	}
 	
+	@Override
+	public void componentChanged(AdvancedChangeEvent event) {
+		super.componentChanged(event);
+	}
+
+	//	/**
+	//	 * Ideal version of the Correct format method. Uses the JFLAP 
+	//	 * Infrastructure to parse the input.
+	//	 * 
+	//	 * @param exp
+	//	 * @return
+	//	 */
+	//	private BooleanWrapper correctFormat(SymbolString exp){
+	//		RestrictedBruteParser parser = new RestrictedBruteParser(myGrammar);
+	//		parser.parse(exp);
+	//		parser.start();
+	//		while(parser.isActive()){
+	//		}
+	//		boolean isInLanguage = parser.getAnswer() != null;
+	//		return new BooleanWrapper(isInLanguage, "The input regex, " + exp + " is invalid. " +
+	//				"This means it is not in the language of the JFLAP regular expression grammar.");
+	//	}
+
 	/**
 	 * A temporary solution to the inefficiency of the Brute parser
 	 * and non-optimized expression grammar.
@@ -145,7 +137,7 @@ public class RegularExpression extends FormalDefinition {
 		if (!isGroupingBalanced(exp))
 			return new BooleanWrapper(false,
 					"The parentheses are unbalanced!");
-		
+
 		Symbol star = myOperatorAlphabet.getKleeneStar();
 		Symbol open = myOperatorAlphabet.getOpenGroup();
 		Symbol close = myOperatorAlphabet.getCloseGroup();
@@ -153,20 +145,20 @@ public class RegularExpression extends FormalDefinition {
 		Symbol empty = myOperatorAlphabet.getEmptySub();
 		BooleanWrapper poorFormat = new BooleanWrapper(false,
 				"Operators are poorly formatted.");
-		
+
 		Symbol c = exp.getFirst();
 		if (c.equals(star))
 			return poorFormat;
-		
+
 		Symbol p = c;
 		for (int i = 1; i < exp.size(); i++) {
 			c = exp.get(i);
-			
+
 			if (c.equals(union) && i == exp.size()-1){
 				return poorFormat;
 			}
 			else if( c.equals(star) &&
-						(p.equals(open)|| p.equals(union))){
+					(p.equals(open)|| p.equals(union))){
 				return poorFormat;
 			}
 			else if(c.equals(empty) ){
@@ -184,7 +176,7 @@ public class RegularExpression extends FormalDefinition {
 		}
 		return new BooleanWrapper(true);
 	}
-	
+
 	/**
 	 * Checks if the parentheses are balanced in a string.
 	 * 
@@ -207,9 +199,9 @@ public class RegularExpression extends FormalDefinition {
 
 
 	public String getExpressionString(){
-		return myRegEx.toString();
+		return myExpression.getExpression().toString();
 	}
-	
+
 	public boolean matches(String in){
 		Pattern p = convertToPattern();
 		return p.matcher(in).matches();
@@ -217,12 +209,12 @@ public class RegularExpression extends FormalDefinition {
 
 
 	public Pattern convertToPattern() {
-		
+
 		return RegularExpression.convertToPattern(this);
 	}
 
 	public static Pattern convertToPattern(RegularExpression regEx) {
-		
+
 		return Pattern.compile(convertToStringPattern(regEx));
 	}
 
@@ -247,31 +239,18 @@ public class RegularExpression extends FormalDefinition {
 		temp.removeAll(myOperatorAlphabet);
 		return new TreeSet<Symbol>(temp);
 	}
-	
-	@Override
-	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
-		if (a instanceof InputAlphabet)
-			return myRegEx.removeEach(s);
-		return super.purgeOfSymbol(a, s);
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + 
-				"\n\t Regular Expression: " + myRegEx +
-				"\n\t" + myGrammar.toString();
-	}
-	
+
+
 
 	public SymbolString getExpression() {
-		return new SymbolString(myRegEx);
+		return getComponentOfClass(ExpressionComponent.class).getExpression();
 	}
-	
+
 	@Override
 	public BooleanWrapper[] isComplete() {
-		
+
 		BooleanWrapper[] comp = super.isComplete();
-		
+
 		if (comp.length == 0){
 			BooleanWrapper bw = new BooleanWrapper(derivesSomething(), 
 					"This regular Expression does not derive any strings.");
@@ -279,13 +258,13 @@ public class RegularExpression extends FormalDefinition {
 				comp = new BooleanWrapper[]{bw};
 		}
 
-		
+
 		return comp;
 	}
 
 
 	private boolean derivesSomething() {
-		SymbolString exp = new SymbolString(getExpression());
+		SymbolString exp = getExpression();
 		exp.removeAll(getOperators());
 		return !exp.isEmpty();
 	}
@@ -308,11 +287,11 @@ public class RegularExpression extends FormalDefinition {
 				n++;
 			else if(ops.getCloseGroup().equals(s)) 
 				n--;
-			
+
 			if (n == 0)
 				break;
 		}
-		
+
 		if (i < input.size()-1 && 
 				input.get(i+1).equals(ops.getKleeneStar())){
 			i++;
@@ -321,11 +300,27 @@ public class RegularExpression extends FormalDefinition {
 	}
 
 
-	@Override
-	public RegularExpression copy() {
-		RegularExpression exp = this.alphabetAloneCopy();
-		exp.setTo(this.myRegEx);
+	public static SymbolString toExpression(String in, RegularExpression regex, String delimiter){
+		SymbolString exp = new SymbolString();
+		OperatorAlphabet ops = regex.getOperators();
+		String cur = "";
+		outer: for(int i = 0; i < in.length(); i++){
+			String next = in.charAt(i) + "";
+			if(ops.containsSymbolWithString(next)){
+				Symbol s = ops.getSymbolForString(next);
+				exp.addAll(SymbolString.createFromString(cur, delimiter));
+				exp.add(s);
+				cur = "";
+			}
+			else cur += next;
+		}
 		return exp;
 	}
-	
+
+	@Override
+	public RegularExpression copy() {
+		return new RegularExpression(getInputAlphabet().copy(), 
+									myExpression.copy());
+	}
+
 }

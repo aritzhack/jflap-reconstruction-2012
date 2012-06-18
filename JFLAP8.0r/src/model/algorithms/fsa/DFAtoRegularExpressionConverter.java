@@ -269,7 +269,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	private boolean isEmptySetTransition(FSATransition test) {
-		return isEmptySetTransition(test.getInput());
+		return isEmptySetTransition(new SymbolString(test.getInput()));
 	}
 
 	private boolean isEmptySetTransition(SymbolString input) {
@@ -302,7 +302,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		SymbolString exp = pk;
 		if (!isEmptySetTransition(kk)){
-			kk = star(kk);
+			kk = star(kk.toArray(new Symbol[0]));
 			exp = concat(exp, kk);
 		}
 		concat(exp,kq);
@@ -326,19 +326,20 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return left;
 	}
 
-	private SymbolString star(SymbolString input) {
+	private SymbolString star(Symbol[] s) {
+		SymbolString symbols = new SymbolString(s);
 		OperatorAlphabet ops = myRegEx.getOperators();
 		KleeneStar star = ops.getKleeneStar();
-		SymbolString first = RegularExpression.getFirstOperand(input, ops);
-		if (first.size() != input.size() ||
-				input.endsWith(star)){
-			input.addFirst(ops.getOpenGroup());
-			input.addLast(ops.getCloseGroup());
+		SymbolString first = RegularExpression.getFirstOperand(symbols, ops);
+		if (first.size() != symbols.size() ||
+				symbols.endsWith(star)){
+			symbols.addFirst(ops.getOpenGroup());
+			symbols.addLast(ops.getCloseGroup());
 		}
 			
-		input.add(star);
+		symbols.add(star);
 		
-		return input;
+		return symbols;
 	}
 
 	private SymbolString modifyForConcat(SymbolString input) {
@@ -429,7 +430,6 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		Set<FSATransition> fromTo = 
 				transSet.getTransitionsFromStateToState(trans.getFromState(), 
 						trans.getToState());
-
 		transSet.removeAll(fromTo);
 
 		SymbolString regexLabel = new SymbolString();
@@ -454,7 +454,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	private boolean isLambdaTransition(FSATransition t) {
-		return t.getInput().isEmpty();
+		return t.getInput().length == 0;
 	}
 
 	private void removeCollapse(FSATransition trans) {

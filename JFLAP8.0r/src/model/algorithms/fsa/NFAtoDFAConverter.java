@@ -164,7 +164,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		List<FSATransition> list = new ArrayList<FSATransition>();
 		for (State s: ClosureHelper.takeClosure(state, getNFA())){
 			for (FSATransition trans : getNFA().getTransitions().getTransitionsFromState(s)){
-				if (trans.getInput().startsWith(sym)){
+				if (!trans.isLambdaTransition() && trans.getInput()[0].equals(sym)){
 					list.add(trans);
 				}
 
