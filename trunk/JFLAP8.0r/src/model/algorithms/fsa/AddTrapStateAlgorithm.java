@@ -98,7 +98,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	public boolean addTransition(State from, Symbol s){
 		for (FSATransition trans: myTransitionsNeeded.toArray(new FSATransition[0])){
 			if (trans.getFromState().equals(from) &&
-					trans.getInput().startsWith(s)){
+					trans.getInput()[0].equals(s)){
 				if (!addTransition(trans))
 					return false;
 			}
@@ -137,7 +137,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		for (Symbol s: myNewDFA.getInputAlphabet()){
 			boolean exists = false;
 			for (FSATransition t: trans){
-				if (t.getInput().startsWith(s)){
+				if (t.getInput()[0].equals(s)){
 					exists = true;
 					break;
 				}

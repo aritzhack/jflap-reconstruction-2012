@@ -1,18 +1,30 @@
 package model.formaldef.components;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import model.change.ChangingObject;
+import model.change.events.AddEvent;
+import model.change.events.AdvancedChangeEvent;
+import model.change.events.AdvancedUndoableEvent;
+import model.change.events.RemoveEvent;
+import model.change.events.SetToEvent;
 import model.formaldef.components.symbols.Symbol;
 
 import util.Copyable;
 
 import errors.BooleanWrapper;
 
-public abstract class SetComponent<T extends Copyable> extends FormalDefinitionComponent implements SortedSet<T>{
+public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalDefinitionComponent 
+																	implements SortedSet<T>, ChangeListener{
 
 	
 	private TreeSet<T> myComponents;
@@ -23,23 +35,27 @@ public abstract class SetComponent<T extends Copyable> extends FormalDefinitionC
 	
 	@Override
 	public boolean add(T e) {
-		return conditionalDistributeChange(myComponents.add(e), ITEM_ADDED, e);
-	}
+		Collection<T> toAdd = new ArrayList<T>();
+		toAdd.add(e);
+		return addAll(toAdd);	}
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		boolean added = false;
-		for (T t: c){
-			added = this.add(t) || added;
+		ChangeEvent e = new AddEvent<T>(this, c);
+		boolean added = myComponents.addAll(c);
+		if (added){
+			for (T item : c){
+				item.addListener(this);
+			}
 		}
+		distributeChange(e);
 		return added;
+
 	}
 
 	@Override
 	public void clear() {
-		for (Object t : this.toArray()){
-			this.remove(t);
-		}
+		this.removeAll(this);
 	}
 
 	@Override
@@ -64,21 +80,29 @@ public abstract class SetComponent<T extends Copyable> extends FormalDefinitionC
 
 	@Override
 	public boolean remove(Object o) {
-		return conditionalDistributeChange(myComponents.remove(o), ITEM_REMOVED, o);
+		Collection<T> toRemoved = new ArrayList<T>();
+		toRemoved.add((T) o);
+		return removeAll(toRemoved);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		boolean removed = false;
-		for (Object t: c){
-			removed = this.remove(t) || removed;
+		ChangeEvent e = new RemoveEvent<T>(this, (Collection<? extends T>) c);
+		boolean removed = myComponents.removeAll(c);
+		if (removed){
+			for (Object item : c){
+				((ChangingObject) item).removeListener(this);
+			}
 		}
+		distributeChange(e);
 		return removed;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		return myComponents.retainAll(c);
+		Set<T> temp = new TreeSet<T>(this);
+		temp.removeAll(c);
+		return this.removeAll(temp);
 	}
 
 	@Override
@@ -144,6 +168,37 @@ public abstract class SetComponent<T extends Copyable> extends FormalDefinitionC
 		} 
 	}
 
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (e instanceof SetToEvent){
+			SetToEvent<T> event = (SetToEvent<T>) e;
+			this.distributeChange(new ModifyEvent(event));
+		}
+	}
 	
+	private class ModifyEvent extends AdvancedUndoableEvent{
 
+		private SetToEvent<T> myEvent;
+
+		public ModifyEvent(SetToEvent<T> event) {
+			super(SetComponent.this, event.getType());
+			myEvent = event;
+		}
+
+		@Override
+		public boolean undo() {
+			return myEvent.undo();
+		}
+
+		@Override
+		public boolean redo() {
+			return myEvent.redo();
+		}
+
+		@Override
+		public String getName() {
+			return myEvent.getName();
+		}
+		
+	}
 }

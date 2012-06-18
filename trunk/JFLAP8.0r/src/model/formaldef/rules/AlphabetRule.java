@@ -23,14 +23,6 @@ public abstract class AlphabetRule<S extends Alphabet> implements Describable, C
 	public abstract BooleanWrapper canAdd(S a, Symbol newSymbol);
 	
 	
-	public Class<Alphabet> getApplicableAlphType(){
-		return (Class<Alphabet>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-	}
-	
-	public Class<FormalDefinition> getApplicableDefType(){
-		return (Class<FormalDefinition>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-	}
-	
 	public String toString(){
 		return this.getDescriptionName() + ": " + this.getDescription();
 	}

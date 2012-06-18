@@ -1,11 +1,13 @@
 package util;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import model.automata.State;
+import model.formaldef.FormalDefinition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
@@ -83,6 +85,10 @@ public class UtilFunctions {
 		for (Symbol o: rhs)
 			if (o.equals(s)) return true;
 		return false;
+	}
+	
+	public Class getGenericParam(Object o, int i){
+		return (Class) ((ParameterizedType) o.getClass().getGenericSuperclass()).getActualTypeArguments()[i];
 	}
 	
 }

@@ -214,7 +214,7 @@ public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<Finite
 	public MinimizeTreeNode getGroupFromStateOnSymbol(State s, Symbol sym) {
 		Set<FSATransition> fromSet = this.getDFA().getTransitions().getTransitionsFromState(s);
 		for (FSATransition trans: fromSet) {
-			if (trans.getInput().startsWith(sym)) {
+			if (trans.getInput()[0].equals(sym)) {
 				return getGroupForState(trans.getToState());
 			}
 		}

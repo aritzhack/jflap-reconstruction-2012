@@ -6,6 +6,7 @@ import model.automata.State;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.simulate.SingleInputSimulator;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class PDAConfiguration extends
@@ -25,8 +26,8 @@ public class PDAConfiguration extends
 		return this.getStringForIndex(0);
 	}
 
-	private boolean canPop(SymbolString pop) {
-		return this.getStack().startsWith(pop);
+	private boolean canPop(Symbol[] symbols) {
+		return this.getStack().startsWith(symbols);
 	}
 
 	@Override
@@ -56,16 +57,16 @@ public class PDAConfiguration extends
 
 	@Override
 	protected int getPositionChange(PDATransition trans) {
-		return trans.getPush().size()-trans.getPop().size();
+		return trans.getPush().length-trans.getPop().length;
 	}
 
 	@Override
 	protected SymbolString createUpdatedSecondary(SymbolString clone,
 			PDATransition trans) {
 		SymbolString stack = clone;
-		SymbolString pop = trans.getPop();
-		SymbolString push = trans.getPush().clone();
-		return push.concat(stack.subList(pop.size()));
+		Symbol[] pop = trans.getPop();
+		SymbolString push = new SymbolString(trans.getPush());
+		return push.concat(stack.subList(pop.length));
 	}
 
 }

@@ -117,8 +117,9 @@ public class SLR1DFA extends FiniteStateAcceptor {
 	private SLR1DFAState getAlreadyAddedState(Set<SLR1Production> toSet) {
 		for (State s: this.getStates()){
 			SLR1DFAState state = (SLR1DFAState) s;
-			if (state.matchesSet(toSet))
+			if (state.matchesSet(toSet)){
 				return state;
+			}
 		}
 		return null;
 	}
@@ -127,7 +128,7 @@ public class SLR1DFA extends FiniteStateAcceptor {
 		Set<FSATransition> trans = this.getTransitions().getTransitionsFromState(s);
 		Set<Symbol> needed = s.getSymbolsForTransition();
 		for (FSATransition t: trans){
-			needed.remove(t.getInput().getFirst());
+			needed.remove(t.getInput()[0]);
 		}
 		return needed;
 	}

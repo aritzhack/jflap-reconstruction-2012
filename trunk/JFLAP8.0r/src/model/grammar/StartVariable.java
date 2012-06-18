@@ -7,6 +7,7 @@ import java.util.TreeSet;
 import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SpecialSymbol;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Variable;
@@ -41,18 +42,21 @@ public class StartVariable extends SpecialSymbol{
 	}
 
 	@Override
-	public Variable toSymbolObject() {
-		return (Variable) super.toSymbolObject();
+	public Variable getSymbol() {
+		return (Variable) super.getSymbol();
 	}
 
 	@Override
-	public void setTo(Symbol s) {
-		if (s == null ) 
-			super.setTo(s);
-		else
-			super.setTo(new Variable(s.getString()));
+	public boolean setSymbol(Symbol s) {
+		if (s != null && !(s instanceof Variable))
+			s = new Variable(s.getString());
+		return super.setSymbol(s);
 	}
-	
-	
+
+	@Override
+	public Class<? extends Alphabet> getAlphabetClass() {
+		return VariableAlphabet.class;
+	}
+
 	
 }

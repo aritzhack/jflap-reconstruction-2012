@@ -28,7 +28,7 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	@Override
 	public Element appendComponentsToRoot(Document doc, StartState structure,
 			Element root) {
-		State s = structure.toStateObject();
+		State s = structure.getState();
 		root.appendChild(myStateTransducer.toXMLTree(doc, s));
 		return root;
 	}

@@ -22,7 +22,7 @@ public abstract class FourStateDeX extends DeExpressionifier {
 	public List<FSATransition> adjustTransitionSet(
 			FSATransition trans, GeneralizedTransitionGraph gtg) {
 		
-		SymbolString input = trans.getInput();
+		SymbolString input = new SymbolString(trans.getInput());
 		SymbolString before = RegularExpression.getFirstOperand(input, getOperatorAlphabet());
 		SymbolString after = input.subList(before.size()+getShiftFromFirstOp());
 

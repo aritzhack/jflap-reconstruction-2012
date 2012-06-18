@@ -9,7 +9,8 @@ import java.util.TreeSet;
 
 import util.Copyable;
 
-import model.formaldef.ChangingObject;
+import model.change.ChangingObject;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import errors.BooleanWrapper;
@@ -22,17 +23,6 @@ import errors.BooleanWrapper;
  */
 public abstract class FormalDefinitionComponent extends ChangingObject implements Describable, Copyable, ChangeTypes{
 
-	
-	public void distributeChange(int type, Object ... args){
-		ComponentChangeEvent event = new ComponentChangeEvent(this.getClass(), type, args);
-		super.distributeChanged(event);
-	}
-	
-	public boolean conditionalDistributeChange(boolean cond, int type, Object ... args){
-		if (cond) 
-			distributeChange(type, args);
-		return cond;
-	}
 	
 	/**
 	 * Every {@link FormalDefinitionComponent} is traditionally
@@ -59,5 +49,9 @@ public abstract class FormalDefinitionComponent extends ChangingObject implement
 	@Override
 	public abstract FormalDefinitionComponent copy();
 	
+	/**
+	 * Clears this formal definition object of any state.
+	 */
+	public abstract void clear();
 	
 }

@@ -15,7 +15,7 @@ import file.xml.formaldef.components.SetComponentTransducer;
 
 import util.Copyable;
 
-public abstract class FunctionSetTransducer<T extends LanguageFunction> extends SetComponentTransducer<T> {
+public abstract class FunctionSetTransducer<T extends LanguageFunction<T>> extends SetComponentTransducer<T> {
 
 	
 	private FunctionTransducer<T> mySubTransducer;

@@ -35,12 +35,20 @@ public abstract class FunctionSet<T extends LanguageFunction<T>> extends SetComp
 		return used;
 	}
 	
+	@Override
+	public boolean applySymbolMod(String from, String to) {
+		boolean changed = false;
+		for (LanguageFunction<T> f: this){
+			changed = f.applySymbolMod(from,to) || changed;
+		}
+		return changed;
+	}
 	
 	@Override
-	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
+	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
 		boolean result = false;
 		for (LanguageFunction<T> f: this){
-			result = f.purgeOfSymbol(a, s) || result;
+			result = f.purgeOfSymbols(a, s) || result;
 		}
 		return result;
 	}

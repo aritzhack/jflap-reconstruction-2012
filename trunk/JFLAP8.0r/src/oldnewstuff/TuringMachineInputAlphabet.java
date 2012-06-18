@@ -1,5 +1,6 @@
 package oldnewstuff;
 
+import java.util.Collection;
 import java.util.Set;
 
 import model.automata.InputAlphabet;
@@ -15,7 +16,7 @@ public class TuringMachineInputAlphabet extends InputAlphabet implements UsesSym
 	}
 
 	@Override
-	public boolean purgeOfSymbol(Alphabet a, Symbol s) {
+	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
 		return this.remove(s);
 	}
 	

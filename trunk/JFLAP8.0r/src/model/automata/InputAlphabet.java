@@ -33,5 +33,7 @@ public class InputAlphabet extends Alphabet{
 	public InputAlphabet copy() {
 		return (InputAlphabet) super.copy();
 	}
+	
+	
 
 }

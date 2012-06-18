@@ -8,6 +8,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import debug.JFLAPDebug;
+
 import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
 import file.xml.formaldef.FormalDefinitionTransducer;
@@ -15,28 +17,17 @@ import file.xml.formaldef.FormalDefinitionTransducer;
 import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.ExpressionComponent;
 import model.regex.RegularExpression;
 
 public class RegExTransducer extends FormalDefinitionTransducer<RegularExpression> {
 
-
-	@Override
-	public RegularExpression fromStructureRoot(Element root) {
-		RegularExpression regex = super.fromStructureRoot(root);
-		NodeList list = root.getElementsByTagName(EXPRESSION_TAG);
-		String exp = XMLHelper.containedText(list.item(0));
-		regex.setTo(exp);
-		return regex;
-
-	}
 	
 	@Override
 	public RegularExpression buildStructure(Object[] subComp) {
 		InputAlphabet alph = retrieveTarget(InputAlphabet.class, subComp);
-		SymbolString exp = retrieveTarget(SymbolString.class, subComp);
-		RegularExpression regex = new RegularExpression(alph);
-		regex.setTo(exp);
-		return regex;
+		ExpressionComponent exp = retrieveTarget(ExpressionComponent.class, subComp);
+		return new RegularExpression(alph, exp);
 	}
 
 	@Override
@@ -55,7 +46,8 @@ public class RegExTransducer extends FormalDefinitionTransducer<RegularExpressio
 	@Override
 	public void addFunctionSetsToMap(Map<Object, XMLTransducer> map,
 			RegularExpression regex) {
-		map.put(regex.getExpression(), new ExpressionStringTransducer(null));
+		map.put(regex.getComponentOfClass(ExpressionComponent.class), 
+							new ExpressionStringTransducer(null));
 	}
 
 

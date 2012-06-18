@@ -28,6 +28,7 @@ import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.regex.ExpressionComponent;
 import model.regex.RegularExpression;
 
 import org.w3c.dom.Element;

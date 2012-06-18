@@ -1,4 +1,4 @@
-package model.formaldef;
+package model.change;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,8 +6,6 @@ import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.formaldef.components.ComponentChangeEvent;
-import model.formaldef.components.ComponentChangeListener;
 
 public class ChangingObject {
 
@@ -32,10 +30,10 @@ public class ChangingObject {
 	
 	public void distributeChanged(){
 		ChangeEvent event = new ChangeEvent(this);
-		this.distributeChanged(event);
+		this.distributeChange(event);
 	}
 
-	public void distributeChanged(ChangeEvent event) {
+	public void distributeChange(ChangeEvent event) {
 		for (ChangeListener listener: myListeners){
 			listener.stateChanged(event);
 		}

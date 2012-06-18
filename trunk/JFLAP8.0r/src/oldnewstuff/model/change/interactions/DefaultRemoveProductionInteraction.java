@@ -10,7 +10,7 @@ import debug.JFLAPDebug;
 
 import model.change.events.CompoundUndoableChangeEvent;
 import model.change.events.SetComponentEvent;
-import model.change.events.UndoableChangeEvent;
+import model.change.events.UndoableEvent;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
@@ -40,7 +40,7 @@ public class DefaultRemoveProductionInteraction extends Interaction {
 			Set<Symbol> allUsed = myGrammar.getUniqueSymbolsUsed(vars);
 			used.removeAll(allUsed);
 			if (!used.isEmpty()){
-				UndoableChangeEvent temp = vars.createRemoveEvent(used.toArray(new Symbol[0]));
+				UndoableEvent temp = vars.createRemoveEvent(used.toArray(new Symbol[0]));
 				event.addSubEvents(temp);
 				temp.applyChange();
 			}
@@ -48,7 +48,7 @@ public class DefaultRemoveProductionInteraction extends Interaction {
 			allUsed = myGrammar.getUniqueSymbolsUsed(terms);
 			used2.removeAll(allUsed);
 			if (!used.isEmpty()){
-				UndoableChangeEvent temp = terms.createRemoveEvent(used2.toArray(new Symbol[0]));
+				UndoableEvent temp = terms.createRemoveEvent(used2.toArray(new Symbol[0]));
 				event.addSubEvents(temp);
 				temp.applyChange();
 			}

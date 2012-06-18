@@ -2,6 +2,8 @@ package model.automata.acceptors.pda;
 
 import java.util.Set;
 
+import util.UtilFunctions;
+
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
@@ -33,19 +35,8 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 				"a next state and symbols to push onto the stack.";
 	}
 
-
-
-	@Override
-	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
-		Set<Symbol> used = super.getSymbolsUsedForAlphabet(a);
-		used.addAll(this.getPop());
-		used.addAll(this.getPush());
-		return used;
-	}
-
-
-	public SymbolString getPop() {
-		return myPop;
+	public Symbol[] getPop() {
+		return myPop.toArray(new Symbol[0]);
 	}
 
 
@@ -56,8 +47,8 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 
 
 
-	public SymbolString getPush() {
-		return myPush;
+	public Symbol[] getPush() {
+		return myPush.toArray(new Symbol[0]);
 	}
 
 
@@ -66,47 +57,28 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 		this.myPush = push;
 	}
 
-	public SymbolString[] toArray(){
-		return new SymbolString[]{this.getInput(),
-									this.getPop(),
-									this.getPush()};
-	}
-	
 	@Override
 	public int compareTo(PDATransition o) {
 		int comp;
 		if ((comp = super.compareTo(o)) != 0) return comp;
-		
-		PDATransition other = (PDATransition) o;
-		
-		
-		SymbolString[] mine = this.toArray(),
-						yours = other.toArray();
-		
-		
-		for (int i = 0; i < mine.length; i++){
-			comp = mine[i].compareTo(yours[i]);
-			if (comp != 0) return comp;
-				
-		}
-		
-		return 0;
+		return UtilFunctions.metaCompare(new Comparable[]{myPop, myPush}, 
+											new Comparable[]{o.myPop, o.myPush});
 	}
 	
 	@Override
 	public PDATransition copy() {
 		return new PDATransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
-									this.getInput().copy(),
-									this.getPop().copy(), 
-									this.getPush().copy());
+									new SymbolString(getInput()),
+									new SymbolString(this.getPop()), 
+									new SymbolString(this.getPush()));
 	}
 
 
 
 	@Override
 	public String getLabelText() {
-		return this.getInput() + "|" + this.getPop() + ";" + this.getPush();
+		return super.getLabelText() + "|" + myPop + ";" + myPush;
 	}
 
 
@@ -115,19 +87,27 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		if (a instanceof StackAlphabet){
-			return new SymbolString[]{this.getPop(), this.getPush()};
+			return new SymbolString[]{myPop, myPush};
 		}
 		return super.getPartsForAlphabet(a);
+	}
+
+	
+	@Override
+	protected void applySetTo(PDATransition other) {
+		super.applySetTo(other);
+		this.myPop.setTo(other.myPop);
+		this.myPush.setTo(other.myPush);
 	}
 
 
 
 	@Override
-	public boolean isLambdaTransition() {
-		
-		return false;
+	public SymbolString[] getAllParts() {
+		return UtilFunctions.combine(super.getAllParts(),myPop, myPush);
 	}
 	
 	
+
 
 }

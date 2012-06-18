@@ -1,10 +1,10 @@
 package model.automata;
 
-
 import util.UtilFunctions;
 import model.formaldef.components.functionset.function.LanguageFunction;
 
-public abstract class Transition<T extends Transition<T>> extends AutomatonFunction<T> implements LanguageFunction<T>{
+public abstract class Transition<T extends Transition<T>> extends
+		AutomatonFunction<T> {
 
 	/** The states this transition goes between. */
 	private State myFrom;
@@ -12,8 +12,8 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 	private State myTo;
 
 	public Transition(State from, State to) {
-		setFromState(from);
-		setToState(to);
+		myFrom = from;
+		myTo = to;
 	}
 
 	/**
@@ -34,45 +34,42 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 		return this.myTo;
 	}
 
-	/**
-	 * Sets the state the transition starts at.
-	 * @param newFrom the state the transition starts at
-	 */
-	public void setFromState(State newFrom) {
-		this.myFrom = newFrom;
-	}
+//	/**
+//	 * Sets the state the transition starts at.
+//	 * 
+//	 * @param newFrom
+//	 *            the state the transition starts at
+//	 */
+//	public void setFromState(State newFrom) {
+//		this.myFrom = newFrom;
+//	}
+//
+//	/**
+//	 * Sets the state the transition goes to.
+//	 * 
+//	 * @param newTo
+//	 *            the state the transition goes to
+//	 */
+//	public void setToState(State newTo) {
+//		this.myTo = newTo;
+//	}
 
 	/**
-	 * Sets the state the transition goes to.
-	 * @param newTo the state the transition goes to
-	 */
-	public void setToState(State newTo) {
-		this.myTo = newTo;
-	}
-
-	/**
-	 * Checks if this transition is a loop, i.e. if
-	 * its from state is the same as its to state
+	 * Checks if this transition is a loop, i.e. if its from state is the same
+	 * as its to state
+	 * 
 	 * @return
 	 */
 	public boolean isLoop() {
 		return this.myTo.equals(myFrom);
 	}
 
-	@Override
-	public boolean setTo(T other) {
-		this.setFromState(other.getFromState());
-		this.setToState(other.getToState());
-		return true;
-	};
-
 	public abstract String getLabelText();
 
 	/**
-	 * Checks to see if this transition has a lambda input
-	 * component. subclasses should override this method
-	 * if the definition of a lambda transition is different,
-	 * specifically in the case of closure.
+	 * Checks to see if this transition has a lambda input component. subclasses
+	 * should override this method if the definition of a lambda transition is
+	 * different, specifically in the case of closure.
 	 * 
 	 * @return
 	 */
@@ -87,9 +84,8 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 	 */
 	@Override
 	public String toString() {
-		return this.getFromState().getName() + "---" + 
-				this.getLabelText() + "--->" + 
-				this.getToState().getName();
+		return this.getFromState().getName() + "---" + this.getLabelText()
+				+ "--->" + this.getToState().getName();
 	}
 
 	/**
@@ -104,11 +100,11 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 	public boolean equals(Object o) {
 		return this.compareTo((T) o) == 0;
 	}
-	
+
 	public int compareTo(T o) {
-		return UtilFunctions.metaCompare(
-				new Comparable[]{this.getFromState(), this.getToState()},
-				new Comparable[]{o.getFromState(), o.getToState()});
+		return UtilFunctions.metaCompare(new Comparable[] {
+				this.getFromState(), this.getToState() },
+				new Comparable[] { o.getFromState(), o.getToState() });
 	};
 
 	/**
@@ -120,5 +116,10 @@ public abstract class Transition<T extends Transition<T>> extends AutomatonFunct
 	public int hashCode() {
 		return myFrom.hashCode() ^ myTo.hashCode();
 	}
+	
+	protected void applySetTo(T other) {
+		this.myFrom = other.myFrom;
+		this.myTo = other.myTo;
+	};
 
 }

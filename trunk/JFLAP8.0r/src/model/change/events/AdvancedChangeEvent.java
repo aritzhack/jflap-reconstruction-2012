@@ -1,24 +1,25 @@
-package model.formaldef.components;
+package model.change.events;
 
 import javax.swing.event.ChangeEvent;
+
+import model.formaldef.components.ChangeTypes;
+import model.formaldef.components.FormalDefinitionComponent;
 
 import util.UtilFunctions;
 
 
-public class ComponentChangeEvent extends ChangeEvent{
+public class AdvancedChangeEvent extends ChangeEvent implements ChangeTypes{
 
-	private Class<? extends FormalDefinitionComponent> myComponentClass;
 	
 	private int myChangeType;
 	
 	private Object[] myArgs;
 	
 	
-	public ComponentChangeEvent(Class<? extends FormalDefinitionComponent> clazz,
+	public AdvancedChangeEvent(Object source,
 									int type,
 									Object ... args){
-		super(UtilFunctions.concatAll(new Object[]{clazz, type}, args));
-		myComponentClass = clazz;
+		super(source);
 		myChangeType = type;
 		myArgs = args;
 	}
@@ -26,7 +27,7 @@ public class ComponentChangeEvent extends ChangeEvent{
 	
 	/**
 	 * Returns true if the {@link FormalDefinitionComponent} 
-	 * class associated with this {@link ComponentChangeEvent}
+	 * class associated with this {@link AdvancedChangeEvent}
 	 * is the same as or is a subclass of the passed in 
 	 * <code>FormalDefinitionComponent</code> 
 	 * 
@@ -35,8 +36,8 @@ public class ComponentChangeEvent extends ChangeEvent{
 	 * @param c
 	 * @return
 	 */
-	public boolean comesFrom(FormalDefinitionComponent c){
-		return myComponentClass.isAssignableFrom(c.getClass());
+	public boolean comesFrom(Class s){
+		return s.equals(this.getSource().getClass());
 	}
 	
 	public int getNumArgs(){

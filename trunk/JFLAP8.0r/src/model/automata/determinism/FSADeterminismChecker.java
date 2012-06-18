@@ -15,7 +15,7 @@ public class FSADeterminismChecker extends DeterminismChecker<FSATransition> {
 
 	@Override
 	protected SymbolString retrieveApplicableString(FSATransition trans) {
-		return trans.getInput();
+		return new SymbolString(trans.getInput());
 	}
 	
 	@Override

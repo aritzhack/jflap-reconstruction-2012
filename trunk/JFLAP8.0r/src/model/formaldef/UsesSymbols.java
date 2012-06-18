@@ -1,5 +1,6 @@
 package model.formaldef;
 
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -19,5 +20,7 @@ public interface UsesSymbols {
 
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a);
 	
-	public boolean purgeOfSymbol(Alphabet a, Symbol s);
+	public boolean applySymbolMod(String from, String to);
+	
+	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s);
 }

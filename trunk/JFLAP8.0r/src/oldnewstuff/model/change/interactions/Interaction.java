@@ -1,7 +1,7 @@
 package oldnewstuff.model.change.interactions;
 
 import model.change.events.CompoundUndoableChangeEvent;
-import model.change.events.UndoableChangeEvent;
+import model.change.events.UndoableEvent;
 import oldnewstuff.model.change.ChangeDistributingObject;
 import oldnewstuff.model.change.ChangeDistributor;
 import oldnewstuff.model.change.ChangeEvent;
@@ -33,8 +33,8 @@ public abstract class Interaction extends ChangeRelated{
 		if (changed){
 			CompoundUndoableChangeEvent event = new CompoundUndoableChangeEvent(myDistributor,
 					e.getName());
-			if (e instanceof UndoableChangeEvent)
-				event.addSubEvents((UndoableChangeEvent)e);
+			if (e instanceof UndoableEvent)
+				event.addSubEvents((UndoableEvent)e);
 			addAndApplyInteractions(e, event);
 			myDistributor.distributeChange(event);
 		}

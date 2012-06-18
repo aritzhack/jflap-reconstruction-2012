@@ -37,7 +37,7 @@ public abstract class DeExpressionifier {
 	 * @return
 	 */
 	public boolean isApplicable(FSATransition trans){
-		SymbolString input = trans.getInput();
+		SymbolString input = new SymbolString(trans.getInput());
 		SymbolString first = RegularExpression.getFirstOperand(input, myOpAlph);
 		return isApplicable(first, input.subList(first.size()));
 	}

@@ -1,8 +1,10 @@
 package model.automata;
 
+import java.util.Collection;
+
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
-import model.formaldef.components.ComponentChangeEvent;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.symbols.Symbol;
 
@@ -21,7 +23,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 	}
 
 	public State getStartState() {
-		return getComponentOfClass(StartState.class).toStateObject();
+		return getComponentOfClass(StartState.class).getState();
 	}
 	
 	public void setStartState(State s){
@@ -30,7 +32,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 					"a part of the state set of the automaton");
 		}
 		else
-			getComponentOfClass(StartState.class).setTo(s);
+			getComponentOfClass(StartState.class).setState(s);
 	}
 
 	
@@ -39,16 +41,12 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 		}
 
 	@Override
-	public void componentChanged(ComponentChangeEvent event) {
-		StateSet states = this.getStates();
+	public void componentChanged(AdvancedChangeEvent event) {
 		
-		if (event.comesFrom(states) && event.getType() == ITEM_REMOVED){
+		if (event.comesFrom(StateSet.class) && event.getType() == ITEM_REMOVED){
 			TransitionSet<T> transSet = this.getTransitions();
-			State s = (State) event.getArg(0);
-			transSet.removeForState(s);
-		}
-		else if (event.comesFrom(getInputAlphabet()) && event.getType() == ITEM_REMOVED){
-			this.getTransitions().purgeOfSymbol(getInputAlphabet(),((Symbol) event.getArg(0)));
+			Collection<State> s = (Collection<State>) event.getArg(0);
+			transSet.removeForStates(s);
 		}
 		else super.componentChanged(event);
 	}

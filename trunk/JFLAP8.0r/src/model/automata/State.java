@@ -2,13 +2,15 @@ package model.automata;
 
 import java.lang.reflect.Constructor;
 
+import model.formaldef.components.SetSubComponent;
+
 import util.Copyable;
 import util.JFLAPConstants;
 
 
 
 
-public class State implements JFLAPConstants, Comparable<State>, Copyable{
+public class State extends SetSubComponent<State> implements JFLAPConstants {
 
 	private String myLabel;
 
@@ -17,8 +19,8 @@ public class State implements JFLAPConstants, Comparable<State>, Copyable{
 	private String myName;
 
 	public State(String name, int id){
-		setName(name);
-		setID(id);
+		myName= name;
+		myID = id;
 	}
 
 
@@ -31,7 +33,7 @@ public class State implements JFLAPConstants, Comparable<State>, Copyable{
 	 *            the new name for the state
 	 */
 	public void setName(String name) {
-		myName = name;
+		setTo(new State(name, myID));
 	}
 
 	/**
@@ -48,9 +50,6 @@ public class State implements JFLAPConstants, Comparable<State>, Copyable{
 		return myID;
 	}
 	
-	public void setID(int id){
-		myID = id;
-	}
 
 	@Override 
 	public State copy(){
@@ -103,6 +102,28 @@ public class State implements JFLAPConstants, Comparable<State>, Copyable{
 	@Override
 	public int hashCode() {
 		return (int) (Math.pow(2, this.getID()));
+	}
+
+
+
+	@Override
+	public String getDescriptionName() {
+		return "State";
+	}
+
+
+
+	@Override
+	public String getDescription() {
+		return "A State in an automaton!";
+	}
+
+
+
+	@Override
+	protected void applySetTo(State other) {
+		// this will only set the name. that is ALL. ID's are immutable.
+		this.myName = other.myName;
 	}
 
 

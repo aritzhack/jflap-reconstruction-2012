@@ -5,15 +5,18 @@ import java.lang.Character.Subset;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import javax.swing.event.ChangeEvent;
+
 import debug.JFLAPDebug;
 
 import model.automata.turing.BlankSymbol;
+import model.change.events.SetToEvent;
 import model.formaldef.components.SetSubComponent;
 import model.regex.EmptySub;
 
 import util.Copyable;
 
-public class Symbol implements SetSubComponent<Symbol>{
+public class Symbol extends SetSubComponent<Symbol>{
 
 	private String myString;
 	
@@ -37,7 +40,7 @@ public class Symbol implements SetSubComponent<Symbol>{
 	}
 	
 	public void setString(String s){
-		myString = s;
+		this.setTo(new Symbol(s));
 	}
 
 
@@ -95,13 +98,11 @@ public class Symbol implements SetSubComponent<Symbol>{
 	public String getDescription() {
 		return "A symbol!";
 	}
-
+	
 	@Override
-	public boolean setTo(Symbol other) {
+	protected void applySetTo(Symbol other) {
 		myString = other.getString();
-		return true;
 	}
-	
-	
+
 }
 

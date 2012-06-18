@@ -1,5 +1,6 @@
 package model.automata.acceptors.fsa;
 
+import java.util.List;
 import java.util.Set;
 
 import model.automata.State;
@@ -39,29 +40,7 @@ public class FSATransition extends SingleInputTransition<FSATransition> {
 	public FSATransition copy() {
 		return new FSATransition(this.getFromState().copy(), 
 									this.getToState().copy(), 
-									this.getInput().copy());
-	}
-
-	@Override
-	public String getLabelText() {
-		return this.getInput().toString();
-	}
-
-	@Override
-	public boolean setTo(FSATransition other) {
-		return super.setTo(other) && 
-				this.setInput(other.getInput());
-	}
-
-	@Override
-	public SymbolString[] getPartsForAlphabet(Alphabet a) {
-		return null;
-	}
-
-	@Override
-	public boolean isLambdaTransition() {
-		// TODO Auto-generated method stub
-		return false;
+									new SymbolString(getInput()));
 	}
 
 	

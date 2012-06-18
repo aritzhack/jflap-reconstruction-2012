@@ -44,8 +44,8 @@ public class GrammarTest extends TestHarness {
 		Terminal b = new Terminal("b");
 
 		//ex7.6cnf-a.jff
-		addSymbols(g.getVariables(), S,A,B );
-		addSymbols(g.getTerminals(),a,b);
+//		addSymbols(g.getVariables(), S,A,B );
+//		addSymbols(g.getTerminals(),a,b);
 		prod.add(new Production(S, a,S,b));
 		prod.add(new Production(S, a,A,b));
 		prod.add(new Production(A, a,A));

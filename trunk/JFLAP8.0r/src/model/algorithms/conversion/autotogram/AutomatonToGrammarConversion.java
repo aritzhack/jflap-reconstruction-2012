@@ -167,10 +167,10 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 		return myMappedVariables.get(mapping);
 	}
 
-	protected SymbolString convertToTerminals(SymbolString input) {
+	protected SymbolString convertToTerminals(Symbol[] symbols) {
 		SymbolString terms = new SymbolString();
 		
-		for (Symbol s : input){
+		for (Symbol s : symbols){
 			terms.add(new Terminal(s.toString()));
 		}
 		

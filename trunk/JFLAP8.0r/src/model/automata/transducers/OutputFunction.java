@@ -32,16 +32,6 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 		return myOutput;
 	}
 
-	@Override
-	public OutputFunction copy() {
-		try {
-			return this.getClass().getConstructor(State.class, SymbolString.class).newInstance(myState.copy(),
-					myOutput.copy());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} 
-	}
-
 	/**
 	 * Checks to see if this output function is associated
 	 * with the transition passed in as an argument. This
@@ -79,5 +69,19 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 				new Comparable[]{this.getState(), this.getOutput()},
 				new Comparable[]{o.getState(), o.getOutput()});
 	}
+
+	@Override
+	public SymbolString[] getAllParts() {
+		return new SymbolString[]{myOutput};
+	}
+
+	@Override
+	protected void applySetTo(T other) {
+		this.myState = other.myState;
+		this.myOutput = other.myOutput;
+		
+	}
+	
+	
 }
 

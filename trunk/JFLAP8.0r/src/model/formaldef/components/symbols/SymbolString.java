@@ -231,6 +231,22 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		return max;
 	}
 	
+	public static SymbolString createFromString(String in, String delimiter) {
+		if (delimiter == null)
+			return toSingleCharSymbols(in);
+		SymbolString newSS = new SymbolString();
+		for (String s: in.split(delimiter))
+			newSS.add(new Symbol(s));
+		return newSS;
+	}
+
+	public static SymbolString toSingleCharSymbols(String in) {
+		SymbolString s = new SymbolString();
+		for (Character c: in.toCharArray())
+			s.add(new Symbol(c + ""));
+		return s;
+	}
+
 	public static boolean checkAndSpawnError(String error, String in, Alphabet ... alphs){
 		if (!SymbolString.canBeParsed(in, alphs)){
 			JOptionPane.showMessageDialog(null, 

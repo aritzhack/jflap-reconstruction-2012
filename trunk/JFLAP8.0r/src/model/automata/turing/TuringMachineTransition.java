@@ -1,5 +1,6 @@
 package model.automata.turing;
 
+import util.UtilFunctions;
 import model.automata.AutomatonException;
 import model.automata.State;
 import model.automata.SingleInputTransition;
@@ -148,13 +149,19 @@ public class TuringMachineTransition extends Transition<TuringMachineTransition>
 
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
-		return null;
+		if (a instanceof TapeAlphabet)
+			return getAllParts();
+		return new SymbolString[0];
 	}
 
 	@Override
 	public boolean isLambdaTransition() {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public SymbolString[] getAllParts() {
+		return UtilFunctions.combine(myReads,myWrites);
 	}
 
 }

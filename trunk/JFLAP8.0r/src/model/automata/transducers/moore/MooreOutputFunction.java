@@ -29,4 +29,10 @@ public class MooreOutputFunction extends OutputFunction<MooreOutputFunction> {
 		return trans.getToState().equals(this.getState());
 	}
 
+
+	@Override
+	public MooreOutputFunction copy() {
+		return new MooreOutputFunction(getState(), getOutput());
+	}
+
 }

@@ -13,6 +13,7 @@ import debug.JFLAPDebug;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
@@ -54,10 +55,13 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 		Element root = XMLHelper.createElement(doc, getTag(), null, null);
 		for (Entry<String, Object> e: tagToValue.entrySet()){
 			String tag = e.getKey();
+			Object value = e.getValue();
 			XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
-			if (trans == null)
+			if (trans == null){
 				trans = new SymbolStringTransducer(e.getKey());
-			root.appendChild(trans.toXMLTree(doc, e.getValue()));
+				value = new SymbolString((Symbol[]) value);
+			}
+			root.appendChild(trans.toXMLTree(doc, value));
 		}
 		return root;
 	}

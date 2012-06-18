@@ -3,6 +3,7 @@ package file.xml.formaldef.components.symbols;
 import java.util.Arrays;
 
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 import org.w3c.dom.Element;
@@ -25,6 +26,10 @@ public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 		return myTag;
 	}
 
+	public Object extractData(Symbol[] structure){
+		return this.extractData(new SymbolString(structure));
+	}
+	
 	@Override
 	public Object extractData(SymbolString structure) {
 		return structure.toNondelimitedString();

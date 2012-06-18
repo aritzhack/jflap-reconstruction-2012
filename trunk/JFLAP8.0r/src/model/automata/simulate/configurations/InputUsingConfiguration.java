@@ -43,7 +43,7 @@ public abstract class InputUsingConfiguration<S extends Automaton<T>,
 
 	@Override
 	protected int getNextPrimaryPosition(T trans) {
-		return this.getPrimaryPosition() + trans.getInput().size();
+		return this.getPrimaryPosition() + trans.getInput().length;
 	}
 	
 	@Override

@@ -52,8 +52,8 @@ public abstract class SingleInputTransition<T extends SingleInputTransition<T>> 
 		myInput = input;
 	}
 
-	public SymbolString getInput(){
-		return myInput;
+	public Symbol[] getInput(){
+		return myInput.toArray(new Symbol[0]);
 	}
 
 
@@ -64,16 +64,36 @@ public abstract class SingleInputTransition<T extends SingleInputTransition<T>> 
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		if (a instanceof InputAlphabet)
-			return new SymbolString[]{this.getInput()};
+			return new SymbolString[]{myInput};
 		return new SymbolString[0];
+	}
+	
+	@Override
+	public SymbolString[] getAllParts() {
+		return new SymbolString[]{myInput};
 	}
 	
 	@Override
 	public int compareTo(T o) {
 		int compare = super.compareTo(o);
 		if (compare == 0)
-			compare = this.getInput().compareTo(o.getInput());
+			compare = myInput.compareTo(o.myInput);
 		return compare;
 	}
 
+	@Override
+	public boolean isLambdaTransition() {
+		return myInput.isEmpty();
+	}
+	
+	protected void applySetTo(T other) {
+		super.applySetTo(other);
+		this.myInput.setTo(other.myInput);
+	}
+	
+	@Override
+	public String getLabelText() {
+		return myInput.toString();
+	}
+	
 }

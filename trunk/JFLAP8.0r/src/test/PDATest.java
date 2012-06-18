@@ -74,12 +74,12 @@ public class PDATest extends TestHarness{
 		
 		
 		PDATransition t0 = new PDATransition(q0, q1, new SymbolString(A), 
-				new SymbolString(bos.toSymbolObject()), new SymbolString(A,bos.toSymbolObject()));
+				new SymbolString(bos.getSymbol()), new SymbolString(A,bos.getSymbol()));
 		PDATransition t1 = new PDATransition(q1, q1, new SymbolString(A), new SymbolString(A), new SymbolString(A,A));
 		PDATransition t2 = new PDATransition(q1, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
 		PDATransition t3 = new PDATransition(q2, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
 		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), 
-				new SymbolString(bos.toSymbolObject()), new SymbolString());
+				new SymbolString(bos.getSymbol()), new SymbolString());
 		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 		pda.trimAlphabets();

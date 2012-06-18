@@ -65,4 +65,18 @@ public class SLR1Production extends Production {
 		return new SLR1Production(this.createNormalProduction(), myMarkIndex);
 	}
 	
+	@Override
+	public int compareTo(Production o) {
+		int compare = super.compareTo(o);
+		if (compare == 0){
+			compare = myMarkIndex - ((SLR1Production)o).myMarkIndex;
+		}
+		return compare;
+	}
+	
+	@Override
+	public String toString() {
+		return new SymbolString(getLHS()) + "->" + new SymbolString(getRHS());
+	}
+	
 }

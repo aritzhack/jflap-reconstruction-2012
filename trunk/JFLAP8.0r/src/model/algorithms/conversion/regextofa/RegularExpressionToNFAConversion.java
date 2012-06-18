@@ -27,6 +27,7 @@ import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
@@ -102,7 +103,8 @@ public class RegularExpressionToNFAConversion extends ConversionAlgorithm<Regula
 	}
 
 	private boolean isExpressionTransition(FSATransition t) {
-		return t.getInput().containsAny(this.getRE().getOperators().toArray(new Symbol[0]));
+		SymbolString input = new SymbolString(t.getInput());
+		return input.containsAny(this.getRE().getOperators().toArray(new Symbol[0]));
 	}
 
 	
