@@ -89,7 +89,6 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 	}
 
 
-
 	public Symbol getByString(String sym) {
 		for (Symbol s: this){
 			if (sym.equals(s.getString()))

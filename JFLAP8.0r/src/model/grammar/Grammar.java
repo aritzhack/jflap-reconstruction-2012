@@ -215,9 +215,10 @@ public class Grammar extends FormalDefinition{
 
 	@Override
 	public Grammar copy() {
-		Grammar g = this.alphabetAloneCopy();
-		g.getProductionSet().addAll(this.getProductionSet());
-		g.setStartVariable(this.getStartVariable());
+		Grammar g = new Grammar(getVariables().copy(),
+				getTerminals().copy(), 
+				getProductionSet().copy(),
+				new StartVariable(getStartVariable()));
 		return g;
 	}
 

@@ -3,6 +3,7 @@ package model.grammar;
 import java.util.Set;
 import java.util.TreeSet;
 
+import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
@@ -51,6 +52,11 @@ public class ProductionSet extends FunctionSet<Production> {
 		return prods;
 	}
 
+	@Override
+	public ProductionSet copy() {
+		return (ProductionSet) super.copy();
+	}
+	
 	public Set<Production> getProductionsWithSymbolOnRHS(Symbol s) {
 		Set<Production> prods = new TreeSet<Production>();
 		for (Production p: this){
