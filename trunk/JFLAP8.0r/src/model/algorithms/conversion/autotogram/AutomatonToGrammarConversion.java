@@ -68,8 +68,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	 * @return
 	 */
 	public boolean isComplete() {
-		return inputAlphabetConverted() && 
-				variableMappingsComplete() && 
+		return variableMappingsComplete() && 
 				allTransitionsConverted() &&
 				this.getConvertedGrammar().isComplete().length == 0;
 	}
@@ -124,18 +123,6 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 							"Could not add the variable " + var + "to the converted Grammar.");
 	}
 
-	public boolean convertInputAlphabet() {
-		boolean converted = true;
-		for (Symbol s: getAutomaton().getInputAlphabet()){
-			converted = converted && getConvertedGrammar().getTerminals().add(new Terminal(s.toString()));
-		}
-		return converted;
-	}
-
-	public boolean inputAlphabetConverted() {
-		return getConvertedGrammar().getTerminals().size() == getAutomaton().getInputAlphabet().size();
-	}
-
 	@Override
 	public boolean reset() throws AlgorithmException{
 		myMappedVariables = new HashMap<S, Variable>();
@@ -188,8 +175,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		return new AlgorithmStep[]{new ConvertInputAlphabet(),
-									new MapAllVariables(),
+		return new AlgorithmStep[]{new MapAllVariables(),
 									new ConvertTransitions()};
 	}
 
@@ -206,38 +192,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	////////////// Algorithm Steps //////////////////
 	/////////////////////////////////////////////////
 	
-	/**
-	 * Converts the Input Alphabet of the Automaton
-	 * to the Terminal alphabet of the Grammar. First
-	 * step in the conversion algorithm
-	 * 
-	 * @author Julian
-	 *
-	 */
-	private class ConvertInputAlphabet implements AlgorithmStep{
 
-		@Override
-		public String getDescriptionName() {
-			return "Convert Input Alphabet";
-		}
-
-		@Override
-		public String getDescription() {
-			return "Converts the Input Alphabet of the Automaton" +
-					" to the Terminal alphabet of the Grammar.";
-		}
-
-		@Override
-		public boolean execute() throws AlgorithmException {
-			return convertInputAlphabet();
-		}
-
-		@Override
-		public boolean isComplete() {
-			return inputAlphabetConverted();
-		}
-		
-	}
 	
 	/**
 	 * Create all variable mappings and then make sure those
