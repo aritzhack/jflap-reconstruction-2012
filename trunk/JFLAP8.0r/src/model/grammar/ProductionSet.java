@@ -34,7 +34,7 @@ public class ProductionSet extends FunctionSet<Production> {
 	 * @return
 	 */
 	public Production[] getProductionsWithLHS(SymbolString lhs) {
-		ProductionSet prods = new ProductionSet();
+		TreeSet<Production> prods = new TreeSet<Production>();
 		for (Production p: this){
 			if (p.equalsLHS(lhs))
 				prods.add(p);
