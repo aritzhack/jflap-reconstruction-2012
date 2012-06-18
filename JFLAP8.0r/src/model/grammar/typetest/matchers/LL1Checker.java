@@ -15,6 +15,7 @@ import model.grammar.GrammarException;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.parsing.FirstFollowTable;
+import model.grammar.parsing.ParserException;
 
 public class LL1Checker extends GrammarChecker {
 
@@ -40,7 +41,12 @@ public class LL1Checker extends GrammarChecker {
 
 	@Override
 	public boolean matchesGrammar(Grammar g) {
-		FirstFollowTable table = new FirstFollowTable(g);
+		FirstFollowTable table;
+		try {
+		table = new FirstFollowTable(g);
+		} catch (ParserException e){
+			return false;
+		}
 		ProductionSet p = g.getProductionSet();
 		
 		for (Symbol v: g.getVariables()){

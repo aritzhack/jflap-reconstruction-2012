@@ -11,6 +11,8 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.change.ChangingObject;
 import model.change.events.AddEvent;
 import model.change.events.AdvancedChangeEvent;
@@ -46,7 +48,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		boolean added = myComponents.addAll(c);
 		if (added){
 			for (T item : c){
-				item.setParent(this);
+				item.addParent(this);
 			}
 		}
 		distributeChange(e);
@@ -101,7 +103,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		boolean removed = myComponents.removeAll(c);
 		if (removed){
 			for (Object item : c){
-				((SetSubComponent<T>) item).clearParent();
+				((SetSubComponent<T>) item).removeParent(this);
 			}
 		}
 		distributeChange(e);

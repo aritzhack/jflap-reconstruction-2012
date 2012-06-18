@@ -2,29 +2,17 @@ package view.formaldef.componentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.text.JTextComponent;
 
-import debug.JFLAPDebug;
-
-import oldnewstuff.view.JFLAPGUIResources;
-import oldnewstuff.view.util.thinscroller.ThinScrollBarScrollPane;
 import util.JFLAPConstants;
+import util.view.thinscroller.ThinScrollBarScrollPane;
 
-import model.formaldef.components.symbols.Symbol;
 
-
-public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane implements JFLAPGUIResources{
+public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane implements JFLAPConstants{
 
 	private JToolBar myBar;
 	private Color myHighlight;

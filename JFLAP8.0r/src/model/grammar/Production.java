@@ -274,7 +274,7 @@ public class Production extends LanguageFunction<Production> implements JFLAPCon
 
 	@Override
 	public Production copy() {
-		return new Production(myLHS.copy(), myLHS.copy());
+		return new Production(myLHS.copy(), myRHS.copy());
 	}
 	
 	public boolean isLambdaProduction() {

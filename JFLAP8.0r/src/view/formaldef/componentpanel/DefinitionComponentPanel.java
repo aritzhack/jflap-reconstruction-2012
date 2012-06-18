@@ -10,14 +10,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import oldnewstuff.view.EditingPanel;
-import oldnewstuff.view.JFLAPGUIResources;
-import oldnewstuff.view.util.SuperMouseAdapter;
+import util.JFLAPConstants;
+import util.view.SuperMouseAdapter;
 
 
 import model.formaldef.components.FormalDefinitionComponent;
 import model.undo.UndoKeeper;
 
-public abstract class DefinitionComponentPanel<T extends FormalDefinitionComponent> extends EditingPanel implements JFLAPGUIResources, ChangeListener{
+public abstract class DefinitionComponentPanel<T extends FormalDefinitionComponent> extends EditingPanel 
+													implements JFLAPConstants, ChangeListener{
 
 	private JLabel myLabel;
 	private T myComp;

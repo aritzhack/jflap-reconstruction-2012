@@ -40,8 +40,9 @@ public abstract class Acceptor<T extends Transition<T>> extends Automaton<T> {
 				event.getType() == ITEM_ADDED){
 			Collection<State> added = (Collection<State>) event.getArg(0);
 			StateSet states = this.getStates();
-			if(!states.containsAll(added)){
-				states.addAll(added);
+			for (State s: added){
+				if (!states.contains(s))
+					states.add(s);
 			}
 				
 		}

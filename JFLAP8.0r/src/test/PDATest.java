@@ -67,7 +67,7 @@ public class PDATest extends TestHarness{
 
 		pda.getStates().addAll(Arrays.asList(new State[]{q0,q1,q2,q3}));
 		pda.setStartState(q0);
-		pda.getFinalStateSet().add(q3);
+		pda.getFinalStateSet().add(q3.copy());
 		
 		Symbol A = 	new Symbol("a");
 		Symbol B = new Symbol("b");
@@ -80,11 +80,9 @@ public class PDATest extends TestHarness{
 		PDATransition t3 = new PDATransition(q2, q2, new SymbolString(B), new SymbolString(A), new SymbolString());
 		PDATransition t4 = new PDATransition(q2, q3, new SymbolString(), 
 				new SymbolString(bos.getSymbol()), new SymbolString());
-		
 		pda.getTransitions().addAll((Arrays.asList(new PDATransition[]{t0,t1,t2,t3,t4})));
 		pda.trimAlphabets();
 		outPrintln(pda.toString());
-		
 		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(pda.isComplete()),"\n"));
 		
 		errPrintln("");

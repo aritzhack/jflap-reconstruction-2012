@@ -3,6 +3,8 @@ package model.grammar;
 import java.util.Arrays;
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
@@ -215,10 +217,11 @@ public class Grammar extends FormalDefinition{
 
 	@Override
 	public Grammar copy() {
-		Grammar g = new Grammar(getVariables().copy(),
-				getTerminals().copy(), 
-				getProductionSet().copy(),
-				new StartVariable(getStartVariable()));
+		VariableAlphabet vars = getVariables().copy();
+		TerminalAlphabet terms = getTerminals().copy();
+		ProductionSet p = getProductionSet().copy();
+		StartVariable var = new StartVariable(getStartVariable());
+		Grammar g = new Grammar(vars, terms, p, var);
 		return g;
 	}
 

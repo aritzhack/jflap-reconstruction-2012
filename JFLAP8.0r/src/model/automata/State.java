@@ -49,7 +49,7 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 	public int getID(){
 		return myID;
 	}
-	
+
 
 	@Override 
 	public State copy(){
@@ -62,7 +62,7 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 			throw new RuntimeException(e);
 		}
 
-		
+
 	}
 
 
@@ -84,7 +84,7 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 	public String toString() {
 		return this.getName();
 	}
-	
+
 	public String toDetailedString() {
 		return this.getName() + "|id:" + this.getID();
 	}
@@ -96,7 +96,10 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 
 	@Override
 	public int compareTo(State toState) {
-		return ((Integer)this.getID()).compareTo(toState.getID());
+		int compare = this.myID - toState.myID;
+		if (compare == 0)
+			compare = this.myName.compareTo(toState.myName);
+		return compare;
 	}
 
 	@Override

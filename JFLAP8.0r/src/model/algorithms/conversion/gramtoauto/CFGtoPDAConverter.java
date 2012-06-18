@@ -94,29 +94,24 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 	@Override
 	public boolean doSetup() {
 		StateSet stateSet = this.getConvertedAutomaton().getStates();
-		boolean success = true;
 		
 		//set up start state;
-		myStartState = new State(null, stateSet.getNextUnusedID());
-		success &= stateSet.add(myStartState);
+		myStartState = stateSet.createAndAddState();
 		this.getConvertedAutomaton().setStartState(myStartState);
 
 		
-		myMiddleState = new State(null, stateSet.getNextUnusedID());
-		success &= stateSet.add(myMiddleState);
+		myMiddleState = stateSet.createAndAddState();
 		
 		//set up final state
-		myFinalState = new State(null, stateSet.getNextUnusedID());
+		myFinalState = stateSet.createAndAddState();
 		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
-		success &= stateSet.add(myFinalState);
-		success &= finalStates.add(myFinalState);
-		
+		finalStates.add(myFinalState);
 		//Add all of these states to the automaton
 		Symbol symbol = 
 				SpecialSymbolFactory.getReccomendedBOSSymbol(this.getConvertedAutomaton().getStackAlphabet());
 		this.getConvertedAutomaton().setBottomOfStackSymbol(symbol);
 		
-		return success && this.setUpTransitions();
+		return this.setUpTransitions();
 	}
 
 	public State getStartState(){

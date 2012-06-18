@@ -145,10 +145,11 @@ public class RegularExpressionGrammar extends Grammar {
 
 	@Override
 	public RegularExpressionGrammar copy(){
-		RegularExpressionGrammar g = (RegularExpressionGrammar) super.copy();
+		RegularExpressionGrammar g = 
+				new RegularExpressionGrammar(myInputAlph, myOperatorAlph);
 		ProductionSet prods = g.getProductionSet();
 		prods.clear();
-		prods.addAll(this.getProductionSet());
+		prods.addAll(this.getProductionSet().toCopiedSet());
 		return g;
 	}
 

@@ -13,9 +13,9 @@ public class RunTests {
 //		PDATest.class,
 //		RegExTest.class, 
 //		FSATest.class, 
-//		GrammarTest.class,
+		GrammarTest.class,
 //		ParserTest.class,
-		FileTester.class
+//		FileTester.class
 	};
 	
 	public static void main(String[] args) {

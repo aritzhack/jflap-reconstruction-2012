@@ -13,7 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
-import oldnewstuff.view.util.undo.UndoableAction;
+import util.view.undo.UndoableAction;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
