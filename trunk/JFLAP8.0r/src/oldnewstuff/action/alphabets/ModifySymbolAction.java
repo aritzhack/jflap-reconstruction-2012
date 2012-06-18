@@ -4,48 +4,45 @@ package oldnewstuff.action.alphabets;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
+import model.change.events.SetToEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
+import model.undo.IUndoRedo;
+import model.undo.UndoKeeper;
 
 
 
-public class ModifySymbolAction extends AbstractEditSymbolsAction {
+public class ModifySymbolAction extends AbstractAction {
 
-	private String newString, oldString;
+	private Symbol mySymbol;
+	private SetToEvent<Symbol> myEvent;
+	private UndoKeeper myKeeper;
 
-	public ModifySymbolAction( Alphabet a, Symbol s) {
-		super("Modify", a, s);
+	public ModifySymbolAction(Symbol s, UndoKeeper keeper) {
+		super("Modify Symbol");
+		mySymbol = s;
+		myKeeper = keeper;
 	}
 
 
-
 	@Override
-	protected boolean setFields(ActionEvent e) {
-		oldString = this.getSymbol(0).getString();
-		newString = JOptionPane.showInputDialog(null, 
+	public void actionPerformed(ActionEvent arg0) {
+		String from = mySymbol.getString(),
+				to = JOptionPane.showInputDialog(null, 
 				"Modify the symbol, click ok to complete",
-				oldString);
-		if (newString == null)
-			return false;
-		return true;
-	}
-
-
-
-	@Override
-	public boolean undo() {
-		return this.getAlphabet().modify(new Symbol(oldString), 
-							new Symbol(newString));
-	}
-
-
-
-	@Override
-	public boolean redo() {
-		return this.getAlphabet().modify(new Symbol(newString), 
-				new Symbol(oldString));
+				from);
+		if (to == null)
+			return;
+		myEvent = new SetToEvent<Symbol>(mySymbol, 
+										  new Symbol(from), 
+										  new Symbol(to));
+		myKeeper.beginCombine(myEvent);
+		myEvent.redo();
+		myKeeper.endCombine();
+		
 	}
 
 }
