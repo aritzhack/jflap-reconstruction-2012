@@ -2,7 +2,6 @@ package model.automata.turing;
 
 import java.util.Collection;
 
-import oldnewstuff.TuringMachineInputAlphabet;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -105,8 +104,8 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	}
 
 	@Override
-	public TuringMachineInputAlphabet getInputAlphabet() {
-		return (TuringMachineInputAlphabet) super.getInputAlphabet();
+	public InputAlphabet getInputAlphabet() {
+		return super.getInputAlphabet();
 	}
 
 	@Override

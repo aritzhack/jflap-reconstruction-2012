@@ -34,6 +34,10 @@ public abstract class SetSubComponent<T extends SetSubComponent<T>> extends Chan
 		myParent = null;
 	}
 
+	public SetComponent<T> getParent(){
+		return myParent;
+	}
+
 	@Override
 	public boolean setTo(T other) {
 		ChangeEvent change = new SetToEvent<T>((T) this, this.copy(), other);
