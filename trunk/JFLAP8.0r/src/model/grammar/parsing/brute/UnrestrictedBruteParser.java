@@ -11,7 +11,7 @@ import model.grammar.Production;
 public class UnrestrictedBruteParser extends BruteParser{
 
 	public UnrestrictedBruteParser(Grammar g){
-		super(optimize(g));
+		super(g);
 	}
 	
 	/**
