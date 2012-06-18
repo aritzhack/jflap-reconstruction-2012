@@ -53,6 +53,15 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		return added;
 
 	}
+	
+	public Set<T> toCopiedSet(){
+		Set<T> set = new TreeSet<T>();
+		for(T s: this){
+			set.add(s.copy());
+		}
+		return set;
+	}
+
 
 	@Override
 	public void clear() {

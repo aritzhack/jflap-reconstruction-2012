@@ -5,9 +5,9 @@ import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
+import util.JFLAPConstants;
 import util.UtilFunctions;
 
-import model.JFLAPConstants;
 import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.*;
 import model.formaldef.components.symbols.*;
@@ -19,7 +19,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class CYKGUI extends JFrame {
+public class CYKGUI extends JFrame implements JFLAPConstants{
 
 	private JPanel contentPane;
 	private JPanel buttonBar;
@@ -233,7 +233,7 @@ public class CYKGUI extends JFrame {
 				for(int j=0; j<parseTable.getColumnCount();j++){
 					if(myParser.getNodeAtIndex(i, j)!= null){
 						if(myParser.getNodeAtIndex(i, j).size()==0){
-							parseTable.setValueAt(JFLAPConstants.EMPTY_SET_SYMBOL, i, j);
+							parseTable.setValueAt(EMPTY_SET_SYMBOL, i, j);
 						}else{
 							parseTable.setValueAt(myParser.getNodeAtIndex(i, j), i, j);
 						}

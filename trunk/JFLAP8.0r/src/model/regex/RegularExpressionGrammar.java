@@ -11,6 +11,7 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.formaldef.components.symbols.Terminal;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -48,17 +49,14 @@ public class RegularExpressionGrammar extends Grammar {
 		myInputAlph = alph;
 		myInputAlph.addListener(this);
 		myOperatorAlph = ops;
-		TerminalAlphabet terms = this.getTerminals();
-		terms.addAll(ops);
 		this.setVariableGrouping(new GroupingPair('<', '>'));
-		this.getVariables().addAll(START, EXPRESSION);
 		this.setStartVariable(START);
 		this.getProductionSet().add(new Production(START, EXPRESSION));
-		addProduction(ops.getOpenGroup(), EXPRESSION, ops.getCloseGroup());
-		addProduction(EXPRESSION, ops.getUnionOperator(), EXPRESSION);
-		addProduction(EXPRESSION, ops.getKleeneStar());
+		addProduction(ops.getOpenGroup().copy(), EXPRESSION, ops.getCloseGroup().copy());
+		addProduction(EXPRESSION, ops.getUnionOperator().copy(), EXPRESSION);
+		addProduction(EXPRESSION, ops.getKleeneStar().copy());
 		addProduction(EXPRESSION, EXPRESSION);
-		addProduction(ops.getEmptySub());
+		addProduction(ops.getEmptySub().copy());
 		inputSymbolsAdded(alph);
 	}
 
@@ -128,8 +126,7 @@ public class RegularExpressionGrammar extends Grammar {
 		TerminalAlphabet terms = this.getTerminals();
 		boolean changed = false;
 		for (Symbol s: symbols){
-			if(terms.add(s) &&
-					addProductionForSymbol(terms.getByString(s.getString())))
+			if(addProductionForSymbol(new Terminal(s.getString())))
 				changed = true;
 		}
 		return true;

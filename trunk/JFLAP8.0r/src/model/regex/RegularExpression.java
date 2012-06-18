@@ -304,7 +304,7 @@ public class RegularExpression extends FormalDefinition {
 		SymbolString exp = new SymbolString();
 		OperatorAlphabet ops = regex.getOperators();
 		String cur = "";
-		outer: for(int i = 0; i < in.length(); i++){
+		for(int i = 0; i < in.length(); i++){
 			String next = in.charAt(i) + "";
 			if(ops.containsSymbolWithString(next)){
 				Symbol s = ops.getSymbolForString(next);

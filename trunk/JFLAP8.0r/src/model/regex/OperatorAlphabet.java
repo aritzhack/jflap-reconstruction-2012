@@ -1,5 +1,7 @@
 package model.regex;
 
+import debug.JFLAPDebug;
+import oldnewstuff.main.JFLAP;
 import oldnewstuff.universe.preferences.JFLAPPreferences;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
