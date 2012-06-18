@@ -1,5 +1,7 @@
 package model.automata.turing;
 
+import java.util.Collection;
+
 import oldnewstuff.TuringMachineInputAlphabet;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
@@ -86,12 +88,12 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	public void componentChanged(AdvancedChangeEvent event) {
 		if (event.comesFrom(TapeAlphabet.class) && event.getType() == ITEM_REMOVED){
 			InputAlphabet input = this.getInputAlphabet();
-			Symbol s = (Symbol) event.getArg(0);
-				input.remove(s);
+			Collection<Symbol> s = (Collection<Symbol>) event.getArg(0);
+			input.removeAll(s);
 		} else if (event.comesFrom(InputAlphabet.class) && event.getType() == ITEM_ADDED){
 			TapeAlphabet tape = this.getTapeAlphabet();
-			Symbol s = (Symbol) event.getArg(0);
-			tape.add(s);
+			Collection<Symbol> s = (Collection<Symbol>) event.getArg(0);
+			tape.addAll(s);
 		}
 		super.componentChanged(event);
 	}
