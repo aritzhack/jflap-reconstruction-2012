@@ -1,5 +1,6 @@
 package model.algorithms.transform;
 
+import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;

@@ -132,7 +132,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		int[] position = this.getNextSecondaryPositions(trans);
 		SymbolString[] clones = new SymbolString[myStrings.length];
 		for (int i = 0; i < clones.length; i++)
-			clones[i] = myStrings[i].clone();
+			clones[i] = myStrings[i].copy();
 		clones = this.assembleUpdatedStrings(clones, trans);
 
 		try {
@@ -147,13 +147,13 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 	public Configuration<S,T> clone(){
 		LinkedList<SymbolString> clones = new LinkedList<SymbolString>();
 		for (SymbolString string : myStrings){
-			clones.add(string.clone());
+			clones.add(string.copy());
 		}
 		try {
 			Configuration<S,T> config = this.createConfig(this.getAutomaton(),
 					myState, 
 					myPrimaryPosition, 
-					myPrimary.clone(), 
+					myPrimary.copy(), 
 					myPositions, 
 					clones.toArray(new SymbolString[0]));
 			config.setTransitionTo(this.getTransitionTo());

@@ -4,6 +4,7 @@ package model.formaldef.components.symbols;
 import java.lang.Character.Subset;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.swing.event.ChangeEvent;
 
@@ -27,14 +28,11 @@ public class Symbol extends SetSubComponent<Symbol>{
 		myString = s;
 	}
 	
-	@Override
-	public Alphabet getParent() {
-		return (Alphabet) super.getParent();
-	}
 	
 	@Override
 	public boolean setTo(Symbol other) {
-		getParent().checkRules(AlphabetActionType.MODIFY, this, other);
+		for(SetComponent<Symbol> parent: getParents()) 
+			((Alphabet) parent).checkRules(AlphabetActionType.MODIFY, this, other);
 		return super.setTo(other);
 	}
 	

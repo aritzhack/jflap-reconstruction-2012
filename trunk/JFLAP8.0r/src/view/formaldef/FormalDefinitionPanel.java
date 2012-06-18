@@ -1,28 +1,18 @@
 package view.formaldef;
 
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import oldnewstuff.view.EditingPanel;
-import oldnewstuff.view.JFLAPGUIResources;
+import util.JFLAPConstants;
 import view.formaldef.componentpanel.ComponentPanelFactory;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
 
-import model.formaldef.Describable;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.undo.UndoKeeper;
 
-public class FormalDefinitionPanel extends JPanel implements JFLAPGUIResources {
+public class FormalDefinitionPanel extends JPanel implements JFLAPConstants {
 
 	
 

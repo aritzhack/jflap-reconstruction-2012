@@ -49,7 +49,7 @@ public class FileTester extends TestHarness {
 		
 		//SAVE AND LOAD GRAMMAR
 		Grammar g = createGrammar();
-		f = new File(toSave + "/LL1grammar.jff");
+		f = new File(toSave + "/UNRgrammar.jff");
 		outPrintln("Before import:\n" + g.toString());
 		codec.encode(g, f, null);
 		g = (Grammar) codec.decode(f);
@@ -138,6 +138,7 @@ public class FileTester extends TestHarness {
 		Variable S = new Variable("S");
 		Variable A = new Variable("A");
 		Variable B = new Variable("B");
+		Variable C = new Variable("C");
 		Terminal a = new Terminal("a");
 		Terminal b = new Terminal("b");
 		Terminal c = new Terminal("c");
@@ -146,11 +147,14 @@ public class FileTester extends TestHarness {
 		//ex7.6cnf-a.jff
 //		g.getVariables().addAll( S,A,B );
 //		g.getTerminals().addAll(a,b,c,d);
-		prod.add(new Production(S, a,A,d,B));
-		prod.add(new Production(A, a,A));
-		prod.add(new Production(A, c));
-		prod.add(new Production(B, b, B));
-		prod.add(new Production(B));
+		prod.add(new Production(S, a,b,c));
+		prod.add(new Production(S, a,A,b,c));
+		prod.add(new Production(new SymbolString(A,b), new SymbolString(b,A)));
+		prod.add(new Production(new SymbolString(A,c), new SymbolString(B,b,c,c)));
+		prod.add(new Production(new SymbolString(b,B), new SymbolString(B,b)));
+		prod.add(new Production(new SymbolString(a,B), new SymbolString(a,a)));
+		prod.add(new Production(new SymbolString(a,B), new SymbolString(a,a,A)));
+		prod.add(new Production(new SymbolString(B,A), new SymbolString(C)));
 		g.setStartVariable(S);
 		
 		

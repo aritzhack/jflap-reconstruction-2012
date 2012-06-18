@@ -208,10 +208,10 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 		if (p.isStartProduction(this.getTransformedGrammar().getStartVariable()))
 			return false;
 		DependencyGraph graph = myConstructDependencyGraphStep.getAlgorithm().getDependencyGraph();
-		Variable lhs = (Variable) p.getLHS()[0];
+		Set<Variable> lhs = p.getVariablesOnLHS();
 		Variable start = this.getTransformedGrammar().getStartVariable();
 		Variable[] startDependencies = graph.getAllDependencies(start);
-		if (Arrays.asList(startDependencies).contains(lhs))
+		if (Arrays.asList(startDependencies).containsAll(lhs))
 			return false;
 		return true;
 	}

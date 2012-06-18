@@ -21,6 +21,9 @@ import model.grammar.Grammar;
 import model.grammar.GrammarUtil;
 import model.grammar.Production;
 import model.grammar.VariableAlphabet;
+import model.grammar.typetest.matchers.ContextFreeChecker;
+import model.grammar.typetest.matchers.GrammarChecker;
+import model.grammar.typetest.matchers.UnrestrictedChecker;
 import model.regex.EmptySub;
 
 /**
@@ -61,6 +64,10 @@ public class FirstFollowTable {
 	 * 		true if the table should be automatically populated
 	 */
 	public FirstFollowTable(Grammar g, boolean populate) {
+		GrammarChecker check = new ContextFreeChecker();
+		if (!check.matchesGrammar(g))
+			throw new ParserException("This grammar is not context free, " +
+					" therefore, you may not build a FIRST/FOLLOW table with it.");
 		myGrammar = g;
 		Variable[] alph = g.getVariables().toArray(new Variable[0]);
 		myTable = new FirstFollowMapping[alph.length];

@@ -2,7 +2,7 @@ package oldnewstuff.view;
 
 import java.util.Map;
 
-import oldnewstuff.view.util.undo.UndoKeeper;
+import util.view.undo.UndoKeeper;
 
 
 public abstract class PrimaryEditingPane extends EditingPanel {
