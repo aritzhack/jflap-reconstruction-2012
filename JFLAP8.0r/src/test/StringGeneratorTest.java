@@ -1,5 +1,6 @@
 package test;
 
+import model.formaldef.components.symbols.Terminal;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,7 @@ import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.languages.Language;
+import model.languages.samplelanguages.EvenLetterLanguage;
 import model.languages.samplelanguages.OddLetterLanguage;
 import model.formaldef.components.symbols.Variable;
 import model.grammar.*;
@@ -157,8 +159,8 @@ public class StringGeneratorTest {
 //		List<SymbolString> list = LLgen.generateStringsOfLength(8);
 //		System.out.println(UtilFunctions.createDelimitedString(list, "\n"));
 		
-		Language lang = new OddLetterLanguage(input, new Terminal("a"));
-		System.out.println(lang.getStrings(50));
+		Language lang = new EvenLetterLanguage(input, new Terminal("a"));
+		System.out.println(lang.getStrings(100));
 	}
 	
 }

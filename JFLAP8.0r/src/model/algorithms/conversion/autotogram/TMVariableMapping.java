@@ -26,12 +26,20 @@ public class TMVariableMapping extends VariableMapping{
 	@Override
 	public boolean equals(Object arg0) {
 		TMVariableMapping other = (TMVariableMapping) arg0;
+		if((myState==null && other.myState!=null) || (myState!=null && other.myState==null)) return false;
+		if(myState==null && other.myState==null){
+			return myA.equals(other.myA) && myB.equals(other.myB);
+		}
 		return (myA.equals(other.myA) && myB.equals(other.myB) && myState.equals(other.myState));
 	}
 
 	@Override
 	public int hashCode() {
-		return myA.hashCode()+myState.hashCode()*myState.hashCode()+myB.hashCode()*myB.hashCode()*myB.hashCode();
+		int hash = myA.hashCode()+myB.hashCode()*myB.hashCode()*myB.hashCode();
+		if(myState!=null){
+			hash+=myState.hashCode()*myState.hashCode();
+		}
+		return hash;
 	}
 	
 
