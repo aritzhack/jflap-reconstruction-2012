@@ -1,7 +1,5 @@
-package model.numbersets;
+package model.numbersets.defined;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Congruence using modular arithmetic
@@ -11,9 +9,14 @@ import java.util.Collection;
  * 
  */
 
+
+import java.util.Set;
+import java.util.TreeSet;
+
+
 public class CongruentSet extends PredefinedSet {
 
-	private ArrayList<Integer> myValues;
+	private Set<Integer> myValues;
 
 	private int myModulus;
 	private int myInitial;
@@ -33,7 +36,7 @@ public class CongruentSet extends PredefinedSet {
 			startValue = wrapStart(startValue);
 		myInitial = startValue;
 		
-		myValues = new ArrayList<Integer>();
+		myValues = new TreeSet<Integer>();
 	}
 	
 	private int wrapStart(int start) {
@@ -64,12 +67,12 @@ public class CongruentSet extends PredefinedSet {
 	}
 
 	@Override
-	public Collection<Integer> getNumbersInSet() {
+	public Set<Integer> getSet() {
 		return myValues;
 	}
 
 	@Override
-	public Collection<Integer> generateNextNumbers(int n) {
+	public Set<Integer> generateNextNumbers(int n) {
 		int buffer = myValues.size();
 		for (int i = buffer; i < n + buffer; i++) {
 			myValues.add(myInitial + myModulus * i);
@@ -101,14 +104,24 @@ public class CongruentSet extends PredefinedSet {
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 		myValues.clear();
 	}
 
 	@Override
-	public Collection<Integer> getValuesInRange(int min, int max) {
+	public Set<Integer> getValuesInRange(int min, int max) {
 		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> mods = new TreeSet<Integer>();
+		
+		int start = myInitial + (int) Math.floor(Math.abs(min - myInitial) % myModulus);
+		System.out.println(start);
+		
+		
+		return mods;
+	}
+
+	@Override
+	public int getSize() {
+		return myValues.size();
 	}
 
 }

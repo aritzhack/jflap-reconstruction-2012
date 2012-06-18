@@ -1,29 +1,35 @@
 package model.numbersets;
 
-import model.numbersets.parse.FormulaParser;
+import model.numbersets.defined.PredefinedSet;
+import model.numbersets.function.ExponentialFunction;
+import model.numbersets.function.FunctionSet;
+
 
 public class Main {
 	
 	public static void main (String[] args) {
 	
-		
-//		PredefinedSet set = new MultiplesOfSet(5);
+//		CustomSet custom = new CustomSet();
+//		System.out.println(custom + "\n\n");
 //		
-//		// print first n numbers
-//		System.out.println(set.generateNextNumbers(0));		// empty
-//		System.out.println(set.generateNextNumbers(1));		// first
-//		System.out.println(set.generateNextNumbers(7));		// n more
+//		custom.setName("Test set");
+//		custom.addDescription("Random integers");
+//		custom.addAll(5, 9, 0, 11, 15, 2, 3, 2, 2, 2, 6);
 //		
-//		// print contains n
-//		System.out.println(set.contains(7));		// true
-//		System.out.println(set.contains(14));		// false
+//		System.out.println(custom + "\n\n");
+//		
+//		custom.remove(8);
+//		System.out.println(custom + "\n\n");
+//		
+//		custom.remove(2);
+//		System.out.println(custom + "\n\n");
 		
 		
-		FormulaParser parser = new FormulaParser("5n - 6 ");
+		PredefinedSet set = new FunctionSet(new ExponentialFunction(4));
+		System.out.println(set.contains(1024));
 		
-		System.out.println(parser.getStringFromIndex(0));
 		
-		
+
 	}
 
 }
