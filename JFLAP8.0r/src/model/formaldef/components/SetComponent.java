@@ -17,6 +17,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.change.events.AdvancedUndoableEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
+import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.symbols.Symbol;
 
 import util.Copyable;
@@ -45,7 +46,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		boolean added = myComponents.addAll(c);
 		if (added){
 			for (T item : c){
-				item.addListener(this);
+				item.setParent(this);
 			}
 		}
 		distributeChange(e);
@@ -91,7 +92,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		boolean removed = myComponents.removeAll(c);
 		if (removed){
 			for (Object item : c){
-				((ChangingObject) item).removeListener(this);
+				((SetSubComponent<T>) item).clearParent();
 			}
 		}
 		distributeChange(e);
@@ -195,6 +196,11 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 			return myEvent.redo();
 		}
 
+		@Override
+		public Object getArg(int i) {
+			return myEvent.getArg(i);
+		}
+		
 		@Override
 		public String getName() {
 			return myEvent.getName();

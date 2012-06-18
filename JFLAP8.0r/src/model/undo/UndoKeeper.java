@@ -57,6 +57,7 @@ public class UndoKeeper implements ChangeListener{
 			myCombineAction.add(toAdd);
 		else
 			myUndoQueue.push(toAdd);
+		JFLAPDebug.print(toAdd.getName());
 	}
 
 	public boolean undoLast(){

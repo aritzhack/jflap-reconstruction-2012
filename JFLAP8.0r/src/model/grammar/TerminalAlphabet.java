@@ -1,12 +1,14 @@
 package model.grammar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
+import model.formaldef.components.symbols.Variable;
 
 
 
@@ -33,12 +35,16 @@ public class TerminalAlphabet extends Alphabet {
 	public String getSymbolName() {
 		return "Terminal";
 	}
-	
+
 	@Override
-	public boolean add(Symbol e) {
-		if (!(e instanceof Terminal))
-			e = new Terminal(e.getString());
-		return super.add(e);
+	public boolean addAll(Collection<? extends Symbol> e) {
+		for (Symbol s: e.toArray(new Symbol[0])){
+			if (!(s instanceof Terminal)){
+				e.remove(s);
+				((Collection<Symbol>) e).add(new Terminal(s.getString()));
+			}
+		}
+		return super.addAll(e);
 	}
 
 
@@ -46,5 +52,5 @@ public class TerminalAlphabet extends Alphabet {
 	public TerminalAlphabet copy() {
 		return (TerminalAlphabet) super.copy();
 	}
-	
+
 }

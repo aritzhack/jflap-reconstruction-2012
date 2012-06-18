@@ -1,30 +1,27 @@
 package model.change.events;
 
+import debug.JFLAPDebug;
 import model.formaldef.components.Settable;
 import model.formaldef.components.symbols.SpecialSymbol;
 import model.formaldef.components.symbols.Symbol;
 
 public class SetToEvent<T extends Settable<T>> extends AdvancedUndoableEvent {
 
-	private T myFrom;
-	private T myTo;
 	private T myBase;
 
 	public SetToEvent(T source, T from, T to) {
-		super(source, ITEM_MODIFIED);
+		super(source, ITEM_MODIFIED, from, to);
 		myBase = source;
-		myFrom = from;
-		myTo = to;
 	}
 
 	@Override
 	public boolean undo() {
-		return myBase.setTo(myFrom);
+		return myBase.setTo(getFrom());
 	}
 	
 	@Override
 	public boolean redo() {
-		return myBase.setTo(myTo);
+		return myBase.setTo(getTo());
 	}
 	
 	@Override
@@ -33,16 +30,16 @@ public class SetToEvent<T extends Settable<T>> extends AdvancedUndoableEvent {
 	}
 	
 	public T getFrom(){
-		return myFrom;
+		return (T) getArg(0);
 	}
 	
 	public T getTo(){
-		return myTo;
+		return (T) getArg(1);
 	}
 
 	@Override
 	public String getName() {
-		return "Set " + myFrom + " to " + myTo;
+		return "Set " + getFrom() + " to " + getTo();
 	}
 
 }

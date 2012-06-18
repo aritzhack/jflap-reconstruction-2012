@@ -30,7 +30,8 @@ public class UITesting {
 		File f = new File(toSave + "/grammar.jff");
 		
 		Grammar gram = (Grammar) new XMLCodec().decode(f);
-		frame.add(new GrammarView(gram, new UndoKeeper(), true));
+		UndoKeeper keeper = new UndoKeeper();
+		frame.add(new GrammarView(gram, keeper, true));
 		frame.pack();
 		frame.setVisible(true);
 	}

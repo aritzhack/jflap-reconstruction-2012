@@ -1,4 +1,4 @@
-package oldnewstuff.action.alphabets;
+package view.action;
 
 
 import java.awt.Component;
@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
+import debug.JFLAPDebug;
+
+import model.change.events.AdvancedUndoableEvent;
 import model.change.events.SetToEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
@@ -15,34 +18,29 @@ import model.undo.UndoKeeper;
 
 
 
-public class ModifySymbolAction extends AbstractAction {
+public class ModifySymbolAction extends UndoingAction {
 
 	private Symbol mySymbol;
-	private SetToEvent<Symbol> myEvent;
-	private UndoKeeper myKeeper;
 
 	public ModifySymbolAction(Symbol s, UndoKeeper keeper) {
-		super("Modify Symbol");
+		super("Modify Symbol", keeper);
 		mySymbol = s;
-		myKeeper = keeper;
 	}
 
 
+	
+
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public IUndoRedo createEvent(ActionEvent e) {
 		String from = mySymbol.getString(),
 				to = JOptionPane.showInputDialog(null, 
 				"Modify the symbol, click ok to complete",
 				from);
 		if (to == null)
-			return;
-		myEvent = new SetToEvent<Symbol>(mySymbol, 
+			return null;
+		return new SetToEvent<Symbol>(mySymbol, 
 										  new Symbol(from), 
 										  new Symbol(to));
-		myKeeper.beginCombine(myEvent);
-		myEvent.redo();
-		myKeeper.endCombine();
-		
 	}
 
 }

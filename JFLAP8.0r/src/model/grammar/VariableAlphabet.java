@@ -1,5 +1,8 @@
 package model.grammar;
 
+import java.util.Collection;
+import java.util.List;
+
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -35,10 +38,13 @@ public class VariableAlphabet extends Alphabet{
 	}
 
 	@Override
-	public boolean add(Symbol e) {
-		if (!(e instanceof Variable))
-			e = new Variable(e.getString());
-		return super.add(e);
+	public boolean addAll(Collection<? extends Symbol> e) {
+		for (Symbol s: e.toArray(new Symbol[0]))
+		if (!(s instanceof Variable)){
+			e.remove(s);
+			((Collection<Symbol>) e).add(new Variable(s.getString()));
+		}
+		return super.addAll(e);
 	}
 
 	@Override
