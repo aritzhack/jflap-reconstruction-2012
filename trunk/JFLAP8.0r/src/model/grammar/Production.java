@@ -306,5 +306,12 @@ public class Production extends LanguageFunction<Production> implements JFLAPCon
 		this.myRHS.setTo(other.myRHS);
 	}
 
+	public boolean equalsLHS(SymbolString lhs) {
+		return myLHS.equals(lhs);
+	}
+
+	public boolean equalsRHS(SymbolString rhs) {
+		return myRHS.equals(rhs);
+	}
 
 }
