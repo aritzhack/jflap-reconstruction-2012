@@ -36,7 +36,7 @@ public class ProductionSet extends FunctionSet<Production> {
 	public Production[] getProductionsWithLHS(SymbolString lhs) {
 		ProductionSet prods = new ProductionSet();
 		for (Production p: this){
-			if (p.getLHS().equals(lhs))
+			if (p.equalsLHS(lhs))
 				prods.add(p);
 		}
 		return prods.toArray(new Production[0]);
