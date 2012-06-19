@@ -37,4 +37,7 @@ public interface XMLTransducer<T> extends XMLTags{
 	 */
 	public abstract String getTag();
 
+	
+	public abstract boolean matchesTag(String tag);
+
 }

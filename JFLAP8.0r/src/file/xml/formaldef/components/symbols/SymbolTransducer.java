@@ -5,9 +5,8 @@ import model.formaldef.components.symbols.Symbol;
 
 public class SymbolTransducer extends SingleNodeTransducer<Symbol> {
 
-	@Override
-	public String getTag() {
-		return "symbol";
+	public SymbolTransducer(String tag) {
+		super(tag);
 	}
 
 	@Override

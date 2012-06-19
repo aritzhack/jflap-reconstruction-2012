@@ -41,7 +41,7 @@ import file.DataException;
  * @author Thomas Finley
  */
 
-public abstract class StructureTransducer<T> implements XMLTransducer<T> {
+public abstract class StructureTransducer<T> extends BasicTransducer<T> {
 
 
 
@@ -62,6 +62,12 @@ public abstract class StructureTransducer<T> implements XMLTransducer<T> {
 
 	public abstract Element appendComponentsToRoot(Document doc, T structure, Element root);
 
+	
+	@Override
+	public boolean matchesTag(String tag) {
+		return getTag().equals(tag);
+	}
+	
 	public Element creatRoot(Document doc, T structure) {
 		
 		Map<String, Object> attributes = new HashMap<String, Object>();

@@ -8,7 +8,9 @@ import debug.JFLAPDebug;
 
 import model.formaldef.Describable;
 
-public abstract class SteppableAlgorithm implements Describable, JFLAPConstants {
+public abstract class SteppableAlgorithm implements Describable,
+													Steppable,
+													JFLAPConstants {
 
 	
 	private AlgorithmStep[] mySteps;
@@ -34,7 +36,8 @@ public abstract class SteppableAlgorithm implements Describable, JFLAPConstants 
 	 * 
 	 * @return
 	 */
-	public boolean step() throws AlgorithmException{
+	@Override
+	public Boolean step() throws AlgorithmException{
 
 		AlgorithmStep current = getCurrentStep();
 		if (current == null) return false;

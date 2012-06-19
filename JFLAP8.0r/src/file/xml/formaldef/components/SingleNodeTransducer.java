@@ -8,7 +8,22 @@ import file.xml.XMLHelper;
 
 public abstract class SingleNodeTransducer<T> implements XMLTransducer<T>{
 
+	private String myTag;
 
+	public SingleNodeTransducer(String tag){
+		myTag = tag;
+	}
+	
+	@Override
+	public String getTag() {
+		return myTag;
+	}
+	
+	@Override
+	public boolean matchesTag(String tag) {
+		return myTag.equals(tag);
+	}
+	
 	@Override
 	public T fromStructureRoot(Element root) {
 		String text = XMLHelper.containedText(root);

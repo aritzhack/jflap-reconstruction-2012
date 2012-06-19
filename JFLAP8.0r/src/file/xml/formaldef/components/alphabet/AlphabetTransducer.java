@@ -16,9 +16,10 @@ public abstract class AlphabetTransducer extends SetComponentTransducer<Symbol> 
 
 	private SymbolTransducer mySymbolTransducer;
 	public static final String ALPH_TAG_BASE = "alph";
+	private static final String SYMBOL_TAG = "symbol";
 
 	public AlphabetTransducer(){
-		mySymbolTransducer = new SymbolTransducer();
+		mySymbolTransducer = new SymbolTransducer(SYMBOL_TAG);
 	}
 
 	@Override
