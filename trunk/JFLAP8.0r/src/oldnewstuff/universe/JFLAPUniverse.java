@@ -16,7 +16,7 @@ import javax.swing.JComponent;
 
 import oldnewstuff.controller.JFLAPController;
 import oldnewstuff.universe.menu.MainMenu;
-import oldnewstuff.universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 
 
 
