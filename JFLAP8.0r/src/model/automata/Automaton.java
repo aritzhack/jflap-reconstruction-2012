@@ -12,6 +12,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 
 	public Automaton(FormalDefinitionComponent ... comps) {
 		super(comps); 
+		this.getStates().add(getStartState());
 	}
 
 	public InputAlphabet getInputAlphabet(){
@@ -27,12 +28,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 	}
 	
 	public void setStartState(State s){
-		if (!this.getStates().contains(s)){
-			throw new FormalDefinitionException("The start state must already be " +
-					"a part of the state set of the automaton");
-		}
-		else
-			getComponentOfClass(StartState.class).setState(s);
+		getComponentOfClass(StartState.class).setState(s);
 	}
 
 	
@@ -47,6 +43,9 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 			TransitionSet<T> transSet = this.getTransitions();
 			Collection<State> s = (Collection<State>) event.getArg(0);
 			transSet.removeForStates(s);
+		}
+		else if(event.comesFrom(StartState.class) && event.getType() == SPECIAL_CHANGED){
+			this.getStates().add(this.getStartState());
 		}
 		else super.componentChanged(event);
 	}
