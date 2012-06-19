@@ -47,7 +47,7 @@ public class MouseCatTest {
 		OutPrintln(pda.toString());
 		
 		//read input in from a test program, initialize simulator
-		SymbolString input = SymbolString.createFromString(createInput(),pda);
+		SymbolString input = SymbolString.createFromDefinition(createInput(),pda);
 		AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 		sim.beginSimulation(input);
 		

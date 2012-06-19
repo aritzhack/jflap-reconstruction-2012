@@ -1,7 +1,10 @@
 package view.grammar;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
@@ -10,6 +13,8 @@ import view.formaldef.FormalDefinitionView;
 
 public class GrammarView extends FormalDefinitionView<Grammar> {
 
+	private ProductionTable myTable;
+
 	public GrammarView(Grammar definition, UndoKeeper keeper,
 			boolean editable) {
 		super(definition, keeper, editable);
@@ -17,11 +22,11 @@ public class GrammarView extends FormalDefinitionView<Grammar> {
 
 	@Override
 	public JComponent createCentralPanel(Grammar definition,
-			UndoKeeper keeper) {
-		
-		JLabel label = new JLabel("GRAMMAR");
-		
-		return label;
+			UndoKeeper keeper, boolean editable) {
+
+		return new ProductionTable(definition.getProductionSet(), 
+										keeper, 
+										editable);
 	}
 
 }

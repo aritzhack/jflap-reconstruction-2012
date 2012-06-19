@@ -1,6 +1,7 @@
 package view.formaldef.componentpanel.alphabets;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -11,6 +12,8 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
+
+import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
@@ -112,7 +115,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 		}
 		
 		
-	}	
-	
+	}
+
 	
 }

@@ -66,7 +66,7 @@ public class ParserTest extends GrammarTest {
 		//try LL1 parser
 		String in = "aacd$";
 		LL1Parser ll1parse = new LL1Parser(g);
-		boolean accepts = ll1parse.quickParse(SymbolString.createFromString(in, g));
+		boolean accepts = ll1parse.quickParse(SymbolString.createFromDefinition(in, g));
 		outPrintln("LL1 Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
 		
 		//prepare and execute SLR parse
@@ -91,7 +91,7 @@ public class ParserTest extends GrammarTest {
 
 		in = "aaaab";
 		SLR1Parser slr1parse = new SLR1Parser(g);
-		accepts = slr1parse.quickParse(SymbolString.createFromString(in, g));
+		accepts = slr1parse.quickParse(SymbolString.createFromDefinition(in, g));
 		outPrintln("SLR1 Accept? " + accepts + "\n" + createPrintout(slr1parse.getDerivation()));
 		
 	}

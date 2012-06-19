@@ -33,10 +33,12 @@ import javax.swing.event.TableModelListener;
 
 import preferences.JFLAPPreferences;
 
+
 import util.JFLAPConstants;
 
 import model.grammar.Grammar;
 import model.grammar.ProductionSet;
+import model.undo.UndoKeeper;
 
 
 /**
@@ -53,38 +55,26 @@ import model.grammar.ProductionSet;
  */
 
 public class ProductionTableModel extends GrowableTableModel 
-								implements Observer, JFLAPConstants{
+								implements JFLAPConstants{
 
 
 	/**
 	 * Instantiates a <CODE>GrammarTableModel</CODE>.
 	 * @param model 
+	 * @param keeper 
 	 * 
 	 * @param myGrammar
 	 *            the grammar to have for the grammar table model initialized to
 	 */
-	public ProductionTableModel(ProductionSet model) {
-		super(3, new GrammarDataHelper(model));
-		this.addTableModelListener(new TableModelListener() {
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				GrammarDataHelper data = (GrammarDataHelper) ProductionTableModel.this.getData();
-				if (data.hasErrors()){
-					JOptionPane.showMessageDialog(null, 
-							data.getAndClearErrors(),
-							"Warning", 
-							JOptionPane.WARNING_MESSAGE);
-				}
-				else{
-//					data.getGrammar().setSelection(e.getFirstRow(), e.getLastRow());
-					
-				}
-			}
-		});
+	public ProductionTableModel(ProductionSet model, UndoKeeper keeper) {
+		super(3, new ProductionDataHelper(model, keeper));
+//		this.addTableModelListener(new TableModelListener() {
+//			@Override
+//			public void tableChanged(TableModelEvent e) {
+//				ProductionDataHelper data = (ProductionDataHelper) ProductionTableModel.this.getData();
+//			}
+//		});
 	}
-
-	
-
 
 	/**
 	 * Returns an empty string for each name.
@@ -101,8 +91,6 @@ public class ProductionTableModel extends GrowableTableModel
 		}
 		return "";
 	}
-	
-	
 
 	/**
 	 * Everything in the table model is editable except for the middle arrow.
@@ -148,8 +136,6 @@ public class ProductionTableModel extends GrowableTableModel
 	}
 
 	
-	
-	
 	/**
 	 * Returns the object at a particular location in the model. This is
 	 * overridden to see that the arrow does not display itself in the last
@@ -183,29 +169,14 @@ public class ProductionTableModel extends GrowableTableModel
 						this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyStringSymbol());
 	}
 
-
-
-
-	@Override
-	public void update(Observable o, Object arg) {
-		this.fireTableDataChanged();
-	}
-	
-	public Grammar getGrammar() {
-		GrammarDataHelper helper = (GrammarDataHelper) getData();
-		return helper.getGrammar();
-	}
-
-
-	public void setGrammar(Grammar g) {
-		GrammarDataHelper helper = (GrammarDataHelper) getData();
-		helper.setGrammar(g);
-	}
-
-	
 	
 	/** Constants to be used for columns**/
 	private static final int LHS_COLUMN = 0, RHS_COLUMN = 2;
+
+
+	public void remove(int i) {
+		this.getData().remove(i);
+	}
 
 	
 	

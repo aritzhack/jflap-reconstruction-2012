@@ -74,7 +74,7 @@ public class RegExTest extends TestHarness{
 		
 		//test input on DFA to confirm equivalence
 		AutoSimulator sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromString(in, dfa));
+		sim.beginSimulation(SymbolString.createFromDefinition(in, dfa));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 
 		//Minimize DFA
@@ -85,7 +85,7 @@ public class RegExTest extends TestHarness{
 		
 		//test input on DFA to confirm equivalence
 		sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromString(in, dfa));
+		sim.beginSimulation(SymbolString.createFromDefinition(in, dfa));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//convert DFA to rex 

@@ -1,5 +1,7 @@
 package view.formaldef.componentpanel.alphabets;
 
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -8,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
+
+import preferences.JFLAPPreferences;
 
 
 import model.formaldef.components.FormalDefinitionComponent;
@@ -28,7 +32,7 @@ public class SpecialSymbolPanel extends DefinitionComponentPanel<SpecialSymbol>{
 		super(comp, keeper, modify);
 		mySpecialSymbol = comp;
 		JToolBar bar = new JToolBar();
-		bar.add(myButton = new JButton(comp.getSymbol().toString()));
+		bar.add(myButton = new JButton(comp.symbolOnlyString()));
 		myButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -51,5 +55,13 @@ public class SpecialSymbolPanel extends DefinitionComponentPanel<SpecialSymbol>{
 		menu.add(new SetSpecialSymbolAction(mySpecialSymbol, getKeeper()));
 		return menu;
 
+	}
+
+	@Override
+	public void setMagnification(double mag) {
+		super.setMagnification(mag);
+		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
+		Font f = myButton.getFont().deriveFont(size);
+		myButton.setFont(f);
 	}
 }

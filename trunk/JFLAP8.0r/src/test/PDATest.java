@@ -90,7 +90,7 @@ public class PDATest extends TestHarness{
 		//lets try some stuff...
 				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 				String in = "aabb";
-				sim.beginSimulation(SymbolString.createFromString(in, pda));
+				sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
 				outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 
 		//convert PDA to CFG
@@ -106,7 +106,7 @@ public class PDATest extends TestHarness{
 		
 		//test Brute Force Parsing
 		RestrictedBruteParser parser = new RestrictedBruteParser(CFG);
-		boolean accept = parser.quickParse(SymbolString.createFromString(in, CFG));
+		boolean accept = parser.quickParse(SymbolString.createFromDefinition(in, CFG));
 		outPrintln("Parse string: " + in + "\n\t In Language? " + accept);
 	
 		
@@ -123,7 +123,7 @@ public class PDATest extends TestHarness{
 
 		//test LL converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromString(in, pda));
+		sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//Conversion to PDA - LR
@@ -136,7 +136,7 @@ public class PDATest extends TestHarness{
 		
 		//test LR converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromString(in, pda));
+		sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//test remove symbol
