@@ -14,13 +14,13 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.TuringMachineBlankRule;
 
-public class BlockTuringMachine extends Acceptor<BuildingBlockTransition> {
+public class BlockTuringMachine extends Acceptor<BlockTransition> {
 
 	private BlankSymbol myBlank;
 	
-	public BlockTuringMachine(BuildingBlockSet states, TapeAlphabet tapeAlph,
+	public BlockTuringMachine(BlockSet states, TapeAlphabet tapeAlph,
 			BlankSymbol blank, InputAlphabet inputAlph,
-			TransitionSet<BuildingBlockTransition> functions, StartState start,
+			TransitionSet<BlockTransition> functions, StartState start,
 			FinalStateSet finalStates) {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
 		setBlankSymbol(blank);
@@ -33,8 +33,8 @@ public class BlockTuringMachine extends Acceptor<BuildingBlockTransition> {
 	}
 	
 	@Override
-	public BuildingBlockSet getStates(){
-		return (BuildingBlockSet) super.getStates();
+	public BlockSet getStates(){
+		return (BlockSet) super.getStates();
 	}
 
 	@Override
@@ -78,11 +78,11 @@ public class BlockTuringMachine extends Acceptor<BuildingBlockTransition> {
 	
 	@Override
 	public FormalDefinition alphabetAloneCopy() {
-		return new BlockTuringMachine(new BuildingBlockSet(),
+		return new BlockTuringMachine(new BlockSet(),
 				this.getTapeAlphabet(), 
 				myBlank.copy(), 
 				this.getInputAlphabet(), 
-				new TransitionSet<BuildingBlockTransition>(), 
+				new TransitionSet<BlockTransition>(), 
 				new StartState(), 
 				new FinalStateSet());
 	}
