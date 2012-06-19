@@ -9,10 +9,10 @@ import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 
-public class BuildingBlock extends State implements UsesSymbols{
+public class Block extends State implements UsesSymbols{
 	private TuringMachine myMachine;
 
-	public BuildingBlock(TuringMachine machine, String name, int id){
+	public Block(TuringMachine machine, String name, int id){
 		super(name, id);
 		myMachine = machine;
 	}

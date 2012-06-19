@@ -13,35 +13,35 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import preferences.JFLAPPreferences;
 
-public class BuildingBlockSet extends StateSet implements UsesSymbols{
+public class BlockSet extends StateSet implements UsesSymbols{
 	
 	@Override
-	public BuildingBlock getStateWithID(int id) {
-		return (BuildingBlock) super.getStateWithID(id);
+	public Block getStateWithID(int id) {
+		return (Block) super.getStateWithID(id);
 	}
 
 	@Deprecated
-	public BuildingBlock createAndAddState() {
+	public Block createAndAddState() {
 		throw new RuntimeException("Don't use this method, use createAndAddState(TuringMachine tm) instead");
 	}
 	
-	public BuildingBlock createAndAddState(TuringMachine tm, String name){
+	public Block createAndAddState(TuringMachine tm, String name){
 		int id = this.getNextUnusedID();
-		BuildingBlock s = new BuildingBlock(tm, name, id);
+		Block s = new Block(tm, name, id);
 		this.add(s);
 		return s;
 	}
 	
 	@Override
-	public BuildingBlockSet copy() {
-		return (BuildingBlockSet) super.copy();
+	public BlockSet copy() {
+		return (BlockSet) super.copy();
 	}
 
 	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		Set<Symbol> symbolAlphabet = new TreeSet<Symbol>();
 		for(State block : this){
-			symbolAlphabet.addAll(((BuildingBlock) block).getSymbolsUsedForAlphabet(a));
+			symbolAlphabet.addAll(((Block) block).getSymbolsUsedForAlphabet(a));
 		}
 		return symbolAlphabet;
 	}
@@ -50,7 +50,7 @@ public class BuildingBlockSet extends StateSet implements UsesSymbols{
 	public boolean applySymbolMod(String from, String to) {
 		boolean changed = false;
 		for(State block : this){
-			if(((BuildingBlock) block).applySymbolMod(from, to)){
+			if(((Block) block).applySymbolMod(from, to)){
 				changed = true;
 			}
 		}
@@ -61,7 +61,7 @@ public class BuildingBlockSet extends StateSet implements UsesSymbols{
 	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
 		boolean changed = false;
 		for(State block : this){
-			if(((BuildingBlock) block).purgeOfSymbols(a, s)){
+			if(((Block) block).purgeOfSymbols(a, s)){
 				changed = true;
 			}
 		}

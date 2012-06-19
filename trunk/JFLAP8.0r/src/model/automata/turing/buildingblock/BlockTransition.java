@@ -10,9 +10,9 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class BuildingBlockTransition extends SingleInputTransition<BuildingBlockTransition> {
+public class BlockTransition extends SingleInputTransition<BlockTransition> {
 	
-	public BuildingBlockTransition(BuildingBlock from, BuildingBlock to, SymbolString input){
+	public BlockTransition(Block from, Block to, SymbolString input){
 		super(from, to, input);
 	}
 
@@ -27,18 +27,18 @@ public class BuildingBlockTransition extends SingleInputTransition<BuildingBlock
 	}
 	
 	@Override
-	public BuildingBlock getFromState(){
-		return (BuildingBlock) super.getFromState();
+	public Block getFromState(){
+		return (Block) super.getFromState();
 	}
 	
 	@Override
-	public BuildingBlock getToState(){
-		return (BuildingBlock) super.getToState();
+	public Block getToState(){
+		return (Block) super.getToState();
 	}
 
 	@Override
-	public BuildingBlockTransition copy() {
-		return new BuildingBlockTransition(this.getFromState(), this.getToState(), new SymbolString(this.getInput()));
+	public BlockTransition copy() {
+		return new BlockTransition(this.getFromState(), this.getToState(), new SymbolString(this.getInput()));
 	}
 
 }
