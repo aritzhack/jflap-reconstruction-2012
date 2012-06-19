@@ -13,6 +13,10 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import preferences.JFLAPPreferences;
+
+
+
 import debug.JFLAPDebug;
 
 import util.Copyable;
@@ -120,7 +124,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	 * @return
 	 */
 	public ArrayList<Character> getDisallowedCharacters() {
-		return new ArrayList<Character>(Arrays.asList(new Character[]{' '}));
+		return new ArrayList<Character>(Arrays.asList(new Character[]{' ', JFLAPPreferences.getEmptyStringSymbol().charAt(0)}));
 	}
 
 	public AbstractCollection<Alphabet> getAlphabets() {

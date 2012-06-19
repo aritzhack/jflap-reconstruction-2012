@@ -2,7 +2,7 @@ package model.regex;
 
 import debug.JFLAPDebug;
 import oldnewstuff.main.JFLAP;
-import oldnewstuff.universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;

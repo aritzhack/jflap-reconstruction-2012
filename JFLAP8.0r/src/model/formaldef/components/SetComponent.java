@@ -186,6 +186,8 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 			SetToEvent<T> event = (SetToEvent<T>) e;
 			this.distributeChange(new ModifyEvent(event));
 		}
+		else
+			this.distributeChange(e);
 	}
 	
 	private class ModifyEvent extends AdvancedUndoableEvent{

@@ -3,6 +3,7 @@ package model.automata.turing;
 import java.util.Set;
 
 import preferences.JFLAPPreferences;
+
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;

@@ -1,6 +1,6 @@
 package model.grammar.parsing.ll;
 
-import oldnewstuff.universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.symbols.Symbol;

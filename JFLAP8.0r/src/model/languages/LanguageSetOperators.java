@@ -158,12 +158,12 @@ public class LanguageSetOperators {
 		for(char i='a';i<='z';i++){
 			alphs.add(new Symbol(i+""));
 		}
-		set.add(SymbolString.createFromString("acdc", alphs));
-		set.add(SymbolString.createFromString("bccd", alphs));
+		set.add(SymbolString.createFromDefinition("acdc", alphs));
+		set.add(SymbolString.createFromDefinition("bccd", alphs));
 		Set<SymbolString> set2 = new TreeSet<SymbolString>();
-		set2.add(SymbolString.createFromString("ccd", alphs));
-		set2.add(SymbolString.createFromString("d",alphs));
-		set2.add(SymbolString.createFromString("c",alphs));
+		set2.add(SymbolString.createFromDefinition("ccd", alphs));
+		set2.add(SymbolString.createFromDefinition("d",alphs));
+		set2.add(SymbolString.createFromDefinition("c",alphs));
 		System.out.println(rightQuotient(set, set2));
 	}
 }

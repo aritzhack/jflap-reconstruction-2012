@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 
 import errors.BooleanWrapper;
@@ -97,6 +98,11 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 			mySymbol.setString(to);
 		distributeChanged();
 		return applies;
+	}
+
+	public String symbolOnlyString() {
+		if (mySymbol == null) return "";
+		return mySymbol.toString();
 	}
 	
 }

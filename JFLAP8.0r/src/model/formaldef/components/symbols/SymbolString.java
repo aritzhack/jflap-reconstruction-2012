@@ -2,6 +2,7 @@ package model.formaldef.components.symbols;
 
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -12,7 +13,8 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
-import oldnewstuff.universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
+
 
 import debug.JFLAPDebug;
 
@@ -25,7 +27,10 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.Settable;
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.alphabets.grouping.GroupingPair;
+import model.grammar.parsing.ParserException;
 import model.regex.OperatorAlphabet;
+import model.regex.RegularExpression;
 import model.regex.operators.UnionOperator;
 
 
@@ -33,12 +38,12 @@ import model.regex.operators.UnionOperator;
 
 
 public class SymbolString extends LinkedList<Symbol> implements Comparable<SymbolString>, 
-																Copyable,
-																Settable<SymbolString>{
+Copyable,
+Settable<SymbolString>{
 
 	public SymbolString(String in, FormalDefinition def){
 		super();
-		this.addAll(SymbolString.createFromString(in, def));
+		this.addAll(SymbolString.createFromDefinition(in, def));
 	}
 
 	public SymbolString() {
@@ -61,10 +66,10 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 			if (clazz.isAssignableFrom(s.getClass()))
 				results.add((T) s);
 		}
-		
+
 		return results;
 	}
-	
+
 	public SymbolString concat(SymbolString sym) {
 		this.addAll(sym);
 		return this;
@@ -76,7 +81,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 			reverse.addFirst(s);
 		return reverse;
 	}
-	
+
 	public int indexOfSubSymbolString(SymbolString o) {
 		if (o.isEmpty()) return 0;
 		for (int i = 0; i <= this.size()-o.size(); i++){
@@ -128,8 +133,12 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public String toString(){
-		return this.isEmpty() ? JFLAPPreferences.getEmptyStringSymbol() : UtilFunctions.createDelimitedString(this, 
-				JFLAPPreferences.getSymbolStringDelimiter());
+		if (this.isEmpty()) 
+			return JFLAPPreferences.getEmptyStringSymbol();
+		else if(JFLAPPreferences.isUserDefinedMode())
+			return UtilFunctions.createDelimitedString(this, 
+					JFLAPPreferences.getSymbolStringDelimiter());
+		return  UtilFunctions.createDelimitedString(this, "");
 	}
 
 	public boolean equals(Object o){
@@ -152,8 +161,8 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	public SymbolString clone() {
 		return this.copy();
 	}
-	
-	
+
+
 	@Override
 	public SymbolString copy() {
 		SymbolString string = new SymbolString();
@@ -165,20 +174,20 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	@Override
 	public int compareTo(SymbolString o) {
 		Iterator<Symbol> me = this.iterator(),
-		 		 other = o.iterator();
+				other = o.iterator();
 		while(me.hasNext() && other.hasNext()){
 			Symbol sMe = me.next(),
-				   sOther = other.next();
-			
+					sOther = other.next();
+
 			if(sMe.compareTo(sOther) != 0)
-					return sMe.compareTo(sOther);
+				return sMe.compareTo(sOther);
 		}
-		
+
 		if (!me.hasNext() && other.hasNext())
 			return -1;
 		if (me.hasNext() && !other.hasNext())
 			return 1;
-		
+
 		return 0;
 	}
 
@@ -187,33 +196,33 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		if (other instanceof Symbol)
 			return super.indexOf(other);
 		return indexOfSubSymbolString((SymbolString) other);
-		
+
 	}
 
 
-	public static SymbolString createFromString(String in,
+	public static SymbolString createFromDefinition(String in,
 			FormalDefinition def) {
-		return createFromString(in, def.getAlphabets().toArray(new Alphabet[0]));
-		
+		return createFromDefinition(in, def.getAlphabets().toArray(new Alphabet[0]));
+
 	}
-	
-	public static SymbolString createFromString(String in,
+
+	public static SymbolString createFromDefinition(String in,
 			Alphabet ... alphs) {
 
 		if (in == null ||in.length() == 0 || 
 				in == JFLAPPreferences.getEmptyStringSymbol()) 
 			return new SymbolString();
-		
+
 		in = removeDelimiters(in);
 		ArrayList<SymbolString> options = new ArrayList<SymbolString>();
-		
+
 		for (int i = in.length(); i > 0; i--){
 			SymbolString symbols = new SymbolString();
 			String temp = in.substring(0,i);
 			for (Alphabet alph: alphs){
 				if (alph.containsSymbolWithString(temp)){
 					symbols.add(alph.getByString(temp));
-					symbols.addAll(createFromString(in.substring(i), alphs));
+					symbols.addAll(createFromDefinition(in.substring(i), alphs));
 					break;
 				}
 			}
@@ -230,21 +239,76 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		}
 		return max;
 	}
-	
+
 	public static SymbolString createFromString(String in, String delimiter) {
 		if (delimiter == null)
 			return toSingleCharSymbols(in);
-		SymbolString newSS = new SymbolString();
-		for (String s: in.split(delimiter))
-			newSS.add(new Symbol(s));
-		return newSS;
+		return toMultiCharSymbols(in, delimiter, JFLAPPreferences.getVariableGrouping());
+	}
+
+	private static SymbolString toMultiCharSymbols(String input, 
+			String delimiter,
+			GroupingPair gp) {
+
+		SymbolString toReturn = new SymbolString();
+		boolean buildingVar = false;
+		for (String in: input.split(delimiter)){
+			int paren = 0;
+			String cur = "";
+			for (int i = 0; i< in.length(); i++){
+				Character s = in.charAt(i);
+				if ((s.equals(gp.getCloseGroup()) && !buildingVar) || 
+						(s.equals(gp.getOpenGroup()) && buildingVar)){
+					throw new ParserException("The grouping in the input string " +
+								in + " is not properly balanced.");
+				}
+				else if (s.equals(gp.getOpenGroup())){
+					buildingVar = true;
+					if (!cur.isEmpty())
+						toReturn.add(new Terminal(cur));
+					cur = s + "";
+				}else if(s.equals(gp.getCloseGroup())){
+					buildingVar = false;
+					cur += s + "";
+					if (cur.length() == 2)
+						throw new ParserException("You may not create an empty Variable.");
+					toReturn.add(new Variable(cur));
+					cur = "";
+				}
+				else
+					cur += s + "";
+			}
+			if (buildingVar)
+				throw new ParserException("The grouping in the input string " +
+						in + " is not properly balanced.");
+			if (!cur.isEmpty())
+				toReturn.add(new Terminal(cur));
+		}
+		return toReturn;
+	}
+
+	public static boolean isVariable(String s) {
+		GroupingPair pair = JFLAPPreferences.getVariableGrouping();
+		return pair.isGrouped(s);
 	}
 
 	public static SymbolString toSingleCharSymbols(String in) {
 		SymbolString s = new SymbolString();
-		for (Character c: in.toCharArray())
-			s.add(new Symbol(c + ""));
+		in = in.replaceAll(" ", "");
+		for (Character c: in.toCharArray()){
+			if (Character.isUpperCase(c))
+				s.add(new Variable(c + ""));
+			else
+				s.add(new Terminal(c + ""));
+		}
 		return s;
+	}
+
+	public static SymbolString createForMode(String in) {
+		String delimiter = null;
+		if (JFLAPPreferences.isUserDefinedMode())
+			delimiter = JFLAPPreferences.getSymbolStringDelimiter();
+		return createFromString(in, delimiter);
 	}
 
 	public static boolean checkAndSpawnError(String error, String in, Alphabet ... alphs){
@@ -268,10 +332,10 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	public static boolean canBeParsed(String input, FormalDefinition def) {
 		return canBeParsed(input, def.getAlphabets().toArray(new Alphabet[0]));
 	}
-	
+
 	public static boolean canBeParsed(String input, Alphabet ... alphs) {
 		return SymbolString.isEmpty(input) || 
-				removeDelimiters(createFromString(input, alphs).toString()).equals(removeDelimiters(input));
+				removeDelimiters(createFromDefinition(input, alphs).toString()).equals(removeDelimiters(input));
 	}
 
 	private static String removeDelimiters(String input) {
@@ -297,7 +361,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 	}
 
 	public SymbolString replace(int start, int end, SymbolString rhs) {
-		
+
 		if (start < 0 || end > this.size() || end < start){
 			throw new RuntimeException("Start index " + start + " does not work" +
 					" with end index "+end);
@@ -309,7 +373,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 		toreturn.addAll(start, rhs);
 		return toreturn;
 	}
-	
+
 	public SymbolString replace(int start, int end, Symbol ... rhs) {
 		return this.replace(start, end, new SymbolString(rhs));
 	}
@@ -324,7 +388,7 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 			int oldSize = toReturn.size();
 			toReturn = toReturn.replace(toReplace, replaceWith);
 			if( oldSize != toReturn.size()){
-					i += replaceWith.size()-1;
+				i += replaceWith.size()-1;
 			}
 		}
 		return toReturn;
