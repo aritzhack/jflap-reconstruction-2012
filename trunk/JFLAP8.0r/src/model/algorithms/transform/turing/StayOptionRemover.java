@@ -11,10 +11,10 @@ import model.formaldef.components.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class StayOptionRemover extends
-		FormalDefinitionTransformAlgorithm<TuringMachine> {
-	private List<TuringMachineTransition> stayTransitions;
+		FormalDefinitionTransformAlgorithm<MultiTapeTuringMachine> {
+	private List<MultiTapeTMTransition> stayTransitions;
 
-	public StayOptionRemover(TuringMachine tm) {
+	public StayOptionRemover(MultiTapeTuringMachine tm) {
 		super(tm);
 		initializeStayTransitions();
 	}
@@ -27,8 +27,8 @@ public class StayOptionRemover extends
 	}
 
 	public void initializeStayTransitions() {
-		stayTransitions = new ArrayList<TuringMachineTransition>();
-		for (TuringMachineTransition transition : getOriginalDefinition()
+		stayTransitions = new ArrayList<MultiTapeTMTransition>();
+		for (MultiTapeTMTransition transition : getOriginalDefinition()
 				.getTransitions()) {
 			if (transition.getMove(0).equals(TuringMachineMove.STAY)) {
 				stayTransitions.add(transition);
@@ -47,7 +47,7 @@ public class StayOptionRemover extends
 	}
 
 	@Override
-	public BooleanWrapper[] checkOfProperForm(TuringMachine tm) {
+	public BooleanWrapper[] checkOfProperForm(MultiTapeTuringMachine tm) {
 		if(tm.getNumTapes()!=1) return new BooleanWrapper[]{new BooleanWrapper(false, "The Turing machine has multiple tapes")};
 		return new BooleanWrapper[0];
 	}
@@ -84,16 +84,16 @@ public class StayOptionRemover extends
 	}
 
 	public boolean replaceStayTransitions(){
-		TuringMachineTransition transition = stayTransitions.remove(0);
+		MultiTapeTMTransition transition = stayTransitions.remove(0);
 		getTransformedDefinition().getTransitions().remove(transition);
 		State newState = getTransformedDefinition().getStates().createAndAddState();
-		TuringMachineTransition rightReplacement = 
-		new TuringMachineTransition(transition.getFromState(), newState, 
-					transition.getRead(0).getFirst(), transition.getWrite(0).getFirst(), 
+		MultiTapeTMTransition rightReplacement = 
+		new MultiTapeTMTransition(transition.getFromState(), newState, 
+					transition.getRead(0), transition.getWrite(0), 
 					TuringMachineMove.RIGHT);
 		getTransformedDefinition().getTransitions().add(rightReplacement);
 		for(Symbol c : getOriginalDefinition().getTapeAlphabet()){
-			TuringMachineTransition leftReplacement = new TuringMachineTransition(newState, transition.getToState(), 
+			MultiTapeTMTransition leftReplacement = new MultiTapeTMTransition(newState, transition.getToState(), 
 					c, c, 
 					TuringMachineMove.LEFT);
 			getTransformedDefinition().getTransitions().add(leftReplacement);

@@ -6,6 +6,7 @@ import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
+import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
@@ -19,55 +20,26 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.TuringMachineBlankRule;
 import model.formaldef.rules.applied.TuringMachineRule;
 
-public class TuringMachine extends Acceptor<TuringMachineTransition> {
+public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T> {
 
 
 	private BlankSymbol myBlank;
-	private int myNumTapes;
 
 	public TuringMachine(StateSet states,
 							TapeAlphabet tapeAlph,
 							BlankSymbol blank,
 							InputAlphabet inputAlph,
-							TransitionSet<TuringMachineTransition> functions,
+							TransitionSet<T> functions,
 							StartState start,
-							FinalStateSet finalStates, 
-							int numTapes) {
+							FinalStateSet finalStates) {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
-		myNumTapes = numTapes;
 		setBlankSymbol(blank);
 	}
-	
-
-
-	@Override
-	public String getDescriptionName() {
-		return "Turing Machine (TM)";
-	}
-
-	@Override
-	public String getDescription() {
-		return "A turing machine!";
-	}
-
-	@Override
-	public TuringMachine alphabetAloneCopy() {
-		return new TuringMachine(new StateSet(),
-									this.getTapeAlphabet(), 
-									(BlankSymbol) myBlank.copy(), 
-									this.getInputAlphabet(), 
-									new TransitionSet<TuringMachineTransition>(), 
-									new StartState(), 
-									new FinalStateSet(),
-									myNumTapes);
-	}
-
 
 
 	public Symbol getBlankSymbol() {
 		return getComponentOfClass(BlankSymbol.class).getSymbol();
 	}
-
 
 
 	private void setBlankSymbol(BlankSymbol blank) {
@@ -98,30 +70,10 @@ public class TuringMachine extends Acceptor<TuringMachineTransition> {
 	}
 
 
-
-	public int getNumTapes() {
-		return myNumTapes;
-	}
-
 	@Override
 	public InputAlphabet getInputAlphabet() {
 		return super.getInputAlphabet();
 	}
 
-	@Override
-	public TuringMachine copy() {
-		return new TuringMachine(this.getStates().copy(),
-				this.getTapeAlphabet().copy(),
-				myBlank.copy(),
-				this.getInputAlphabet().copy(), 
-				this.getTransitions().copy(), 
-				new StartState(this.getStartState().copy()), 
-				this.getFinalStateSet().copy(),
-				myNumTapes);
-	}
-
-
-	
-	
 
 }

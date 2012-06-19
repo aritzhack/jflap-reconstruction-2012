@@ -12,9 +12,10 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.automata.InputAlphabet;
 import model.automata.State;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.automata.turing.TuringMachineTransition;
+import model.automata.turing.MultiTapeTMTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
@@ -23,9 +24,9 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import errors.BooleanWrapper;
 
-public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMachine, TMVariableMapping, TuringMachineTransition>{
+public class TMtoGrammarConversion extends AutomatonToGrammarConversion<MultiTapeTuringMachine, TMVariableMapping, MultiTapeTMTransition>{
 
-	public TMtoGrammarConversion(TuringMachine automaton)
+	public TMtoGrammarConversion(MultiTapeTuringMachine automaton)
 			throws AlgorithmException {
 		super(automaton);
 		
@@ -47,12 +48,12 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	}
 
 	@Override
-	public Production[] convertTransition(TuringMachineTransition trans) {
+	public Production[] convertTransition(MultiTapeTMTransition trans) {
 		List<Production> productionList = new ArrayList<Production>();
 		State i = trans.getFromState();
 		State j = trans.getToState();
-		Symbol c = trans.getRead(0).getFirst();
-		Symbol d = trans.getWrite(0).getFirst();
+		Symbol c = trans.getRead(0);
+		Symbol d = trans.getWrite(0);
 		InputAlphabet sigmaAndBlank = getAutomaton().getInputAlphabet().copy();
 		sigmaAndBlank.add(getAutomaton().getBlankSymbol().copy());
 		for(Symbol a : sigmaAndBlank){
@@ -83,11 +84,11 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	@Override
 	public Set<TMVariableMapping> getAllNecessaryMappings() {
 		Set<TMVariableMapping> mappingSet = new HashSet<TMVariableMapping>();
-		for(TuringMachineTransition transition : getAutomaton().getTransitions()){
+		for(MultiTapeTMTransition transition : getAutomaton().getTransitions()){
 			State i = transition.getFromState();
 			State j = transition.getToState();
-			Symbol c = transition.getRead(0).getFirst();
-			Symbol d = transition.getWrite(0).getFirst();
+			Symbol c = transition.getRead(0);
+			Symbol d = transition.getWrite(0);
 			InputAlphabet sigmaAndBlank = getAutomaton().getInputAlphabet().copy();
 			sigmaAndBlank.add(getAutomaton().getBlankSymbol().copy());
 			for(Symbol a : sigmaAndBlank){
@@ -108,10 +109,10 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	}
 
 	@Override
-	public BooleanWrapper[] checkOfProperForm(TuringMachine fd) {
+	public BooleanWrapper[] checkOfProperForm(MultiTapeTuringMachine fd) {
 		List<BooleanWrapper> bw = new ArrayList<BooleanWrapper>();
 		if(fd.getNumTapes()!=1) bw.add(new BooleanWrapper(false, "The Turing machine has multiple tapes"));
-		for(TuringMachineTransition trans : fd.getTransitions()){
+		for(MultiTapeTMTransition trans : fd.getTransitions()){
 			if(trans.getMove(0)==TuringMachineMove.STAY){
 				bw.add(new BooleanWrapper(false, "The Turing machine has Stay transitions"));
 				break;

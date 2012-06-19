@@ -13,13 +13,14 @@ import model.formaldef.components.symbols.Symbol;
 public class BlankSymbol extends SpecialSymbol {
 
 	public BlankSymbol() {
-		super(JFLAPPreferences.getTMBlankSymbol());
+		super();
 	}
 
-	private BlankSymbol(Symbol s){
-		super(s);
+	@Override
+	public Symbol getSymbol() {
+		return JFLAPPreferences.getTMBlankSymbol();
 	}
-
+	
 	@Override
 	public Character getCharacterAbbr() {
 		return 'b';
@@ -35,22 +36,17 @@ public class BlankSymbol extends SpecialSymbol {
 		return "The blank symbol used to represent the empty strin on a " +
 				"Turing Machine tape.";
 	}
-
+	
 	@Override
-	public boolean setSymbol(Symbol s) {
-		//do nothing
-		return false;
+	public boolean isPermanent() {
+		return true;
 	}
 
 	@Override
 	public BlankSymbol copy() {
-		return new BlankSymbol(this.getSymbol());
+		return new BlankSymbol();
 	}
-
-	public static BlankSymbol newInstance(String s) {
-		return new BlankSymbol(new Symbol(s));
-	}
-
+	
 	@Override
 	public Class<? extends Alphabet> getAlphabetClass() {
 		return TapeAlphabet.class;

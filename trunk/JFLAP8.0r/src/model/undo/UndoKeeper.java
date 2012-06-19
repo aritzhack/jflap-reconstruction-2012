@@ -77,10 +77,11 @@ public class UndoKeeper implements ChangeListener{
 		amLocked = true;
 		boolean test = true;
 		while (!from.isEmpty() && n > 0){
-			IUndoRedo wrap = from.peek();
+			IUndoRedo toApply = from.peek();
+			JFLAPDebug.print(toApply.getName());
 			switch(help){
-			case UNDO: test = wrap.undo(); break;
-			case REDO: test = wrap.redo(); break;
+			case UNDO: test = toApply.undo(); break;
+			case REDO: test = toApply.redo(); break;
 			}
 			if (!test) break;
 			to.push(from.pop());

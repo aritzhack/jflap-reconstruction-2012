@@ -45,8 +45,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 	private LinkedList<T> findValidTransitions() {
 		LinkedList<T> valid = new LinkedList<T>();
 		TransitionSet<T>  transitions = this.getAutomaton().getTransitions();
-		if (!this.shouldFindValidTransitions()||
-				!checkAndDoBlock()) 
+		if (!this.shouldFindValidTransitions()) 
 			return valid;
 		for (T trans: transitions.getTransitionsFromState(this.getState())){
 			if (this.canMoveAlongTransition(trans)){
@@ -56,27 +55,12 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		return valid;
 	}
 
-	private boolean checkAndDoBlock() {
-//		if (!(this.getState() instanceof Block)) return true;
-		//		Block b = (Block) this.getState();
-		//		InputSimulator parent = UniverseHelper.getActiveModel(InputSimulator.class);
-		//		Collection<ConfigurationChain> accept = AutoSimulator.doAutoBlockRun(parent, 
-		//																this, 
-		//																b.getInnerMachine());
-		//		if (accept == null) return false;
-		//		
-		//		this.setToConfig(accept.iterator().next().getCurrentConfiguration());
-
-		return true;
-
-	}
-
-	private void setToConfig(Configuration setTo) {
-		myPrimaryPosition = setTo.getPrimaryPosition();
-		myPositions = setTo.myPositions;
-		myPrimary = setTo.getPrimaryString();
-		myStrings = setTo.myStrings;
-	}
+//	private void setToConfig(Configuration setTo) {
+//		myPrimaryPosition = setTo.getPrimaryPosition();
+//		myPositions = setTo.myPositions;
+//		myPrimary = setTo.getPrimaryString();
+//		myStrings = setTo.myStrings;
+//	}
 
 	protected boolean shouldFindValidTransitions() {
 		return !this.isDone();

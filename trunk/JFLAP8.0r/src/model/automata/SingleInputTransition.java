@@ -58,7 +58,9 @@ public abstract class SingleInputTransition<T extends SingleInputTransition<T>> 
 
 
 	public boolean setInput(SymbolString input){
-		return myInput.setTo(input);
+		T copy = this.copy();
+		copy.myInput = input;
+		return setTo(copy);
 	}
 
 	@Override

@@ -9,10 +9,13 @@ import model.automata.simulate.configurations.FSAConfiguration;
 import model.automata.simulate.configurations.MealyConfiguration;
 import model.automata.simulate.configurations.MooreConfiguration;
 import model.automata.simulate.configurations.PDAConfiguration;
-import model.automata.simulate.configurations.TMConfiguration;
+import model.automata.simulate.configurations.tm.BlockConfiguration;
+import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
+import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -23,7 +26,7 @@ public class ConfigurationFactory {
 	private static final Class<?>[] CHAIN_TYPES = new Class<?>[]{FSAConfiguration.class,
 		MealyConfiguration.class,
 		MooreConfiguration.class,
-		TMConfiguration.class,
+		MultiTapeTMConfiguration.class,
 		PDAConfiguration.class};
 
 	private static final int NUM_BLANKS = 40;
@@ -39,11 +42,17 @@ public class ConfigurationFactory {
 		else if(a instanceof MealyMachine){
 			return new MealyConfiguration((MealyMachine) a, s, 0, input[0], new SymbolString());
 		}
-		else if(a instanceof TuringMachine){
-			return new TMConfiguration((TuringMachine) a, 
-					s, 
-					createTMPosArray((TuringMachine) a), 
-					createTMOutput((TuringMachine) a, input));
+		else if(a instanceof MultiTapeTuringMachine){
+			MultiTapeTuringMachine tm = (MultiTapeTuringMachine) a;
+			return new MultiTapeTMConfiguration(tm, s,
+					createTMPosArray(tm.getNumTapes()), 
+					createTMOutput(input));
+		}
+		else if(a instanceof BlockTuringMachine){
+			BlockTuringMachine tm = (BlockTuringMachine) a;
+			return new BlockConfiguration(tm, s,
+					createTMPosArray(1)[0], 
+					createTMOutput(input)[0]);
 		}
 		else if(a instanceof PushdownAutomaton){
 			Symbol bos = ((PushdownAutomaton) a).getBottomOfStackSymbol();
@@ -56,8 +65,8 @@ public class ConfigurationFactory {
 	}
 
 
-	private static int[] createTMPosArray(TuringMachine a) {
-		int[] positions = new int[a.getNumTapes()];
+	private static int[] createTMPosArray(int tapes) {
+		int[] positions = new int[tapes];
 		for (int i = 0; i < positions.length; i++){
 			positions[i] = NUM_BLANKS;
 		}
@@ -65,8 +74,7 @@ public class ConfigurationFactory {
 	}
 
 
-	private static SymbolString[] createTMOutput(TuringMachine a,
-			SymbolString[] input) {
+	private static SymbolString[] createTMOutput(SymbolString[] input) {
 		SymbolString[] tapes = new SymbolString[input.length];
 		for (int n = 0; n < tapes.length; n++){
 			SymbolString tape = new SymbolString();

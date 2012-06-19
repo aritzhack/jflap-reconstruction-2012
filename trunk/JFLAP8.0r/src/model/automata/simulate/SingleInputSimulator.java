@@ -48,7 +48,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		return false;
 	}
 	
-	public Collection<ConfigurationChain> step(){
+	public List<ConfigurationChain> step(){
 		LinkedList<ConfigurationChain> copy = new LinkedList<ConfigurationChain>(myChains);
 		myChains.clear();
 		for (ConfigurationChain chain: copy){
@@ -83,8 +83,8 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		return chains;
 	}
 
-	private Collection<ConfigurationChain> getAllAcceptChains() {
-		Collection<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
+	private List<ConfigurationChain> getAllAcceptChains() {
+		List<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
 		for (ConfigurationChain chain : myChains){
 			if (chain.isAccept())
 				toReturn.add(chain);
