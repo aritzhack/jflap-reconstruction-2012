@@ -7,10 +7,10 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.turing.BlankSymbol;
+import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.automata.turing.TuringMachineTransition;
 import model.formaldef.components.symbols.Symbol;
 
 /**
@@ -20,7 +20,7 @@ import model.formaldef.components.symbols.Symbol;
  * 
  */
 public class MoveUntilBlock extends BaseBlock {
-	private TuringMachineTransition myFinalTransition;
+	private MultiTapeTMTransition myFinalTransition;
 	private Symbol mySymbol;
 	private TuringMachineMove myMove;
 	
@@ -38,7 +38,7 @@ public class MoveUntilBlock extends BaseBlock {
 		State start = tm.getStartState();
 		State finalState = tm.getFinalStateSet().first();
 		
-		myFinalTransition = new TuringMachineTransition(start, 
+		myFinalTransition = new MultiTapeTMTransition(start, 
 				finalState, read, read, TuringMachineMove.STAY);
 		
 		tm.getTransitions().add(myFinalTransition);
@@ -53,7 +53,7 @@ public class MoveUntilBlock extends BaseBlock {
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		TransitionSet<TuringMachineTransition> transitions = getTuringMachine().getTransitions();
+		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
 		transitions.clear();
 		transitions.add(myFinalTransition);
 		
@@ -61,7 +61,7 @@ public class MoveUntilBlock extends BaseBlock {
 		
 		for(Symbol term : tape){
 			if(!term.equals(mySymbol)){
-				transitions.add(new TuringMachineTransition(start, start, term, term, myMove));
+				transitions.add(new MultiTapeTMTransition(start, start, term, term, myMove));
 			}
 		}
 	}

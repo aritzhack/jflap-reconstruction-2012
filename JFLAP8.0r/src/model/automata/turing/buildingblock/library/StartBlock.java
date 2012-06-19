@@ -5,7 +5,6 @@ import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
-import model.automata.turing.TuringMachineTransition;
 import model.formaldef.components.symbols.Symbol;
 
 public class StartBlock extends HaltBlock {
