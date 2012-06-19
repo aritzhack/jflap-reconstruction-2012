@@ -29,14 +29,15 @@ public class SpecialSymbolPanel extends DefinitionComponentPanel<SpecialSymbol>{
 	private SpecialSymbol mySpecialSymbol;
 
 	public SpecialSymbolPanel(SpecialSymbol comp, UndoKeeper keeper, boolean modify) {
-		super(comp, keeper, modify);
+		super(comp, keeper, modify );
 		mySpecialSymbol = comp;
 		JToolBar bar = new JToolBar();
 		bar.add(myButton = new JButton(comp.symbolOnlyString()));
 		myButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON3 && isEditable())
+				if (e.getButton() == MouseEvent.BUTTON3 && 
+						isEditable() && !mySpecialSymbol.isPermanent())
 					getMenu().show(e.getComponent(), e.getX(), e.getY());
 			}
 		});

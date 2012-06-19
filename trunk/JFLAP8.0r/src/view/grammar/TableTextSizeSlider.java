@@ -71,4 +71,9 @@ public class TableTextSizeSlider extends JSlider{
 	public void addListener(Magnifiable t) {
 		myTargets.add(t);
 	}
+
+
+	public void distributeMagnification() {
+		this.fireStateChanged();
+	}
 }
