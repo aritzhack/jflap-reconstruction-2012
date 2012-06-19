@@ -4,24 +4,25 @@ import java.util.Collection;
 import java.util.Set;
 
 import model.automata.State;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 
 public class Block extends State implements UsesSymbols{
-	private TuringMachine myMachine;
+	private MultiTapeTuringMachine myMachine;
 
-	public Block(TuringMachine machine, String name, int id){
+	public Block(MultiTapeTuringMachine machine, String name, int id){
 		super(name, id);
 		myMachine = machine;
 	}
 	
-	public void setTuringMachine(TuringMachine tm){
+	public void setTuringMachine(MultiTapeTuringMachine tm){
 		myMachine = tm;
 	}
 	
-	public TuringMachine getTuringMachine(){
+	public MultiTapeTuringMachine getTuringMachine(){
 		return myMachine;
 	}
 
