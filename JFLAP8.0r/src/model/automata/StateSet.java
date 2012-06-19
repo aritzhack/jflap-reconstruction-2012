@@ -33,12 +33,6 @@ public class StateSet extends SetComponent<State> {
 		return new BooleanWrapper(true);
 	}
 
-	@Override
-	public StateSet clone() {
-		StateSet clone = new StateSet();
-		return new StateSet();
-	}
-
 	public int getNextUnusedID() {
 		
 		int i = 0;
