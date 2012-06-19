@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -86,5 +87,7 @@ public interface JFLAPConstants {
 		public static final String TAB_CHANGED = "TAB_CHANGED";
 		public static final int CONFIGURATION_PADDING = 5;
 		public static final int INITAL_LOOP_HEIGHT = 40;
+
+		public static final int MAIN_MENU_MASK = KeyEvent.CTRL_MASK;
 
 }
