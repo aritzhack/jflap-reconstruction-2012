@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import model.automata.State;
 import model.automata.StateSet;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
@@ -25,7 +26,7 @@ public class BlockSet extends StateSet implements UsesSymbols{
 		throw new RuntimeException("Don't use this method, use createAndAddState(TuringMachine tm) instead");
 	}
 	
-	public Block createAndAddState(TuringMachine tm, String name){
+	public Block createAndAddState(MultiTapeTuringMachine tm, String name){
 		int id = this.getNextUnusedID();
 		Block s = new Block(tm, name, id);
 		this.add(s);
