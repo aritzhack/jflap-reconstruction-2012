@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.io.File;
 
+import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.symbols.PermanentSymbol;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.Terminal;
@@ -106,8 +107,8 @@ public class JFLAPPreferences {
 		return new Terminal("$");
 	}
 
-	public static int getDefinitionFontSize() {
-		return 15;
+	public static int getDefaultTextSize() {
+		return 50;
 	}
 
 	public static boolean useDefinitionAbbreviations() {
@@ -115,7 +116,7 @@ public class JFLAPPreferences {
 	}
 
 	public static Font getFormalDefinitionFont() {
-		return new Font(getDefinitionFontName(), getDefinitionFontStyle(), getDefinitionFontSize());
+		return new Font(getDefinitionFontName(), getDefinitionFontStyle(), getDefaultTextSize());
 	}
 
 	private static String getDefinitionFontName() {
@@ -136,6 +137,10 @@ public class JFLAPPreferences {
 
 	public static void setUserDefinedMode(boolean b) {
 		isUserDefinedMode = b;
+	}
+
+	public static GroupingPair getVariableGrouping() {
+		return new GroupingPair('(', ')');
 	}
 
 
