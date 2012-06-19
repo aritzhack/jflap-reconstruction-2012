@@ -21,6 +21,7 @@ import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.BlankSymbol;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.formaldef.components.symbols.SymbolString;
@@ -84,7 +85,7 @@ public class TransducerFactory{
 		addMapping(OutputAlphabet.class, new OutputAlphabetTransducer());
 		
 		//TM - Need to add the TMTransitionFunction stuff too
-//		addMapping(TuringMachine.class, new TuringMachineTransducer());
+		addMapping(MultiTapeTuringMachine.class, new TuringMachineTransducer());
 		addMapping(TapeAlphabet.class, new TapeAlphabetTransducer());
 		
 		//Grammar
@@ -113,7 +114,7 @@ public class TransducerFactory{
 		for (LinkedHashSet<XMLTransducer> set: myClassToTransducerMap.values())
 		{
 			for (XMLTransducer trans:set){
-				if (trans.getTag().equals(tag))
+				if (trans.matchesTag(tag))
 					return trans;
 			}
 		}

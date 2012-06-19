@@ -26,6 +26,11 @@ public interface XMLTags {
 		OUTPUT_FUNC_SET = "output_set",
 		OUTPUT_FUNC_TAG = "output_func";
 	
+	public static final String READ_TAG = "read",
+			WRITE_TAG = "write",
+			MOVE_TAG = "move",
+			TAPE_NUM = "tapes";
+	
 	public static final String ID_TAG = "id";
 	public static final String NAME_TAG = "name";
 	public static final String STATE_TAG = "state";

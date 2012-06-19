@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 
 import file.xml.formaldef.components.functions.FunctionTransducer;
 
-public class PDATransitionTransducer extends TransitionTransducer<PDATransition> {
+public class PDATransitionTransducer extends InputTransitionTransducer<PDATransition> {
 
 	public PDATransitionTransducer(InputAlphabet input, StackAlphabet stack) {
 		super(input, stack);

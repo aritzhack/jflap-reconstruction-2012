@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import util.Copyable;
 import file.xml.XMLHelper;
 
-public class FSATransitionTransducer extends TransitionTransducer<FSATransition> {
+public class FSATransitionTransducer extends InputTransitionTransducer<FSATransition> {
 
 
 	public FSATransitionTransducer(InputAlphabet alph) {

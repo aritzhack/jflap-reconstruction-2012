@@ -13,18 +13,13 @@ import file.xml.formaldef.components.SingleNodeTransducer;
 
 public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 
-	private String myTag;
 	private Alphabet[] myAlphs;
 
 	public SymbolStringTransducer(String tag, Alphabet ... alphs){
-		myTag = tag;
+		super(tag);
 		myAlphs = alphs;
 	}
 
-	@Override
-	public String getTag() {
-		return myTag;
-	}
 
 	public Object extractData(Symbol[] structure){
 		return this.extractData(new SymbolString(structure));

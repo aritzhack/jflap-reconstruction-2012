@@ -15,12 +15,13 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import file.xml.BasicTransducer;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
-public abstract class FunctionTransducer<T extends LanguageFunction> implements XMLTransducer<T> {
+public abstract class FunctionTransducer<T extends LanguageFunction> extends BasicTransducer<T> {
 
 	
 	private Alphabet[] myAlphs;
@@ -41,10 +42,14 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 			if (alphs.length > 0)
 				trans = new SymbolStringTransducer(tag, alphs);
 			else
-				trans = TransducerFactory.getTransducerForTag(tag);
+				trans = getTransducerForTag(tag);
 			valueMap.put(tag, trans.fromStructureRoot(e));			
 		}
 		return createFunction(valueMap);
+	}
+
+	public XMLTransducer getTransducerForTag(String tag) {
+		return TransducerFactory.getTransducerForTag(tag);
 	}
 
 	public abstract T createFunction(Map<String, Object> valueMap);
@@ -56,7 +61,7 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 		for (Entry<String, Object> e: tagToValue.entrySet()){
 			String tag = e.getKey();
 			Object value = e.getValue();
-			XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
+			XMLTransducer trans = getTransducerForTag(tag);
 			if (trans == null){
 				trans = new SymbolStringTransducer(e.getKey());
 				value = new SymbolString((Symbol[]) value);
@@ -65,7 +70,6 @@ public abstract class FunctionTransducer<T extends LanguageFunction> implements 
 		}
 		return root;
 	}
-
 	public abstract Map<String, Object> createTagToValueMap(T structure);
 
 }

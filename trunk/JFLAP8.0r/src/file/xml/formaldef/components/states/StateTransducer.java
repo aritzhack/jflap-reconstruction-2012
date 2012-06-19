@@ -4,10 +4,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import model.automata.State;
+import file.xml.BasicTransducer;
 import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
 
-public class StateTransducer implements XMLTransducer<State> {
+public class StateTransducer extends BasicTransducer<State> {
 
 	@Override
 	public State fromStructureRoot(Element root) {
