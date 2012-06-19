@@ -37,7 +37,7 @@ public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 
 	@Override
 	public SymbolString createInstance(String text) {
-		return SymbolString.createFromString(text, myAlphs);
+		return SymbolString.createFromDefinition(text, myAlphs);
 	}
 	
 
