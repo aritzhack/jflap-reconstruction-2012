@@ -2,6 +2,7 @@ package model.automata.simulate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import debug.JFLAPDebug;
 
@@ -17,10 +18,10 @@ public class AutoSimulator extends AutomatonSimulator{
 		mySimulator  = new SingleInputSimulator(a, specialCase);
 	}
 
-	public Collection<ConfigurationChain> getNextAccept(){
+	public List<ConfigurationChain> getNextAccept(){
 				
 		while (!mySimulator.getChains().isEmpty()){
-			Collection<ConfigurationChain> chains = mySimulator.step();
+			List<ConfigurationChain> chains = mySimulator.step();
 			removeCompletedChains();
 			if (!chains.isEmpty()){
 				return chains;

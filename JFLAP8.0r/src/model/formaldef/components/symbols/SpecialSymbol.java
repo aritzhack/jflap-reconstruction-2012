@@ -33,8 +33,13 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	public SpecialSymbol(){
 		this((Symbol) null);
 	}
+	
+	public boolean isPermanent(){
+		return false;
+	}
 
 	public boolean setSymbol(Symbol s) {
+		if (isPermanent()) return false;
 		ChangeEvent e = new SpecialSymbolSetEvent(this, mySymbol, s);
 		mySymbol = s;
 		distributeChange(e);

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,6 +31,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.symbols.Symbol;
+import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
 import errors.BooleanWrapper;
 
@@ -268,6 +270,68 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 				changed  = true;
 		}
 		return changed;
+	}
+	
+	public SymbolString createFromString(String in, boolean custom){
+		Collection<Object> extracted = extractSymbols(in);
+		SymbolString result = new SymbolString();
+		for (Object o : extracted){
+			if (o instanceof Symbol)
+				result.add((Symbol) o);
+			else
+				result.addAll(toSymbols(in, custom));
+		}
+		return result;
+	}
+
+	private Symbol toSymbols(String in, boolean custom) {
+		
+		return null;
+	}
+
+	private Collection<Object> extractSymbols(String in) {
+		
+		if (in == null ||in.length() == 0) 
+			return new ArrayList<Object>();
+
+		AbstractCollection<Alphabet> alphs = this.getAlphabets();
+		
+		ArrayList<List<Object>> options = new ArrayList<List<Object>>();
+		
+		for (int i = in.length(); i > 0; i--){
+			List<Object> temp = new ArrayList<Object>();
+			Object sub = in.substring(0,i);
+			loop: for (Alphabet alph: alphs){
+				Symbol s = alph.getByString((String) sub);
+				if (s != null){
+					sub = s;
+					break loop;
+				}
+			}
+			temp.add(sub);
+			
+			String remaining = in.substring(i);
+			temp.addAll(extractSymbols(remaining));
+			options.add(temp);
+		}
+		
+		List<Object> best = options.get(0);
+		for (List<Object> option: options){
+			if (stringCount(option) < stringCount(best))
+				best = option;
+		}
+		
+		
+		return best;
+	}
+
+	private int stringCount(List<Object> option) {
+		int count = 0;
+		for (Object o: option){
+			if (o instanceof String)
+				count+= ((String) o).length();
+		}
+		return count;
 	}
 
 }
