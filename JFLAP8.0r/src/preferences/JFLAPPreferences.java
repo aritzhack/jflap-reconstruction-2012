@@ -80,7 +80,7 @@ public class JFLAPPreferences {
 	}
 
 	public static Symbol getTMBlankSymbol() {
-		return new PermanentSymbol(BLANK );
+		return new PermanentSymbol(BLANK);
 	}
 
 	public static OpenGroup getCurrentRegExOpenGroup() {

@@ -10,10 +10,11 @@ import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.turing.BlankSymbol;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.automata.turing.TuringMachineTransition;
+import model.automata.turing.MultiTapeTMTransition;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.parsing.brute.UnrestrictedBruteParser;
@@ -30,16 +31,16 @@ public class TuringTester {
 		BlankSymbol blank = new BlankSymbol();
 		InputAlphabet inputAlph = new InputAlphabet();
 		inputAlph.addAll(new Symbol("a"));
-		TransitionSet<TuringMachineTransition> functions = new TransitionSet<TuringMachineTransition>();
-		functions.add(new TuringMachineTransition(states.getStateWithID(0), states.getStateWithID(0), new Symbol("a"), new Symbol("a"), TuringMachineMove.RIGHT));
-		functions.add(new TuringMachineTransition(states.getStateWithID(0), states.getStateWithID(1), JFLAPPreferences.getTMBlankSymbol(), JFLAPPreferences.getTMBlankSymbol(), TuringMachineMove.LEFT));
+		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
+		functions.add(new MultiTapeTMTransition(states.getStateWithID(0), states.getStateWithID(0), new Symbol("a"), new Symbol("a"), TuringMachineMove.RIGHT));
+		functions.add(new MultiTapeTMTransition(states.getStateWithID(0), states.getStateWithID(1), JFLAPPreferences.getTMBlankSymbol(), JFLAPPreferences.getTMBlankSymbol(), TuringMachineMove.LEFT));
 //		functions.add(new TuringMachineTransition(states.getStateWithID(1), states.getStateWithID(2), new Symbol("b"), new Symbol("a"), TuringMachineMove.STAY));
 
 		StartState start = new StartState(states.getStateWithID(0));
 		FinalStateSet finalStates = new FinalStateSet();
 		finalStates.add(states.getStateWithID(1));
 		int numTapes = 1;
-		TuringMachine tm = new TuringMachine(states, tapeAlph, blank, inputAlph, functions, start, finalStates, numTapes);
+		MultiTapeTuringMachine tm = new MultiTapeTuringMachine(states, tapeAlph, blank, inputAlph, functions, start, finalStates, numTapes);
 		System.out.println(tm);
 		
 //		StayOptionRemover remover = new StayOptionRemover(tm);

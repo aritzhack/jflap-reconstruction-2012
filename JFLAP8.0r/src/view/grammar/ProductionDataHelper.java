@@ -62,6 +62,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		if(isValid(p)){
 			AddEvent<Production> add = 
 					new AddEvent<Production>(myProductions, p);
+			ProductionTableEvent e = new ProductionTableEvent(add, index);
 			if (myKeeper.applyAndCombine(add))
 				myOrderedProductions.add(index, p);
 		}
@@ -180,7 +181,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 			myWrappers.add(error);
 		return error.isError();
 	}
-
+	
 	public boolean hasErrors(){
 		for (BooleanWrapper bw : myWrappers){
 			if (bw.isError())

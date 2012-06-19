@@ -89,5 +89,8 @@ public interface JFLAPConstants {
 		public static final int INITAL_LOOP_HEIGHT = 40;
 
 		public static final int MAIN_MENU_MASK = KeyEvent.CTRL_MASK;
+		
+		public static final Symbol TILDE = new Symbol("~");
+		public static final Symbol NOT = new Symbol("!");
 
 }

@@ -52,7 +52,6 @@ import file.xml.formaldef.components.states.StartStateTransducer;
 import file.xml.formaldef.components.states.StateSetTransducer;
 import file.xml.formaldef.components.states.StateTransducer;
 import file.xml.formaldef.components.states.ToStateTransducer;
-import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
 import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
@@ -87,7 +86,6 @@ public class TransducerFactory{
 		//TM - Need to add the TMTransitionFunction stuff too
 //		addMapping(TuringMachine.class, new TuringMachineTransducer());
 		addMapping(TapeAlphabet.class, new TapeAlphabetTransducer());
-		addMapping(BlankSymbol.class, new BlankSymbolTransducer());
 		
 		//Grammar
 		addMapping(Grammar.class, new GrammarTransducer());

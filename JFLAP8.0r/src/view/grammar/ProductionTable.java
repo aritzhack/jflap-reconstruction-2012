@@ -18,6 +18,8 @@ import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
+import model.formaldef.components.SetComponent;
+import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
@@ -25,6 +27,8 @@ import util.JFLAPConstants;
 public class ProductionTable extends HighlightTable implements JFLAPConstants, Magnifiable{
 
 	private boolean amEditable;
+
+	private UndoKeeper myKeeper;
 
 
 	/**
@@ -40,6 +44,7 @@ public class ProductionTable extends HighlightTable implements JFLAPConstants, M
 		super(new ProductionTableModel(model, keeper));
 		amEditable = editable;
 		initView();
+		myKeeper = keeper;
 		this.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -48,7 +53,10 @@ public class ProductionTable extends HighlightTable implements JFLAPConstants, M
 						amEditable){
 					int[] rows = getSelectedRows();
 					for (int i : rows){
-						((ProductionTableModel) getModel()).remove(i);
+						myKeeper.beginCombine();
+						boolean shouldAdd = 
+								((ProductionTableModel) getModel()).remove(i);
+						myKeeper.endCombine(shouldAdd);
 					}
 					e.consume();
 					updateUI();

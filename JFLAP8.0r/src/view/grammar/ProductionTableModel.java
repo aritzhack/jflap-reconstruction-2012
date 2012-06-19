@@ -174,8 +174,8 @@ public class ProductionTableModel extends GrowableTableModel
 	private static final int LHS_COLUMN = 0, RHS_COLUMN = 2;
 
 
-	public void remove(int i) {
-		this.getData().remove(i);
+	public boolean remove(int i) {
+		return this.getData().remove(i) != null;
 	}
 
 	

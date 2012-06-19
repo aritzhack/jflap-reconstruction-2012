@@ -13,12 +13,11 @@ public class ActionLinkedButton extends JButton{
 		this.repaint();
 	}
 
-
-	public void update() {
+	public void updateEnabled() {
 		if (myAction != null && myAction.isEnabled() != this.isEnabled()){
 			super.setEnabled(myAction.isEnabled());
 		}
 	}
-	
-	
+
+
 }
