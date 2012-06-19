@@ -18,6 +18,7 @@ import model.formaldef.components.symbols.SymbolString;
 public class BlockConfiguration extends TMConfiguration<BlockTuringMachine, BlockTransition> {
 
 	private SymbolString myUpdatedTape;
+	private int myUpdatedIndex;
 
 	public BlockConfiguration(BlockTuringMachine tm, State s, int pos,
 			SymbolString tape) {
@@ -40,7 +41,9 @@ public class BlockConfiguration extends TMConfiguration<BlockTuringMachine, Bloc
 		if (!input[0].equals(JFLAPConstants.TILDE)||
 				!read.equals(input[0]))
 			return false;
-		myUpdatedTape = applyBlock(trans.getToState());
+		MultiTapeTMConfiguration config = applyBlock(trans.getToState());
+		myUpdatedTape = config.getStringForIndex(0);
+		myUpdatedIndex = config.getPositionForIndex(0);
 		return myUpdatedTape != null;
 	}
 
@@ -49,7 +52,7 @@ public class BlockConfiguration extends TMConfiguration<BlockTuringMachine, Bloc
 	 * @param toState
 	 * @return
 	 */
-	private SymbolString applyBlock(Block toState) {
+	private MultiTapeTMConfiguration applyBlock(Block toState) {
 		AutoSimulator auto = new AutoSimulator(toState.getTuringMachine(),
 				getSpecialCase());
 		auto.beginSimulation(getStringForIndex(0).copy());
@@ -57,12 +60,12 @@ public class BlockConfiguration extends TMConfiguration<BlockTuringMachine, Bloc
 		if (chainList.isEmpty()) return null;
 		
 		ConfigurationChain chain = chainList.get(0);
-		return chain.getLast().getStringForIndex(0);
+		return (MultiTapeTMConfiguration) chain.getLast();
 	}
 
 	@Override
 	protected int getNextSecondaryPosition(int i, BlockTransition trans) {
-		return getPositionForIndex(i);
+		return myUpdatedIndex;
 	}
 
 	@Override

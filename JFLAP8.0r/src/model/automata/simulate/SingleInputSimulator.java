@@ -130,16 +130,10 @@ public class SingleInputSimulator extends AutomatonSimulator{
 	}
 	
 	@Override
-	public void beginSimulation(SymbolString[] ... input){
-		this.beginSimulation(input[1]);
-	}
-
-	
 	public void beginSimulation(SymbolString ... input){
 		Configuration init = createInitConfig(input);
 		beginSimulation(init);
 	}
-	
 
 	private Configuration createInitConfig(SymbolString... input) {
 		return ConfigurationFactory.createInitialConfiguration(this.getAutomaton(), input);

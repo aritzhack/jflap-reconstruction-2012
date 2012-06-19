@@ -57,7 +57,7 @@ public class AutoSimulator extends AutomatonSimulator{
 	}
 
 	@Override
-	public void beginSimulation(SymbolString[]... input) {
+	public void beginSimulation(SymbolString ... input) {
 		mySimulator.beginSimulation(input);
 	}
 

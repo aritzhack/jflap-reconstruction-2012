@@ -52,9 +52,7 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 		if (input.isEmpty())
 			input.add(JFLAPPreferences.getTMBlankSymbol());
 		
-		int i = 0;
-		
-		if (input.startsWith(NOT)) i = 1;
+		int i = input.startsWith(NOT) ? 1 : 0;
 		
 		SymbolString symbol = input.subList(i);
 		
