@@ -2,6 +2,7 @@ package model.automata.turing.buildingblock.library;
 
 import model.automata.State;
 import model.automata.turing.BlankSymbol;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 
@@ -11,7 +12,7 @@ public abstract class HaltBlock extends BaseBlock {
 	public HaltBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
 		super(alph, blank, name, id);
 		
-		TuringMachine tm = getTuringMachine();
+		MultiTapeTuringMachine tm = getTuringMachine();
 		
 		State start = tm.getStates().createAndAddState();
 		tm.setStartState(start);

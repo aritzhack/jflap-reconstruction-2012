@@ -3,15 +3,15 @@ package model.automata.turing.buildingblock.library;
 import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
+import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.automata.turing.TuringMachineTransition;
 import model.formaldef.components.symbols.Symbol;
 
 public class MoveUntilNotBlock extends BaseBlock{
 
-	private TuringMachineTransition myNotTransition;
+	private MultiTapeTMTransition myNotTransition;
 	private Symbol mySymbol;
 	
 	public MoveUntilNotBlock(TuringMachineMove direction, BlankSymbol blank,
@@ -26,7 +26,7 @@ public class MoveUntilNotBlock extends BaseBlock{
 		
 		State start = tm.getStartState();
 		
-		myNotTransition = new TuringMachineTransition(start, 
+		myNotTransition = new MultiTapeTMTransition(start, 
 				start, read, read, direction);
 		
 		tm.getTransitions().add(myNotTransition);
@@ -41,7 +41,7 @@ public class MoveUntilNotBlock extends BaseBlock{
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		TransitionSet<TuringMachineTransition> transitions = getTuringMachine().getTransitions();
+		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
 		transitions.clear();
 		transitions.add(myNotTransition);
 		
@@ -50,7 +50,7 @@ public class MoveUntilNotBlock extends BaseBlock{
 		
 		for(Symbol term : tape){
 			if(!term.equals(mySymbol)){
-				transitions.add(new TuringMachineTransition(start, finish, term, term, TuringMachineMove.STAY));
+				transitions.add(new MultiTapeTMTransition(start, finish, term, term, TuringMachineMove.STAY));
 			}
 		}
 	}
