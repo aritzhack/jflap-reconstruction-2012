@@ -20,9 +20,13 @@
 package view.grammar;
 
 import java.awt.Font;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -39,26 +43,32 @@ import javax.swing.event.ChangeListener;
 
 public class TableTextSizeSlider extends JSlider{
 
-    static final int FONT_SIZE_MIN = 1;
-    static final int FONT_SIZE_MAX = 600;
-    static final int FONT_SIZE_INIT = 200;
+    static final int MIN = 1;
+    static final int MAX = 100;
+    static final int INIT = 50;
     static final String TABLE_SIZE_TITLE = "Table Text Size";
     
-    JTable myTable;
+    private Set<Magnifiable> myTargets;
 	
-	public TableTextSizeSlider(JTable table) {
-		super(FONT_SIZE_MIN, FONT_SIZE_MAX, FONT_SIZE_INIT); 
+	public TableTextSizeSlider(Magnifiable ... targets) {
+		super(MIN, MAX, INIT); 
 	    this.addChangeListener(new SliderListener());
 	    setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), TABLE_SIZE_TITLE));
-	    myTable = table;
+	    myTargets = new HashSet<Magnifiable>(Arrays.asList(targets));
 	}
 
 
-      class SliderListener implements ChangeListener {
+	class SliderListener implements ChangeListener {
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                myTable.setFont(new Font("Default", Font.PLAIN, source.getValue()/10));
-                myTable.setRowHeight(source.getValue()/10+10);
+                double frac = source.getValue()/(double)MAX;
+                for (Magnifiable m: myTargets)
+                	m.setMagnification(frac);
             }
       }
+
+
+	public void addListener(Magnifiable t) {
+		myTargets.add(t);
+	}
 }

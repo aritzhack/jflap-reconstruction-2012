@@ -1,5 +1,6 @@
 package view.formaldef;
 
+import java.awt.Component;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -7,12 +8,13 @@ import javax.swing.border.Border;
 import util.JFLAPConstants;
 import view.formaldef.componentpanel.ComponentPanelFactory;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
+import view.grammar.Magnifiable;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.undo.UndoKeeper;
 
-public class FormalDefinitionPanel extends JPanel implements JFLAPConstants {
+public class FormalDefinitionPanel extends JPanel implements JFLAPConstants, Magnifiable {
 
 	
 
@@ -30,6 +32,14 @@ public class FormalDefinitionPanel extends JPanel implements JFLAPConstants {
 			this.add(panel);
 		}
 		
+	}
+
+	@Override
+	public void setMagnification(double mag) {
+		for(Component c: this.getComponents()){
+			if (c instanceof DefinitionComponentPanel)
+				((Magnifiable) c).setMagnification(mag);
+		}
 	}
 
 

@@ -12,59 +12,76 @@ import java.util.Map;
 import java.util.Queue;
 
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import preferences.JFLAPPreferences;
+
+
+import debug.JFLAPDebug;
 
 import util.JFLAPConstants;
 
 
 import errors.BooleanWrapper;
 
+import model.change.events.AddEvent;
+import model.change.events.RemoveEvent;
+import model.change.events.SetToEvent;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.ProductionSet;
+import model.undo.UndoKeeper;
 
 
 
-public class GrammarDataHelper extends ArrayList<Object[]> implements JFLAPConstants{
+public class ProductionDataHelper extends ArrayList<Object[]> 
+									implements JFLAPConstants{
 
 	private static final Object[] EMPTY = new Object[]{"",
 		ARROW,
 	""};
 	private LinkedList<BooleanWrapper> myWrappers;
 	private ArrayList<Production> myOrderedProductions;
-	private Grammar myGrammar;
+	private ProductionSet myProductions;
+	private UndoKeeper myKeeper;
 
-	public GrammarDataHelper(Grammar model){
+	public ProductionDataHelper(ProductionSet model, UndoKeeper keeper){
+		myKeeper = keeper;
 		myWrappers = new LinkedList<BooleanWrapper>();
-		myGrammar = model;
+		myProductions = model;
 		myOrderedProductions = 
-				new ArrayList<Production>(myGrammar.getProductionSet());
+				new ArrayList<Production>(myProductions);
 	}
-
-
-
 
 	@Override
 	public void add(int index, Object[] input) {
 		Production p = this.objectToProduction(input);
-		if (isValid(p)) {
-			myGrammar.getProductionSet().add(p);
-			myOrderedProductions.add(index, p);
+		if(isValid(p)){
+			AddEvent<Production> add = 
+					new AddEvent<Production>(myProductions, p);
+			if (myKeeper.applyAndCombine(add))
+				myOrderedProductions.add(index, p);
 		}
 	}
 
 	@Override
 	public Object[] set(int index, Object[] input) {
 		Object[] old = this.get(index);
-		if (index >= this.getGrammar().getProductionSet().size())
+		if (index >= this.myProductions.size())
 			this.add(input); 
 		else {
-			System.out.println(input);
-			Production p = this.objectToProduction(input);
-			if (isValid(p)){
-				Production removed = myOrderedProductions.remove(index);
-				myOrderedProductions.add(index,p);
-				myGrammar.getProductionSet().remove(removed);
-				myGrammar.getProductionSet().add(p);
+			Production to = this.objectToProduction(input);
+			if (isValid(to)){
+				Production from = myOrderedProductions.get(index);
+				SetToEvent<Production> set = 
+						new SetToEvent<Production>(from, from.copy(), to);
+				myKeeper.applyAndCombine(set);
+			}
+			else{
+				JFLAPDebug.print(Arrays.toString(remove(index)));
 			}
 		}
 
@@ -87,7 +104,7 @@ public class GrammarDataHelper extends ArrayList<Object[]> implements JFLAPConst
 
 	@Override
 	public void clear() {
-		myGrammar.getProductionSet().clear();
+		myProductions.clear();
 		myOrderedProductions.clear();
 	}
 
@@ -101,9 +118,16 @@ public class GrammarDataHelper extends ArrayList<Object[]> implements JFLAPConst
 	@Override
 	public Object[] remove(int index) {
 		if (index >= myOrderedProductions.size()) return EMPTY;
-		Production p = myOrderedProductions.remove(index);
-		myGrammar.getProductionSet().remove(index);
-		return p.toArray();
+		Production remove = myOrderedProductions.get(index);
+		JFLAPDebug.print(remove);
+		RemoveEvent<Production> event = 
+				new RemoveEvent<Production>(myProductions, remove);
+		JFLAPDebug.print(myProductions);
+		if (myKeeper.applyAndCombine(event)){
+			JFLAPDebug.print("removed");
+			myOrderedProductions.remove(index);
+		}
+		return remove.toArray();
 	}
 
 	@Override
@@ -121,24 +145,28 @@ public class GrammarDataHelper extends ArrayList<Object[]> implements JFLAPConst
 
 
 	private Production objectToProduction(Object[] input){
-		SymbolString LHS = SymbolString.createFromString((String) input[0], getGrammar()),
-				RHS = SymbolString.createFromString((String) input[2], getGrammar());
-		if(!SymbolString.canBeParsed((String) input[0], getGrammar())){
-			checkAndAddError(new BooleanWrapper(false, 
-					"The LHS of this production has a bad character at index " + LHS.toString().length() + "."));
-			return null;
-		}
-		if(!SymbolString.canBeParsed((String) input[2], getGrammar())){
-			checkAndAddError(new BooleanWrapper(false, 
-					"The RHS of this production has a bad character at index " + RHS.toString().length() + "."));
-			return null;
-		}
+
+//		if(!SymbolString.canBeParsed((String) input[0], getGrammar())){
+//			checkAndAddError(new BooleanWrapper(false, 
+//					"The LHS of this production has a bad character at index " + LHS.toString().length() + "."));
+//			return null;
+//		}
+//		if(!SymbolString.canBeParsed((String) input[2], getGrammar())){
+//			checkAndAddError(new BooleanWrapper(false, 
+//					"The RHS of this production has a bad character at index " + RHS.toString().length() + "."));
+//			return null;
+//		}
+		if (isEmptyString((String) input[0]))
+			input[0] = "";
+		if (isEmptyString((String) input[2]))
+			input[2] = "";
+		SymbolString LHS = SymbolString.createForMode((String) input[0]),
+				RHS = SymbolString.createForMode((String) input[2]);
 		return new Production(LHS, RHS);
 	}
 
-
-	public Grammar getGrammar(){
-		return myGrammar;
+	private boolean isEmptyString(String object) {
+		return object.equals(JFLAPPreferences.getEmptyStringSymbol());
 	}
 
 	/**
@@ -166,20 +194,6 @@ public class GrammarDataHelper extends ArrayList<Object[]> implements JFLAPConst
 				BooleanWrapper.createErrorLog(myWrappers.toArray(new BooleanWrapper[0]));
 		myWrappers.clear();
 		return message;
-	}
-
-
-
-
-	public void setGrammar(Grammar g) {
-		myGrammar = g;
-	}
-
-
-
-
-	public void updateProductions() {
-
 	}
 
 }

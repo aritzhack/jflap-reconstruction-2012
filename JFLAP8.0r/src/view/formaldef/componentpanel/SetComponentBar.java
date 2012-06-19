@@ -2,6 +2,7 @@ package view.formaldef.componentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -16,7 +17,6 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 
 	private JToolBar myBar;
 	private Color myHighlight;
-    private JTextComponent myFocus;
     
 	public SetComponentBar(Color highlight) {
 		super(4, VERTICAL_SCROLLBAR_NEVER, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -29,6 +29,14 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 	public void setTo(T ...items){
 		myBar.removeAll();
 		this.add(items);
+	}
+	
+	@Override
+	public void setFont(Font font) {
+		super.setFont(font);
+		if (myBar == null) return;
+		for (Component c: myBar.getComponents())
+			c.setFont(font);
 	}
 	
 	
@@ -69,6 +77,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 	
 	private ItemBox setUpBox(T item) {
 		ItemBox box = new ItemBox(item);
+		box.setFocusable(false);
 		box.addMouseListener(new MouseAdapter() {
 			
 			@Override
@@ -76,6 +85,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 				doClickResponse(((ItemBox) e.getSource()).getItem(), e);
 			}
 		});
+		box.setFont(this.getFont());
 		return box;
 	}
 

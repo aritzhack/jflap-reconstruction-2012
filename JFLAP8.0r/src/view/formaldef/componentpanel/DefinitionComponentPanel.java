@@ -1,5 +1,6 @@
 package view.formaldef.componentpanel;
 
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
@@ -9,16 +10,20 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import oldnewstuff.view.EditingPanel;
+import preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.SuperMouseAdapter;
+import view.grammar.Magnifiable;
 
 
 import model.formaldef.components.FormalDefinitionComponent;
 import model.undo.UndoKeeper;
 
 public abstract class DefinitionComponentPanel<T extends FormalDefinitionComponent> extends EditingPanel 
-													implements JFLAPConstants, ChangeListener{
+													implements JFLAPConstants, ChangeListener, Magnifiable{
 
 	private JLabel myLabel;
 	private T myComp;
@@ -49,6 +54,13 @@ public abstract class DefinitionComponentPanel<T extends FormalDefinitionCompone
 		update(e);
 		repaint();
 	}
+	
+	@Override
+	public void setMagnification(double mag) {
+		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
+		for (Component c: this.getComponents())
+			c.setFont(this.getFont().deriveFont(size));
+	}	
 
 
 	public abstract void update(ChangeEvent e);
