@@ -1,10 +1,8 @@
 package model.algorithms.conversion.autotogram;
 
-import java.awt.PageAttributes.OriginType;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -132,14 +130,12 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<MultiTap
 
 		@Override
 		public String getDescriptionName() {
-			// TODO Auto-generated method stub
 			return "Create Additional Productions";
 		}
 
 		@Override
 		public String getDescription() {
-			// TODO Auto-generated method stub
-			return null;
+			return "Creates productions unrelated to transitions for TM to Grammar conversion";
 		}
 
 		@Override

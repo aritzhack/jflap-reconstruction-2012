@@ -46,12 +46,12 @@ public class MultiSimulator extends AutomatonSimulator {
 	}
 
 	@Override
-	public void beginSimulation(SymbolString[]... input) {
+	public void beginSimulation(SymbolString... input) {
 		myResultArray = new boolean[input.length];
 		int i = 0;
-		for (SymbolString[] inputArray: input){
-			myThreads.add(new SimulatorThread(i++, inputArray));
-		}
+//		for (SymbolString[] inputArray: input){
+//			myThreads.add(new SimulatorThread(i++, inputArray));
+//		}
 	}
 
 	public boolean[] doAllSimulations(){

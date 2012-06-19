@@ -225,14 +225,17 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 
 	@Override
 	public String toString() {
-		String s = this.getName() + "\n" +
-				"\t" + "State: " + this.getState().toString() + "\n" +
-				"\t" + this.getPrimaryPresentationName() + ": " + this.getPrimaryString().toString() + "\n" +
-				"\t" + "Primary Position: " + this.getPrimaryPosition() + "\n";
 
+		String s = this.getName() + "\n" +
+				"\t" + "State: " + this.getState().toString() + "\n";
+		if(this.getPrimaryString()!=null){
+				s+= "\t" + this.getPrimaryPresentationName() + ": " + getPrimaryString().toString() + "\n" +
+				"\t" + "Primary Position: " + this.getPrimaryPosition() + "\n";
+		}
 		for (int i = 0; i < myStrings.length; i++){
 			s += "\t" + this.getStringPresentationName(i) + ": " + myStrings[i] + "\n";
 			s += "\t" + "Position: " + this.getPositionForIndex(i) + "\n";
+		
 		}
 		return s;
 	}

@@ -13,7 +13,7 @@ public abstract class AutomatonSimulator implements Describable, Copyable{
 		myAutomaton = a;
 	}
 	
-	public abstract void beginSimulation(SymbolString[] ... input);
+	public abstract void beginSimulation(SymbolString ... input);
 	
 	public abstract int getSpecialAcceptCase();
 	
