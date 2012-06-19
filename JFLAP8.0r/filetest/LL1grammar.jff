@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?><structure type="grammar">&#13;
-	<structure type="start_var">&#13;
-		<value>S</value>&#13;
-	</structure>&#13;
 	<structure type="terminal_alph">&#13;
 		<symbol>a</symbol>&#13;
 		<symbol>b</symbol>&#13;
 		<symbol>c</symbol>&#13;
 		<symbol>d</symbol>&#13;
+	</structure>&#13;
+	<structure type="variable_alph">&#13;
+		<symbol>A</symbol>&#13;
+		<symbol>B</symbol>&#13;
+		<symbol>S</symbol>&#13;
 	</structure>&#13;
 	<structure type="production_set">&#13;
 		<production>&#13;
@@ -30,9 +32,7 @@
 			<lhs>S</lhs>&#13;
 		</production>&#13;
 	</structure>&#13;
-	<structure type="variable_alph">&#13;
-		<symbol>A</symbol>&#13;
-		<symbol>B</symbol>&#13;
-		<symbol>S</symbol>&#13;
+	<structure type="start_var">&#13;
+		<value>S</value>&#13;
 	</structure>&#13;
 </structure>
