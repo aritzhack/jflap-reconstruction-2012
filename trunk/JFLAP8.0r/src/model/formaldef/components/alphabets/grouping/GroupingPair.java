@@ -41,5 +41,9 @@ public class GroupingPair {
 	public String creatGroupedString(String string) {
 		return this.getOpenGroup() + string + this.getCloseGroup();
 	}
+
+	public boolean isGrouped(String s) {
+		return s.startsWith(OPEN +"") && s.endsWith(CLOSE + "");
+	}
 	
 }

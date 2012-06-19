@@ -10,8 +10,8 @@ public class Main {
 	public static void main (String[] args) {
 		Alphabet alpha = new InputAlphabet();
 		alpha.addAll(new Symbol("a"), new Symbol("ab"));
-		SymbolString a = SymbolString.createFromString("a", alpha);
-		SymbolString ab = SymbolString.createFromString("ab", alpha);
+		SymbolString a = SymbolString.createFromDefinition("a", alpha);
+		SymbolString ab = SymbolString.createFromDefinition("ab", alpha);
 		
 		System.out.println(a.getFirst().getString());
 		System.out.println(ab.getFirst().getString());

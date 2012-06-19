@@ -59,7 +59,7 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(SymbolString.createFromString("(aba+a)", gram)));
+		System.out.println(parser.quickParse(SymbolString.createFromDefinition("(aba+a)", gram)));
 		System.out.println(parser.getNumberOfNodes());
 	}
 

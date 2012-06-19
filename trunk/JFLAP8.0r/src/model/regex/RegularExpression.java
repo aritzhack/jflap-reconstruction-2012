@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import oldnewstuff.universe.preferences.JFLAPPreferences;
 import oldnewstuff.view.Updateable;
+import preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 

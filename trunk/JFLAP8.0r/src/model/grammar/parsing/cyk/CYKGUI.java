@@ -146,7 +146,7 @@ public class CYKGUI extends JFrame implements JFLAPConstants{
 				public void mousePressed(MouseEvent arg0) {
 					CardLayout cl = (CardLayout) graphicViewPanel.getLayout();
 					cl.show(graphicViewPanel, "name_1304778301065623");
-					SymbolString input = SymbolString.createFromString(textField.getText(), myParser.getGrammar());
+					SymbolString input = SymbolString.createFromDefinition(textField.getText(), myParser.getGrammar());
 					if(input.size()>0){
 						myParser.setInput(input);
 						StepToCompletion.setEnabled(true);

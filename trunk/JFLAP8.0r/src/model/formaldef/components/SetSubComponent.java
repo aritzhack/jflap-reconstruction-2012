@@ -45,9 +45,10 @@ Settable<T>{
 
 	@Override
 	public boolean setTo(T other) {
+		if (other.equals(this)) return false;
 		ChangeEvent change = new SetToEvent<T>((T) this, this.copy(), other);
 		for (SetComponent<T> parent: myParents){
-			if (parent.contains(other)){
+			if (parent.contains(other) ){
 				throw new FormalDefinitionException("The " + parent.getDescriptionName() + 
 						" already contains the " + other.getDescriptionName() + " " + other.toString() +".");
 			}

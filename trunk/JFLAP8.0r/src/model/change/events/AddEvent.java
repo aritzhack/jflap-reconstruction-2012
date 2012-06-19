@@ -1,5 +1,6 @@
 package model.change.events;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import model.formaldef.components.SetComponent;
@@ -7,6 +8,10 @@ import model.formaldef.components.SetSubComponent;
 
 public class AddEvent<T extends SetSubComponent<T>> extends AdvancedUndoableEvent {
 
+	public AddEvent(SetComponent<T> source, T ...c ){
+		this(source, Arrays.asList(c));
+	}
+	
 	public AddEvent(SetComponent<T> source, Collection<? extends T> c) {
 		super(source, ITEM_ADDED, c);
 	}

@@ -1,14 +1,24 @@
 package model.change.events;
 
+import java.util.Arrays;
 import java.util.Collection;
+
+import debug.JFLAPDebug;
 
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
+import model.grammar.Production;
+import model.grammar.ProductionSet;
 
 public class RemoveEvent<T extends SetSubComponent<T>> extends AdvancedUndoableEvent {
 
 	public RemoveEvent(SetComponent<T> source, Collection<? extends T> c) {
 		super(source, ITEM_REMOVED, c);
+	}
+
+	public RemoveEvent(SetComponent<T> source, T ... remove) {
+		this (source, Arrays.asList(remove));
+		JFLAPDebug.print("New remove: " + Arrays.toString(remove));
 	}
 
 	@Override

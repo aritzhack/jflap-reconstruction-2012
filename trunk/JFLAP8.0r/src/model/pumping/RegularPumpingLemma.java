@@ -22,7 +22,7 @@ package model.pumping;
 
 import java.io.Serializable;
 
-import oldnewstuff.universe.preferences.JFLAPPreferences;
+import preferences.JFLAPPreferences;
 
 
 

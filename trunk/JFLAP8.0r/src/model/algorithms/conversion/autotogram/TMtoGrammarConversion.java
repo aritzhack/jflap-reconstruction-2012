@@ -45,16 +45,6 @@ public class TMtoGrammarConversion extends AutomatonToGrammarConversion<TuringMa
 	public boolean isStartMapping(TMVariableMapping mapping) {
 		return false;
 	}
-	
-	@Override
-	public boolean convertInputAlphabet() {
-		return super.convertInputAlphabet() && getConvertedGrammar().getTerminals().add(new Terminal(getOriginalDefinition().getBlankSymbol().getString()));
-	}
-
-	@Override
-	public boolean inputAlphabetConverted() {
-		return getConvertedGrammar().getTerminals().size() == getAutomaton().getInputAlphabet().size()+1;
-	}
 
 	@Override
 	public Production[] convertTransition(TuringMachineTransition trans) {
