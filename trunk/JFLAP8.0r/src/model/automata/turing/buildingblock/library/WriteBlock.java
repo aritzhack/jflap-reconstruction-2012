@@ -11,7 +11,7 @@ import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.symbols.Symbol;
 
 public class WriteBlock extends BaseMultiTapeBlock {
-	Symbol myWrite;
+	private Symbol myWrite;
 
 	public WriteBlock(Symbol write, TapeAlphabet alph, BlankSymbol blank, int id) {
 		super(alph, blank, BlockLibrary.WRITE + BlockLibrary.UNDSCR +write, id);
