@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
+import util.Copyable;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
@@ -14,7 +18,7 @@ import model.automata.acceptors.Acceptor;
 import model.formaldef.components.symbols.SymbolString;
 
 
-public abstract class Configuration<S extends Automaton<T>, T extends Transition<T>> {
+public abstract class Configuration<S extends Automaton<T>, T extends Transition<T>> implements Copyable{
 
 	private State myState;
 	private T myTransitionTo;
@@ -82,8 +86,9 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 
 		if (!this.hasNextState()&&
 				!(this.isAccept() || this.isReject())){
-			Configuration<S, T> clone = this.clone();
+			Configuration<S, T> clone = this.copy();
 			configs.add(clone);
+			clone.updateAccept();
 			clone.updateReject();
 
 		}
@@ -128,7 +133,8 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 
 	}
 
-	public Configuration<S,T> clone(){
+	@Override
+	public Configuration<S,T> copy(){
 		LinkedList<SymbolString> clones = new LinkedList<SymbolString>();
 		for (SymbolString string : myStrings){
 			clones.add(string.copy());
@@ -137,12 +143,13 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 			Configuration<S,T> config = this.createConfig(this.getAutomaton(),
 					myState, 
 					myPrimaryPosition, 
-					myPrimary.copy(), 
+					usingPrimary() ? myPrimary.copy(): null, 
 					myPositions, 
 					clones.toArray(new SymbolString[0]));
 			config.setTransitionTo(this.getTransitionTo());
 			return config;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException("Error creating next Config of class " + this.getClass());
 		}
 

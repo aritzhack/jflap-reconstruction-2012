@@ -1,5 +1,6 @@
 package test;
 
+import java.awt.image.TileObserver;
 import java.io.File;
 import java.util.Arrays;
 
@@ -18,6 +19,17 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;
+import model.automata.turing.buildingblock.Block;
+import model.automata.turing.buildingblock.BlockSet;
+import model.automata.turing.buildingblock.BlockTransition;
+import model.automata.turing.buildingblock.BlockTuringMachine;
+import model.automata.turing.buildingblock.library.FinalBlock;
+import model.automata.turing.buildingblock.library.StartFinalBlock;
+import model.automata.turing.buildingblock.library.MoveBlock;
+import model.automata.turing.buildingblock.library.MoveUntilBlock;
+import model.automata.turing.buildingblock.library.ShiftBlock;
+import model.automata.turing.buildingblock.library.StartBlock;
+import model.automata.turing.buildingblock.library.WriteBlock;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.components.symbols.Terminal;
@@ -29,10 +41,11 @@ import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import model.regex.RegularExpression;
+import util.JFLAPConstants;
 import util.UtilFunctions;
 import file.xml.XMLCodec;
 
-public class FileTester extends TestHarness {
+public class FileTester extends TestHarness implements JFLAPConstants{
 
 	@Override
 	public void runTest() {
@@ -72,7 +85,23 @@ public class FileTester extends TestHarness {
 		codec.encode(regex, f, null);
 		regex = (RegularExpression) codec.decode(f);
 		outPrintln("After import:\n" + regex.toString());
+
+		// SAVE AND LOAD TM
+		MultiTapeTuringMachine tm = createTuringMachine();
+		f = new File(toSave + "/tm_AnBnCn.jff");
+		outPrintln("Before import:\n" + tm.toString());
+		codec.encode(tm, f, null);
+		tm = (MultiTapeTuringMachine) codec.decode(f);
+		outPrintln("After import:\n" + tm.toString());
 		
+		// SAVE AND LOAD BLOCK TM
+		BlockTuringMachine blockTM = createBlockTM();
+		f = new File(toSave + "/blockTM_unaryAdd.jff");
+		outPrintln("Before import:\n" + blockTM.toString());
+		codec.encode(blockTM, f, null);
+		blockTM = (BlockTuringMachine) codec.decode(f);
+		outPrintln("After import:\n" + blockTM.toString());
+
 	}
 
 	private FiniteStateAcceptor createFSA() {
@@ -188,55 +217,55 @@ public class FileTester extends TestHarness {
 
 		Symbol a = new Symbol("a"), b = new Symbol("b"), c = new Symbol("c");
 		TapeAlphabet tapeAlph = new TapeAlphabet();
-		tapeAlph.addAll(a, b, c);
+//		tapeAlph.addAll(a, b, c);
 
 		BlankSymbol blank = new BlankSymbol();
 		Symbol square = blank.getSymbol();
 		InputAlphabet inputAlph = new InputAlphabet();
-		inputAlph.addAll(a, b, c);
+//		inputAlph.addAll(a, b, c);
 
 		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
 				states.getStateWithID(0), new Symbol[] { a, square, square },
 				new Symbol[] { a, a, square }, new TuringMachineMove[] {
-						TuringMachineMove.RIGHT, TuringMachineMove.RIGHT,
-						TuringMachineMove.STAY }));
+			TuringMachineMove.RIGHT, TuringMachineMove.RIGHT,
+			TuringMachineMove.STAY }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
 				states.getStateWithID(1), new Symbol[] { b, square, square },
 				new Symbol[] { b, square, b}, new TuringMachineMove[] {
-						TuringMachineMove.RIGHT, TuringMachineMove.STAY,
-						TuringMachineMove.RIGHT }));
+			TuringMachineMove.RIGHT, TuringMachineMove.STAY,
+			TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
 				states.getStateWithID(4), new Symbol[] { square, square, square },
 				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-						TuringMachineMove.STAY, TuringMachineMove.LEFT,
-						TuringMachineMove.STAY }));
+			TuringMachineMove.STAY, TuringMachineMove.LEFT,
+			TuringMachineMove.STAY }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(1),
 				states.getStateWithID(1), new Symbol[] { b, square, square },
 				new Symbol[] { b, square, b}, new TuringMachineMove[] {
-						TuringMachineMove.RIGHT, TuringMachineMove.STAY,
-						TuringMachineMove.RIGHT }));
+			TuringMachineMove.RIGHT, TuringMachineMove.STAY,
+			TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(1),
 				states.getStateWithID(2), new Symbol[] { c, square, square },
 				new Symbol[] { c, square, square }, new TuringMachineMove[] {
-						TuringMachineMove.STAY, TuringMachineMove.LEFT,
-						TuringMachineMove.LEFT }));
+			TuringMachineMove.STAY, TuringMachineMove.LEFT,
+			TuringMachineMove.LEFT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(2),
 				states.getStateWithID(2), new Symbol[] { c, a, b},
 				new Symbol[] { c, a, b}, new TuringMachineMove[] {
-						TuringMachineMove.RIGHT, TuringMachineMove.LEFT,
-						TuringMachineMove.LEFT }));
+			TuringMachineMove.RIGHT, TuringMachineMove.LEFT,
+			TuringMachineMove.LEFT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(2),
 				states.getStateWithID(3), new Symbol[] { square, square, square },
 				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-						TuringMachineMove.STAY, TuringMachineMove.STAY,
-						TuringMachineMove.RIGHT }));
+			TuringMachineMove.STAY, TuringMachineMove.STAY,
+			TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(4),
 				states.getStateWithID(3), new Symbol[] { square, square, square },
 				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-						TuringMachineMove.STAY, TuringMachineMove.STAY,
-						TuringMachineMove.STAY }));
-		
+			TuringMachineMove.STAY, TuringMachineMove.STAY,
+			TuringMachineMove.STAY }));
+
 		StartState start = new StartState(states.getStateWithID(0));
 		FinalStateSet finalStates = new FinalStateSet();
 		finalStates.add(states.getStateWithID(3));
@@ -245,8 +274,63 @@ public class FileTester extends TestHarness {
 		MultiTapeTuringMachine tm = new MultiTapeTuringMachine(states,
 				tapeAlph, blank, inputAlph, functions, start, finalStates,
 				numTapes);
-		
+
 		return tm;
+	}
+	
+	private BlockTuringMachine createBlockTM(){
+		BlockSet blocks = new BlockSet();
+		TapeAlphabet alph = new TapeAlphabet();
+		BlankSymbol blank = new BlankSymbol();
+		InputAlphabet inputAlph = new InputAlphabet();
+		TransitionSet<BlockTransition> transitions = new TransitionSet<BlockTransition>();
+		StartState startState = new StartState();
+		FinalStateSet finalStates = new FinalStateSet();
+		
+		Symbol square = blank.getSymbol();
+		Symbol ONE = new Symbol("1");
+		Symbol PLUS = new Symbol("+");
+		Symbol TILDE = new Symbol(JFLAPConstants.TILDE);
+
+		int id = 0;
+		
+		Block start = new StartBlock(alph, blank, id++);
+		startState.setState(start);
+		blocks.add(start);
+		
+		Block shiftLeft = new ShiftBlock(TuringMachineMove.LEFT, alph, blank, id++);
+		Block rightToBlank = new MoveUntilBlock(TuringMachineMove.RIGHT, square, alph, blank, id++);
+		Block writeONE = new WriteBlock(ONE, alph, blank, id++);
+		Block leftToBlank = new MoveUntilBlock(TuringMachineMove.LEFT, square, alph, blank, id++);
+		Block moveRight1 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
+		Block writeBlank = new WriteBlock(square, alph, blank, id++);
+		Block moveRight2 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
+		Block halt = new FinalBlock(alph, blank, id);
+		finalStates.add(halt);
+		
+		BlockTransition[] trans = new BlockTransition[9];
+		
+		trans[0] = new BlockTransition(start, shiftLeft, new SymbolString(ONE));
+		trans[1] = new BlockTransition(shiftLeft, rightToBlank, new SymbolString(TILDE));
+		trans[2] = new BlockTransition(rightToBlank, writeONE, new SymbolString(TILDE));
+		trans[3] = new BlockTransition(writeONE, leftToBlank, new SymbolString(TILDE));
+		trans[4] = new BlockTransition(leftToBlank, moveRight1, new SymbolString(TILDE));
+		trans[5] = new BlockTransition(moveRight1, start, new SymbolString(TILDE));
+		trans[6] = new BlockTransition(start, writeBlank, new SymbolString(PLUS));
+		trans[7] = new BlockTransition(writeBlank, moveRight2, new SymbolString(TILDE));
+		trans[8] = new BlockTransition(moveRight2, halt, new SymbolString(TILDE));
+		
+		for (Block b: new Block[]{shiftLeft, rightToBlank, writeONE, leftToBlank, 
+									moveRight1, writeBlank, moveRight2, halt}){
+			blocks.add(b);
+		}
+
+		for (BlockTransition t: trans){
+			transitions.add(t);
+		}
+		
+		return new BlockTuringMachine(blocks, alph, blank, inputAlph, transitions, startState, finalStates);
+
 	}
 
 }

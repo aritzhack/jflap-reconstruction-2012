@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import debug.JFLAPDebug;
 
@@ -19,6 +20,7 @@ import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.components.functionset.function.LanguageFunction;
 import file.xml.MetaTransducer;
 import file.xml.StructureTransducer;
+import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
 import file.xml.formaldef.components.alphabet.AlphabetTransducer;
@@ -30,9 +32,11 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 	
 
 	@Override
-	public T fromSubStructureList(List<Element> list) {
+	public Object[] toSubStructureList(Element root) {
+		List<Element> list = XMLHelper.getChildArray(root, STRUCTURE_TAG);
 		List<Alphabet> alphs = retrieveAlphabets(list);
 		List<Object> comps = new ArrayList<Object>(alphs);
+		
 		Map<Element, XMLTransducer> tdMap = new HashMap<Element, XMLTransducer>();
 		for (Element e: list){
 			XMLTransducer trans = StructureTransducer.getStructureTransducer(e);
@@ -41,7 +45,7 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 																alphs);
 			comps.add(trans.fromStructureRoot(e));
 		}
-		return buildStructure(comps.toArray());
+		return comps.toArray();
 	}
 
 	public abstract XMLTransducer getTransducerForStructureNode(String string, List<Alphabet> alphs);

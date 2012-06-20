@@ -2,6 +2,8 @@ package model.automata.simulate.configurations.tm;
 
 import java.util.LinkedList;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.automata.simulate.Configuration;
 import model.automata.turing.MultiTapeTuringMachine;
@@ -47,7 +49,7 @@ public class MultiTapeTMConfiguration extends TMConfiguration<MultiTapeTuringMac
 			MultiTapeTMTransition trans) {
 		for (int i = 0; i < this.getNumOfSecondary(); i++){
 			Symbol write = trans.getWrite(i);
-			clones[i].replace(this.getPositionForIndex(i), write);
+			clones[i] = clones[i].replace(this.getPositionForIndex(i), write);
 		}
 		return clones;
 	}

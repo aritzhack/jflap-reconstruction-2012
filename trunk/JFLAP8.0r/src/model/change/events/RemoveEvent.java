@@ -18,7 +18,6 @@ public class RemoveEvent<T extends SetSubComponent<T>> extends AdvancedUndoableE
 
 	public RemoveEvent(SetComponent<T> source, T ... remove) {
 		this (source, Arrays.asList(remove));
-		JFLAPDebug.print("New remove: " + Arrays.toString(remove));
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package model.automata;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 
 import model.formaldef.components.SetSubComponent;
 
@@ -128,6 +129,9 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 		// this will only set the name. that is ALL. ID's are immutable.
 		this.myName = other.myName;
 	}
+
+
+
 
 
 }

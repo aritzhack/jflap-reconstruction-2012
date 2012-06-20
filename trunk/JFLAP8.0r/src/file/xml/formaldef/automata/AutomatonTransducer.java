@@ -24,17 +24,17 @@ public abstract class AutomatonTransducer<T extends Automaton> extends FormalDef
 	public XMLTransducer getTransducerForStructureNode(String s,
 			List<Alphabet> alphs) {
 		if (s.equals(TRANS_SET)){
-			return createTransitionFuncTransducer(alphs);
+			return createTransitionTransducer(alphs);
 		}
 		return null;
 	}
 
 	@Override
 	public void addFunctionSetsToMap(Map<Object, XMLTransducer> map, T structure) {
-		XMLTransducer func = createTransitionFuncTransducer(null);
+		XMLTransducer func = createTransitionTransducer(null);
 		map.put(structure.getTransitions(), func);
 	}
 
-	public abstract TransitionSetTransducer createTransitionFuncTransducer(List<Alphabet> alphs);
+	public abstract TransitionSetTransducer createTransitionTransducer(List<Alphabet> alphs);
 
 }

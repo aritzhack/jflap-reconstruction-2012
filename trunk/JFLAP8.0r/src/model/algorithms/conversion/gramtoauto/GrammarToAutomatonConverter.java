@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+
+import debug.JFLAPDebug;
 
 import util.UtilFunctions;
 
@@ -97,7 +100,7 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	}
 
 	public Set<Production> getUnconvertedProductions(){
-		HashSet<Production> all = new HashSet<Production>(this.getGrammar().getProductionSet());
+		TreeSet<Production> all = new TreeSet<Production>(this.getGrammar().getProductionSet());
 		all.removeAll(this.getConvertedProductions());
 		return all;
 	}
@@ -119,7 +122,6 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
 		return new AlgorithmStep[]{
-				new ConvertAlphabets(),
 				new ConvertProductions()};
 	}
 
@@ -146,38 +148,38 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	////////////// Algorithm Steps //////////////////
 	/////////////////////////////////////////////////
 	
-	/**
-	 *  Convert all of the terminals in the terminal alphabet
-	 *  of the grammar into symbols in the input alphabet of
-	 *  the automaton.
-	 * @author Julian
-	 *
-	 */
-	private class ConvertAlphabets implements AlgorithmStep{
-
-		@Override
-		public String getDescriptionName() {
-			return "Convert Terminals to Input Alphabet";
-		}
-
-		@Override
-		public String getDescription() {
-			return "Convert all of the terminals in the terminal alphabet" +
-					" of the grammar into symbols in the input alphabet of" +
-					" the automaton";
-		}
-
-		@Override
-		public boolean execute() throws AlgorithmException {
-			return convertAlphabets();
-		}
-
-		@Override
-		public boolean isComplete() {
-			return alphabetsConverted();
-		}
-		
-	}
+//	/**
+//	 *  Convert all of the terminals in the terminal alphabet
+//	 *  of the grammar into symbols in the input alphabet of
+//	 *  the automaton.
+//	 * @author Julian
+//	 *
+//	 */
+//	private class ConvertAlphabets implements AlgorithmStep{
+//
+//		@Override
+//		public String getDescriptionName() {
+//			return "Convert Terminals to Input Alphabet";
+//		}
+//
+//		@Override
+//		public String getDescription() {
+//			return "Convert all of the terminals in the terminal alphabet" +
+//					" of the grammar into symbols in the input alphabet of" +
+//					" the automaton";
+//		}
+//
+//		@Override
+//		public boolean execute() throws AlgorithmException {
+//			return convertAlphabets();
+//		}
+//
+//		@Override
+//		public boolean isComplete() {
+//			return alphabetsConverted();
+//		}
+//		
+//	}
 
 	
 	/**

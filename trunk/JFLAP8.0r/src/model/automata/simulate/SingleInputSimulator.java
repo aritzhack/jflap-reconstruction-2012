@@ -49,6 +49,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 	}
 	
 	public List<ConfigurationChain> step(){
+		
 		LinkedList<ConfigurationChain> copy = new LinkedList<ConfigurationChain>(myChains);
 		myChains.clear();
 		for (ConfigurationChain chain: copy){
@@ -61,7 +62,11 @@ public class SingleInputSimulator extends AutomatonSimulator{
 				myChains.addAll(stepAndFork(chain));
 			}
 		}
+		
+
 		updateSelectedStates();
+//		JFLAPDebug.print(myChains);
+
 		return this.getAllAcceptChains();
 	}
 	

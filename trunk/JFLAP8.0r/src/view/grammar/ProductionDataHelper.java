@@ -82,7 +82,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 				myKeeper.applyAndCombine(set);
 			}
 			else{
-				JFLAPDebug.print(Arrays.toString(remove(index)));
+				remove(index);
 			}
 		}
 
@@ -120,12 +120,9 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	public Object[] remove(int index) {
 		if (index >= myOrderedProductions.size()) return EMPTY;
 		Production remove = myOrderedProductions.get(index);
-		JFLAPDebug.print(remove);
 		RemoveEvent<Production> event = 
 				new RemoveEvent<Production>(myProductions, remove);
-		JFLAPDebug.print(myProductions);
 		if (myKeeper.applyAndCombine(event)){
-			JFLAPDebug.print("removed");
 			myOrderedProductions.remove(index);
 		}
 		return remove.toArray();

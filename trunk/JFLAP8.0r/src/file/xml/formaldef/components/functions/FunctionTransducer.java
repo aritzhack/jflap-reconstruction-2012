@@ -19,6 +19,7 @@ import file.xml.BasicTransducer;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
+import file.xml.formaldef.components.functions.transitions.tm.BlockTransitionTransducer;
 import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
 public abstract class FunctionTransducer<T extends LanguageFunction> extends BasicTransducer<T> {
@@ -39,13 +40,20 @@ public abstract class FunctionTransducer<T extends LanguageFunction> extends Bas
 			Alphabet[] alphs = 
 					FunctionAlphabetFactory.discerneAlphabets(tag, myAlphs);
 			XMLTransducer trans;
-			if (alphs.length > 0)
-				trans = new SymbolStringTransducer(tag, alphs);
-			else
+			if (alphs.length > 0){
+				trans = getSymbolStringTransducer(tag, alphs);
+			}
+			else{
 				trans = getTransducerForTag(tag);
+			}
 			valueMap.put(tag, trans.fromStructureRoot(e));			
 		}
-		return createFunction(valueMap);
+		T func = createFunction(valueMap);
+		return func;
+	}
+
+	public XMLTransducer getSymbolStringTransducer(String tag, Alphabet[] alphs) {
+		return new SymbolStringTransducer(tag, alphs);
 	}
 
 	public XMLTransducer getTransducerForTag(String tag) {

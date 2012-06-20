@@ -39,7 +39,7 @@ public class MealyMachineTransducer extends TransducerTransducer<MealyMachine> {
 	}
 
 	@Override
-	public TransitionSetTransducer createTransitionFuncTransducer(
+	public TransitionSetTransducer createTransitionTransducer(
 			List<Alphabet> alphs) {
 		return FSATransducer.createFSATransitionTransducer(alphs);
 	}

@@ -61,8 +61,8 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 	@Override
 	public PushdownAutomaton alphabetAloneCopy() {
 		return new PushdownAutomaton(new StateSet(),
-										this.getInputAlphabet(), 
-										this.getStackAlphabet(), 
+										this.getInputAlphabet().copy(), 
+										this.getStackAlphabet().copy(), 
 										new TransitionSet<PDATransition>(), 
 										new StartState(), 
 										new BottomOfStackSymbol(), 

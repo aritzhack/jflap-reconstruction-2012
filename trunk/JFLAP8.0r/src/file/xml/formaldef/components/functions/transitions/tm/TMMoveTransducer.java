@@ -5,8 +5,8 @@ import file.xml.formaldef.components.SingleNodeTransducer;
 
 public class TMMoveTransducer extends SingleNodeTransducer<TuringMachineMove> {
 
-	public TMMoveTransducer() {
-		super(MOVE_TAG);
+	public TMMoveTransducer(int i) {
+		super(MOVE_TAG + i);
 	}
 
 	@Override
@@ -22,6 +22,5 @@ public class TMMoveTransducer extends SingleNodeTransducer<TuringMachineMove> {
 		}
 		return null;
 	}
-
 
 }

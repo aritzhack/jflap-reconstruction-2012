@@ -6,13 +6,13 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 
-public abstract class HaltBlock extends BaseBlock {
+public abstract class StartFinalBlock extends BaseMultiTapeBlock {
 
 
-	public HaltBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
+	public StartFinalBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
 		super(alph, blank, name, id);
 		
-		MultiTapeTuringMachine tm = getTuringMachine();
+		TuringMachine tm = getTuringMachine();
 		
 		State start = tm.getStates().createAndAddState();
 		tm.setStartState(start);

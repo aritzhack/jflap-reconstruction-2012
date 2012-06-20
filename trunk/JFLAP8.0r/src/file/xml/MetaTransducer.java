@@ -12,22 +12,26 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import debug.JFLAPDebug;
+
 public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 
 	@Override
 	public T fromStructureRoot(Element root) {
-		List<Element> list = XMLHelper.getChildArray(root, STRUCTURE_TAG);
-		return fromSubStructureList(list);
+		Object[] comps = toSubStructureList(root);
+		return buildStructure(comps);
+		
 	}
 
-	public T fromSubStructureList(List<Element> list) {
+	public Object[] toSubStructureList(Element root) {
+		List<Element> list = XMLHelper.getChildArray(root, STRUCTURE_TAG);
 		List<Object> subComp = new ArrayList<Object>();
 		for(Element child: list){
 			XMLTransducer t = 
 					StructureTransducer.getStructureTransducer(child);
 			subComp.add(t.fromStructureRoot(child));
 		}
-		return buildStructure(subComp.toArray());
+		return subComp.toArray();
 	}
 
 	public abstract T buildStructure(Object[] subComp);
@@ -56,7 +60,7 @@ public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 	
 	public static <T> T retrieveTarget(Class<T> target, Object ... population){
 		for (Object o: population){
-			if (target.isAssignableFrom(o.getClass()))
+			if (target.equals(o.getClass()))
 				return (T) o;
 		}
 		return null;

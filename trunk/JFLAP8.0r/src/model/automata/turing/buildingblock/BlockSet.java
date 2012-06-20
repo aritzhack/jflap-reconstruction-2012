@@ -1,6 +1,7 @@
 package model.automata.turing.buildingblock;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -37,7 +38,7 @@ public class BlockSet extends StateSet implements UsesSymbols{
 	public BlockSet copy() {
 		return (BlockSet) super.copy();
 	}
-
+	
 	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		Set<Symbol> symbolAlphabet = new TreeSet<Symbol>();

@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
@@ -82,7 +84,6 @@ public class BuildMinimalDFA extends SteppableAlgorithm {
 		if (!myTransitionsNeeded.remove(trans)){
 			return false;
 		}
-		
 		return myMinimalDFA.getTransitions().add(trans);
 	}
 

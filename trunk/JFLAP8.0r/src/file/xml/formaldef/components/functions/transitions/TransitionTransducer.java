@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import util.UtilFunctions;
 
 import model.automata.InputAlphabet;

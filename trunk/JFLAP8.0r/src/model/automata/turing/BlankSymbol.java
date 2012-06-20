@@ -48,6 +48,11 @@ public class BlankSymbol extends SpecialSymbol {
 	}
 	
 	@Override
+	public BooleanWrapper isComplete() {
+		return new BooleanWrapper(true);
+	}
+	
+	@Override
 	public Class<? extends Alphabet> getAlphabetClass() {
 		return TapeAlphabet.class;
 	}

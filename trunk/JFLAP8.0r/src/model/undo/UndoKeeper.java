@@ -61,7 +61,6 @@ public class UndoKeeper implements ChangeListener{
 		}
 		else
 			myUndoQueue.push(toAdd);
-		JFLAPDebug.print(toAdd.getName());
 	}
 
 	public boolean undoLast(){
@@ -78,7 +77,6 @@ public class UndoKeeper implements ChangeListener{
 		boolean test = true;
 		while (!from.isEmpty() && n > 0){
 			IUndoRedo toApply = from.peek();
-			JFLAPDebug.print(toApply.getName());
 			switch(help){
 			case UNDO: test = toApply.undo(); break;
 			case REDO: test = toApply.redo(); break;

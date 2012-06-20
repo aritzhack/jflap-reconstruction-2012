@@ -34,7 +34,7 @@ public class ChangingObject {
 	}
 
 	public void distributeChange(ChangeEvent event) {
-		for (ChangeListener listener: myListeners){
+		for (ChangeListener listener: myListeners.toArray(new ChangeListener[0])){
 			listener.stateChanged(event);
 		}
 	}

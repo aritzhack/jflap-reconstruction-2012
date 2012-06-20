@@ -24,12 +24,17 @@ public interface XMLTags {
 		FSA_TAG="fsa",
 		FINAL_STATESET_TAG = "final_states",
 		OUTPUT_FUNC_SET = "output_set",
-		OUTPUT_FUNC_TAG = "output_func";
+		OUTPUT_FUNC_TAG = "output_func",
+		FSA_TRANS = "fsa_trans";
 	
 	public static final String READ_TAG = "read",
 			WRITE_TAG = "write",
 			MOVE_TAG = "move",
-			TAPE_NUM = "tapes";
+			TAPE_NUM = "tapes",
+			TM_TAG = "turing",
+			BLOCK_TAG = "block",
+			BLOC_SET_TAG = "block_set",
+			BLOCK_TM_TAG = "block_tm";
 	
 	public static final String ID_TAG = "id";
 	public static final String NAME_TAG = "name";

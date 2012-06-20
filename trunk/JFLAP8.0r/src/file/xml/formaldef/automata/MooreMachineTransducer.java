@@ -35,7 +35,7 @@ public class MooreMachineTransducer extends TransducerTransducer<MooreMachine> {
 	}
 
 	@Override
-	public TransitionSetTransducer createTransitionFuncTransducer(
+	public TransitionSetTransducer createTransitionTransducer(
 			List<Alphabet> alphs) {
 		return FSATransducer.createFSATransitionTransducer(alphs);
 	}

@@ -60,6 +60,10 @@ public class AutoSimulator extends AutomatonSimulator{
 	public void beginSimulation(SymbolString ... input) {
 		mySimulator.beginSimulation(input);
 	}
+	
+	public void beginSimulation(Configuration c){
+		mySimulator.beginSimulation(c);
+	}
 
 	@Override
 	public int getSpecialAcceptCase() {

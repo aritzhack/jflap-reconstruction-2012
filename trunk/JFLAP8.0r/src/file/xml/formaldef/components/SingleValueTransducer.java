@@ -1,5 +1,7 @@
 package file.xml.formaldef.components;
 
+import java.util.List;
+
 import model.formaldef.components.symbols.SpecialSymbol;
 
 import org.w3c.dom.Document;
@@ -15,8 +17,8 @@ public abstract class SingleValueTransducer<T> extends StructureTransducer<T> {
 
 	@Override
 	public T fromStructureRoot(Element root) {
-		NodeList list = root.getElementsByTagName(VALUE_TAG);
-		String s = XMLHelper.containedText(list.item(0));
+		List<Element> list = XMLHelper.getChildrenWithTag(root, VALUE_TAG);
+		String s = XMLHelper.containedText(list.get(0));
 		return this.createInstance(s);
 	}
 

@@ -8,9 +8,11 @@ import preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 import model.automata.AutomatonException;
+import model.automata.InputAlphabet;
 import model.automata.SingleInputTransition;
 import model.automata.State;
 import model.automata.Transition;
+import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
@@ -52,7 +54,7 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 		if (input.isEmpty())
 			input.add(JFLAPPreferences.getTMBlankSymbol());
 		
-		int i = input.startsWith(NOT) ? 1 : 0;
+		int i = input.startsWith(new Symbol(NOT)) ? 1 : 0;
 		
 		SymbolString symbol = input.subList(i);
 		
@@ -69,10 +71,23 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 	}
 	
 	@Override
+	public SymbolString[] getPartsForAlphabet(Alphabet a) {
+		SymbolString[] strings = super.getPartsForAlphabet(a);
+		if (a instanceof InputAlphabet){
+			for (int i =0; i< strings.length; i++){
+				SymbolString temp = new SymbolString(strings[i]);
+				temp.remove(JFLAPPreferences.getTMBlankSymbol());
+				strings[i] = temp;
+			}
+		}
+		return strings;
+	}
+	
+	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		Set<Symbol> symbols = super.getSymbolsUsedForAlphabet(a);
-		symbols.remove(TILDE);
-		symbols.remove(NOT);
+		symbols.remove(new Symbol(TILDE));
+		symbols.remove(new Symbol(NOT));
 		return symbols;
 	}
 }

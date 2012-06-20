@@ -10,7 +10,7 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.symbols.Symbol;
 
-public class MoveBlock extends BaseBlock {
+public class MoveBlock extends BaseMultiTapeBlock {
 	private TuringMachineMove myDirection;
 	
 	public MoveBlock(TuringMachineMove direction, TapeAlphabet alph, BlankSymbol blank, int id) {
@@ -24,7 +24,7 @@ public class MoveBlock extends BaseBlock {
 	}
 
 	private static String createName(TuringMachineMove direction){
-		String move = "Move_"+direction.char_abbr;
+		String move = BlockLibrary.MOVE + BlockLibrary.UNDSCR +direction.char_abbr;
 		return move;
 	}
 	

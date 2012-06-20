@@ -26,7 +26,7 @@ public class PDATransitionTransducer extends InputTransitionTransducer<PDATransi
 			Map<String, Object> base, PDATransition t) {
 		base.put(POP_TAG, t.getPop());
 		base.put(PUSH_TAG, t.getPush());
-		return base;
+		return super.addOtherLabelComponentsToMap(base, t);
 	}
 
 	@Override

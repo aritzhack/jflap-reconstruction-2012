@@ -17,9 +17,9 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.change.events.AdvancedChangeEvent;
 
-public abstract class BaseBlock extends Block implements ChangeListener{
+public abstract class BaseMultiTapeBlock extends Block implements ChangeListener{
 
-	public BaseBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
+	public BaseMultiTapeBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
 		super(createTuringMachine(blank, alph), name, id);
 		alph.addListener(this);
 	}

@@ -11,18 +11,18 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 
 public class Block extends State implements UsesSymbols{
-	private MultiTapeTuringMachine myMachine;
+	private TuringMachine myMachine;
 
-	public Block(MultiTapeTuringMachine machine, String name, int id){
+	public Block(TuringMachine machine, String name, int id){
 		super(name, id);
 		myMachine = machine;
 	}
 	
-	public void setTuringMachine(MultiTapeTuringMachine tm){
+	public void setTuringMachine(TuringMachine tm){
 		myMachine = tm;
 	}
 	
-	public MultiTapeTuringMachine getTuringMachine(){
+	public TuringMachine getTuringMachine(){
 		return myMachine;
 	}
 
@@ -43,7 +43,7 @@ public class Block extends State implements UsesSymbols{
 	
 	@Override
 	public String toDetailedString(){
-		return super.toDetailedString()+myMachine.toString();
+		return super.toDetailedString()+ "\n" + myMachine.toString();
 	}
 	
 }
