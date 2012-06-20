@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import oldnewstuff.main.JFLAP;
+
 import debug.JFLAPDebug;
 
 import model.automata.AutomatonException;
@@ -67,9 +69,10 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		
 		b1=b2;
 		b2 = new MoveBlock(myOpposite, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		trans = new BlockTransition(b1,b2, new SymbolString(myMarker));
 		transitions.add(trans);
 
+		Block forPrint = b2;
 		
 		b1=b2;
 		b2 = new WriteBlock(blank.getSymbol(), alph, blank, id++);
@@ -99,11 +102,13 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 
+		
 		b1=b2;
 		b2 = new FinalBlock(alph, blank, id++);
 		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		tm.getFinalStateSet().add(b2);
+		
 	}
 
 	@Override

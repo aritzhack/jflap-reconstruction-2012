@@ -1,5 +1,6 @@
 package model.automata.turing.buildingblock.library;
 
+import debug.JFLAPDebug;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
@@ -32,10 +33,9 @@ public class MoveBlock extends BaseMultiTapeBlock {
 	public void updateTuringMachine(TapeAlphabet tape) {
 		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
 		transitions.clear();
-		
 		State start = getTuringMachine().getStartState();
 		State finish = getTuringMachine().getFinalStateSet().first();
-		
+		JFLAPDebug.print("MOVE UPDATED: " + tape);
 		for(Symbol term : tape){
 			transitions.add(new MultiTapeTMTransition(start, finish, term, term, myDirection));
 		}
