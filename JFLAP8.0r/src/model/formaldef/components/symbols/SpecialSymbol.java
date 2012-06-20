@@ -59,7 +59,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	
 	@Override
 	public String toString() {
-		return this.getDescriptionName() + ": " + (mySymbol == null ? "" : mySymbol.toString());
+		return this.getDescriptionName() + ": " + (getSymbol() == null ? "" : getSymbol().toString());
 	}
 
 	@Override
@@ -98,6 +98,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	@Override
 	public boolean applySymbolMod(String from, String to) {
+		if(isPermanent()) return false;
 		boolean applies = mySymbol.getString() == from;
 		if (applies)
 			mySymbol.setString(to);
@@ -106,8 +107,8 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	}
 
 	public String symbolOnlyString() {
-		if (mySymbol == null) return "";
-		return mySymbol.toString();
+		if (getSymbol() == null) return "";
+		return getSymbol().toString();
 	}
 	
 }

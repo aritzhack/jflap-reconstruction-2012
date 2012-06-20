@@ -1,10 +1,16 @@
 package model.automata.turing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import debug.JFLAPDebug;
+
+import preferences.JFLAPPreferences;
 
 import util.UtilFunctions;
 import model.automata.AutomatonException;
+import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.Transition;
@@ -149,8 +155,15 @@ public class MultiTapeTMTransition extends Transition<MultiTapeTMTransition> {
 	
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
-		if (a instanceof TapeAlphabet)
-			return getAllParts();
+		if (a instanceof TapeAlphabet || a instanceof InputAlphabet){
+			SymbolString[] parts =  getAllParts();
+			if (a instanceof InputAlphabet){
+				for (SymbolString s: parts){
+					s.removeEach(JFLAPPreferences.getTMBlankSymbol());
+				}
+			}
+			return parts;
+		}
 		return new SymbolString[0];
 	}
 

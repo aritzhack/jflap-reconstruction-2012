@@ -233,14 +233,6 @@ public class RegularExpression extends FormalDefinition {
 
 	}
 
-	@Override
-	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
-		SymbolString temp = getExpression();
-		temp.removeAll(myOperatorAlphabet);
-		return new TreeSet<Symbol>(temp);
-	}
-
-
 
 	public SymbolString getExpression() {
 		return getComponentOfClass(ExpressionComponent.class).getExpression();

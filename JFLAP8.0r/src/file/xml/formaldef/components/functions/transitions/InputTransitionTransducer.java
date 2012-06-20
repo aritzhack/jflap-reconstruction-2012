@@ -13,6 +13,8 @@ import model.formaldef.components.symbols.SymbolString;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 public abstract class InputTransitionTransducer<T extends SingleInputTransition<T>> extends TransitionTransducer<T> {
 
 	public InputTransitionTransducer(InputAlphabet alph, Alphabet ... alphs) {

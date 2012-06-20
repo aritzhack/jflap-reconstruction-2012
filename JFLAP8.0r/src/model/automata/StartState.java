@@ -1,6 +1,7 @@
 package model.automata;
 
 import java.awt.Point;
+import java.util.Collection;
 
 import errors.BooleanWrapper;
 import model.change.events.StartStateSetEvent;
@@ -74,8 +75,18 @@ public class StartState extends FormalDefinitionComponent {
 	}
 
 
-
 	public State getState() {
 		return myState;
+	}
+
+
+
+	public void checkAndRemove(Collection<State> removed) {
+		for (State s: removed){
+			if (this.getState().equals(s)){
+				this.clear();
+				return;
+			}
+		}
 	}
 }

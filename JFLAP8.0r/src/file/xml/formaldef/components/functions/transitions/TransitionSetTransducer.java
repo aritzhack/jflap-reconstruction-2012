@@ -1,6 +1,7 @@
 package file.xml.formaldef.components.functions.transitions;
 
 import model.automata.SingleInputTransition;
+import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.formaldef.components.SetComponent;
 
@@ -12,7 +13,7 @@ import file.xml.formaldef.components.functions.FunctionTransducer;
 
 import util.Copyable;
 
-public class TransitionSetTransducer<T extends SingleInputTransition<T>> extends FunctionSetTransducer<T> {
+public class TransitionSetTransducer<T extends Transition<T>> extends FunctionSetTransducer<T> {
 
 	public TransitionSetTransducer(FunctionTransducer<T> trans) {
 		super(trans);

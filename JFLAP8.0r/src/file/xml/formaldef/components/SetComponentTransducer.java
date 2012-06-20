@@ -1,5 +1,7 @@
 package file.xml.formaldef.components;
 
+import java.util.List;
+
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 
@@ -8,18 +10,22 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import debug.JFLAPDebug;
+
 import util.Copyable;
 
 import file.xml.StructureTransducer;
+import file.xml.XMLHelper;
+import file.xml.formaldef.components.states.StateSetTransducer;
 
 public abstract class SetComponentTransducer<T extends SetSubComponent<T>> extends StructureTransducer<SetComponent<T>> {
 
 	@Override
 	public SetComponent<T> fromStructureRoot(Element root) {
-		NodeList list = root.getElementsByTagName(getSubNodeTag());
+		List<Element> list = XMLHelper.getChildrenWithTag(root,getSubNodeTag());
 		SetComponent<T> comp = createEmptyComponent();
-		for (int i = 0; i < list.getLength(); i++){
-			comp.add(decodeSubNode((Element)list.item(i)));
+		for (int i = 0; i < list.size(); i++){
+			comp.add(decodeSubNode((Element)list.get(i)));
 		}
 		return comp;
 	}

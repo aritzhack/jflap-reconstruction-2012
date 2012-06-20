@@ -160,17 +160,20 @@ public class XMLHelper {
 		return docBuilder.parse(f);
 	}
 
-	public static Element getChildWithTag(Element parent, String tag) {
-		NodeList list = parent.getElementsByTagName(tag);
-		if (list.getLength() == 0) return null;
-		return (Element) list.item(0);
+	public static List<Element> getChildrenWithTag(Element parent, String tag) {
+		List<Element> list = getElementChildren(parent);
+		for (Element e : list.toArray(new Element[0])){
+			if (!e.getTagName().equals(tag))
+				list.remove(e);
+		}
+		return list;
 	}
 
 	public static List<Element> getChildArray(Element root, String tag) {
-		NodeList list = root.getElementsByTagName(tag);
+		List<Element> list = XMLHelper.getChildrenWithTag(root, tag);
 		List<Element> structures = new ArrayList<Element>();
-		for(int i =0; i < list.getLength(); i++){
-			Element child = (Element) list.item(i);
+		for(int i =0; i < list.size(); i++){
+			Element child = (Element) list.get(i);
 			structures.add(child);
 		}
 		return structures;

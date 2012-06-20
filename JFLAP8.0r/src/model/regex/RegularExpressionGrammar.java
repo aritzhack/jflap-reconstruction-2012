@@ -155,7 +155,7 @@ public class RegularExpressionGrammar extends Grammar {
 
 	@Override
 	public void componentChanged(AdvancedChangeEvent event) {
-		if (event.comesFrom(myInputAlph.getClass())){
+		if (event.comesFrom(InputAlphabet.class)){
 			switch (event.getType()){
 			case ITEM_MODIFIED: break;
 			//propagate modify to regex grammar if need be.

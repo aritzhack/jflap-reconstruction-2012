@@ -9,7 +9,10 @@ import model.regex.OperatorAlphabet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import file.xml.StructureTransducer;
+import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
 import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
@@ -28,7 +31,7 @@ public class ExpressionStringTransducer extends StructureTransducer<ExpressionCo
 
 	@Override
 	public ExpressionComponent fromStructureRoot(Element root) {
-		Element e = (Element) root.getElementsByTagName(EXPRESSION_TAG).item(0);
+		Element e = (Element) XMLHelper.getChildrenWithTag(root, EXPRESSION_TAG).get(0);
 		SymbolString expression = mySymbolStringTransducer.fromStructureRoot(e);
 		return new ExpressionComponent(expression);
 	}

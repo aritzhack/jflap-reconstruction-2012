@@ -2,6 +2,10 @@ package model.grammar.parsing.brute;
 
 import java.util.*;
 
+import oldnewstuff.main.JFLAP;
+
+import debug.JFLAPDebug;
+
 import model.grammar.*;
 import model.grammar.parsing.*;
 import model.formaldef.components.symbols.Symbol;
@@ -105,7 +109,6 @@ public abstract class BruteParser extends Parser {
 	}
 
 	private boolean makeNextReplacement() {
-
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 
 		loop: while (!myDerivationsQueue.isEmpty()) {

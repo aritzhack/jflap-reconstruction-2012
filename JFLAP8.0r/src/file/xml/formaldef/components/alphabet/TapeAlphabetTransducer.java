@@ -1,5 +1,6 @@
 package file.xml.formaldef.components.alphabet;
 
+import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.symbols.Symbol;
 
@@ -12,8 +13,7 @@ public class TapeAlphabetTransducer extends AlphabetTransducer {
 
 	@Override
 	public SetComponent<Symbol> createEmptyComponent() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TapeAlphabet();
 	}
 
 }

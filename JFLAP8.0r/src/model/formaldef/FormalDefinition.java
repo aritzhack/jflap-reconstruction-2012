@@ -54,6 +54,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 		for (Alphabet a: this.getAlphabets())
 			a.addRules(new DisallowedCharacterRule(this));
+		updateAlphabets(ITEM_MODIFIED);
 	}
 
 	public String toNtupleString(){

@@ -5,6 +5,8 @@ import java.util.SortedSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.SetComponentTransducer;
@@ -18,9 +20,13 @@ public class StateSetTransducer extends SetComponentTransducer<State> {
 	private StateTransducer myStateTransducer;
 
 	public StateSetTransducer() {
-		myStateTransducer = new StateTransducer();
+		myStateTransducer = createStateTransducer();
 	}
 	
+	public StateTransducer createStateTransducer() {
+		return new StateTransducer();
+	}
+
 	@Override
 	public State decodeSubNode(Element item) {
 		return myStateTransducer.fromStructureRoot(item);

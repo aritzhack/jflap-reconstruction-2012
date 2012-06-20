@@ -1,5 +1,6 @@
 package model.grammar.parsing;
 
+import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 import util.Copyable;
 import model.algorithms.AlgorithmException;

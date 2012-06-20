@@ -25,7 +25,7 @@ public class FSATransitionTransducer extends InputTransitionTransducer<FSATransi
 
 	@Override
 	public String getTag() {
-		return "fsa_trans";
+		return FSA_TRANS;
 	}
 
 
@@ -39,7 +39,7 @@ public class FSATransitionTransducer extends InputTransitionTransducer<FSATransi
 	@Override
 	public Map<String, Object> addOtherLabelComponentsToMap(
 			Map<String, Object> base, FSATransition structure) {
-		return base;
+		return super.addOtherLabelComponentsToMap(base, structure);
 	}
 
 }

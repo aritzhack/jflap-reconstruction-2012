@@ -12,8 +12,8 @@ public class StateTransducer extends BasicTransducer<State> {
 
 	@Override
 	public State fromStructureRoot(Element root) {
-		Element id_ele = XMLHelper.getChildWithTag(root, ID_TAG);
-		Element name_ele = XMLHelper.getChildWithTag(root, NAME_TAG);
+		Element id_ele = XMLHelper.getChildrenWithTag(root, ID_TAG).get(0);
+		Element name_ele = XMLHelper.getChildrenWithTag(root, NAME_TAG).get(0);
 		
 		int id = Integer.valueOf(XMLHelper.containedText(id_ele));
 		String name = XMLHelper.containedText(name_ele);

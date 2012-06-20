@@ -40,7 +40,7 @@ public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 	@Override
 	public FiniteStateAcceptor alphabetAloneCopy() {
 		return new FiniteStateAcceptor(new StateSet(), 
-						this.getInputAlphabet(), 
+						this.getInputAlphabet().copy(), 
 						new TransitionSet<FSATransition>(), 
 						new StartState(), 
 						new FinalStateSet());

@@ -20,7 +20,7 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	
 	@Override
 	public StartState fromStructureRoot(Element root) {
-		Element state_ele = XMLHelper.getChildWithTag(root, myStateTransducer.getTag());
+		Element state_ele = XMLHelper.getChildrenWithTag(root, myStateTransducer.getTag()).get(0);
 		State s = myStateTransducer.fromStructureRoot(state_ele);
 		return new StartState(s);
 	}

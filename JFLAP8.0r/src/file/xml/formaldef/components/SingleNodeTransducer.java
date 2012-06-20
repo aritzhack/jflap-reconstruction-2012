@@ -3,6 +3,8 @@ package file.xml.formaldef.components;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 

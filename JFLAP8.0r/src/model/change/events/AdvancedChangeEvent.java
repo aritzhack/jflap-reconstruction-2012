@@ -40,6 +40,10 @@ public class AdvancedChangeEvent extends ChangeEvent implements ChangeTypes{
 		return s.equals(this.getSource().getClass());
 	}
 	
+	public boolean comesFrom(Object o){
+		return this.getSource().equals(o);
+	}
+	
 	public int getNumArgs(){
 		return myArgs.length;
 	}

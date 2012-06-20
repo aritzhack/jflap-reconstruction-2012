@@ -30,7 +30,7 @@ public class PDATransducer extends AutomatonTransducer<PushdownAutomaton> {
 	}
 
 	@Override
-	public TransitionSetTransducer createTransitionFuncTransducer(
+	public TransitionSetTransducer createTransitionTransducer(
 			List<Alphabet> alphs) {
 		InputAlphabet input = retrieveAlphabet(alphs, InputAlphabet.class);
 		StackAlphabet stack = retrieveAlphabet(alphs, StackAlphabet.class);

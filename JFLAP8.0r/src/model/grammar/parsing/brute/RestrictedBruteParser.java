@@ -32,7 +32,7 @@ public class RestrictedBruteParser extends BruteParser {
 
 
 	public boolean isPossibleDerivation(SymbolString derivation) {
-		if (super.isPossibleDerivation(derivation))
+		if (!super.isPossibleDerivation(derivation))
 			return false;
 		//int targetSearched = 0;
 		boolean startBookend = false, endBookend = false;

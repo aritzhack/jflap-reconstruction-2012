@@ -40,7 +40,8 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 	public boolean add(T e) {
 		Collection<T> toAdd = new ArrayList<T>();
 		toAdd.add(e);
-		return addAll(toAdd);	}
+		return addAll(toAdd);	
+		}
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
@@ -50,8 +51,8 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 			for (T item : c){
 				item.addParent(this);
 			}
+			distributeChange(e);
 		}
-		distributeChange(e);
 		return added;
 
 	}
@@ -105,8 +106,8 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 			for (Object item : c){
 				((SetSubComponent<T>) item).removeParent(this);
 			}
+			distributeChange(e);
 		}
-		distributeChange(e);
 		return removed;
 	}
 

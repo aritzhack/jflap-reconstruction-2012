@@ -24,6 +24,9 @@ import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
+import model.automata.turing.TuringMachineMove;
+import model.automata.turing.buildingblock.BlockSet;
+import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.StartVariable;
@@ -37,22 +40,27 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import file.xml.formaldef.automata.BlockTMTransducer;
 import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.automata.MealyMachineTransducer;
 import file.xml.formaldef.automata.MooreMachineTransducer;
 import file.xml.formaldef.automata.PDATransducer;
+import file.xml.formaldef.automata.MultiTapeTMTransducer;
 import file.xml.formaldef.components.alphabet.InputAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.OutputAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.StackAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.TapeAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.TerminalsTransducer;
 import file.xml.formaldef.components.alphabet.VariablesTransducer;
+import file.xml.formaldef.components.functions.transitions.tm.TMMoveTransducer;
+import file.xml.formaldef.components.states.BlockSetTransducer;
 import file.xml.formaldef.components.states.FinalStateSetTransducer;
 import file.xml.formaldef.components.states.FromStateTransducer;
 import file.xml.formaldef.components.states.StartStateTransducer;
 import file.xml.formaldef.components.states.StateSetTransducer;
 import file.xml.formaldef.components.states.StateTransducer;
 import file.xml.formaldef.components.states.ToStateTransducer;
+import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
 import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
@@ -84,9 +92,14 @@ public class TransducerFactory{
 		addMapping(MealyMachine.class, new MealyMachineTransducer());
 		addMapping(OutputAlphabet.class, new OutputAlphabetTransducer());
 		
-		//TM - Need to add the TMTransitionFunction stuff too
-		addMapping(MultiTapeTuringMachine.class, new TuringMachineTransducer());
+		//TM 
+		addMapping(MultiTapeTuringMachine.class, new MultiTapeTMTransducer());
+		addMapping(BlankSymbol.class, new BlankSymbolTransducer());
 		addMapping(TapeAlphabet.class, new TapeAlphabetTransducer());
+		
+		//TM Block stuff
+		addMapping(BlockTuringMachine.class, new BlockTMTransducer());
+		addMapping(BlockSet.class, new BlockSetTransducer());
 		
 		//Grammar
 		addMapping(Grammar.class, new GrammarTransducer());

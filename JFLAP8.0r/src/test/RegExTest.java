@@ -3,6 +3,8 @@ package test;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import debug.JFLAPDebug;
+
 import file.xml.XMLCodec;
 
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
@@ -33,6 +35,7 @@ public class RegExTest extends TestHarness{
 		File f = new File(toSave + "/regEx.jff");
 		RegularExpression regex = (RegularExpression) new XMLCodec().decode(f);
 
+		
 		//set regex
 		String in = "((a+b)*+c)";
 		

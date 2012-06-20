@@ -16,6 +16,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
+import model.regex.operators.Operator;
 
 public class ExpressionComponent extends FormalDefinitionComponent implements UsesSymbols{
 
@@ -73,12 +74,23 @@ public class ExpressionComponent extends FormalDefinitionComponent implements Us
 
 	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
-		if (a instanceof InputAlphabet || a instanceof OperatorAlphabet){
-			Set<Symbol> symbols = new TreeSet<Symbol>(myExpression);
-			symbols.retainAll(a);
-			return symbols;
+		if ( myExpression != null){
+			if (a instanceof InputAlphabet){
+				Set<Symbol> symbols = new TreeSet<Symbol>(myExpression);
+				for (Symbol s:  symbols.toArray(new Symbol[0])){
+					if (s  instanceof Operator)
+						symbols.remove(s);
+				}
+				return symbols;
+			}else if(a instanceof OperatorAlphabet){
+				Set<Symbol> symbols = new TreeSet<Symbol>(myExpression);
+				for (Symbol s:  symbols.toArray(new Symbol[0])){
+					if (!(s instanceof Operator))
+						symbols.remove(s);
+				}
+				return symbols;
+			}
 		}
-			
 		return new TreeSet<Symbol>();
 	}
 
@@ -97,7 +109,8 @@ public class ExpressionComponent extends FormalDefinitionComponent implements Us
 
 	@Override
 	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
-		if (a instanceof InputAlphabet || a instanceof OperatorAlphabet){
+		if (myExpression != null && 
+				(a instanceof InputAlphabet || a instanceof OperatorAlphabet)){
 			return myExpression.removeAll(s);
 		}
 		return false;

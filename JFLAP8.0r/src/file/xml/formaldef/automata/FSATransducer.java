@@ -38,7 +38,7 @@ public class FSATransducer extends AutomatonTransducer<FiniteStateAcceptor> {
 	}
 
 	@Override
-	public TransitionSetTransducer createTransitionFuncTransducer(
+	public TransitionSetTransducer createTransitionTransducer(
 			List<Alphabet> alphs) {
 		return createFSATransitionTransducer(alphs);
 	}

@@ -19,13 +19,13 @@ import model.formaldef.components.symbols.Symbol;
  * @author Ian McMahon
  * 
  */
-public class MoveUntilBlock extends BaseBlock {
+public class MoveUntilBlock extends BaseMultiTapeBlock {
 	private MultiTapeTMTransition myFinalTransition;
 	private Symbol mySymbol;
 	private TuringMachineMove myMove;
 	
-	public MoveUntilBlock(TuringMachineMove direction, BlankSymbol blank,
-			Symbol read, TapeAlphabet alph, int id) {
+	public MoveUntilBlock(TuringMachineMove direction, Symbol read,
+			TapeAlphabet alph, BlankSymbol blank, int id) {
 		super(alph, blank, createName(direction, read), id);
 		
 		mySymbol = read;
@@ -47,7 +47,9 @@ public class MoveUntilBlock extends BaseBlock {
 	
 	private static String createName(TuringMachineMove direction, Symbol read){
 		if(direction.equals(TuringMachineMove.STAY)) throw new RuntimeException("Infinite loops are fun, but not allowed");
-		String move = "Move_"+direction.char_abbr+"_Until_"+read;
+		String move = BlockLibrary.MOVE + BlockLibrary.UNDSCR +
+				direction.char_abbr + BlockLibrary.UNDSCR + 
+				BlockLibrary.UNTIL + BlockLibrary.UNDSCR + read;
 		return move;
 	}
 

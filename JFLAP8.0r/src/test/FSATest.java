@@ -60,10 +60,6 @@ public class FSATest extends TestHarness{
 		outPrintln("Testing error/definition completion printouts:");
 		errPrintln(UtilFunctions.createDelimitedString(Arrays.asList(fsa.isComplete()),"\n") + "\n");
 		
-		for (char i = '0'; i <= '9'; i++){
-			fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
-		}
-		
 		//figure 2.18 from the linz book with minor adjustments for non-determinism
 		State q0 = new State("q0", 0);
 		State q1 = new State("q1", 1);

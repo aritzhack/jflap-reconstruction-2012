@@ -9,7 +9,7 @@ import model.automata.simulate.configurations.FSAConfiguration;
 import model.automata.simulate.configurations.MealyConfiguration;
 import model.automata.simulate.configurations.MooreConfiguration;
 import model.automata.simulate.configurations.PDAConfiguration;
-import model.automata.simulate.configurations.tm.BlockConfiguration;
+import model.automata.simulate.configurations.tm.BlockTMConfiguration;
 import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
@@ -29,7 +29,7 @@ public class ConfigurationFactory {
 		MultiTapeTMConfiguration.class,
 		PDAConfiguration.class};
 
-	private static final int NUM_BLANKS = 40;
+	private static final int MAX_TAPE_SIZE = 40;
 
 	public static Configuration createInitialConfiguration(Automaton a, SymbolString ... input) {
 		State s = a.getStartState();
@@ -50,7 +50,7 @@ public class ConfigurationFactory {
 		}
 		else if(a instanceof BlockTuringMachine){
 			BlockTuringMachine tm = (BlockTuringMachine) a;
-			return new BlockConfiguration(tm, s,
+			return new BlockTMConfiguration(tm, s,
 					createTMPosArray(1)[0], 
 					createTMOutput(input)[0]);
 		}
@@ -68,7 +68,7 @@ public class ConfigurationFactory {
 	private static int[] createTMPosArray(int tapes) {
 		int[] positions = new int[tapes];
 		for (int i = 0; i < positions.length; i++){
-			positions[i] = NUM_BLANKS;
+			positions[i] = MAX_TAPE_SIZE;
 		}
 		return positions;
 	}
@@ -90,7 +90,7 @@ public class ConfigurationFactory {
 
 	private static SymbolString createBlankString() {
 		SymbolString tape = new SymbolString();
-		for (int n = 0; n < NUM_BLANKS; n++){
+		for (int n = 0; n < MAX_TAPE_SIZE; n++){
 			tape.addLast(new Symbol("" + JFLAPPreferences.getTMBlankSymbol()));
 		}
 		return tape;
