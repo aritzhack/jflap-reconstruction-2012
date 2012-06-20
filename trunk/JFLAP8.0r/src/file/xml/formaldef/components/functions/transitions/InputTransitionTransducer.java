@@ -24,14 +24,18 @@ public abstract class InputTransitionTransducer<T extends SingleInputTransition<
 	@Override
 	public Map<String, Object> addOtherLabelComponentsToMap(
 			Map<String, Object> base, T structure) {
-		base.put(TRANS_INPUT_TAG, structure.getInput());
+		base.put(getInputTag(), structure.getInput());
 		return base;
 	}
 	
+	public String getInputTag() {
+		return TRANS_INPUT_TAG;
+	}
+
 	@Override
 	public T createTransition(State from, State to,
 			Map<String, Object> remaining) {
-		SymbolString input = (SymbolString) remaining.remove(TRANS_INPUT_TAG);
+		SymbolString input = (SymbolString) remaining.remove(getInputTag());
 		return createTransition(from, to, input, remaining);
 	}
 	

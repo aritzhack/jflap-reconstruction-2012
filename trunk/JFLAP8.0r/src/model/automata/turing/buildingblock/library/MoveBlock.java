@@ -35,7 +35,6 @@ public class MoveBlock extends BaseMultiTapeBlock {
 		transitions.clear();
 		State start = getTuringMachine().getStartState();
 		State finish = getTuringMachine().getFinalStateSet().first();
-		JFLAPDebug.print("MOVE UPDATED: " + tape);
 		for(Symbol term : tape){
 			transitions.add(new MultiTapeTMTransition(start, finish, term, term, myDirection));
 		}

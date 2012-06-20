@@ -1,11 +1,13 @@
 package file.xml.formaldef.components.functions.transitions.tm;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import model.automata.InputAlphabet;
 import model.automata.SingleInputTransition;
 import model.automata.State;
 import model.automata.Transition;
+import model.automata.turing.TapeAlphabet;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.formaldef.components.alphabets.Alphabet;
@@ -26,8 +28,8 @@ import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 
 public class BlockTransitionTransducer extends InputTransitionTransducer<BlockTransition> {
 
-	public BlockTransitionTransducer(InputAlphabet alph) {
-		super(alph);
+	public BlockTransitionTransducer(InputAlphabet alph, TapeAlphabet tape) {
+		super(alph, tape);
 	}
 
 	@Override
@@ -41,7 +43,11 @@ public class BlockTransitionTransducer extends InputTransitionTransducer<BlockTr
 		return new Block(null, from.getName(), from.getID());
 	}
 
-
+@Override
+public String getInputTag() {
+	return TM_READ_TAG;
+}	
+	
 	@Override
 	public XMLTransducer getSymbolStringTransducer(String tag, Alphabet[] alphs) {
 		return new BlockSymbolStringTransducer(tag, alphs);

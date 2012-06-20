@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import oldnewstuff.main.JFLAP;
+import test.BuildingBlockTesting;
 
 import debug.JFLAPDebug;
 
@@ -40,14 +41,19 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 	private Block myPivot;
 	private Symbol myMarker;
 
-	public SingleShiftBlock(Symbol s, TuringMachineMove direction, TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, BlockLibrary.SHIFT + BlockLibrary.UNDSCR +direction.char_abbr+"_" + s, id);
+	public SingleShiftBlock(Symbol s, TuringMachineMove direction, TapeAlphabet tape, BlankSymbol blank, int id) {
+		super(tape, blank, BlockLibrary.SHIFT + BlockLibrary.UNDSCR +direction.char_abbr+"_" + s, id);
 		if (direction == TuringMachineMove.STAY)
 			throw new AutomatonException("You may not shift with a stay option.");
 
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
+		
+		
+		TapeAlphabet alph = tm.getTapeAlphabet();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
+		
 		BlockSet blocks = tm.getStates();
+		
 		myLoops = new ArrayList<Loop>();
 		myMarker = new Symbol(getBestMarker(alph));
 
@@ -72,7 +78,6 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		trans = new BlockTransition(b1,b2, new SymbolString(myMarker));
 		transitions.add(trans);
 
-		Block forPrint = b2;
 		
 		b1=b2;
 		b2 = new WriteBlock(blank.getSymbol(), alph, blank, id++);
@@ -85,7 +90,7 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		transitions.add(trans);
 
 		//do all loops
-		updateTuringMachine(alph);
+		updateTuringMachine(tape);
 
 		b1=myPivot;
 		b2 = new MoveUntilBlock(myShift, blank.getSymbol(), alph, blank, id++);
@@ -114,8 +119,8 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		Set<Symbol> sym = super.getSymbolsUsedForAlphabet(a);
-		if (a instanceof InputAlphabet)
 			sym.remove(myMarker);
+
 		return sym;
 	}
 
@@ -125,7 +130,15 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
+		
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
+		TapeAlphabet alph = tm.getTapeAlphabet();
+//		JFLAPDebug.print("INPUT: " + tape);
+//		JFLAPDebug.print("STATIC: " + BuildingBlockTesting.alph);
+		alph.retainAll(tape);
+		alph.addAll(tape);
+		alph.add(myMarker);
+		
 		Set<Symbol> symbols = new TreeSet<Symbol>(tape);
 		for (Loop loop: myLoops.toArray(new Loop[0])){
 			if (symbols.contains(loop.symbol))
@@ -138,7 +151,7 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		symbols.remove(tm.getBlankSymbol());
 
 		for (Symbol s: symbols){
-			Loop loop = createLoop(s, tape);
+			Loop loop = createLoop(s,alph);
 			myLoops.add(loop);
 		}
 	}
@@ -151,19 +164,19 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		myLoops.remove(loop);
 	}
 
-	private Loop createLoop(Symbol s, TapeAlphabet tape) {
+	private Loop createLoop(Symbol s, TapeAlphabet local) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		BlockSet blocks = tm.getStates(); 
 		BlankSymbol blank = new BlankSymbol();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 
-		Block b1 = new WriteBlock(blank.getSymbol(), tape, blank, blocks.getNextUnusedID());
+		Block b1 = new WriteBlock(blank.getSymbol(), local, blank, blocks.getNextUnusedID());
 		blocks.add(b1);
-		Block b2 = new MoveBlock(myShift, tape, blank, blocks.getNextUnusedID());
+		Block b2 = new MoveBlock(myShift, local, blank, blocks.getNextUnusedID());
 		blocks.add(b2);
-		Block b3 = new WriteBlock(s, tape, blank, blocks.getNextUnusedID());
+		Block b3 = new WriteBlock(s, local, blank, blocks.getNextUnusedID());
 		blocks.add(b3);
-		Block b4 = new MoveBlock(myOpposite, tape, blank, blocks.getNextUnusedID());
+		Block b4 = new MoveBlock(myOpposite, local, blank, blocks.getNextUnusedID());
 		blocks.add(b4);
 
 		BlockTransition t1 = new BlockTransition(myPivot, b1, new SymbolString(s));

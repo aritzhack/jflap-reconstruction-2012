@@ -15,6 +15,7 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
+import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -35,6 +36,7 @@ public class ShiftBlock extends BaseBlockTMBlock {
 		this.getTuringMachine().setStartState(myStart);
 		updateTuringMachine(tape);
 	}
+	
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {

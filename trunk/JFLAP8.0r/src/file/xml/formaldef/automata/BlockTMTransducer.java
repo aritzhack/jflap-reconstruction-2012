@@ -40,8 +40,9 @@ public class BlockTMTransducer extends AutomatonTransducer<BlockTuringMachine> {
 	public TransitionSetTransducer createTransitionTransducer(
 			List<Alphabet> alphs) {
 		InputAlphabet input = retrieveAlphabet(alphs, InputAlphabet.class);
+		TapeAlphabet tape = retrieveAlphabet(alphs, TapeAlphabet.class);
 
-		BlockTransitionTransducer ducer = new BlockTransitionTransducer(input);
+		BlockTransitionTransducer ducer = new BlockTransitionTransducer(input, tape);
 		
 		TransitionSetTransducer<BlockTransition> trans = 
 				new TransitionSetTransducer<BlockTransition>(ducer);
@@ -56,6 +57,7 @@ public class BlockTMTransducer extends AutomatonTransducer<BlockTuringMachine> {
 
 		convertAnyLibraryBlocks(blocks, tapeAlph);
 		TransitionSet<BlockTransition> oldtrans = retrieveTarget(TransitionSet.class, subComp);
+		
 		StartState oldStart = retrieveTarget(StartState.class, subComp);
 
 		TransitionSet<BlockTransition> transitions = createTransitionSet(blocks,oldtrans);
