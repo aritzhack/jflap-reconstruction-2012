@@ -2,6 +2,7 @@ package test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import preferences.JFLAPPreferences;
@@ -47,15 +48,16 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 		int id = 0;
 		//
 				Block block = new ShiftBlock(TuringMachineMove.LEFT, alph, blank, 0);
+				alph.addAll(block.getSymbolsUsedForAlphabet(alph));
 				SymbolString input = new SymbolString(a,a,a,b,b,c,c);
 				testBlock(block, input);
 		////
-		//		block = new FinalBlock(alph, blank, id);
-		//		testBlock(block, input);
-		////
-		////		block = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id);
-		////		testBlock(block, input);
-		////
+//				block = new FinalBlock(alph, blank, id);
+//				testBlock(block, input);
+//		////
+//				block = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id);
+//				testBlock(block, input);
+//		////
 		//		block = new MoveUntilBlock(TuringMachineMove.RIGHT, c, alph, blank, id);
 		//		testBlock(block, input);
 
@@ -149,23 +151,29 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 
 	private void testBlock(Block block, SymbolString input) {
 		outPrintln("\n\nTESTING: \n" + block.toDetailedString());
-		AutoSimulator sim = new AutoSimulator(block.getTuringMachine(), 0);
+		SingleInputSimulator sim = new SingleInputSimulator(block.getTuringMachine(), 0);
 		sim.beginSimulation(input);
-		List<ConfigurationChain> accept = sim.getNextAccept();
-		outPrintln("The result of a "+ block.toString() + " on abbcc.: \n" + 
-				(accept.isEmpty() ? "failed" : trimToResult(accept.get(0))));
+		List<ConfigurationChain> accept = new ArrayList<ConfigurationChain>();
+		while(sim.canStep()){
+			sim.step();
+			accept = new ArrayList<ConfigurationChain>(sim.getChains());
+			outPrintln("" + accept);
+		}
+		outPrintln("The result of a "+ block.toString() + " on " + input + ": \n" + 
+				(accept.isEmpty() || accept.get(0).isReject() ? "failed" : accept.get(0).getLast().getPositionForIndex(0) + " | "
+														+ trimToResult(accept.get(0))));
 	}
 
 
 	private SymbolString trimToResult(ConfigurationChain chain) {
 		SymbolString s = chain.getLast().getStringForIndex(0);
 		Symbol b = JFLAPPreferences.getTMBlankSymbol();
-		while (s.getFirst().equals(b)){
-			s.removeFirst();
-		}
-		while (s.getLast().equals(b)){
-			s.removeLast();
-		}
+//		while (s.getFirst().equals(b)){
+//			s.removeFirst();
+//		}
+//		while (s.getLast().equals(b)){
+//			s.removeLast();
+//		}
 		return s;
 	}
 

@@ -56,20 +56,15 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 				!read.equals(input[0]))
 			return false;
 		
-		JFLAPDebug.print(trans);
-		JFLAPDebug.print("Read: " + read);
-
 		
 		TMConfiguration config = applyBlock(trans.getToState());
 
 		if (config == null){
-			JFLAPDebug.print(false);
 			return false;
 		}
 		
 		myUpdatedTape = config.getStringForIndex(0);
 		myUpdatedIndex = config.getPositionForIndex(0);
-		JFLAPDebug.print(myUpdatedIndex + ": " + myUpdatedTape);
 		return true;
 	}
 
@@ -80,7 +75,6 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	 */
 	private TMConfiguration applyBlock(Block toState) {
 		TMConfiguration init = createInitialConfig(toState);
-			JFLAPDebug.print(init);
 		AutoSimulator auto = new AutoSimulator(toState.getTuringMachine(),
 				getSpecialCase());
 		
@@ -90,7 +84,7 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 		if (chainList.isEmpty()) return null;
 		
 		ConfigurationChain chain = chainList.get(0);
-		return (MultiTapeTMConfiguration) chain.getLast();
+		return (TMConfiguration) chain.getLast();
 	}
 
 	private TMConfiguration createInitialConfig(Block toState) {

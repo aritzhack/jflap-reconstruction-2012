@@ -27,6 +27,7 @@ public class AutoSimulator extends AutomatonSimulator{
 				return chains;
 			}
 		}
+		
 		return new ArrayList<ConfigurationChain>();
 	}
 

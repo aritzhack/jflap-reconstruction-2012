@@ -84,17 +84,21 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		LinkedList<Configuration<S,T>> configs = new LinkedList<Configuration<S,T>>();
 
 
+		JFLAPDebug.print("In machine:\n" + this.getAutomaton());
+		
 		if (!this.hasNextState()&&
 				!(this.isAccept() || this.isReject())){
 			Configuration<S, T> clone = this.copy();
 			configs.add(clone);
-			clone.updateAccept();
 			clone.updateReject();
+			JFLAPDebug.print("Final Config:\n" + clone);
 
 		}
 		else {
 			for (T trans : myValidTransitons){
+				JFLAPDebug.print(trans);
 				Configuration c = createNextConfiguration(trans);
+				JFLAPDebug.print("NEXT CONFIG:\n" + c);
 				configs.add(c);
 				c.setTransitionTo(trans);
 				c.updateAccept();

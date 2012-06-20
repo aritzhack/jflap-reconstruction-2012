@@ -41,7 +41,6 @@ public class ShiftBlock extends BaseBlockTMBlock {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		BlockSet blocks = tm.getStates();
 		Set<Symbol> symbols = new TreeSet<Symbol>(tape);
-		JFLAPDebug.print(tape);
 		for (Symbol sym: mySubBlocks.keySet().toArray(new Symbol[0])){
 			if (symbols.contains(sym))
 				symbols.remove(sym);
