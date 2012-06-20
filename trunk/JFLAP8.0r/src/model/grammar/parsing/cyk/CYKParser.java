@@ -49,6 +49,7 @@ public class CYKParser extends Parser {
 	@SuppressWarnings("unchecked")
 	private void initializeTable(int length) {
 		myParseTable = new Set[length][length];
+		
 		for (int i = 0; i < length; i++) {
 			for (int j = i; j < length; j++) {
 				myParseTable[i][j] = new HashSet<CYKParseNode>();
@@ -76,9 +77,11 @@ public class CYKParser extends Parser {
 	private boolean addTerminalProduction() {
 		int i = myStartIndex;
 		SymbolString current = getInput().subList(i, i + 1);
+		
 		for (Production p : myProductions) {
 			if (p.getRHS().equals(current)) {
 				CYKParseNode node = new CYKParseNode(p, i);
+				
 				myParseTable[i][i].add(node);
 			}
 		}
@@ -106,9 +109,11 @@ public class CYKParser extends Parser {
 			for (Variable A : getLHSVariableSet(myStartIndex, k)) {
 				for (Variable B : getLHSVariableSet(k + 1, myStartIndex+myIncrement)) {
 					SymbolString concat = new SymbolString(A, B);
+					
 					for (Production p : myProductions) {
 						if (p.getRHS().equals(concat)) {
 							CYKParseNode node = new CYKParseNode(p, k);
+							
 							myParseTable[myStartIndex][myStartIndex+myIncrement].add(node);
 						}
 					}
@@ -128,8 +133,9 @@ public class CYKParser extends Parser {
 	 */
 	public Derivation getDerivation() {
 		myAnswerTrace = new ArrayList<Production>();
-		getTrace(getGrammar().getStartVariable(), 0,
-				getInput().size() - 1);
+		Variable start = getGrammar().getStartVariable();
+		
+		getTrace(start, 0, getInput().size() - 1);
 		
 		Derivation answer = Derivation.createLeftmostDerivation(myAnswerTrace);
 		return answer;
@@ -151,8 +157,9 @@ public class CYKParser extends Parser {
 	 */
 	private boolean getTrace(Variable LHS, int start, int end) {
 		if (start == end) {
-			Production terminalProduction = new Production(LHS,
-					(Terminal) getInput().get(start));
+			Terminal character = (Terminal) getInput().get(start);
+			Production terminalProduction = new Production(LHS, character);
+			
 			for (Production p : myProductions) {
 				if (p.equals(terminalProduction)) {
 					myAnswerTrace.add(terminalProduction);
@@ -163,13 +170,12 @@ public class CYKParser extends Parser {
 		}
 		for (CYKParseNode node : myParseTable[start][end]) {
 			Production nodeProduction = new Production(LHS, node.getRHS());
+			
 			for (Production p : myProductions) {
 				if (p.equals(nodeProduction)) {
 					myAnswerTrace.add(nodeProduction);
-					if (getTrace(node.getFirstRHSVariable(), start,
-							node.getK())
-							&& getTrace(node.getSecondRHSVariable(),
-									node.getK() + 1, end)) {
+					if (getTrace(node.getFirstRHSVariable(), start, node.getK()) && 
+						getTrace(node.getSecondRHSVariable(), node.getK() + 1, end)) {
 						return true;
 					}
 					myAnswerTrace.remove(nodeProduction);
@@ -209,6 +215,7 @@ public class CYKParser extends Parser {
 	 */
 	private Set<Variable> getLHSVariableSet(int start, int end) {
 		Set<Variable> LHSVars = new HashSet<Variable>();
+		
 		for (CYKParseNode node : myParseTable[start][end]) {
 			LHSVars.add(node.getLHS());
 		}
@@ -240,15 +247,17 @@ public class CYKParser extends Parser {
 			myIncrement++;
 		}
 		return nextTableCell;
-		
 	}
 
 	@Override
 	public boolean resetParserStateOnly() {
-		myProductions = getGrammar().getProductionSet();
-		myStartVariable = getGrammar().getStartVariable();
+		Grammar gram = getGrammar();
+		
+		myProductions = gram.getProductionSet();
+		myStartVariable = gram.getStartVariable();
 		myAnswerTrace = new ArrayList<Production>();
 		myStartIndex = myIncrement = 0;
+		
 		if (getInput() != null) {
 			this.initializeTable(getInput().size());
 		}
@@ -267,12 +276,14 @@ public class CYKParser extends Parser {
 	public Set<Symbol> getNodeAtIndex(int row, int col){
 		int previousRow = myStartIndex-1;
 		int previousCol = previousRow + myIncrement;
+		
 		if(myStartIndex-1==-1){
 			previousRow = getInput().size()-myIncrement;
 			previousCol = previousRow+myIncrement-1;
 		}
-		if(myParseTable[row][col]!= null && row==previousRow &&col==previousCol){
+		if(myParseTable[row][col]!= null && row==previousRow && col==previousCol){
 			Set<Symbol> set = new TreeSet<Symbol>();
+			
 			for(CYKParseNode node : myParseTable[row][col]){
 				set.add(node.getLHS());
 			}

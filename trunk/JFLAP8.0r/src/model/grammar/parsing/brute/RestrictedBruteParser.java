@@ -8,17 +8,12 @@ import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.Derivation;
 
-public class RestrictedBruteParser extends BruteParser {
+public class RestrictedBruteParser extends UnrestrictedBruteParser {
 
 	public RestrictedBruteParser(Grammar g) {
 		super(g);
 	}
 
-
-
-
-
-	// restricted only
 	public int getNumberOfTerminals (SymbolString string) {
 		int terminals = 0;
 
@@ -34,10 +29,9 @@ public class RestrictedBruteParser extends BruteParser {
 	public boolean isPossibleDerivation(SymbolString derivation) {
 		if (!super.isPossibleDerivation(derivation))
 			return false;
-		//int targetSearched = 0;
+		
 		boolean startBookend = false, endBookend = false;
 		ArrayList<SymbolString> discrete = new ArrayList<SymbolString>();
-		//int start = -1;
 
 		/*
 		 * Set the start and end "bookeneds", that is, the derivation is padded
@@ -86,15 +80,5 @@ public class RestrictedBruteParser extends BruteParser {
 			}
 		}
 		return true;
-	}
-
-
-
-
-
-	@Override
-	public Derivation getDerivation() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
