@@ -88,6 +88,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 				!(this.isAccept() || this.isReject())){
 			Configuration<S, T> clone = this.copy();
 			configs.add(clone);
+			clone.updateAccept();
 			clone.updateReject();
 
 		}
