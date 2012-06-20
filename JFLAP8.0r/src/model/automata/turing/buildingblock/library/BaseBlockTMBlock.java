@@ -3,6 +3,8 @@ package model.automata.turing.buildingblock.library;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -25,6 +27,7 @@ public abstract class BaseBlockTMBlock extends Block implements ChangeListener{
 	public BaseBlockTMBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
 		super(createTuringMachine(blank, alph), name, id);
 		alph.addListener(this);
+//		JFLAPDebug.print("ORIGINAL: " + alph);
 	}
 	
 	private static BlockTuringMachine createTuringMachine(BlankSymbol blank, TapeAlphabet alph) {
@@ -52,17 +55,6 @@ public abstract class BaseBlockTMBlock extends Block implements ChangeListener{
 		if(event.comesFrom(TapeAlphabet.class)){
 			updateTuringMachine((TapeAlphabet) event.getSource());
 		}
-	}
-	
-	public void addStartAndFinalStates(){
-		TuringMachine tm = getTuringMachine();
-		StateSet states = tm.getStates();
-		
-		State start = states.createAndAddState();
-		tm.setStartState(start);
-		
-		State finalState = states.createAndAddState();
-		tm.getFinalStateSet().add(finalState);
 	}
 	
 	public abstract void updateTuringMachine(TapeAlphabet tape);

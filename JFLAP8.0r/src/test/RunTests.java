@@ -15,7 +15,7 @@ public class RunTests {
 //		FSATest.class, 
 //		GrammarTest.class,
 //		ParserTest.class,
-		FileTester.class,
+//		FileTester.class,
 		BuildingBlockTesting.class
 	};
 	
