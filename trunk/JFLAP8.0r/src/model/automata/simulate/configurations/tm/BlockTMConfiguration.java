@@ -3,6 +3,8 @@ package model.automata.simulate.configurations.tm;
 import java.util.Arrays;
 import java.util.List;
 
+import oldnewstuff.main.JFLAP;
+
 import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
@@ -15,6 +17,7 @@ import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.Configuration;
 import model.automata.simulate.ConfigurationChain;
 import model.automata.simulate.ConfigurationFactory;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTransition;
@@ -43,19 +46,30 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	protected boolean canMoveAlongTransition(BlockTransition trans) {
 		Symbol read = this.getReadForTape(0);
 		Symbol[] input = trans.getInput();
+	
+
 		if (input[0].getString().equals(JFLAPConstants.NOT) &&
 				read.equals(input[1]))
 			return false;
-		if (!input[0].getString().equals(JFLAPConstants.TILDE)&&
+		if (input.length == 1 &&
+				!input[0].getString().equals(JFLAPConstants.TILDE) &&
 				!read.equals(input[0]))
 			return false;
 		
-		MultiTapeTMConfiguration config = applyBlock(trans.getToState());
+		JFLAPDebug.print(trans);
+		JFLAPDebug.print("Read: " + read);
+
 		
-		if (config == null) return false;
+		TMConfiguration config = applyBlock(trans.getToState());
+
+		if (config == null){
+			JFLAPDebug.print(false);
+			return false;
+		}
 		
 		myUpdatedTape = config.getStringForIndex(0);
 		myUpdatedIndex = config.getPositionForIndex(0);
+		JFLAPDebug.print(myUpdatedIndex + ": " + myUpdatedTape);
 		return true;
 	}
 
@@ -64,15 +78,14 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	 * @param toState
 	 * @return
 	 */
-	private MultiTapeTMConfiguration applyBlock(Block toState) {
-		TuringMachine tm = toState.getTuringMachine();
-		SymbolString input = createTrimmedString();
-		
+	private TMConfiguration applyBlock(Block toState) {
+		TMConfiguration init = createInitialConfig(toState);
+			JFLAPDebug.print(init);
 		AutoSimulator auto = new AutoSimulator(toState.getTuringMachine(),
 				getSpecialCase());
 		
 		
-		auto.beginSimulation(input);
+		auto.beginSimulation(init);
 		List<ConfigurationChain> chainList = auto.getNextAccept();
 		if (chainList.isEmpty()) return null;
 		
@@ -80,13 +93,21 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 		return (MultiTapeTMConfiguration) chain.getLast();
 	}
 
-	private SymbolString createTrimmedString() {
-		SymbolString s = this.getStringForIndex(0).subList(getPositionForIndex(0));
-		Symbol b = JFLAPPreferences.getTMBlankSymbol();
-		while (s.getLast().equals(b)){
-			s.removeLast();
+	private TMConfiguration createInitialConfig(Block toState) {
+		TuringMachine tm = toState.getTuringMachine();
+		SymbolString input = getStringForIndex(0).copy();
+		if (tm instanceof MultiTapeTuringMachine){
+			return new MultiTapeTMConfiguration((MultiTapeTuringMachine) tm, 
+								tm.getStartState(), 
+								new int[]{getPositionForIndex(0)}, 
+								input);
 		}
-		return s;
+		else{
+			return new BlockTMConfiguration((BlockTuringMachine) tm, 
+					tm.getStartState(),
+					getPositionForIndex(0), 
+					input);
+		}
 	}
 
 	@Override

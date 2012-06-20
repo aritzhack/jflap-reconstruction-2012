@@ -46,13 +46,14 @@ public abstract class Acceptor<T extends Transition<T>> extends Automaton<T> {
 			}
 			return;	
 		}
-		else if (event.comesFrom(StateSet.class) &&
+		else if (event.comesFrom(this.getStates()) &&
 				event.getType() == ITEM_REMOVED){
-			Collection<State> added = (Collection<State>) event.getArg(0);
-			StateSet states = this.getFinalStateSet();
-			for (State s: added){
-				if (states.contains(s))
-					states.remove(s);
+			Collection<State> removed = (Collection<State>) event.getArg(0);
+
+			FinalStateSet finalStates = this.getFinalStateSet();
+			for (State s: removed){
+				if (finalStates.contains(s))
+					finalStates.remove(s);
 			}
 				
 		}

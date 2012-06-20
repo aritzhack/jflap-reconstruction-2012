@@ -29,7 +29,7 @@ public class ConfigurationFactory {
 		MultiTapeTMConfiguration.class,
 		PDAConfiguration.class};
 
-	private static final int MAX_TAPE_SIZE = 40;
+	private static final int MAX_TAPE_SIZE = 5;
 
 	public static Configuration createInitialConfiguration(Automaton a, SymbolString ... input) {
 		State s = a.getStartState();

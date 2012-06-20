@@ -70,10 +70,5 @@ public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>
 	}
 
 
-	@Override
-	public InputAlphabet getInputAlphabet() {
-		return super.getInputAlphabet();
-	}
-
 
 }

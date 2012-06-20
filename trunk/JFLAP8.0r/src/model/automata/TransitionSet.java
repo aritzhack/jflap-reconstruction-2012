@@ -151,10 +151,8 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	 */
 	public void removeForStates(Collection<State> states) {
 		for (State s: states){
-			JFLAPDebug.print("BEFORE: " + this.size());
 			this.removeAll(this.getTransitionsFromState(s));
 			this.removeAll(this.getTransitionsToState(s));
-			JFLAPDebug.print("AFTER: " + this.size());
 
 		}
 	}
