@@ -79,7 +79,8 @@ public class CYKParser extends Parser {
 		SymbolString current = getInput().subList(i, i + 1);
 		
 		for (Production p : myProductions) {
-			if (p.getRHS().equals(current)) {
+			SymbolString RHS = new SymbolString(p.getRHS());
+			if (RHS.equals(current)) {
 				CYKParseNode node = new CYKParseNode(p, i);
 				
 				myParseTable[i][i].add(node);
@@ -111,7 +112,8 @@ public class CYKParser extends Parser {
 					SymbolString concat = new SymbolString(A, B);
 					
 					for (Production p : myProductions) {
-						if (p.getRHS().equals(concat)) {
+						SymbolString RHS = new SymbolString(p.getRHS());
+						if (RHS.equals(concat)) {
 							CYKParseNode node = new CYKParseNode(p, k);
 							
 							myParseTable[myStartIndex][myStartIndex+myIncrement].add(node);
