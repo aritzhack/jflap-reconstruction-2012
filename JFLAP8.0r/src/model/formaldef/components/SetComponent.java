@@ -68,7 +68,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 
 	@Override
 	public void clear() {
-		this.removeAll(this);
+		this.removeAll(new TreeSet<T>(this));
 	}
 
 	@Override

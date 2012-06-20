@@ -54,7 +54,9 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 			myStartState.checkAndRemove(s);
 		}
 		else if(event.comesFrom(StartState.class) && event.getType() == SPECIAL_CHANGED){
-			this.getStates().add(this.getStartState());
+			State s = this.getStartState();
+			if (s != null)
+				this.getStates().add(s);
 		}
 		else if (event.comesFrom(TransitionSet.class) && 
 				event.getType() == ITEM_ADDED){

@@ -123,7 +123,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		for (int i = 0; i < clones.length; i++)
 			clones[i] = myStrings[i].copy();
 		clones = this.assembleUpdatedStrings(clones, trans);
-
+		
 		try {
 			return createConfig( this.getAutomaton(), s, ppos, myPrimary, position, clones);
 		} catch (Exception e) {
