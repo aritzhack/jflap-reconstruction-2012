@@ -40,11 +40,10 @@ import file.xml.XMLCodec;
 
 public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 
-	public static TapeAlphabet alph;
 	
 	@Override
 	public void runTest() {
-		alph = new TapeAlphabet();
+		TapeAlphabet alph = new TapeAlphabet();
 		Symbol a= new Symbol("a");
 		Symbol b = new Symbol("b");
 		Symbol c = new Symbol("c");
@@ -54,46 +53,9 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 		alph.add(blank.getSymbol());
 		//
 		Block block = new ShiftBlock(TuringMachineMove.LEFT, alph, blank, 0);
-		alph.add(new Symbol("d"));
-		for (State bl: block.getTuringMachine().getStates()){
-			JFLAPDebug.print(bl.toDetailedString());
-			if (bl instanceof BaseBlockTMBlock){
-				for(State bl2: ((BaseBlockTMBlock) bl).getTuringMachine().getStates()){
-					JFLAPDebug.print("\t" + bl2.toDetailedString());
+		SymbolString input = new SymbolString(a,a,a,b,b,c,c);
+		testBlock(block, input);
 
-				}
-				
-			}
-				
-		}
-		//				SymbolString input = new SymbolString(a,a,a,b,b,c,c);
-		//				testBlock(block, input);
-
-		Block start = new StartBlock(alph, blank, 1);
-
-
-		BlockSet blocks = new BlockSet();
-		InputAlphabet inputAlph = new InputAlphabet();
-		TransitionSet<BlockTransition> transitions = new TransitionSet<BlockTransition>();
-		StartState startState = new StartState();
-		FinalStateSet finalStates = new FinalStateSet();
-
-		startState.setState(start);
-		blocks.add(block);
-		transitions.add(new BlockTransition(start, block, new SymbolString(new Symbol("~"))));
-
-		BlockTuringMachine machine = new BlockTuringMachine(blocks, alph, blank, inputAlph, transitions, startState, finalStates);
-		for (State bl: machine.getStates()){
-			JFLAPDebug.print(bl.toDetailedString());
-			if (bl instanceof BaseBlockTMBlock){
-				for(State bl2: ((BaseBlockTMBlock) bl).getTuringMachine().getStates()){
-					JFLAPDebug.print("\t" + bl2.toDetailedString());
-
-				}
-				
-			}
-				
-		}
 		////
 		//				block = new FinalBlock(alph, blank, id);
 		//				testBlock(block, input);
@@ -110,19 +72,19 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 		//		block = new WriteBlock(c, alph, blank, id);
 		//		testBlock(block, input);
 
-		//		String toSave = System.getProperties().getProperty("user.dir")
-		//				+ "/filetest";
-		//		File f = new File(toSave + "/blockTM_unaryAdd.jff");
+				String toSave = System.getProperties().getProperty("user.dir")
+						+ "/filetest";
+				File f = new File(toSave + "/blockTM_unaryAdd.jff");
+		
+				BlockTuringMachine blockTM = (BlockTuringMachine) new XMLCodec().decode(f);
+				outPrintln("After import:\n" + blockTM);
 		//
-		//		BlockTuringMachine blockTM = (BlockTuringMachine) new XMLCodec().decode(f);
-		//		outPrintln("After import:\n" + blockTM);
-		//
-		//		SymbolString s = blockTM.createFromString("1111+1111", false);
-		//		AutoSimulator sim1 = new AutoSimulator(blockTM, SingleInputSimulator.DEFAULT);
-		//		sim1.beginSimulation(s);
-		//		List<ConfigurationChain> accept1 = sim1.getNextAccept();
-		//		outPrintln("The result of a TM on "+ s +": \n" + 
-		//				(accept1.isEmpty() ? "failed" : trimToResult(accept1.get(0))));
+				SymbolString s = blockTM.createFromString("1111+1111", false);
+				AutoSimulator sim1 = new AutoSimulator(blockTM, SingleInputSimulator.DEFAULT);
+				sim1.beginSimulation(s);
+				List<ConfigurationChain> accept1 = sim1.getNextAccept();
+				outPrintln("The result of a TM on "+ s +": \n" + 
+						(accept1.isEmpty() ? "failed" : trimToResult(accept1.get(0))));
 
 
 		//		ArrayList<State> states = new ArrayList<State>(blockTM.getStates());

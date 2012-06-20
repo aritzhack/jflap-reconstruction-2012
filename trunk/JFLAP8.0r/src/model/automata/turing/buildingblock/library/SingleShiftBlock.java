@@ -93,8 +93,8 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		updateTuringMachine(tape);
 
 		b1=myPivot;
-		b2 = new MoveUntilBlock(myShift, blank.getSymbol(), alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		b2 = new MoveUntilBlock(myShift, myMarker, alph, blank, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(blank.getSymbol()));
 		transitions.add(trans);
 
 		b1=b2;
