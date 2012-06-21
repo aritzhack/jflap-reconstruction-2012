@@ -1,6 +1,7 @@
 package model.automata.turing.buildingblock.library;
 
 import model.automata.State;
+import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
@@ -13,6 +14,7 @@ public class MoveUntilNotBlock extends BaseMultiTapeBlock{
 
 	private MultiTapeTMTransition myNotTransition;
 	private Symbol mySymbol;
+	private TuringMachineMove myDirection;
 	
 	public MoveUntilNotBlock(TuringMachineMove direction, Symbol read,
 			TapeAlphabet alph, BlankSymbol blank, int id) {
@@ -23,11 +25,14 @@ public class MoveUntilNotBlock extends BaseMultiTapeBlock{
 		addStartAndFinalStates();
 		
 		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
 		
 		State start = tm.getStartState();
+		State intermediateState = states.createAndAddState();
 		
-		myNotTransition = new MultiTapeTMTransition(start, 
-				start, read, read, direction);
+		myNotTransition = new MultiTapeTMTransition(intermediateState, 
+				intermediateState, read, read, direction);
+		myDirection = direction;
 		
 		tm.getTransitions().add(myNotTransition);
 		updateTuringMachine(alph);
@@ -43,16 +48,22 @@ public class MoveUntilNotBlock extends BaseMultiTapeBlock{
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
+		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
+		
 		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
 		transitions.clear();
 		transitions.add(myNotTransition);
 		
-		State start = getTuringMachine().getStartState();
-		State finish = getTuringMachine().getFinalStateSet().first();
+		State start = tm.getStartState();
+		State intermediate = states.getStateWithID(2);
+		State finish = tm.getFinalStateSet().first();
 		
 		for(Symbol term : tape){
+			transitions.add(new MultiTapeTMTransition(start, intermediate, term, term, myDirection));
+			
 			if(!term.equals(mySymbol)){
-				transitions.add(new MultiTapeTMTransition(start, finish, term, term, TuringMachineMove.STAY));
+				transitions.add(new MultiTapeTMTransition(intermediate, finish, term, term, TuringMachineMove.STAY));
 			}
 		}
 	}

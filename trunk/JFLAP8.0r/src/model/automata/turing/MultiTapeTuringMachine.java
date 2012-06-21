@@ -18,6 +18,21 @@ public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>
 		myNumTapes = numTapes;
 	}
 	
+	public MultiTapeTuringMachine(int i){
+		this(new StateSet(),
+				new TapeAlphabet(),
+				new BlankSymbol(),
+				new InputAlphabet(),
+				new TransitionSet<MultiTapeTMTransition>(),
+				new StartState(),
+				new FinalStateSet(),
+				i);
+	}
+	
+	public MultiTapeTuringMachine(){
+		this(1);
+	}
+	
 	@Override
 	public String getDescriptionName() {
 		return "Turing Machine (TM)";

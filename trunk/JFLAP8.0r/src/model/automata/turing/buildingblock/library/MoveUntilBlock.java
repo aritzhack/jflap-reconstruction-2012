@@ -34,11 +34,13 @@ public class MoveUntilBlock extends BaseMultiTapeBlock {
 		addStartAndFinalStates();
 		
 		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
 		
 		State start = tm.getStartState();
+		State intermediateState = states.createAndAddState();
 		State finalState = tm.getFinalStateSet().first();
 		
-		myFinalTransition = new MultiTapeTMTransition(start, 
+		myFinalTransition = new MultiTapeTMTransition(intermediateState, 
 				finalState, read, read, TuringMachineMove.STAY);
 		
 		tm.getTransitions().add(myFinalTransition);
@@ -55,15 +57,21 @@ public class MoveUntilBlock extends BaseMultiTapeBlock {
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
+		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
+		
+		TransitionSet<MultiTapeTMTransition> transitions = tm.getTransitions();
 		transitions.clear();
 		transitions.add(myFinalTransition);
 		
-		State start = getTuringMachine().getStartState();
+		State start = tm.getStartState();
+		State intermediate = states.getStateWithID(2);
 		
 		for(Symbol term : tape){
+			transitions.add(new MultiTapeTMTransition(start, intermediate, term, term, myMove));
+			
 			if(!term.equals(mySymbol)){
-				transitions.add(new MultiTapeTMTransition(start, start, term, term, myMove));
+				transitions.add(new MultiTapeTMTransition(intermediate, intermediate, term, term, myMove));
 			}
 		}
 	}
