@@ -43,6 +43,7 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 		return addAll(toAdd);	
 		}
 
+	
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		ChangeEvent e = new AddEvent<T>(this, c);
