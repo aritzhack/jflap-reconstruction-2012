@@ -22,11 +22,10 @@ import file.xml.formaldef.components.functions.transitions.TransitionSetTransduc
 
 public class MealyMachineTransducer extends TransducerTransducer<MealyMachine> {
 
-	private static final String MEALY_MACHINE = "mealy_machine";
 
 	@Override
 	public String getTag() {
-		return MEALY_MACHINE;
+		return MEALY_TAG;
 	}
 
 	@Override

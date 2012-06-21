@@ -78,19 +78,26 @@ public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Tran
 			input.removeLast();
 		}
 		
-		input = TMConfiguration.bufferString(input, bufferSize);
+		input = TMConfiguration.createBlankBufferedString(input, bufferSize);
 		
 		pos+=bufferSize;
 
 		return pos;
 	}
 	
-	public static SymbolString bufferString(SymbolString input, int i) {
-		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
-		for(int j = 0; j<i; j++){
-			input.addFirst(blank);
-			input.addLast(blank);
-		}
+	public static SymbolString createBlankBufferedString(SymbolString input, int n) {
+		input = new SymbolString(input);
+		input.addAll(0,createBlankTape(n));
+		input.addAll(createBlankTape(n));
 		return input;
+	}
+
+	public static SymbolString createBlankTape(int size) {
+		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
+		SymbolString blanks = new SymbolString();
+		for (int i = 0; i< size; i++){
+			blanks.add(blank);
+		}
+		return blanks;
 	}
 }

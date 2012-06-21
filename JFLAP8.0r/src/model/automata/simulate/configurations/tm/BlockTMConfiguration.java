@@ -19,6 +19,7 @@ import model.automata.simulate.ConfigurationChain;
 import model.automata.simulate.ConfigurationFactory;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
+import model.automata.turing.UniversalTuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
@@ -90,16 +91,29 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	private TMConfiguration createInitialConfig(Block toState) {
 		TuringMachine tm = toState.getTuringMachine();
 		SymbolString input = getStringForIndex(0).copy();
-		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
 		
 		int pos = getPositionForIndex(0);
 		
-			
-		if (tm instanceof MultiTapeTuringMachine){
+		if (tm instanceof UniversalTuringMachine){
+			return ((UniversalTuringMachine)tm).createInitalConfig(input, pos);
+		}
+		else if (tm instanceof MultiTapeTuringMachine){
+			//MULTI-TAPE TM's can be in a block, the input returned is simply
+			//whatever is only the 0th tape.
+			int numTapes = ((MultiTapeTuringMachine) tm).getNumTapes();
+			int size = input.size();
+			int[] positions = new int[numTapes];
+			SymbolString[] inputArray = new SymbolString[numTapes];
+			inputArray[0] = input;
+			for (int i = 0; i< numTapes; i++){
+				positions[i] = pos;
+				if (i > 0)
+					inputArray[i] = TMConfiguration.createBlankTape(size);
+			}
 			return new MultiTapeTMConfiguration((MultiTapeTuringMachine) tm, 
 								tm.getStartState(), 
-								new int[]{pos}, 
-								input);
+								positions, 
+								inputArray);
 		}
 		else{
 			return new BlockTMConfiguration((BlockTuringMachine) tm, 

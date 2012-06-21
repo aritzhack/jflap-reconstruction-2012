@@ -76,6 +76,11 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 		
 	}
 	
+	@Override
+	public String toString() {
+		return myState + " --> " + myOutput;
+	}
+	
 	
 }
 
