@@ -6,10 +6,10 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 
-public abstract class StartFinalBlock extends BaseMultiTapeBlock {
+public abstract class StartHaltBlock extends BaseMultiTapeBlock {
 
 
-	public StartFinalBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
+	public StartHaltBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
 		super(alph, blank, name, id);
 		
 		TuringMachine tm = getTuringMachine();

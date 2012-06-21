@@ -7,7 +7,7 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.formaldef.components.symbols.Symbol;
 
-public class StartBlock extends StartFinalBlock {
+public class StartBlock extends StartHaltBlock {
 
 	public StartBlock(TapeAlphabet alph, BlankSymbol blank, int id) {
 		super(alph, blank, BlockLibrary.START, id);
