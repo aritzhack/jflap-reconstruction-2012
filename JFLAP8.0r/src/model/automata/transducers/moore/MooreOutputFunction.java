@@ -32,7 +32,7 @@ public class MooreOutputFunction extends OutputFunction<MooreOutputFunction> {
 
 	@Override
 	public MooreOutputFunction copy() {
-		return new MooreOutputFunction(getState(), getOutput());
+		return new MooreOutputFunction(getState(), new SymbolString(getOutput()));
 	}
 
 }

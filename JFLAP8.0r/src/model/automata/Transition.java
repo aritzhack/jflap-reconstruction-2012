@@ -117,6 +117,7 @@ public abstract class Transition<T extends Transition<T>> extends
 		return myFrom.hashCode() ^ myTo.hashCode();
 	}
 	
+	@Override
 	protected void applySetTo(T other) {
 		this.myFrom = other.myFrom;
 		this.myTo = other.myTo;

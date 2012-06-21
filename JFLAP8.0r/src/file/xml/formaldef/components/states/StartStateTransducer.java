@@ -1,5 +1,7 @@
 package file.xml.formaldef.components.states;
 
+import java.util.List;
+
 import model.automata.StartState;
 import model.automata.State;
 
@@ -20,8 +22,10 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	
 	@Override
 	public StartState fromStructureRoot(Element root) {
-		Element state_ele = XMLHelper.getChildrenWithTag(root, myStateTransducer.getTag()).get(0);
-		State s = myStateTransducer.fromStructureRoot(state_ele);
+		List<Element> state_ele = XMLHelper.getChildrenWithTag(root, myStateTransducer.getTag());
+		State s= null;
+		if (!state_ele.isEmpty())
+			s = myStateTransducer.fromStructureRoot(state_ele.get(0));
 		return new StartState(s);
 	}
 
@@ -29,7 +33,8 @@ public class StartStateTransducer extends StructureTransducer<StartState> {
 	public Element appendComponentsToRoot(Document doc, StartState structure,
 			Element root) {
 		State s = structure.getState();
-		root.appendChild(myStateTransducer.toXMLTree(doc, s));
+		if (s != null)
+			root.appendChild(myStateTransducer.toXMLTree(doc, s));
 		return root;
 	}
 

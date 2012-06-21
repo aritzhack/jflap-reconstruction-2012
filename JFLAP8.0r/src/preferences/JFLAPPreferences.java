@@ -54,6 +54,12 @@ public class JFLAPPreferences {
 		return LAMBDA;
 	}
 	
+	public static final Terminal SLR_MARKER = new Terminal("_");
+
+	public static int getDefaultTMBufferSize(){
+		return 5;
+	}
+	
 	/**
 	 * Returns the main mask for menu items. The main mask is the mask of keys
 	 * that are held down to typically invoke a menu item. This varies from

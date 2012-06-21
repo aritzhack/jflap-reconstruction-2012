@@ -13,8 +13,6 @@ import util.JFLAPConstants;
 
 public class State extends SetSubComponent<State> implements JFLAPConstants {
 
-	private String myLabel;
-
 	private int myID;
 
 	private String myName;
@@ -56,9 +54,7 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 	public State copy(){
 		try{
 			Constructor c = this.getClass().getConstructor(String.class, int.class);
-			State s = (State) c.newInstance(this.getName(), this.getID());
-			s.setLabel(this.getLabel());
-			return s;
+			return (State) c.newInstance(this.getName(), this.getID());
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
@@ -66,20 +62,6 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 
 	}
 
-
-	public void setLabel(String label) {
-		myLabel = label;
-	}
-
-	public boolean clearLabel() {
-		boolean b = myLabel != null;
-		myLabel = null;
-		return b;
-	}
-
-	public String getLabel() {
-		return myLabel;
-	}
 
 	@Override
 	public String toString() {

@@ -6,6 +6,7 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
 import model.formaldef.components.alphabets.Alphabet;
+import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
@@ -15,6 +16,10 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	public MealyOutputFunction(State s,  SymbolString input, SymbolString output) {
 		super(s, output);
 		myInput = input;
+	}
+
+	public MealyOutputFunction(FSATransition t, SymbolString output) {
+		this(t.getFromState(), new SymbolString(t.getInput()), output);
 	}
 
 	@Override
@@ -28,8 +33,8 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 		return null;
 	}
 
-	public SymbolString getInput(){
-		return myInput;
+	public Symbol[] getInput(){
+		return myInput.toArray(new Symbol[0]);
 	}
 	
 	public boolean setInput(SymbolString s){
@@ -37,15 +42,9 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	}
 	
 	@Override
-	public boolean setTo(OutputFunction other) {
-		setInput(((MealyOutputFunction) other).getInput());
-		return super.setTo(other);
-	}
-	
-	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		if (a instanceof InputAlphabet)
-			return new SymbolString[]{getInput()};
+			return new SymbolString[]{myInput};
 		return super.getPartsForAlphabet(a);
 	}
 	
@@ -59,13 +58,15 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	public int compareTo(OutputFunction o) {
 		int compare = super.compareTo(o);
 		if (compare != 0) return compare;
-		return this.getInput().compareTo(((MealyOutputFunction) o).getInput());
+		return this.myInput.compareTo(((MealyOutputFunction) o).myInput);
 	}
 
 
 	@Override
 	public MealyOutputFunction copy() {
-		return new MealyOutputFunction(getState(), myInput, getOutput());
+		MealyOutputFunction func = new MealyOutputFunction(getState(), new SymbolString(), new SymbolString());
+		func.setTo(this);
+		return func;
 	}
 	
 	@Override

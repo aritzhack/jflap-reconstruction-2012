@@ -146,8 +146,6 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	/**
 	 * Retrieves all of the {@link FormalDefinitionComponent}s in order
 	 * as they should be in the n-tuple of this {@link FormalDefinition}.
-	 * THIS METHOD MUST BE OVERRIDDEN UPON CHANGING THE COMPONENTS IN THE
-	 * FORMAL DEFINTION, I.E. SUBCLASSING.
 	 * 
 	 * @return all of the {@link FormalDefinitionComponent} in this 
 	 * 											{@link FormalDefinition}.

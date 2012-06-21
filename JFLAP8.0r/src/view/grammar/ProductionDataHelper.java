@@ -62,7 +62,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		if(isValid(p)){
 			AddEvent<Production> add = 
 					new AddEvent<Production>(myProductions, p);
-			ProductionTableEvent e = new ProductionTableEvent(add, index);
+//			ProductionTableEvent e = new ProductionTableEvent(add, index);
 			if (myKeeper.applyAndCombine(add))
 				myOrderedProductions.add(index, p);
 		}

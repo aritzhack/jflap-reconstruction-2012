@@ -35,7 +35,7 @@ public class GrammarTest extends TestHarness {
 	@Override
 	public void runTest() {
 		String toSave = System.getProperties().getProperty("user.dir") +"/filetest";
-		File f = new File(toSave + "/UNRgrammar.jff");
+		File f = new File(toSave + "/grammar.jff");
 		Grammar g = (Grammar) new XMLCodec().decode(f);
 
 		outPrintln("Initial Grammar:\n" + g.toString());

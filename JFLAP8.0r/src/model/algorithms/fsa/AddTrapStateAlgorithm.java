@@ -89,8 +89,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	}
 	
 	private void setupState(State s) {
-		s.setLabel(TRAP);
-		s.setName("TRAPPPPPPP");
+		s.setName(TRAP);
 		myTrapState = s;
 		myTransitionsNeeded = getAllTransitionsNeeded();
 	}

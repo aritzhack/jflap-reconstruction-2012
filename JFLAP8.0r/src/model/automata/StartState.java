@@ -82,6 +82,7 @@ public class StartState extends FormalDefinitionComponent {
 
 
 	public void checkAndRemove(Collection<State> removed) {
+		if (this.getState() == null) return;
 		for (State s: removed){
 			if (this.getState().equals(s)){
 				this.clear();

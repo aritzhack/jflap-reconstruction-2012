@@ -90,16 +90,21 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	private TMConfiguration createInitialConfig(Block toState) {
 		TuringMachine tm = toState.getTuringMachine();
 		SymbolString input = getStringForIndex(0).copy();
+		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
+		
+		int pos = getPositionForIndex(0);
+		
+			
 		if (tm instanceof MultiTapeTuringMachine){
 			return new MultiTapeTMConfiguration((MultiTapeTuringMachine) tm, 
 								tm.getStartState(), 
-								new int[]{getPositionForIndex(0)}, 
+								new int[]{pos}, 
 								input);
 		}
 		else{
 			return new BlockTMConfiguration((BlockTuringMachine) tm, 
 					tm.getStartState(),
-					getPositionForIndex(0), 
+					pos, 
 					input);
 		}
 	}
