@@ -19,9 +19,14 @@ import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
 public class BlockTransition extends SingleInputTransition<BlockTransition> implements JFLAPConstants {
-	
+
 	public BlockTransition(Block from, Block to, SymbolString input){
 		super(from, to, input);
+		checkInput(input);
+	}
+
+	public BlockTransition(Block from, Block to, Symbol input) {
+		this(from,to,new SymbolString(input));
 	}
 
 	@Override
@@ -33,12 +38,12 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 	public String getDescription() {
 		return "The transition for a Building Block Turing Machine";
 	}
-	
+
 	@Override
 	public Block getFromState(){
 		return (Block) super.getFromState();
 	}
-	
+
 	@Override
 	public Block getToState(){
 		return (Block) super.getToState();
@@ -48,28 +53,32 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 	public BlockTransition copy() {
 		return new BlockTransition(this.getFromState(), this.getToState(), new SymbolString(this.getInput()));
 	}
-	
+
 	@Override
 	public boolean setInput(SymbolString input) {
 		if (input.isEmpty())
 			input.add(JFLAPPreferences.getTMBlankSymbol());
 		
-		int i = input.startsWith(new Symbol(NOT)) ? 1 : 0;
-		
-		SymbolString symbol = input.subList(i);
-		
-		if (symbol.size() > 1)
-			throw new AutomatonException("You may not set the input on a TM block transition " +
-					"to a string of my than one symbols.");
+		checkInput(input);
 		
 		return super.setInput(input);
 	}
-	
+
+	private void checkInput(SymbolString input) {
+		int i = input.startsWith(new Symbol(NOT)) ? 1 : 0;
+
+		SymbolString symbol = input.subList(i);
+
+		if (symbol.size() > 1)
+			throw new AutomatonException("You may not set the input on a Turing machine block transition " +
+					"to a string of more than one symbols.");
+	}
+
 	@Override
 	public boolean setTo(BlockTransition other) {
 		return super.setTo(other);
 	}
-	
+
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		SymbolString[] strings = super.getPartsForAlphabet(a);
@@ -82,7 +91,7 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 		}
 		return strings;
 	}
-	
+
 	@Override
 	public Set<Symbol> getSymbolsUsedForAlphabet(Alphabet a) {
 		Set<Symbol> symbols = super.getSymbolsUsedForAlphabet(a);

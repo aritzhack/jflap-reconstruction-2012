@@ -15,7 +15,7 @@ public abstract class TransducerTransducer<T extends Transducer> extends Automat
 	@Override
 	public XMLTransducer getTransducerForStructureNode(String s,
 			List<Alphabet> alphs) {
-		if (s == OUTPUT_FUNC_SET)
+		if (s.equals(OUTPUT_FUNC_SET))
 			return createOutputSetTransducer(alphs);
 		return super.getTransducerForStructureNode(s, alphs);
 	}

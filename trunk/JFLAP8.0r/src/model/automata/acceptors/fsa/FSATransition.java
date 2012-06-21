@@ -3,6 +3,9 @@ package model.automata.acceptors.fsa;
 import java.util.List;
 import java.util.Set;
 
+import util.JFLAPConstants;
+
+import model.automata.AutomatonException;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
@@ -17,6 +20,7 @@ public class FSATransition extends SingleInputTransition<FSATransition> {
 		super(from, to, input);
 	}
 
+	
 	public FSATransition(State from, State to) {
 		this(from, to, new SymbolString());
 	}

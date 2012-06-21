@@ -19,8 +19,7 @@ import model.formaldef.components.alphabets.Alphabet;
 
 public class MooreMachineTransducer extends TransducerTransducer<MooreMachine> {
 
-	private static final String MOORE_TAG = "moore_machine";
-
+	
 	@Override
 	public String getTag() {
 		return MOORE_TAG;

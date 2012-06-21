@@ -64,9 +64,9 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 
 	@Override
 	public MealyOutputFunction copy() {
-		MealyOutputFunction func = new MealyOutputFunction(getState(), new SymbolString(), new SymbolString());
-		func.setTo(this);
-		return func;
+		return new MealyOutputFunction(getState(), 
+				new SymbolString(myInput), 
+				new SymbolString(getOutput()));
 	}
 	
 	@Override
@@ -78,6 +78,11 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	protected void applySetTo(MealyOutputFunction other) {
 		super.applySetTo(other);
 		this.myInput.setTo(other.myInput);
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + getState() + ", " + myInput + ") --> " + new SymbolString(getOutput());
 	}
 
 }
