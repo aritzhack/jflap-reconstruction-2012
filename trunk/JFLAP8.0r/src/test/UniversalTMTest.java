@@ -199,6 +199,9 @@ public class UniversalTMTest {
 		trans = tri(14,15, one,one,S , one,zero,R, one,one,S);
 		functions.add(trans);
 		
+		trans = tri(14,16, one,one,S, square,zero,S, one,one,S);
+		functions.add(trans);
+		
 		trans = tri(15,14, one,one,S , zero,one,R, one,one,S);
 		functions.add(trans);
 
