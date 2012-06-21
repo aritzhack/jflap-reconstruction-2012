@@ -5,6 +5,9 @@ import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
+import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
+import model.automata.simulate.configurations.tm.TMConfiguration;
+import model.formaldef.components.symbols.SymbolString;
 
 public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>{
 
@@ -72,4 +75,21 @@ public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>
 									myNumTapes);
 	}
 
+	public TMConfiguration createInitalConfig(SymbolString input, int pos) {
+
+		int numTapes = this.getNumTapes();
+		int size = input.size();
+		int[] positions = new int[numTapes];
+		SymbolString[] inputArray = new SymbolString[numTapes];
+		inputArray[0] = input;
+		for (int i = 0; i< numTapes; i++){
+			positions[i] = pos;
+			if (i > 0)
+				inputArray[i] = TMConfiguration.createBlankTape(size);
+		}
+		return new MultiTapeTMConfiguration(this, 
+							this.getStartState(), 
+							positions, 
+							inputArray);
+	}
 }

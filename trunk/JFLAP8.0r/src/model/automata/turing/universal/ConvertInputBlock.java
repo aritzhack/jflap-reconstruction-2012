@@ -1,4 +1,4 @@
-package model.automata.turing.buildingblock.library.universal;
+package model.automata.turing.universal;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,25 +12,26 @@ import model.automata.turing.buildingblock.library.BaseBlockTMBlock;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
-public class ConvertToUniversalBlock extends BaseBlockTMBlock{
+public class ConvertInputBlock extends MappingBlock{
 
-	private Map<Symbol, SymbolString> myMappings;
+	private SymbolString myTransitionEncoding;
 	
-	public ConvertToUniversalBlock(TapeAlphabet alph, BlankSymbol blank,
-			String name, int id) {
-		super(alph, blank, name, id);
-		myMappings = new TreeMap<Symbol, SymbolString>();
-		
-	}
-
-	@Override
-	public void updateTuringMachine(TapeAlphabet tape) {
-		
+	public ConvertInputBlock(SymbolString transEncoding, TapeAlphabet alph, 
+			BlankSymbol blank, int id) {
+		super(alph, blank, "Convert", id);
+		myTransitionEncoding = transEncoding;
+	
 	}
 	
 	private void addTransition(Block from, Block to, Symbol input) {
 		TransitionSet<BlockTransition> trans = this.getTuringMachine().getTransitions();
 		trans.add(new BlockTransition(from, to, input));
+	}
+
+	@Override
+	public void updateTuringMachine(Map<Symbol, SymbolString> encodings) {
+
+		
 	}
 
 }

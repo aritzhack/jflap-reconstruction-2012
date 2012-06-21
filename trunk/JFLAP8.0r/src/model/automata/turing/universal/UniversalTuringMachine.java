@@ -1,5 +1,6 @@
-package model.automata.turing;
+package model.automata.turing.universal;
 
+import model.algorithms.AlgorithmException;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -9,6 +10,9 @@ import model.automata.acceptors.FinalStateSet;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.automata.simulate.configurations.tm.TMConfiguration;
+import model.automata.turing.MultiTapeTMTransition;
+import model.automata.turing.MultiTapeTuringMachine;
+import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
 
@@ -23,34 +27,32 @@ import model.formaldef.components.symbols.SymbolString;
 public class UniversalTuringMachine extends MultiTapeTuringMachine {
 
 
-	private SymbolString myTransitionEncoding;
-	private SymbolString myStateEncoding;
 	private boolean shouldFlip;
+	public static final SymbolString TAPE_DELIMITER = new SymbolString(new Symbol("0"), new Symbol("0"));
 
-
-	public UniversalTuringMachine(String stateEncoding, String transEncoding, boolean flipForBlock){
+	public UniversalTuringMachine(boolean flipForBlock){
 		super(3);
 		shouldFlip = flipForBlock;
 		buildMachine();
-		myStateEncoding = this.createFromString(stateEncoding, false);
-		myTransitionEncoding = this.createFromString(transEncoding, false);
 	}
 
-	public SymbolString getTransitionEncoding(){
-		return myTransitionEncoding;
-	}
-	public SymbolString getStateEncoding(){
-		return myStateEncoding;
-	}
-
+	@Override
 	public TMConfiguration createInitalConfig(SymbolString input, int pos) {
 
+		//input is: TRANS00INPUT00STATE
+		SymbolString[] parts = input.split(TAPE_DELIMITER.toArray(new Symbol[0]));
+		
+		if (parts.length != 3)
+			throw new AlgorithmException("An error occurred splitting " + input + " while " +
+					"preparing a Universal TM inital config");
+		
+		//Alternate definition of turing machine
 		return new MultiTapeTMConfiguration(this, 
 				this.getStartState(), 
 				new int[]{pos,0,0}, 
-				new SymbolString[]{input, 
-			myStateEncoding, 
-			myTransitionEncoding});
+				new SymbolString[]{parts[1], 
+									parts[2], 
+									parts[0]});
 	}
 
 	public void buildMachine(){		
