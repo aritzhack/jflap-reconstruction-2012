@@ -17,7 +17,8 @@ public class DuplicateCharBlock extends BaseBlockTMBlock {
 	private Symbol mySymbol;
 
 	public DuplicateCharBlock(TapeAlphabet alph, BlankSymbol blank, int id, Symbol character) {
-		super(alph, blank, BlockLibrary.DUPLICATE+character, id);
+		super(alph, blank, 
+				BlockLibrary.DUPLICATE+ BlockLibrary.UNDSCR + character, id);
 		
 		mySymbol = character;
 		
@@ -56,7 +57,7 @@ public class DuplicateCharBlock extends BaseBlockTMBlock {
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new FinalBlock(alph, blank, id++);
+		b2 = new HaltBlock(alph, blank, id++);
 		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		tm.getFinalStateSet().add(b2);

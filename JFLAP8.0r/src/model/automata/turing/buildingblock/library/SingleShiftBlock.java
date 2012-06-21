@@ -109,7 +109,7 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 
 		
 		b1=b2;
-		b2 = new FinalBlock(alph, blank, id++);
+		b2 = new HaltBlock(alph, blank, id++);
 		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		tm.getFinalStateSet().add(b2);
@@ -133,8 +133,6 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		TapeAlphabet alph = tm.getTapeAlphabet();
-//		JFLAPDebug.print("INPUT: " + tape);
-//		JFLAPDebug.print("STATIC: " + BuildingBlockTesting.alph);
 		alph.retainAll(tape);
 		alph.addAll(tape);
 		alph.add(myMarker);

@@ -94,9 +94,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		}
 		else {
 			for (T trans : myValidTransitons){
-				JFLAPDebug.print(trans);
 				Configuration c = createNextConfiguration(trans);
-				JFLAPDebug.print("NEXT CONFIG:\n" + c);
 				configs.add(c);
 				c.setTransitionTo(trans);
 				c.updateAccept();

@@ -25,7 +25,7 @@ public class BlockLibrary {
 
 		//FinalBlock
 		if (parts[0].equals(FINAL) && parts.length == 1){
-			return new FinalBlock(alph, new BlankSymbol(), id);
+			return new HaltBlock(alph, new BlankSymbol(), id);
 		}
 		//StartBlock
 		else if(parts[0].equals(START) && parts.length == 1){
@@ -77,6 +77,8 @@ public class BlockLibrary {
 			return new WriteBlock(alph.getSymbolForString(parts[1]), alph, new BlankSymbol(), id);
 
 		}
+		else if (parts[0].equals(COPY) && parts.length == 1)
+			return new CopyBlock(alph, new BlankSymbol(), id);
 		return null;
 	}
 

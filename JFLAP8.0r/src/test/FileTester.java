@@ -30,7 +30,7 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import model.automata.turing.buildingblock.library.FinalBlock;
+import model.automata.turing.buildingblock.library.HaltBlock;
 import model.automata.turing.buildingblock.library.StartFinalBlock;
 import model.automata.turing.buildingblock.library.MoveBlock;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
@@ -327,7 +327,7 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		Block moveRight1 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
 		Block writeBlank = new WriteBlock(square, alph, blank, id++);
 		Block moveRight2 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
-		Block halt = new FinalBlock(alph, blank, id);
+		Block halt = new HaltBlock(alph, blank, id);
 		finalStates.add(halt);
 		
 		BlockTransition[] trans = new BlockTransition[9];
