@@ -1,9 +1,9 @@
-package model.numbersets.function;
+package model.numbersets.defined;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import model.numbersets.defined.PredefinedSet;
+import model.numbersets.function.Function;
 
 public class FunctionSet extends PredefinedSet {
 
@@ -24,6 +24,7 @@ public class FunctionSet extends PredefinedSet {
 		myCurrent = initial;
 		
 		myValues = new TreeSet<Integer>();
+		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
 	}
 	
 	public FunctionSet(Function func) {
@@ -37,8 +38,12 @@ public class FunctionSet extends PredefinedSet {
 
 	@Override
 	public Set<Integer> generateNextNumbers(int n) {
-		// TODO Auto-generated method stub
-		return null;
+		for (int i = 0; i < n; i++) {
+			myValues.add(myFunction.evaluate(myCurrent));
+			myCurrent++;
+		}
+		
+		return myValues;
 	}
 
 	@Override
@@ -53,14 +58,12 @@ public class FunctionSet extends PredefinedSet {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Function Set";
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Set of numbers in the function " + myFunction.toString();
 	}
 
 	@Override

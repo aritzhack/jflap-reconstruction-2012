@@ -14,6 +14,7 @@ public class OddSet extends PredefinedSet {
 
 	public OddSet () {
 		myValues = new TreeSet<Integer>();
+		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
 	}
 
 

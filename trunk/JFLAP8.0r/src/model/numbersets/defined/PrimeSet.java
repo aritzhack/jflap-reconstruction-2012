@@ -14,6 +14,8 @@ public class PrimeSet extends PredefinedSet {
 	public PrimeSet () {
 		myCurrent = 1;
 		myValues = new TreeSet<Integer>();
+		
+		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
 	}
 
 	@Override
