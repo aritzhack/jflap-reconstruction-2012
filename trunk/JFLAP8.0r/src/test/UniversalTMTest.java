@@ -97,88 +97,67 @@ public class UniversalTMTest {
 				q[3], q[3], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{S,L,S});
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[3], q[4], new Symbol[]{one,square,one}, new Symbol[]{one,square,one}, new TuringMachineMove[]{S,R,S});
+		trans = tri(3,4, one,one,S, square,square,R, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[3], q[4], new Symbol[]{one,zero,one}, new Symbol[]{one,zero,one}, new TuringMachineMove[]{S,R,S});
+		trans = tri(3,4, one,one,S, zero,zero,R, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[4], q[4], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,R});
+		trans = tri(4,4, one,one,R, one,one,S, one,one,R);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[4], q[4], new Symbol[]{one,one,square}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,R});
+		trans = tri(4,4, one,one,R, one,one,S, square,one,R);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[4], q[5], new Symbol[]{zero,one,square}, new Symbol[]{zero,one,square}, new TuringMachineMove[]{R,S,L});
+		trans = tri(4,5, zero,zero,R, one,one,S, square,square,L);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[4], q[5], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,square}, new TuringMachineMove[]{R,S,L});
+		trans = tri(4,5, zero,zero,R, one,one,S, one,square,L);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[5], q[5], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{S,S,L});
+		trans = tri(5,5, one,one,S, one,one,S, one,one,L);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[5], q[13], new Symbol[]{one,one,square}, new Symbol[]{one,one,square}, new TuringMachineMove[]{R,R,R});
+		trans = tri(5,13, one,one,R, one,one,R, square,square,R);
 		functions.add(trans);
 
-		trans = new MultiTapeTMTransition(
-				q[6], q[6], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(6,6, one,one,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[6], q[7], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(6,7, zero,zero,R, one,one,S, one,one, S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[7], q[7], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(7,7, one,one,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[7], q[8], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(7,8, zero,zero,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[8], q[8], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(8,8, one,one,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[8], q[9], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(8,9, zero,zero,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[9], q[9], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(9,9, one,one,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[9], q[10], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(9,10, zero,zero,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[10], q[10], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(10,10, one,one,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[10], q[11], new Symbol[]{zero,one,one}, new Symbol[]{zero,one,one}, new TuringMachineMove[]{R,S,S});
+		trans = tri(10,11, zero,zero,R, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[11], q[11], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{S,S,L});
+		trans = tri(11,11, one,one,S, one,one,S, one,one,L);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[32], q[11], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{S,S,S});
+		trans = tri(32,11, one,one,S, one,one,S, one,one,S);
 		functions.add(trans);
 		
-		trans = new MultiTapeTMTransition(
-				q[12], q[12], new Symbol[]{one,one,one}, new Symbol[]{one,one,one}, new TuringMachineMove[]{S,L,S});
+		trans = tri(12,12, one,one,S, one,one,L, one, one,S);
 		functions.add(trans);
 		
 		trans = tri(12,7, one,one,S , zero,zero,R, one,one,S);
