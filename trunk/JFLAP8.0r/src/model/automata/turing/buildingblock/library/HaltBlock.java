@@ -7,6 +7,7 @@ public class HaltBlock extends StartFinalBlock {
 
 	public HaltBlock(TapeAlphabet alph, BlankSymbol blank,int id) {
 		super(alph, blank, BlockLibrary.FINAL, id);
+		
 	}
 
 }
