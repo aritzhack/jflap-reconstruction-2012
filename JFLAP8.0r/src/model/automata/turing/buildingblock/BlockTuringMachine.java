@@ -27,6 +27,16 @@ public class BlockTuringMachine extends TuringMachine<BlockTransition> {
 								FinalStateSet finalStates) {
 		super(states, tapeAlph, blank, inputAlph, functions, start, finalStates);
 	}
+	
+	public BlockTuringMachine(){
+		super(new BlockSet(),
+				new TapeAlphabet(),
+				new BlankSymbol(),
+				new InputAlphabet(),
+				new TransitionSet<BlockTransition>(),
+				new StartState(),
+				new FinalStateSet());
+	}
 
 	@Override
 	public BlockSet getStates(){

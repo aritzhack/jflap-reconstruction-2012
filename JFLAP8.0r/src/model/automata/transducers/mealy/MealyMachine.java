@@ -20,6 +20,15 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 			OutputFunctionSet outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
+	
+	public MealyMachine(){
+		super(new StateSet(),
+				new InputAlphabet(),
+				new OutputAlphabet(),
+				new TransitionSet<FSATransition>(),
+				new StartState(),
+				new OutputFunctionSet());
+	}
 
 	@Override
 	public String getDescriptionName() {

@@ -15,6 +15,8 @@ public class BlockLibrary {
 	public static final String WRITE = "Write";
 	public static final String UNDSCR = "_";
 	public static final String NOT = "Not";
+	public static final String DUPLICATE = "Duplicate";
+	public static final String COPY = "Copy";
 
 
 

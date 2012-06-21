@@ -46,6 +46,10 @@ public class RegularExpression extends FormalDefinition {
 		myOperatorAlphabet = new OperatorAlphabet();
 		myGrammar = new RegularExpressionGrammar(alph, myOperatorAlphabet);
 	}
+	
+	public RegularExpression(){
+		this(new InputAlphabet());
+	}
 
 
 	public InputAlphabet getInputAlphabet(){
