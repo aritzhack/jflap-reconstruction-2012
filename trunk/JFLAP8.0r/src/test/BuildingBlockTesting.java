@@ -2,19 +2,8 @@ package test;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
-import preferences.JFLAPPreferences;
-import util.JFLAPConstants;
-
-import debug.JFLAPDebug;
-
-import model.automata.InputAlphabet;
-import model.automata.StartState;
-import model.automata.State;
-import model.automata.TransitionSet;
-import model.automata.acceptors.FinalStateSet;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.ConfigurationChain;
 import model.automata.simulate.SingleInputSimulator;
@@ -22,20 +11,12 @@ import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.Block;
-import model.automata.turing.buildingblock.BlockSet;
-import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import model.automata.turing.buildingblock.library.BaseBlockTMBlock;
-import model.automata.turing.buildingblock.library.FinalBlock;
-import model.automata.turing.buildingblock.library.MoveBlock;
-import model.automata.turing.buildingblock.library.MoveUntilBlock;
-import model.automata.turing.buildingblock.library.MoveUntilNotBlock;
-import model.automata.turing.buildingblock.library.ShiftBlock;
-import model.automata.turing.buildingblock.library.StartBlock;
-import model.automata.turing.buildingblock.library.WriteBlock;
+import model.automata.turing.buildingblock.library.CopyBlock;
 import model.formaldef.components.symbols.Symbol;
 import model.formaldef.components.symbols.SymbolString;
-import model.regex.RegularExpression;
+import preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import file.xml.XMLCodec;
 
 public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
@@ -52,8 +33,8 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 		BlankSymbol blank = new BlankSymbol();
 		alph.add(blank.getSymbol());
 		//
-		Block block = new ShiftBlock(TuringMachineMove.LEFT, alph, blank, 0);
-		SymbolString input = new SymbolString(a,a,a,b,b,c,c);
+		Block block = new CopyBlock(alph, blank, 0);
+		SymbolString input = new SymbolString(a,b,c,a,a,a);
 		testBlock(block, input);
 
 		////
