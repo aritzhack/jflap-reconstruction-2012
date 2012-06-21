@@ -356,9 +356,9 @@ Settable<SymbolString>{
 		return this.replace(i,i+1, replaceWith);
 	}
 
-	public int indexOf(SymbolString e, int cp) {
-		SymbolString temp = this.subList(cp);
-		return cp + temp.indexOf(e);
+	public int indexOf(SymbolString e, int start) {
+		SymbolString temp = this.subList(start);
+		return start + temp.indexOf(e);
 	}
 
 	public SymbolString replace(int start, int end, SymbolString rhs) {
@@ -436,6 +436,24 @@ Settable<SymbolString>{
 
 	public boolean addAll(Symbol ... symbols) {
 		return addAll(new SymbolString(symbols));
+	}
+
+	public SymbolString[] split(Symbol ... array) {
+		List<SymbolString> split = new ArrayList<SymbolString>();
+		SymbolString copy = this.copy();
+		int index = 0;
+		SymbolString delimiter = new SymbolString(array);
+		while((index = copy.indexOf(delimiter)) != -1){
+			SymbolString[] innerSplit =  copy.splitOnIndex(index);
+			split.add(innerSplit[0]);
+			copy = innerSplit[1].tailList(index+2);
+		}
+		
+		return split.toArray(new SymbolString[0]);
+	}
+
+	public SymbolString tailList(int i) {
+		return this.subList(i, this.size());
 	}
 
 
