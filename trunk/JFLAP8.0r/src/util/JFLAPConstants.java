@@ -21,7 +21,7 @@ public interface JFLAPConstants {
 	
 	public static final Symbol EMPTY_SET_SYMBOL = new Symbol("\u00F8");
 	
-	public static final Terminal SLR_MARKER = new Terminal("\u00B7");
+//			new Terminal("\u00B7");
 	
 	public static final String JDEF_SUFFIX = ".jdef",
 			   JFF_SUFFIX = ".jff",

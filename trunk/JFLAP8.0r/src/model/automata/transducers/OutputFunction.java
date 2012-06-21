@@ -28,8 +28,8 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 		return myState;
 	}
 
-	public SymbolString getOutput(){
-		return myOutput;
+	public Symbol[] getOutput(){
+		return myOutput.toArray(new Symbol[0]);
 	}
 
 	/**
@@ -42,12 +42,6 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 	public abstract boolean matches(FSATransition trans);
 
 
-	@Override
-	public boolean setTo(OutputFunction other) {
-		this.setState(other.getState());
-		return this.setOutput(other.getOutput());
-	}
-
 	public void setState(State state) {
 		myState = state;
 	}
@@ -59,15 +53,15 @@ public abstract class OutputFunction<T extends OutputFunction<T>> extends Automa
 	@Override
 	public SymbolString[] getPartsForAlphabet(Alphabet a) {
 		if (a instanceof OutputAlphabet)
-			return new SymbolString[]{getOutput()};
+			return new SymbolString[]{myOutput};
 		return new SymbolString[0];
 	}
 
 	@Override
 	public int compareTo(OutputFunction o) {
 		return UtilFunctions.metaCompare(
-				new Comparable[]{this.getState(), this.getOutput()},
-				new Comparable[]{o.getState(), o.getOutput()});
+				new Comparable[]{this.myState, myOutput},
+				new Comparable[]{o.myState, o.myOutput});
 	}
 
 	@Override

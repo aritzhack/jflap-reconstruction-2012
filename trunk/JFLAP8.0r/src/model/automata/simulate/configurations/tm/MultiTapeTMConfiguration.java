@@ -2,6 +2,8 @@ package model.automata.simulate.configurations.tm;
 
 import java.util.LinkedList;
 
+import preferences.JFLAPPreferences;
+
 import debug.JFLAPDebug;
 
 import model.automata.State;
@@ -41,7 +43,7 @@ public class MultiTapeTMConfiguration extends TMConfiguration<MultiTapeTuringMac
 	protected int getNextSecondaryPosition(int i,
 			MultiTapeTMTransition trans) {
 		TuringMachineMove move = trans.getMove(i);
-		return this.getPositionForIndex(i) + move.int_move;
+		return Math.max(this.getPositionForIndex(i) + move.int_move, 0);
 	}
 
 	@Override
@@ -49,12 +51,17 @@ public class MultiTapeTMConfiguration extends TMConfiguration<MultiTapeTuringMac
 			MultiTapeTMTransition trans) {
 		for (int i = 0; i < this.getNumOfSecondary(); i++){
 			Symbol write = trans.getWrite(i);
+			TuringMachineMove move = trans.getMove(i);
+			int pos = this.getPositionForIndex(i);
+			SymbolString tape = clones[i];
+			
+			clones[i] = updateTape(move, pos, tape);
+			
 			clones[i] = clones[i].replace(this.getPositionForIndex(i), write);
 		}
 		return clones;
 	}
 
 
-	
 
 }

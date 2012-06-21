@@ -48,16 +48,6 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 	}
 	
 	@Override
-	public FormalDefinitionComponent[] getComponents() {
-		return new FormalDefinitionComponent[]{this.getStates(),
-											this.getInputAlphabet(),
-											this.getOutputAlphabet(),
-											this.getTransitions(),
-											new StartState(this.getStartState()),
-											this.getOutputFunctionSet()};
-	}
-	
-	@Override
 	public Transducer copy() {
 		Class<Transducer> clz = (Class<Transducer>) this.getClass();
 		try {

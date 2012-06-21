@@ -3,6 +3,7 @@ package test;
 import java.awt.image.TileObserver;
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 
 import preferences.JFLAPPreferences;
 
@@ -14,6 +15,12 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.transducers.OutputAlphabet;
+import model.automata.transducers.OutputFunctionSet;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.mealy.MealyOutputFunction;
+import model.automata.transducers.moore.MooreMachine;
+import model.automata.transducers.moore.MooreOutputFunction;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
@@ -96,12 +103,27 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		
 		// SAVE AND LOAD BLOCK TM
 		BlockTuringMachine blockTM = createBlockTM();
-		f = new File(toSave + "/blockTM_unaryAdd.jff");
-		outPrintln("Before import:\n" + blockTM.toString());
-		codec.encode(blockTM, f, null);
-		blockTM = (BlockTuringMachine) codec.decode(f);
-		outPrintln("After import:\n" + blockTM.toString());
+		doSaveAndImport(blockTM, toSave + "/blockTM_unaryAdd.jff");
+		
+		// SAVE AND LOAD MOORE
+		MealyMachine mealy = createMealyMachine();
+		doSaveAndImport(mealy, toSave + "/mealyTest.jff");
+		
+		// SAVE AND LOAD MEALY
+		MooreMachine moore = createMooreMachine();
+		doSaveAndImport(moore, toSave + "/mooreTest.jff");
+		
 
+	}
+	
+	public File doSaveAndImport(Object o, String filename){
+		File f = new File(filename);
+		outPrintln("Before import:\n" + o.toString());
+		XMLCodec codec = new XMLCodec();
+		codec.encode(o, f, null);
+		o = codec.decode(f);
+		outPrintln("After import:\n" + o.toString());
+		return f;
 	}
 
 	private FiniteStateAcceptor createFSA() {
@@ -332,5 +354,87 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		return new BlockTuringMachine(blocks, alph, blank, inputAlph, transitions, startState, finalStates);
 
 	}
+	
+	private MooreMachine createMooreMachine() {
+		StateSet states = new StateSet();
+		InputAlphabet alph = new InputAlphabet();
+		OutputAlphabet out	= new OutputAlphabet();
+		TransitionSet<FSATransition> transitions = new TransitionSet<FSATransition>();
+		StartState start = new StartState();
+		OutputFunctionSet<MooreOutputFunction> outputFunc = new OutputFunctionSet<MooreOutputFunction>();
+		MooreMachine moore = new MooreMachine(states, alph, out, transitions, start, outputFunc);
+		
+		Symbol a = new Symbol("A");
+		Symbol b = new Symbol("B");
+		Symbol c = new Symbol("C");
+		Symbol d = new Symbol("D");
 
+		
+		State s1 = new State("q1", 1);
+		State s2 = new State("q2", 2);
+		State s3 = new State("q3", 3);
+		
+		start.setState(s1);
+		
+		FSATransition t0 = new FSATransition(s1, s1, a);
+		FSATransition t1 = new FSATransition(s1, s2, a);
+		FSATransition t2 = new FSATransition(s2, s2, b);
+		FSATransition t3 = new FSATransition(s2, s3, c);
+		FSATransition t4 = new FSATransition(s3, s3, c);
+		
+		MooreOutputFunction o1 = new MooreOutputFunction(s1, new SymbolString(d));
+		MooreOutputFunction o2 = new MooreOutputFunction(s2, new SymbolString(c));
+		MooreOutputFunction o3 = new MooreOutputFunction(s3, new SymbolString(b));
+
+		transitions.addAll(toCollection(t0,t1,t2,t3,t4));
+		outputFunc.addAll(toCollection(o1,o2,o3));
+		
+		return moore;
+	}
+	
+	private MealyMachine createMealyMachine() {
+		StateSet states = new StateSet();
+		InputAlphabet alph = new InputAlphabet();
+		OutputAlphabet out	= new OutputAlphabet();
+		TransitionSet<FSATransition> transitions = new TransitionSet<FSATransition>();
+		StartState start = new StartState();
+		OutputFunctionSet<MealyOutputFunction> outputFunc = new OutputFunctionSet<MealyOutputFunction>();
+		MealyMachine mealy = new MealyMachine(states, alph, out, transitions, start, outputFunc);
+		
+		Symbol a = new Symbol("A");
+		Symbol b = new Symbol("B");
+		Symbol c = new Symbol("C");
+		Symbol d = new Symbol("D");
+
+		
+		State s1 = new State("q1", 1);
+		State s2 = new State("q2", 2);
+		State s3 = new State("q3", 3);
+		
+		start.setState(s1);
+		
+		
+		FSATransition t0 = new FSATransition(s1, s1, a);
+		FSATransition t1 = new FSATransition(s1, s2, a);
+		FSATransition t2 = new FSATransition(s2, s2, b);
+		FSATransition t3 = new FSATransition(s2, s3, c);
+		FSATransition t4 = new FSATransition(s3, s3, c);
+		
+		MealyOutputFunction o0 = new MealyOutputFunction(t0, new SymbolString(d));
+		MealyOutputFunction o1 = new MealyOutputFunction(t1, new SymbolString(d));
+		MealyOutputFunction o2 = new MealyOutputFunction(t2, new SymbolString(c));
+		MealyOutputFunction o3 = new MealyOutputFunction(t3, new SymbolString(b));
+		MealyOutputFunction o4 = new MealyOutputFunction(t4, new SymbolString(b));
+
+		transitions.addAll(toCollection(t0,t1,t2,t3,t4));
+		outputFunc.addAll(toCollection(o1,o2,o3));
+		
+		return mealy;
+	}
+
+
+	private <T> Collection<T> toCollection(T ... array) {
+		return Arrays.asList(array);
+	}
+	
 }

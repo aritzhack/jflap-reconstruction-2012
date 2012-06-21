@@ -31,8 +31,7 @@ public class SLR1DFAState extends State{
 		return myProductions.toArray(new SLR1Production[0]);
 	}
 	
-	@Override
-	public String getLabel() {
+	public String createLabel() {
 		return UtilFunctions.createDelimitedString(myProductions, "\n");
 	}
 	

@@ -28,7 +28,7 @@ public class SLR1Production extends Production {
 	@Override
 	public Symbol[] getRHS() {
 		SymbolString newRHS = new SymbolString(super.getRHS());
-		newRHS.add(myMarkIndex, SLR_MARKER);
+		newRHS.add(myMarkIndex, JFLAPPreferences.SLR_MARKER);
 		return newRHS.toArray(new Symbol[0]);
 	}
 	
@@ -40,7 +40,7 @@ public class SLR1Production extends Production {
 
 	private SymbolString getMarkerFreeRHS() {
 		SymbolString rhs = new SymbolString(getRHS());
-		rhs.remove(SLR_MARKER);
+		rhs.remove(JFLAPPreferences.SLR_MARKER);
 		rhs.remove(JFLAPPreferences.getSubForEmptyString());
 		return rhs;
 	}
