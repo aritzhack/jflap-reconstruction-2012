@@ -23,9 +23,9 @@ public class UniversalTMTest {
 
 	public static void main(String[] args){		
 		StateSet states = new StateSet();
-		q = new State[34];
+		q = new State[40];
 		
-		for(int i=0; i<34; i++){
+		for(int i=0; i<40; i++){
 			State qi = new State("q"+i, i);
 			states.add(qi);
 			q[i] = qi;
@@ -328,10 +328,34 @@ public class UniversalTMTest {
 		trans = tri(32,33, one,one,S , one,one,S, square,square,L);
 		functions.add(trans);
 		
+		trans = tri(33,34, one,one,S, one, one,R, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(34,35, one,one,S, zero,square,L, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(35,36, one,one,S, one,square,L, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(36,36, one,one,S, one, one,L, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(36,36, one,one,S, zero, zero,L, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(36,37, one,one,S, square, square,R, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(37,38, one,one,S, one, square,R, one, one, S);
+		functions.add(trans);
+		
+		trans = tri(38,39, one,one,S, zero, square,R, one, one, S);
+		functions.add(trans);
+		
 		StartState start = new StartState(states.getStateWithID(0));
 		
 		FinalStateSet finalStates = new FinalStateSet();
-		finalStates.add(states.getStateWithID(33));
+		finalStates.add(states.getStateWithID(39));
 		
 		int numTapes = 3;
 		
