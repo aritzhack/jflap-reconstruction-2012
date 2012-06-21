@@ -15,6 +15,7 @@ public class EvenSet extends PredefinedSet {
 	
 	public EvenSet () {
 		myValues = new TreeSet<Integer>();
+		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
 	}
 	
 

@@ -10,6 +10,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public abstract class PredefinedSet {
+	
+	protected static final int DEFAULT_NUMBER_TO_ADD = 50;
+	
+	protected Set<Integer> myValues;
+	
+	public PredefinedSet () {
+		myValues = new TreeSet<Integer>();
+	}
 
 	/**
 	 * Returns the numbers currently in the set
@@ -99,6 +107,14 @@ public abstract class PredefinedSet {
 		Set<Integer> copy = new TreeSet<Integer>(original);
 		return copy;
 	}
+	
+	
+	/**
+	 * 
+	 */
+	public Set<Integer> getSubset () {
+		return null;
+	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder(getName() + "\n");
@@ -106,4 +122,6 @@ public abstract class PredefinedSet {
 		return sb.toString();
 	}
 
+	
+	
 }

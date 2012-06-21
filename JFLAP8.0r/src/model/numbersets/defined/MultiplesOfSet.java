@@ -36,14 +36,12 @@ public class MultiplesOfSet extends PredefinedSet {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Non-negative integers that are multiples of " + myFactor;
 	}
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+		myValues.clear();
 	}
 
 	@Override
@@ -58,14 +56,14 @@ public class MultiplesOfSet extends PredefinedSet {
 
 	@Override
 	public Set<Integer> getValuesInRange(int min, int max) {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Integer> range = new TreeSet<Integer>();
+		
+		return range;
 	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return myValues.size();
 	}
 
 }

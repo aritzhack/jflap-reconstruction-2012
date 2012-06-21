@@ -9,6 +9,12 @@ import java.util.TreeSet;
 
 
 public class FibonacciSet extends PredefinedSet {
+	
+	/**
+	 * The 48th element will cause integer overflow in the form of adding
+	 * a negative integer to the set. 
+	 */
+	private static final int MAX_SIZE = 46;
 
 	/**
 	 * f(n)
@@ -30,17 +36,23 @@ public class FibonacciSet extends PredefinedSet {
 		prevFirst = 1;
 
 		myValues = new TreeSet<Integer>();
+		generateNextNumbers(MAX_SIZE);
 	}
 
 	@Override
 	public Set<Integer> generateNextNumbers(int n) {
-		for (int i = 0; i < n; i++) {
+		
+		
+		for (int i = 0; i <= n; i++) {
+			
 			if (myValues.size() == 0 && n >= 1)
 				myValues.add(prevLast);
 			else if (myValues.size() == 1 && n >= 2)
 				myValues.add(prevFirst);
+			
 			else {
 				current = prevFirst + prevLast;
+				
 				myValues.add(current);
 
 				prevLast = prevFirst;
@@ -103,8 +115,20 @@ public class FibonacciSet extends PredefinedSet {
 
 	@Override
 	public Set<Integer> getValuesInRange(int min, int max) {
-		// TODO Auto-generated method stub
-		return null;
+		if (min < 0)	
+			min = 0;
+		if (max > Integer.MAX_VALUE)
+			max = Integer.MAX_VALUE;
+		
+		Set<Integer> range = new TreeSet<Integer>();
+		for (int i : myValues) {
+			if (i > min && i < max) {
+				range.add(i);
+			}
+			if (i > max)	break;
+		}
+		
+		return range;
 	}
 
 }

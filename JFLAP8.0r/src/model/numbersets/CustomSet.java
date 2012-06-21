@@ -10,7 +10,7 @@ import java.util.TreeSet;
  * 
  */
 
-public class CustomSet {
+public class CustomSet extends AbstractNumberSet {
 
 	private String name;
 	private String description;
@@ -19,6 +19,11 @@ public class CustomSet {
 
 	public CustomSet() {
 		elements = new TreeSet<Integer>();
+	}
+
+	public CustomSet(int... i) {
+		this();
+		addAll(i);
 	}
 
 	public boolean add(int value) {
@@ -48,8 +53,9 @@ public class CustomSet {
 		return false;
 	}
 	
-	
-	
+	public Set<Integer> getSet () {
+		return elements;
+	}
 	
 	public boolean contains(int value) {
 		return elements.contains(value);
@@ -59,6 +65,7 @@ public class CustomSet {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -67,6 +74,7 @@ public class CustomSet {
 		this.description = description;
 	}
 
+	@Override
 	public String getDescription() {
 		return this.description;
 	}

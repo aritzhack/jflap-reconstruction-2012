@@ -1,32 +1,60 @@
 package model.numbersets;
 
-import model.numbersets.defined.PredefinedSet;
-import model.numbersets.function.ExponentialFunction;
-import model.numbersets.function.FunctionSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+import model.numbersets.defined.FunctionSet;
+import model.numbersets.defined.PrimeSet;
+import model.numbersets.function.LinearFunction;
+
 
 
 public class Main {
 	
+	public static void print (Object o) {
+		System.out.println(o);
+	}
+	
 	public static void main (String[] args) {
 	
-//		CustomSet custom = new CustomSet();
-//		System.out.println(custom + "\n\n");
-//		
-//		custom.setName("Test set");
-//		custom.addDescription("Random integers");
-//		custom.addAll(5, 9, 0, 11, 15, 2, 3, 2, 2, 2, 6);
-//		
-//		System.out.println(custom + "\n\n");
-//		
-//		custom.remove(8);
-//		System.out.println(custom + "\n\n");
-//		
-//		custom.remove(2);
-//		System.out.println(custom + "\n\n");
+		// Fibonacci sets
+//		PredefinedSet fib = new FibonacciSet();
+//		print(fib);
+//		print(fib.contains(34));	//true
+//		print(fib.contains(0));		//false
+//		print(fib.getValuesInRange(15, 50));
+//		print(fib.generateNextNumbers(3));
 		
 		
-		PredefinedSet set = new FunctionSet(new ExponentialFunction(4));
-		System.out.println(set.contains(1024));
+		// Prime sets
+		
+		
+		
+		
+		// Multiples of __ sets
+		
+		
+		
+		
+		
+		// Congruence sets
+		
+		// Even sets
+		
+		
+		
+		// Odd sets
+		
+		
+		
+		
+		// set properties
+//		FunctionSet func = new FunctionSet(new LinearFunction(2, 1));
+//		PrimeSet prime = new PrimeSet();
+		
+//		print(func.getSet());
+//		print(prime.getSet());
+//		print(SetProperties.intersection(func.getSet(), prime.getSet()));
 		
 		
 
