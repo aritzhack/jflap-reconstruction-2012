@@ -66,8 +66,8 @@ public class ProductionTableModel extends GrowableTableModel
 	 * @param myGrammar
 	 *            the grammar to have for the grammar table model initialized to
 	 */
-	public ProductionTableModel(ProductionSet model, UndoKeeper keeper) {
-		super(3, new ProductionDataHelper(model, keeper));
+	public ProductionTableModel(Grammar g, UndoKeeper keeper) {
+		super(3, new ProductionDataHelper(g, keeper));
 //		this.addTableModelListener(new TableModelListener() {
 //			@Override
 //			public void tableChanged(TableModelEvent e) {

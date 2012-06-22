@@ -39,4 +39,10 @@ public class CompoundUndoRedo implements IUndoRedo {
 		return myBase.getName();
 	}
 
+	public void addAll(IUndoRedo ... others) {
+		for (IUndoRedo undo: others){
+			add(undo);
+		}
+	}
+
 }

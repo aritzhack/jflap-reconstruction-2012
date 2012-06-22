@@ -3,6 +3,8 @@ package util.view;
 import javax.swing.Action;
 import javax.swing.JButton;
 
+import debug.JFLAPDebug;
+
 public class ActionLinkedButton extends JButton{
 
 	private Action myAction;
@@ -10,6 +12,7 @@ public class ActionLinkedButton extends JButton{
 	public ActionLinkedButton(Action action) {
 		super(action);
 		myAction = action;
+		updateEnabled();
 		this.repaint();
 	}
 

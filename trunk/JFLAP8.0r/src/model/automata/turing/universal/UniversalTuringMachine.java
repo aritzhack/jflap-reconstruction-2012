@@ -42,16 +42,17 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 		//input is: TRANS00INPUT00STATE
 		SymbolString[] parts = input.split(TAPE_DELIMITER.toArray(new Symbol[0]));
 		
-		if (parts.length != 3)
+		if (parts.length != 2)
 			throw new AlgorithmException("An error occurred splitting " + input + " while " +
 					"preparing a Universal TM inital config");
 		
+		SymbolString stateEncoding = new SymbolString(new Symbol("1"));
 		//Alternate definition of turing machine
 		return new MultiTapeTMConfiguration(this, 
 				this.getStartState(), 
 				new int[]{pos,0,0}, 
 				new SymbolString[]{parts[1], 
-									parts[2], 
+									stateEncoding, 
 									parts[0]});
 	}
 

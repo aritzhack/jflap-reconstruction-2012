@@ -8,6 +8,8 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
@@ -19,12 +21,14 @@ import preferences.JFLAPPreferences;
 import debug.JFLAPDebug;
 
 import model.formaldef.components.SetComponent;
+import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
 
-public class ProductionTable extends HighlightTable implements JFLAPConstants, Magnifiable{
+public class ProductionTable extends HighlightTable 
+						implements JFLAPConstants, Magnifiable, ChangeListener{
 
 	private boolean amEditable;
 
@@ -40,9 +44,10 @@ public class ProductionTable extends HighlightTable implements JFLAPConstants, M
 	 * @param keeper 
 	 * @param editable 
 	 */
-	public ProductionTable(ProductionSet model, UndoKeeper keeper, boolean editable) {
-		super(new ProductionTableModel(model, keeper));
+	public ProductionTable(Grammar g, UndoKeeper keeper, boolean editable) {
+		super(new ProductionTableModel(g, keeper));
 		amEditable = editable;
+		g.getProductionSet().addListener(this);
 		initView();
 		myKeeper = keeper;
 		this.addKeyListener(new KeyAdapter() {
@@ -52,13 +57,16 @@ public class ProductionTable extends HighlightTable implements JFLAPConstants, M
 						e.getKeyCode() == KeyEvent.VK_D &&
 						amEditable){
 					int[] rows = getSelectedRows();
+					myKeeper.beginCombine();
+					boolean shouldAdd = false;
 					for (int i : rows){
-						myKeeper.beginCombine();
-						boolean shouldAdd = 
-								((ProductionTableModel) getModel()).remove(i);
-						myKeeper.endCombine(shouldAdd);
+						shouldAdd = ((ProductionTableModel) getModel()).remove(i);
+						if (!shouldAdd) break;
 					}
+					myKeeper.endCombine(shouldAdd);
+
 					e.consume();
+					clearSelection();
 					updateUI();
 				}
 			}
@@ -141,6 +149,14 @@ public class ProductionTable extends HighlightTable implements JFLAPConstants, M
 		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
         this.setFont(this.getFont().deriveFont(size));
         this.setRowHeight((int) (size+10));
+	}
+
+
+
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		this.updateUI();
 	}
 
 }

@@ -22,6 +22,7 @@ public class UndoAction extends AbstractAction implements UndoKeeperListener {
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z,
 				JFLAPConstants.MAIN_MENU_MASK));
 		keeper.addUndoListener(this);
+		keeperStateChanged();
 	}
 	
 	@Override

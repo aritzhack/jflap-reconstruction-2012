@@ -31,6 +31,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.symbols.SpecialSymbol;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import errors.BooleanWrapper;
@@ -207,24 +208,23 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	}
 
 	public void componentChanged(AdvancedChangeEvent event){
-		for (Alphabet a: this.getAlphabets()){
-			if (event.comesFrom(a.getClass())){
-				switch (event.getType()){
-				case ITEM_REMOVED: 
-					this.purgeOfSymbols(a, (Collection<Symbol>) event.getArg(0));
-					return;
-				case ITEM_MODIFIED:
-					Symbol from = (Symbol) event.getArg(0);
-					Symbol to = (Symbol) event.getArg(1);
-					applySymbolMod(from.getString(), to.getString());
-					return;
-				}
+		for (FormalDefinitionComponent comp : this.getComponents()){
+			if (!event.comesFrom(comp.getClass())) continue;
+			
+			if (comp instanceof Alphabet && event.getType() == ITEM_REMOVED){
+				this.purgeOfSymbols((Alphabet) comp, (Collection<Symbol>) event.getArg(0));
+				return;
 			}
-		}
+			if((comp instanceof Alphabet || comp instanceof SpecialSymbol)
+					&& event.getType() == ITEM_MODIFIED){
+				Symbol from = (Symbol) event.getArg(0);
+				Symbol to = (Symbol) event.getArg(1);
+				JFLAPDebug.print("Apply mod: " + from + "-->" + to);
 
-		Collection<UsesSymbols> users = this.getUsesSymbols();
-		for (UsesSymbols us: users){
-			if (event.comesFrom(us.getClass())){
+				applySymbolMod(from.getString(), to.getString());
+			}
+			
+			if (comp instanceof UsesSymbols){
 				updateAlphabets(event.getType());
 				return;
 			}

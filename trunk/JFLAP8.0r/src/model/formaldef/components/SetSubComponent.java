@@ -8,7 +8,6 @@ import javax.swing.event.ChangeEvent;
 
 import debug.JFLAPDebug;
 
-import oldnewstuff.model.change.ChangeApplyingObject;
 import model.change.ChangingObject;
 import model.change.events.SetToEvent;
 import model.formaldef.Describable;

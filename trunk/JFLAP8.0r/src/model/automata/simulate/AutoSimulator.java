@@ -73,7 +73,6 @@ public class AutoSimulator extends AutomatonSimulator{
 		ArrayList<ConfigurationChain> copy = new ArrayList<ConfigurationChain>(mySimulator.getChains());
 		for (ConfigurationChain chain : copy){
 			if (chain.isFinished()) {
-				JFLAPDebug.print(chain);
 				mySimulator.removeConfigurationChain(chain);
 			}
 		}

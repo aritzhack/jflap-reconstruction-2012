@@ -22,6 +22,7 @@ package view.undo;
 
 
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.Action;
@@ -29,6 +30,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
+
+import debug.JFLAPDebug;
 
 import util.view.ActionLinkedButton;
 
@@ -47,6 +50,10 @@ import errors.JFLAPError;
 
 public class UndoButton extends ActionLinkedButton {
 
+	private ImageIcon myIcon;
+
+
+
 	public UndoButton(UndoKeeper keeper) {
 		super(new UndoAction(keeper));
 	}
@@ -61,7 +68,11 @@ public class UndoButton extends ActionLinkedButton {
 
 	@Override
 	public Icon getIcon() {
-		return new ImageIcon("/ICON/undo2.jpg");
+		if (myIcon == null){
+			String url = System.getProperty("user.dir")+"/src/ICON/undo2.jpg";
+			myIcon = new ImageIcon(url);
+		}
+		return myIcon;
 	}
 
 }

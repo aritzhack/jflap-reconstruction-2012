@@ -48,6 +48,8 @@ import errors.BooleanWrapper;
 
 public class RedoButton extends ActionLinkedButton {
 	
+	private ImageIcon myIcon;
+
 	public RedoButton(UndoKeeper keeper){
 		super(new RedoAction(keeper));
 	}
@@ -59,7 +61,11 @@ public class RedoButton extends ActionLinkedButton {
 	
 	@Override
 	public Icon getIcon() {
-		return new ImageIcon("ICON/redo.jpg");
+		if (myIcon == null){
+			String url = System.getProperty("user.dir")+"/src/ICON/redo.jpg";
+			myIcon = new ImageIcon(url);
+		}
+		return myIcon;
 	}
 
 }
