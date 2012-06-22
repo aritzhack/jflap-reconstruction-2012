@@ -18,7 +18,7 @@
 
 
 
-package oldnewstuff.action.windows;
+package view.action.windows;
 
 
 import java.awt.event.ActionEvent;

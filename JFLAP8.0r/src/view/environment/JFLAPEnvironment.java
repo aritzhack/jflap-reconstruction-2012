@@ -1,0 +1,187 @@
+package view.environment;
+
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+import util.JFLAPConstants;
+import view.EditingPanel;
+import view.ViewFactory;
+import view.menus.JFLAPMenuBar;
+
+import file.XMLFileChooser;
+import file.xml.XMLCodec;
+import file.xml.XMLTransducer;
+
+public class JFLAPEnvironment extends JFrame{
+
+	private File myFile;
+	private JTabbedPane myTabbedPane;
+	private JFLAPMenuBar myMenu;
+	private Component myPrimaryView;
+	private boolean amDirty;
+
+	public JFLAPEnvironment(File f){
+		this(ViewFactory.createView(f));
+		setFile(f);
+	}
+	
+	private void setFile(File f) {
+		myFile= f;
+	}
+
+	public JFLAPEnvironment(Component component){
+		super("JFLAP v" + JFLAPConstants.VERSION);
+		myTabbedPane = new SpecialTabbedPane();
+		myPrimaryView = component;
+		
+		myMenu = MenuFactory.createMenu(this);
+		this.setJMenuBar(myMenu);
+		
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				JFLAPEnvironment.this.close(true);
+			}
+
+		});
+		
+		addView(component);
+	}
+	
+	public boolean close(boolean save) {
+		if (save && this.isDirty()){
+			int result = JOptionPane.showConfirmDialog(this, 
+					"Save changes before closing?");
+			if (result == 2) {
+				return false;
+			}
+			if (result == 0){
+				this.save(false);
+			}
+		}
+		this.dispose();
+		return save;
+	}
+	
+	private boolean save(boolean saveAs) {
+		if (saveAs || myFile == null){
+			XMLFileChooser chooser = new XMLFileChooser();
+			int n = chooser.showSaveDialog(this);
+			if (n == JFileChooser.CANCEL_OPTION ||
+					n == JFileChooser.ERROR_OPTION)
+				return false;
+			myFile = chooser.getSelectedFile();
+		}
+		XMLCodec codec = new XMLCodec();
+		codec.encode(this, myFile, null);
+		amDirty = false;
+		for(EditingPanel ep: getEditingPanels()){
+			ep.setDirty(false);
+		}
+
+		return true;
+		
+	}
+
+	
+	private EditingPanel[] getEditingPanels(){
+		List<EditingPanel> editPanels = new ArrayList<EditingPanel>();
+		for (int i = 0; i< myTabbedPane.getTabCount(); i++){
+			Component c = myTabbedPane.getTabComponentAt(i);
+			if (c instanceof EditingPanel)
+				editPanels.add((EditingPanel) c);
+				
+		}
+		return editPanels.toArray(new EditingPanel[0]);
+	}
+	
+	public boolean isDirty() {
+		if (amDirty) return true;
+		for(EditingPanel ep: getEditingPanels()){
+			if (ep.isDirty())
+				return true;
+		}
+		return false;
+	}
+
+	public Component getPrimaryView(){
+		return myPrimaryView;
+	}
+	
+	public void addView(Component component) {
+		myTabbedPane.add(component);
+		myTabbedPane.setSelectedComponent(component);
+		if (component instanceof EditingPanel)
+			amDirty = true;
+	}
+	
+	public void closeActiveTab() {
+		closeTab(myTabbedPane.getSelectedIndex());
+	}
+	
+	public void closeTab(int i) {
+		Component c = myTabbedPane.getTabComponentAt(i);
+		myTabbedPane.remove(i);
+		if (c instanceof EditingPanel)
+			amDirty = true;
+	}
+
+	public void update() {
+		updatePrimaryPanel();
+		updateMenuBar();
+		this.repaint();
+	}
+
+	private void updatePrimaryPanel() {
+		boolean enabled = myTabbedPane.getTabCount() == 1;
+		if (myPrimaryView instanceof EditingPanel)
+			((EditingPanel) myPrimaryView).setEditable(enabled);
+		myTabbedPane.setEnabledAt(0, enabled);
+	}
+
+	private void updateMenuBar() {
+		myMenu.update();
+	}
+
+	@Override
+	public String getName() {
+		String file = "";
+		if (myFile != null)
+			file = " (" + myFile.getName() + ")";
+		return super.getName() + file;
+	}
+	
+	
+	private class SpecialTabbedPane extends JTabbedPane{
+		
+		@Override
+		public void setSelectedComponent(Component c) {
+			this.setSelectedIndex(this.indexOfTabComponent(c));
+			
+		}
+		
+		@Override
+		public void setSelectedIndex(int index) {
+			super.setSelectedIndex(index);
+			JFLAPEnvironment.this.update();
+		}
+	}
+
+
+	public int getTabCount() {
+		return myTabbedPane.getTabCount();
+	}
+	
+}
