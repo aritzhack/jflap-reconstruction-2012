@@ -11,28 +11,18 @@ import model.formaldef.components.SetComponent;
 import model.grammar.Production;
 import model.undo.IUndoRedo;
 
-public class ProductionTableEvent extends AdvancedUndoableEvent {
+public abstract class ProductionTableEvent extends AdvancedUndoableEvent {
 
 	private Production myProduction;
 	private int myIndex;
 
 
-	public ProductionTableEvent(ProductionDataHelper helper, Production p, int i) {
-		this(helper, ITEM_ADDED, i);
-		myProduction = p;
-	}
-	
-	public ProductionTableEvent(ProductionDataHelper helper, int i){
-		this(helper, ITEM_REMOVED, i);
-		
-	}
-	
-	private ProductionTableEvent(ProductionDataHelper helper, int type,
-			int i) {
+	public ProductionTableEvent(int type, ProductionDataHelper helper, Production p, int i) {
 		super(helper, type);
+		myProduction = p;
 		myIndex = i;
 	}
-
+	
 	@Override
 	public ProductionDataHelper getSource() {
 		return (ProductionDataHelper) super.getSource();
@@ -40,20 +30,16 @@ public class ProductionTableEvent extends AdvancedUndoableEvent {
 	
 	@Override
 	public boolean undo() {
-		return getSource();
+		return undo(getSource(), myProduction, myIndex);
 	}
 
+	public abstract boolean undo(ProductionDataHelper source, Production p,int i);
+	
 	@Override
 	public boolean redo() {
-		return myEvent.redo();
+		return redo(getSource(), myProduction, myIndex);
 	}
 
-
-	@Override
-	public String getName() {
-		switch(this.getType()){
-		case ITEM_ADDED: 
-		return myEvent.getName();
-	}
+	public abstract boolean redo(ProductionDataHelper source, Production p, int i);
 	
 }

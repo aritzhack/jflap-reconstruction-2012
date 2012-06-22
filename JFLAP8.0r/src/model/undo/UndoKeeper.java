@@ -51,6 +51,7 @@ public class UndoKeeper implements ChangeListener{
 	}
 
 	public <T extends Copyable> void registerChange(IUndoRedo toAdd){
+		JFLAPDebug.print("Registered: " + toAdd.getName());
 		if (amLocked) 
 			return;
 		else if (amCombining){
@@ -59,8 +60,11 @@ public class UndoKeeper implements ChangeListener{
 			else
 				myCombineAction.add(toAdd);
 		}
-		else
+		else{
 			myUndoQueue.push(toAdd);
+			myRedoQueue.clear();
+			broadcastStateChange();
+		}
 	}
 
 	public boolean undoLast(){
@@ -84,7 +88,6 @@ public class UndoKeeper implements ChangeListener{
 			if (!test) break;
 			to.push(from.pop());
 			n--;
-
 			broadcastStateChange();
 		}
 		amLocked = false;
@@ -145,7 +148,11 @@ public class UndoKeeper implements ChangeListener{
 		myCombineAction = null;
 	}
 	
-	public boolean applyAndCombine(IUndoRedo init){
+	public boolean applyAndListen(IUndoRedo init){
+		if (amCombining) {
+			registerChange(init);
+			return init.redo();
+		}
 		beginCombine();
 		myCombineAction = new CompoundUndoRedo(init);
 		boolean shouldAdd = init.redo();

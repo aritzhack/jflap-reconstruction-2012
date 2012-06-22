@@ -24,7 +24,7 @@ public class GrammarView extends FormalDefinitionView<Grammar> {
 	public JComponent createCentralPanel(Grammar definition,
 			UndoKeeper keeper, boolean editable) {
 
-		return new ProductionTable(definition.getProductionSet(), 
+		return new ProductionTable(definition, 
 										keeper, 
 										editable);
 	}

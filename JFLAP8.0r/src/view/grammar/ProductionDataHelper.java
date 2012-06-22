@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+
 import preferences.JFLAPPreferences;
 
 
@@ -26,6 +27,7 @@ import util.JFLAPConstants;
 import errors.BooleanWrapper;
 
 import model.change.events.AddEvent;
+import model.change.events.AdvancedUndoableEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.grammar.Grammar;
@@ -33,6 +35,9 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizer;
+import model.symbols.symbolizer.Symbolizers;
+import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
 
 
@@ -47,11 +52,13 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	private ArrayList<Production> myOrderedProductions;
 	private ProductionSet myProductions;
 	private UndoKeeper myKeeper;
+	private Grammar myGrammar;
 
-	public ProductionDataHelper(ProductionSet model, UndoKeeper keeper){
+	public ProductionDataHelper(Grammar model, UndoKeeper keeper){
 		myKeeper = keeper;
 		myWrappers = new LinkedList<BooleanWrapper>();
-		myProductions = model;
+		myGrammar = model;
+		myProductions = myGrammar.getProductionSet();
 		myOrderedProductions = 
 				new ArrayList<Production>(myProductions);
 	}
@@ -60,11 +67,8 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	public void add(int index, Object[] input) {
 		Production p = this.objectToProduction(input);
 		if(isValid(p)){
-			AddEvent<Production> add = 
-					new AddEvent<Production>(myProductions, p);
-//			ProductionTableEvent e = new ProductionTableEvent(add, index);
-			if (myKeeper.applyAndCombine(add))
-				myOrderedProductions.add(index, p);
+			TableAddProdEvent add2 = new TableAddProdEvent(p, index);
+			myKeeper.applyAndListen(add2);
 		}
 	}
 
@@ -79,7 +83,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 				Production from = myOrderedProductions.get(index);
 				SetToEvent<Production> set = 
 						new SetToEvent<Production>(from, from.copy(), to);
-				myKeeper.applyAndCombine(set);
+				myKeeper.applyAndListen(set);
 			}
 			else{
 				remove(index);
@@ -120,11 +124,9 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	public Object[] remove(int index) {
 		if (index >= myOrderedProductions.size()) return EMPTY;
 		Production remove = myOrderedProductions.get(index);
-		RemoveEvent<Production> event = 
-				new RemoveEvent<Production>(myProductions, remove);
-		if (myKeeper.applyAndCombine(event)){
-			myOrderedProductions.remove(index);
-		}
+		RemoveOrderedProdEvent event =
+				new RemoveOrderedProdEvent(remove, index);
+		myKeeper.applyAndListen(event);
 		return remove.toArray();
 	}
 
@@ -158,8 +160,8 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 			input[0] = "";
 		if (isEmptyString((String) input[2]))
 			input[2] = "";
-		SymbolString LHS = SymbolString.createForMode((String) input[0]),
-				RHS = SymbolString.createForMode((String) input[2]);
+		SymbolString LHS = Symbolizers.symbolize((String) input[0], myGrammar),
+				RHS = Symbolizers.symbolize((String) input[2], myGrammar);
 		return new Production(LHS, RHS);
 	}
 
@@ -194,4 +196,54 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		return message;
 	}
 
+	
+	
+	private class TableAddProdEvent extends CompoundUndoRedo{
+
+		private Production myProduction;
+		private int myIndex;
+
+		public TableAddProdEvent(Production p, int i) {
+			super(new AddEvent<Production>(myProductions, p));
+			myProduction = p;
+			myIndex = i;
+		}
+
+		@Override
+		public boolean undo() {
+			return super.undo() && myOrderedProductions.remove(myIndex) != null;
+		}
+
+		@Override
+		public boolean redo() {
+			myOrderedProductions.add(myIndex, myProduction);
+			return super.redo();
+		}
+
+	}
+	
+	private class RemoveOrderedProdEvent extends CompoundUndoRedo{
+
+		private Production myProduction;
+		private int myIndex;
+
+		public RemoveOrderedProdEvent(Production p, int i) {
+			super(new RemoveEvent<Production>(myProductions, p));
+			myProduction = p;
+			myIndex = i;
+		}
+
+
+		@Override
+		public boolean undo() {
+			myOrderedProductions.add(myIndex, myProduction);
+			return super.undo();
+		}
+
+		@Override
+		public boolean redo() {
+			return myOrderedProductions.remove(myIndex) != null && super.redo();
+		}
+
+	}
 }

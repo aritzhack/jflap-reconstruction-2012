@@ -72,6 +72,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 	}
 	
 	public void addToCurrentTextFocus(Symbol item) {
+		if (myFocus == null) return;
 		myFocus.replaceSelection(item.toString());
 	}
 	

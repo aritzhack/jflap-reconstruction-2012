@@ -21,7 +21,7 @@ public abstract class UndoingAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		myEvent = createEvent(e);
 		if (myEvent == null) return;
-		myKeeper.applyAndCombine(myEvent);
+		myKeeper.applyAndListen(myEvent);
 		
 	}
 

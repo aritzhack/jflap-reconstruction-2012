@@ -17,6 +17,7 @@ import model.change.ChangingObject;
 import model.change.events.AddEvent;
 import model.change.events.AdvancedChangeEvent;
 import model.change.events.AdvancedUndoableEvent;
+import model.change.events.ModifyEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.formaldef.FormalDefinitionException;
@@ -186,40 +187,11 @@ public abstract class SetComponent<T extends SetSubComponent<T>> extends FormalD
 	public void stateChanged(ChangeEvent e) {
 		if (e instanceof SetToEvent){
 			SetToEvent<T> event = (SetToEvent<T>) e;
-			this.distributeChange(new ModifyEvent(event));
+			this.distributeChange(new ModifyEvent(this, event));
 		}
 		else
 			this.distributeChange(e);
 	}
 	
-	private class ModifyEvent extends AdvancedUndoableEvent{
 
-		private SetToEvent<T> myEvent;
-
-		public ModifyEvent(SetToEvent<T> event) {
-			super(SetComponent.this, event.getType());
-			myEvent = event;
-		}
-
-		@Override
-		public boolean undo() {
-			return myEvent.undo();
-		}
-
-		@Override
-		public boolean redo() {
-			return myEvent.redo();
-		}
-
-		@Override
-		public Object getArg(int i) {
-			return myEvent.getArg(i);
-		}
-		
-		@Override
-		public String getName() {
-			return myEvent.getName();
-		}
-		
-	}
 }
