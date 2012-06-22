@@ -12,10 +12,10 @@ import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
 
-import oldnewstuff.view.EditingPanel;
 import preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.SuperMouseAdapter;
+import view.EditingPanel;
 import view.grammar.Magnifiable;
 
 

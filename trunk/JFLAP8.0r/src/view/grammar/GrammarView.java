@@ -15,6 +15,10 @@ public class GrammarView extends FormalDefinitionView<Grammar> {
 
 	private ProductionTable myTable;
 
+	public GrammarView(Grammar g){
+		this(g, new UndoKeeper(), true);
+	}
+	
 	public GrammarView(Grammar definition, UndoKeeper keeper,
 			boolean editable) {
 		super(definition, keeper, editable);

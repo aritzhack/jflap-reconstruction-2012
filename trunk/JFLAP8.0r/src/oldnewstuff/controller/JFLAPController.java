@@ -15,13 +15,13 @@ import javax.swing.JTabbedPane;
 
 import oldnewstuff.action.save.SaveAction;
 import oldnewstuff.action.save.SaveActionEvent;
-import oldnewstuff.action.windows.CloseButton;
 import oldnewstuff.universe.JFLAPUniverse;
-import oldnewstuff.view.EditingPanel;
 import oldnewstuff.view.JFLAPGUIResources;
 import oldnewstuff.view.PrimaryEditingPane;
 import oldnewstuff.view.Saveable;
 import util.JFLAPConstants;
+import view.EditingPanel;
+import view.action.windows.CloseButton;
 
 
 

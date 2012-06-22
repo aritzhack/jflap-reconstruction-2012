@@ -18,7 +18,7 @@
 
 
 
-package oldnewstuff.action.windows;
+package view.action.windows;
 
 
 import java.awt.event.ActionEvent;
@@ -35,7 +35,7 @@ import javax.swing.event.ChangeListener;
 
 import oldnewstuff.controller.JFLAPController;
 import oldnewstuff.controller.menus.MenuConstants;
-import oldnewstuff.view.JFLAPGUIResources;
+import view.environment.JFLAPEnvironment;
 
 
 
@@ -48,9 +48,9 @@ import oldnewstuff.view.JFLAPGUIResources;
  * @author Thomas Finley
  */
 
-public class CloseTabAction extends AbstractAction implements PropertyChangeListener, JFLAPGUIResources {
+public class CloseTabAction extends AbstractAction {
 	
-	private JFLAPController myController;
+	private JFLAPEnvironment myEnvironment;
 
 	/**
 	 * Instantiates a <CODE>CloseAction</CODE>.
@@ -59,12 +59,11 @@ public class CloseTabAction extends AbstractAction implements PropertyChangeList
 	 * @param environment
 	 *            the environment to handle the closing for
 	 */
-	public CloseTabAction(JFLAPController c, boolean usingIcon) {
+	public CloseTabAction(JFLAPEnvironment e, boolean usingIcon) {
 		super("Dismiss Tab", getIcon(usingIcon));
 		putValue(ACCELERATOR_KEY, 
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, MenuConstants.getMainMenuMask()));
-		myController = c;
-		myController.addPropertyChangeListener(this);
+		myEnvironment = e;
 	}
 
 
@@ -73,21 +72,15 @@ public class CloseTabAction extends AbstractAction implements PropertyChangeList
 	}
 
 
-	/**
-	 * Handles the closing on the environment.
-	 * 
-	 * @param e
-	 *            the action event
-	 */
-	public void actionPerformed(ActionEvent e) {
-		myController.closeActiveTab(true);
-	}
-
 	@Override
-	public void propertyChange(PropertyChangeEvent e) {
-		if (e.getPropertyName().equals(TAB_CHANGED)){
-			this.setEnabled(myController.canCloseATab());
-		}
-		
+	public void actionPerformed(ActionEvent arg0) {
+		myEnvironment.closeActiveTab();
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return myEnvironment.getTabCount() > 1;
+	}
+	
+
 }

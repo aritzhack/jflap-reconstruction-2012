@@ -3,6 +3,7 @@ package oldnewstuff.view;
 import java.util.Map;
 
 import util.view.undo.UndoKeeper;
+import view.EditingPanel;
 
 
 public abstract class PrimaryEditingPane extends EditingPanel {

@@ -1,4 +1,4 @@
-package oldnewstuff.view;
+package view;
 
 import javax.swing.JPanel;
 
@@ -8,6 +8,7 @@ public abstract class EditingPanel extends JPanel{
 
 	private UndoKeeper myKeeper;
 	private boolean amEditable;
+	private boolean amDirty;
 	
 	public EditingPanel(UndoKeeper keeper, boolean editable){
 		myKeeper = keeper;
@@ -23,6 +24,14 @@ public abstract class EditingPanel extends JPanel{
 	
 	public void setEditable(boolean editable){
 		amEditable = editable;
+	}
+
+	public boolean isDirty() {
+		return amDirty;
+	}
+	
+	public void setDirty(boolean dirty){
+		amDirty = dirty;
 	}
 	
 }

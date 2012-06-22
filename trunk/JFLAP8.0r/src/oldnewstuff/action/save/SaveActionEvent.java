@@ -2,7 +2,7 @@ package oldnewstuff.action.save;
 
 import java.awt.event.ActionEvent;
 
-import oldnewstuff.view.EditingPanel;
+import view.EditingPanel;
 
 
 public class SaveActionEvent extends ActionEvent {

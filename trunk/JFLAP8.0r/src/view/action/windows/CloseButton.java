@@ -18,7 +18,7 @@
 
 
 
-package oldnewstuff.action.windows;
+package view.action.windows;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -32,6 +32,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import oldnewstuff.controller.JFLAPController;
+import util.view.ActionLinkedButton;
+import view.environment.JFLAPEnvironment;
 
 
 
@@ -49,27 +51,14 @@ import oldnewstuff.controller.JFLAPController;
  * @author Jinghui Lim
  *
  */
-public class CloseButton extends JButton implements PropertyChangeListener 
+public class CloseButton extends ActionLinkedButton 
 {
     
-    /**
-     * Instantiates a <code>CloseButton</code>, and sets its values
-     * with {@link #setDefaults()}.
-     * @param jflapController 
-     * 
-     * @param frame the environment to handle the closing for
-     */
-    public CloseButton(JFLAPController jflapController) 
-    {
-        super(new CloseTabAction(jflapController, true));
-        jflapController.addPropertyChangeListener(this);
+	public CloseButton(JFLAPEnvironment e) {
+		super(new CloseTabAction(e, true));
         this.setText("");
         setPreferredSize(new Dimension(22, 22));
-    }
-
-	@Override
-	public void propertyChange(PropertyChangeEvent e) {
-			this.setEnabled(this.getAction().isEnabled());
 	}
+	
 
 }
