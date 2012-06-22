@@ -7,8 +7,8 @@ import preferences.JFLAPPreferences;
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 
 public class BlankSymbol extends SpecialSymbol {
 

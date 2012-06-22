@@ -20,7 +20,7 @@ import model.change.events.AdvancedUndoableEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.formaldef.FormalDefinitionException;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 import util.Copyable;
 

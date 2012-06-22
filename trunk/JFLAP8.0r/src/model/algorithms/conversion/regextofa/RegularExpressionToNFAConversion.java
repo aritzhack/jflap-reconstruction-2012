@@ -26,11 +26,11 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RegularExpressionToNFAConversion extends ConversionAlgorithm<RegularExpression, FiniteStateAcceptor> {
 

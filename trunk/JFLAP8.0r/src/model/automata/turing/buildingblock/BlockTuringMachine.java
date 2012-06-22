@@ -13,8 +13,8 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.TuringMachineBlankRule;
+import model.symbols.Symbol;
 
 public class BlockTuringMachine extends TuringMachine<BlockTransition> {
 

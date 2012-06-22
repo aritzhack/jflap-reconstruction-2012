@@ -16,8 +16,8 @@ import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 

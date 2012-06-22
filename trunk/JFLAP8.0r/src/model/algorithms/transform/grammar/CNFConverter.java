@@ -15,16 +15,16 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.grammar.typetest.matchers.CNFChecker;
 import model.grammar.typetest.matchers.GrammarChecker;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class CNFConverter extends GrammarTransformAlgorithm {
 

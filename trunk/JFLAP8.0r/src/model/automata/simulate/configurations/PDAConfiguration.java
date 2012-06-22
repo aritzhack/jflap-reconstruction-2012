@@ -6,8 +6,8 @@ import model.automata.State;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.simulate.SingleInputSimulator;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class PDAConfiguration extends
 		SingleSecondaryConfiguration<PushdownAutomaton, PDATransition> {

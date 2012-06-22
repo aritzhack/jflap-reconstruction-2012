@@ -12,9 +12,9 @@ import util.Copyable;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.graph.GraphHelper;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * A <CODE>Transition</CODE> object is a simple abstract class representing a

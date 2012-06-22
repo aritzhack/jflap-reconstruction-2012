@@ -11,7 +11,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public abstract class Transducer<T extends OutputFunction> extends Automaton<FSATransition> {
 

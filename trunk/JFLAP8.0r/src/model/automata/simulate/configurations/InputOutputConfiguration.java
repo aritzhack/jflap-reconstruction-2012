@@ -9,8 +9,8 @@ import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
 import model.automata.transducers.Transducer;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public abstract class InputOutputConfiguration<S extends Transducer<T>, T extends OutputFunction> 
 							extends SingleSecondaryConfiguration<S, FSATransition> {
@@ -24,10 +24,19 @@ public abstract class InputOutputConfiguration<S extends Transducer<T>, T extend
 		return super.getSecondaryString();
 	}
 
-
+	@Override
+	protected boolean shouldFindValidTransitions() {
+		return true;
+	}
+//	
+//	@Override
+//	protected boolean isDone() {
+//		return !hasNextState();
+//	}
+//	
 	@Override
 	protected boolean isInFinalState() {
-		return true;
+		return !hasNextState();
 	}
 
 	@Override

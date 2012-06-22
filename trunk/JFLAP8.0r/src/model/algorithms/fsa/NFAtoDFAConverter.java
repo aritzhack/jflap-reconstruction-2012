@@ -24,8 +24,8 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.FSADeterminismChecker;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcceptor>{
 

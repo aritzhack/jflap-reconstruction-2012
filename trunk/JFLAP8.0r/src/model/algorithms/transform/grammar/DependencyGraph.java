@@ -10,13 +10,13 @@ import java.util.TreeSet;
 
 import debug.JFLAPDebug;
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Variable;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.graph.DirectedGraph;
 import model.graph.Graph;
 import model.graph.PathFinder;
 import model.graph.layout.CircleLayoutAlgorithm;
+import model.symbols.Symbol;
 
 public class DependencyGraph extends DirectedGraph<Variable>{
 

@@ -27,13 +27,13 @@ import model.automata.StateSet;
 import model.automata.SingleInputTransition;
 import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
 
 public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S extends SingleInputTransition<S>> 
 																		extends ConversionAlgorithm<Grammar, T> {

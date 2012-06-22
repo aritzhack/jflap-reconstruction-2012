@@ -30,9 +30,9 @@ import model.formaldef.components.ComponentChangeListener;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import errors.BooleanWrapper;
 
 
@@ -283,9 +283,20 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		return result;
 	}
 
-	private Symbol toSymbols(String in, boolean custom) {
-		
-		return null;
+	private SymbolString toSymbols(String in, boolean custom) {
+		SymbolString ss = new SymbolString();
+		if (!custom){
+			for (char c: in.toCharArray()){
+				ss.add(toSymbol(c+""));
+			}
+		}
+		else
+			ss.add(toSymbol(in));
+		return ss;
+	}
+
+	public Symbol toSymbol(String string) {
+		return new Symbol(string);
 	}
 
 	private Collection<Object> extractSymbols(String in) {

@@ -11,8 +11,8 @@ import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.HaltBlock;
 import model.automata.turing.buildingblock.library.StartBlock;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class ConvertedUniversalTM extends BlockTuringMachine {
 

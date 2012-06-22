@@ -9,9 +9,9 @@ import model.automata.AutomatonException;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.EmptySub;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class FSATransition extends SingleInputTransition<FSATransition> {
 

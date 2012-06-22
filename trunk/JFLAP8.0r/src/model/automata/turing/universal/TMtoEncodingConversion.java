@@ -7,7 +7,7 @@ import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.conversion.ConversionAlgorithm;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class TMtoEncodingConversion extends FormalDefinitionAlgorithm<MultiTapeTuringMachine> {
 

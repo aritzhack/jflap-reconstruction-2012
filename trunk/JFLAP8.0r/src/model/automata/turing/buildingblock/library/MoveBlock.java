@@ -9,7 +9,7 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class MoveBlock extends BaseMultiTapeBlock {
 	private TuringMachineMove myDirection;

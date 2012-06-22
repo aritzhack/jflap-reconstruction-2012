@@ -2,9 +2,9 @@ package model.formaldef.rules.applied;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.GroupingRule;
 import model.grammar.TerminalAlphabet;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {

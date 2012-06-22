@@ -15,10 +15,10 @@ import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgorithm {
 

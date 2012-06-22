@@ -15,8 +15,8 @@ import model.automata.Transition;
 import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class BlockTransition extends SingleInputTransition<BlockTransition> implements JFLAPConstants {
 

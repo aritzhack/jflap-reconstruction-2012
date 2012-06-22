@@ -9,8 +9,8 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.library.BaseBlockTMBlock;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class ConvertInputBlock extends MappingBlock{
 

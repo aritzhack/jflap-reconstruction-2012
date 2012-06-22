@@ -3,7 +3,7 @@ package model.automata.simulate;
 import util.Copyable;
 import model.automata.Automaton;
 import model.formaldef.Describable;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public abstract class AutomatonSimulator implements Describable, Copyable{
 

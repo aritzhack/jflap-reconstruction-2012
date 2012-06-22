@@ -1,8 +1,9 @@
 package model.automata.transducers;
 
+import debug.JFLAPDebug;
 import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class OutputFunctionSet<T extends OutputFunction<T>> extends FunctionSet<T> {
 
@@ -26,6 +27,7 @@ public class OutputFunctionSet<T extends OutputFunction<T>> extends FunctionSet<
 			if (func.matches(trans))
 				return new SymbolString(func.getOutput());
 		}
+		
 		return null;
 	}
 

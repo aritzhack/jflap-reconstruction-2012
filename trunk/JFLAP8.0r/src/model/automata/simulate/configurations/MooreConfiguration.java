@@ -3,7 +3,7 @@ package model.automata.simulate.configurations;
 import model.automata.State;
 import model.automata.transducers.moore.MooreMachine;
 import model.automata.transducers.moore.MooreOutputFunction;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 public class MooreConfiguration extends

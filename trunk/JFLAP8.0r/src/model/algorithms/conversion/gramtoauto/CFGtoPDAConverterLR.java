@@ -10,12 +10,12 @@ import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.StartVariable;
+import model.grammar.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class CFGtoPDAConverterLR extends CFGtoPDAConverter {
 

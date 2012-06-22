@@ -17,7 +17,7 @@ import model.automata.Automaton;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.Describable;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 public class SingleInputSimulator extends AutomatonSimulator{
@@ -48,7 +48,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		return false;
 	}
 	
-	public List<ConfigurationChain> step(){
+	public ConfigurationChain[] step(){
 		
 		LinkedList<ConfigurationChain> copy = new LinkedList<ConfigurationChain>(myChains);
 		myChains.clear();
@@ -67,7 +67,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		updateSelectedStates();
 //		JFLAPDebug.print(myChains);
 
-		return this.getAllAcceptChains();
+		return myChains.toArray(new ConfigurationChain[0]);
 	}
 	
 	public Collection<? extends ConfigurationChain> stepAndFork(

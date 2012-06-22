@@ -50,8 +50,8 @@ import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
+import model.grammar.Terminal;
+import model.symbols.Symbol;
 
 
 public class BuildMinimizeTreeAlgorithm extends FormalDefinitionAlgorithm<FiniteStateAcceptor>{

@@ -13,7 +13,7 @@ import java.util.TreeSet;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 

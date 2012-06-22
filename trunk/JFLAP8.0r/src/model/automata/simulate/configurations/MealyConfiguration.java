@@ -6,7 +6,7 @@ import model.automata.simulate.Configuration;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.mealy.MealyOutputFunction;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 public class MealyConfiguration extends

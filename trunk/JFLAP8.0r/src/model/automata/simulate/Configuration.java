@@ -15,7 +15,7 @@ import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 public abstract class Configuration<S extends Automaton<T>, T extends Transition<T>> implements Copyable{

@@ -11,7 +11,7 @@ import model.formaldef.Describable;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public abstract class LanguageFunction<T extends LanguageFunction<T>> extends SetSubComponent<T>
 																		implements UsesSymbols{

@@ -6,8 +6,8 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 
@@ -50,7 +50,7 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	
 	@Override
 	public boolean matches(FSATransition trans) {
-		return this.getInput().equals(trans.getInput()) &&
+		return myInput.equals(new SymbolString(trans.getInput())) &&
 				this.getState().equals(trans.getFromState());
 	}
 

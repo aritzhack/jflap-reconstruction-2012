@@ -5,8 +5,8 @@ import java.util.Map;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.buildingblock.library.BaseBlockTMBlock;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RetrieveOutputBlock extends MappingBlock{
 

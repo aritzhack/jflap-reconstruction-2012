@@ -17,14 +17,14 @@ import model.automata.SingleInputTransition;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.GroupingRule;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.StartVariable;
+import model.grammar.Variable;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcceptor, FSATransition> {
 

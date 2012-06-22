@@ -19,7 +19,7 @@ import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class BuildMinimalDFA extends SteppableAlgorithm {
 

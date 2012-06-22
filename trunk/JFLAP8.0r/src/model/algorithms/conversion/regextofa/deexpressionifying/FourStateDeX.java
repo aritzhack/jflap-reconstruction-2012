@@ -7,10 +7,10 @@ import model.algorithms.conversion.regextofa.DeExpressionifier;
 import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
+import model.symbols.SymbolString;
 
 public abstract class FourStateDeX extends DeExpressionifier {
 

@@ -5,11 +5,11 @@ import java.util.List;
 import model.algorithms.AlgorithmException;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * An interface designed to provide some syntactic sugar for the 
