@@ -8,8 +8,8 @@ import java.util.TreeSet;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public abstract class AutomatonFunction<T extends AutomatonFunction<T>> extends LanguageFunction<T>{
 

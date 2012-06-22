@@ -9,12 +9,12 @@ import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
 import model.algorithms.conversion.regextofa.DeExpressionifier;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class GroupingDeX extends DeExpressionifier {
 

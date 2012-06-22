@@ -23,13 +23,13 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.operators.KleeneStar;
 import model.regex.operators.Operator;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<FiniteStateAcceptor> {
 

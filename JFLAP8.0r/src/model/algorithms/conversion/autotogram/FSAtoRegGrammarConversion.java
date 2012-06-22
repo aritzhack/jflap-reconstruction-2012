@@ -17,10 +17,10 @@ import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
+import model.grammar.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<FiniteStateAcceptor, FSAVariableMapping, FSATransition> {
 

@@ -7,7 +7,7 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.automata.simulate.configurations.tm.TMConfiguration;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>{
 

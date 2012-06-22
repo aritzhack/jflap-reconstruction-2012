@@ -8,8 +8,8 @@ import model.automata.Automaton;
 import model.automata.SingleInputTransition;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class FSADeterminismChecker extends DeterminismChecker<FSATransition> {
 

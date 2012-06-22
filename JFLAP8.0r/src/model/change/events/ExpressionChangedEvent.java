@@ -1,7 +1,7 @@
 package model.change.events;
 
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.ExpressionComponent;
+import model.symbols.SymbolString;
 
 public class ExpressionChangedEvent extends IndividualComponentChange<ExpressionComponent, SymbolString> {
 

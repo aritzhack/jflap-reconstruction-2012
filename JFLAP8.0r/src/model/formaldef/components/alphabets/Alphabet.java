@@ -21,10 +21,10 @@ import model.automata.InputAlphabet;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.AlphabetRule;
 import model.formaldef.rules.GroupingRule;
 import model.formaldef.rules.applied.BaseRule;
+import model.symbols.Symbol;
 
 
 

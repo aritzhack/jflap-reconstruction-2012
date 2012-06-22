@@ -1,7 +1,7 @@
 package model.change.events;
 
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 
 public class SpecialSymbolSetEvent extends IndividualComponentChange<SpecialSymbol, Symbol> {
 

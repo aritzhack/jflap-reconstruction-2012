@@ -9,8 +9,8 @@ import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class UniversalTMBlock extends Block {
 

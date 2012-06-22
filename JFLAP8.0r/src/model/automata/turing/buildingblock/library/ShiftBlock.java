@@ -16,8 +16,8 @@ import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class ShiftBlock extends BaseBlockTMBlock {
 

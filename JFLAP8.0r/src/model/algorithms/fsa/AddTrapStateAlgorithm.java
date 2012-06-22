@@ -19,8 +19,8 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.DeterminismChecker;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteStateAcceptor> {
 

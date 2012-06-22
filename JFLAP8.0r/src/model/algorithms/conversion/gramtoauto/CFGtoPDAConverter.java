@@ -17,14 +17,14 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<PushdownAutomaton, PDATransition> {
 

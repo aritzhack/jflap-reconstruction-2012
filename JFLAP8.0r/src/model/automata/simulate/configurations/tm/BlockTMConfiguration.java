@@ -23,8 +23,8 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.universal.UniversalTuringMachine;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, BlockTransition> {
 

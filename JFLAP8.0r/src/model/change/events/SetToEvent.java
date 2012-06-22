@@ -2,8 +2,8 @@ package model.change.events;
 
 import debug.JFLAPDebug;
 import model.formaldef.components.Settable;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 
 public class SetToEvent<T extends Settable<T>> extends AdvancedUndoableEvent {
 

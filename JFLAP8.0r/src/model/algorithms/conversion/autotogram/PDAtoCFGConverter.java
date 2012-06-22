@@ -18,11 +18,11 @@ import model.automata.State;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAutomaton,PDAVariableMapping, PDATransition>{
 

@@ -9,10 +9,10 @@ import debug.JFLAPDebug;
 import model.algorithms.conversion.regextofa.DeExpressionifier;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.KleeneStar;
+import model.symbols.SymbolString;
 
 public class KleeneStarDeX extends DeExpressionifier {
 

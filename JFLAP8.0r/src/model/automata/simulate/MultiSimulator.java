@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import model.automata.Automaton;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * A simple class designed to save the results for multiple input

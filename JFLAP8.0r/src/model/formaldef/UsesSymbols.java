@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 /**
  * A simple interface to give an object the quality of 

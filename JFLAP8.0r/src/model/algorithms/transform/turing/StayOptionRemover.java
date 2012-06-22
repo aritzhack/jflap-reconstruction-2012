@@ -12,7 +12,7 @@ import model.automata.TransitionSet;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 /**

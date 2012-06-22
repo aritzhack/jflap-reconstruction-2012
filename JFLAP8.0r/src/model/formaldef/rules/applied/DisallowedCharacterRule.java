@@ -3,8 +3,8 @@ package model.formaldef.rules.applied;
 import util.UtilFunctions;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.FormalDefinitionUsingRule;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class DisallowedCharacterRule extends FormalDefinitionUsingRule<Alphabet, FormalDefinition> {

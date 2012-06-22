@@ -11,7 +11,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public abstract class DeterminismChecker<T extends SingleInputTransition<T>> {
 

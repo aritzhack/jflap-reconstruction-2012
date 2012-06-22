@@ -1,13 +1,14 @@
 package model.automata.simulate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import debug.JFLAPDebug;
 
 import model.automata.Automaton;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class AutoSimulator extends AutomatonSimulator{
 
@@ -19,23 +20,62 @@ public class AutoSimulator extends AutomatonSimulator{
 	}
 
 	public List<ConfigurationChain> getNextAccept(){
-				
+		
+		while(mySimulator.canStep()){
+			List<ConfigurationChain> chains = getNextHalt();
+			List<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
+			for (ConfigurationChain chain: chains){
+				if (chain.isAccept())
+					toReturn.add(chain);
+			}
+			if (!toReturn.isEmpty()){
+				return toReturn;
+			}
+		}
+		return new ArrayList<ConfigurationChain>();
+		
+	}
+
+	public List<ConfigurationChain> getNextHalt() {
 		while (!mySimulator.getChains().isEmpty()){
-			List<ConfigurationChain> chains = mySimulator.step();
-			removeCompletedChains();
-			if (!chains.isEmpty()){
-				return chains;
+			ConfigurationChain[] chains = mySimulator.step();
+			List<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
+			for (ConfigurationChain chain: chains){
+				if (chain.isFinished())
+					toReturn.add(chain);
+			}
+			if (!toReturn.isEmpty()){
+				return toReturn;
 			}
 		}
 		
 		return new ArrayList<ConfigurationChain>();
 	}
+	
+	public List<ConfigurationChain> getLastHalt(){
+		List<ConfigurationChain> result = new ArrayList<ConfigurationChain>();
+		while (!mySimulator.getChains().isEmpty()){
+			ConfigurationChain[] chains = mySimulator.step();
+			List<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
+			for (ConfigurationChain chain: chains){
+				if (chain.isFinished())
+					toReturn.add(chain);
+			}
+			if (!toReturn.isEmpty()){
+				result.clear();
+				result.addAll(toReturn);
+			}
+		}
+		return result;
+	}
 
-	private void removeCompletedChains() {
+	private void removeRejectChains() {
 		ArrayList<ConfigurationChain> copy = new ArrayList<ConfigurationChain>(mySimulator.getChains());
 		for (ConfigurationChain chain : copy){
-			if (chain.isFinished()) 
+			if (chain.isFinished()) {
+				JFLAPDebug.print(chain);
 				mySimulator.removeConfigurationChain(chain);
+			}
 		}
 		
 		

@@ -37,7 +37,7 @@ import model.automata.State;
 import model.automata.StateSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 /**
  * The Minimize Tree Node object is merely a default mutable tree node with an

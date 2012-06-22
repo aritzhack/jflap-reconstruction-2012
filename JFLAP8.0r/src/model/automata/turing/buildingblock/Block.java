@@ -8,7 +8,7 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class Block extends State implements UsesSymbols{
 	private TuringMachine myMachine;

@@ -16,9 +16,9 @@ import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.TuringMachineBlankRule;
 import model.formaldef.rules.applied.TuringMachineRule;
+import model.symbols.Symbol;
 
 public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T> {
 

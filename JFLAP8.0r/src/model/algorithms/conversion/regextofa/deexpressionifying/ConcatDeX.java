@@ -6,11 +6,11 @@ import java.util.List;
 import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.OperatorAlphabet;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.UnionOperator;
+import model.symbols.SymbolString;
 
 public class ConcatDeX extends FourStateDeX{
 

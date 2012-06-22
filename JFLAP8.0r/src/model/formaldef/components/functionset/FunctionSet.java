@@ -14,7 +14,7 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public abstract class FunctionSet<T extends LanguageFunction<T>> extends SetComponent<T> implements UsesSymbols{
 

@@ -3,7 +3,7 @@ package model.automata.transducers.moore;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunction;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class MooreOutputFunction extends OutputFunction<MooreOutputFunction> {
 

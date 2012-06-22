@@ -14,12 +14,12 @@ import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import errors.BooleanWrapper;
 
 public abstract class AutomatonToGrammarConversion<T extends Automaton<E>, 

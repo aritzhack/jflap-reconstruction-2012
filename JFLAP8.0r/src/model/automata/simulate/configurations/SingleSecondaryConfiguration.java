@@ -6,7 +6,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.simulate.Configuration;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 public abstract class SingleSecondaryConfiguration<S extends Automaton<T>, 

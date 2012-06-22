@@ -12,11 +12,11 @@ import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmExecutingStep;
 import model.algorithms.AlgorithmStep;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Variable;
+import model.symbols.SymbolString;
 
 public class UselessProductionRemover extends GrammarTransformAlgorithm {
 

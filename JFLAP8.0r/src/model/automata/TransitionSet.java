@@ -14,7 +14,7 @@ import debug.JFLAPDebug;
 
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 

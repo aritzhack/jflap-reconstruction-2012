@@ -13,8 +13,8 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.alphabets.grouping.SpecialSymbolFactory;
-import model.formaldef.components.symbols.Symbol;
 import model.formaldef.rules.applied.BottomOfStackSymbolRule;
+import model.symbols.Symbol;
 
 public class PushdownAutomaton extends Acceptor<PDATransition> {
 

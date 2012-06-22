@@ -10,7 +10,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public abstract class Automaton<T extends Transition<T>> extends FormalDefinition{
 

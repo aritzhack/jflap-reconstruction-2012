@@ -13,7 +13,7 @@ import model.change.ChangingObject;
 import model.change.events.SetToEvent;
 import model.formaldef.Describable;
 import model.formaldef.FormalDefinitionException;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import util.Copyable;
 
 public abstract class SetSubComponent<T extends SetSubComponent<T>> extends ChangingObject 

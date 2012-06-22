@@ -7,8 +7,8 @@ import util.UtilFunctions;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class PDATransition extends SingleInputTransition<PDATransition> {
 

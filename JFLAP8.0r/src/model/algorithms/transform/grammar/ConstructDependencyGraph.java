@@ -14,9 +14,9 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Variable;
 
 public class ConstructDependencyGraph extends FormalDefinitionAlgorithm<Grammar> {
 
