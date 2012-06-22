@@ -9,10 +9,10 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.parsing.lr.SLR1Production;
+import model.symbols.Symbol;
 
 public class ClosureHelper implements JFLAPConstants{
 

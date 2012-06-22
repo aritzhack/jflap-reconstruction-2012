@@ -8,9 +8,8 @@ import errors.BooleanWrapper;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Variable;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 
 public class StartVariable extends SpecialSymbol{
 

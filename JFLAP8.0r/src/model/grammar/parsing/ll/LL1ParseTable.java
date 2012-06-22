@@ -10,13 +10,13 @@ import preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.parsing.FirstFollowTable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class LL1ParseTable {
 

@@ -27,7 +27,7 @@ import model.automata.State;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 
 /**

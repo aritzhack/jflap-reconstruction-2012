@@ -1,8 +1,8 @@
 package model.languages.samplelanguages;
 
-import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.languages.*;
+import model.symbols.*;
 
 public class SigmaStarLanguage extends Language {
 

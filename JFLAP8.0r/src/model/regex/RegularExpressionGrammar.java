@@ -9,16 +9,16 @@ import model.automata.InputAlphabet;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * Creates a basic Regular Expression grammar with

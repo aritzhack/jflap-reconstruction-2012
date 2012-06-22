@@ -8,9 +8,9 @@ import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
 import model.algorithms.SteppableAlgorithm;
 import model.formaldef.Describable;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
+import model.symbols.SymbolString;
 
 
 public abstract class Parser extends FormalDefinitionAlgorithm<Grammar>{

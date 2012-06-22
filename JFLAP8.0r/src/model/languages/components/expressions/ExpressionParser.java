@@ -1,6 +1,6 @@
 package model.languages.components.expressions;
 
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class ExpressionParser {
 

@@ -1,10 +1,10 @@
 package model.grammar.typetest.matchers;
 
 import model.formaldef.Describable;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 

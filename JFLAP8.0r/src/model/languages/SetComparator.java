@@ -2,7 +2,7 @@ package model.languages;
 
 import java.util.Comparator;
 
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class SetComparator implements Comparator<SymbolString> {
 

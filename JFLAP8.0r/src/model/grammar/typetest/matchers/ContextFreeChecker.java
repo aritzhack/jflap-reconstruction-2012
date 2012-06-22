@@ -2,11 +2,11 @@ package model.grammar.typetest.matchers;
 
 import java.util.Arrays;
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 public class ContextFreeChecker extends GrammarChecker{

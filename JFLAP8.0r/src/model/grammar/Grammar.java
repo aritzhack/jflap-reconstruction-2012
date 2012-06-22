@@ -10,10 +10,6 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.AlphabetRule;
 import model.formaldef.rules.GroupingRule;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
@@ -22,6 +18,8 @@ import model.formaldef.rules.applied.TermsVersusVarsIdenticalRule;
 import model.formaldef.rules.applied.VariableGroupingRule;
 import model.formaldef.rules.applied.VarsVersusTermsIdenticalRule;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * An object representing the formal 4-tuple that represents

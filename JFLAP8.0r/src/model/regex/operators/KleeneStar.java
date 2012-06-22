@@ -1,6 +1,6 @@
 package model.regex.operators;
 
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class KleeneStar extends Operator {
 
