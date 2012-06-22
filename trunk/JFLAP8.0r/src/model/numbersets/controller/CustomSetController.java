@@ -13,7 +13,6 @@ public class CustomSetController {
 	
 	private CustomSet myCustomSet;
 	
-	
 	private static final String DELIMITER = "[\\s|,]+";
 	
 	public CustomSetController() {

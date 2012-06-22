@@ -12,4 +12,6 @@ public abstract class AbstractNumberSet {
 	
 	public abstract String getDescription();
 	
+	public abstract boolean isFinite ();
+	
 }
