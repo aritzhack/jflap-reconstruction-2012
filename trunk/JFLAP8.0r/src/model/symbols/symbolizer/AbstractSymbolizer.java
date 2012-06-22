@@ -22,7 +22,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 	private Alphabet[] myAlphs;
 
 	public AbstractSymbolizer(FormalDefinition fd){
-		this(fd.getAlphabets().toArray(new Alphabet[0]));
+		this(fd.getAlphabets());
 	}
 	
 	public AbstractSymbolizer(Alphabet ... alphs) {
@@ -52,7 +52,6 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 		for (String s: split){
 			ss.add(toNewSymbol(s));
 		}
-		JFLAPDebug.print(unIDed);
 		return ss;
 	}
 

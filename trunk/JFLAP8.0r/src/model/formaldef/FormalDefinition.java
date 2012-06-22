@@ -130,7 +130,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		return new ArrayList<Character>(Arrays.asList(new Character[]{' ', JFLAPPreferences.getEmptyStringSymbol().charAt(0)}));
 	}
 
-	public AbstractCollection<Alphabet> getAlphabets() {
+	public Alphabet[] getAlphabets() {
 		AbstractCollection<Alphabet> alphs = new ArrayList<Alphabet>();
 
 		for (FormalDefinitionComponent comp : this.getComponents()){
@@ -140,7 +140,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 
 
-		return alphs;
+		return alphs.toArray(new Alphabet[0]);
 	}
 
 	/**
@@ -207,8 +207,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	}
 
 	public void componentChanged(AdvancedChangeEvent event){
-		Collection<Alphabet> alphabets = this.getAlphabets();
-		for (Alphabet a: alphabets){
+		for (Alphabet a: this.getAlphabets()){
 			if (event.comesFrom(a.getClass())){
 				switch (event.getType()){
 				case ITEM_REMOVED: 

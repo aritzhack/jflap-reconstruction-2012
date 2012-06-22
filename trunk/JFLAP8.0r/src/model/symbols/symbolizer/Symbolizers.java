@@ -18,62 +18,64 @@ import model.symbols.SymbolString;
 public class Symbolizers {
 
 	private static Map<Class<? extends FormalDefinition>, 
-							Class<? extends DefaultSymbolizer>> myDefaultMap;
+	Class<? extends DefaultSymbolizer>> myDefaultMap;
 	private static Map<Class<? extends FormalDefinition>, 
 	Class<? extends CustomSymbolizer>> myCustomMap;
 
 	static{
 		myDefaultMap = new HashMap<Class<? extends FormalDefinition>, 
-									Class<? extends DefaultSymbolizer>>();
+				Class<? extends DefaultSymbolizer>>();
 		myCustomMap = new HashMap<Class<? extends FormalDefinition>, 
 				Class<? extends CustomSymbolizer>>();
-		
+
 		//add Grammar symbolizers
 		myDefaultMap.put(Grammar.class, GrammarDefaultSymbolizer.class);
 		myCustomMap.put(Grammar.class, GrammarCustomSymbolizer.class);
-		
+
 		//add Regex symbolizers
 		myDefaultMap.put(RegularExpression.class, RegExDefaultSymbolizer.class);
 		myCustomMap.put(RegularExpression.class, RegExCustomSymbolizer.class);
 
-		
+
 	}
-	
-	
+
+
 	public static SymbolString symbolize(String in, FormalDefinition fd) {
 		Symbolizer s = getSymbolizer(fd);
-		JFLAPDebug.print(fd.getDescriptionName() + " | " + s.getClass().getSimpleName());
 		return s.symbolize(in);
 	}
 
-	public static SymbolString defaultSymbolize(String in, FormalDefinition fd) {
-		Symbolizer s = getDefaultSymbolizer(fd);
+	public static SymbolString symbolize(String in, Alphabet ... alphs) {
+		boolean isCustom = intuitMode(alphs);
+		Symbolizer s;
+		if (isCustom)
+			s= new CustomSymbolizer(alphs);
+		else
+			s = new DefaultSymbolizer(alphs);
 		return s.symbolize(in);
 	}
 
-	public static SymbolString defaultSymbolize(String in, Alphabet ... alphs) {
-		Symbolizer s = new DefaultSymbolizer(alphs);
-		return s.symbolize(in);
-	}
 
 	public static Symbolizer getSymbolizer(FormalDefinition def) {
-		return getSymbolizer(def,intuitMode(def));
+		return getSymbolizer(def,intuitMode(def.getAlphabets()));
 	}
-	
+
 	public static Symbolizer getSymbolizerForMode(FormalDefinition def) {
 		return getSymbolizer(def, JFLAPPreferences.isCustomMode());
-		
+
 	}
-	
-	private static boolean intuitMode(FormalDefinition def){
-		for (Symbol s: def.getAllSymbolsInAlphabets()){
-			if (s.getString().length() > 1)
-				return JFLAPPreferences.CUSTOM_MODE;
+
+	private static boolean intuitMode(Alphabet ... alphs){
+		for (Alphabet alph: alphs){
+			for (Symbol s: alph){
+				if (s.getString().length() > 1)
+					return JFLAPPreferences.CUSTOM_MODE;
+			}
 		}
-		
+
 		return JFLAPPreferences.DEFAULT_MODE;
 	}
-	
+
 	private static Symbolizer getSymbolizer(FormalDefinition def, boolean isCustom){
 		if (isCustom)
 			return getCustomSymbolizer(def);
@@ -90,8 +92,8 @@ public class Symbolizers {
 
 	private static <T extends Symbolizer> T instantiate(
 			Map<Class<? extends FormalDefinition>, Class<? extends T>> map,
-											FormalDefinition def,
-													Class<T> defaultClazz) {
+			FormalDefinition def,
+			Class<T> defaultClazz) {
 		Class<? extends T> clazz = map.get(def.getClass());
 		if (clazz == null)
 			clazz = defaultClazz;
@@ -105,7 +107,7 @@ public class Symbolizers {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new SymbolizingException("Failure instantiating a " + clazz.getSimpleName() + 
-											" from a " + def.getDescriptionName());
+					" from a " + def.getDescriptionName());
 		} 
 	}
 

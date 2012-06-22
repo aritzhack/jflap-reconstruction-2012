@@ -107,7 +107,7 @@ public class PDATest extends TestHarness{
 		
 		//test Brute Force Parsing
 		RestrictedBruteParser parser = new RestrictedBruteParser(CFG);
-		SymbolString sad = Symbolizers.defaultSymbolize(in, CFG);
+		SymbolString sad = Symbolizers.symbolize(in, CFG);
 		boolean accept = parser.quickParse(sad);
 		outPrintln("Parse string: " + sad + "\n\t In Language? " + accept);
 	
