@@ -61,7 +61,7 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 				BlockTuringMachine blockTM = (BlockTuringMachine) new XMLCodec().decode(f);
 				outPrintln("After import:\n" + blockTM);
 		//
-				SymbolString s = Symbolizers.defaultSymbolize("1111+1111", blockTM);
+				SymbolString s = Symbolizers.symbolize("1111+1111", blockTM);
 				AutoSimulator sim1 = new AutoSimulator(blockTM, SingleInputSimulator.DEFAULT);
 				sim1.beginSimulation(s);
 				List<ConfigurationChain> accept1 = sim1.getNextAccept();

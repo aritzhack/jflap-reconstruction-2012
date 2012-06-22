@@ -40,8 +40,8 @@ public class MooreAndMealyTest extends TestHarness {
 		
 		outPrintln("Moore Machine :\n" + moore.toString());
 		
-		SymbolString input1 = Symbolizers.defaultSymbolize("AAAABBBBCCCC", moore);
-		SymbolString input2 = Symbolizers.defaultSymbolize("AAABBBBABBBABAB", moore);
+		SymbolString input1 = Symbolizers.symbolize("AAAABBBBCCCC", moore);
+		SymbolString input2 = Symbolizers.symbolize("AAABBBBABBBABAB", moore);
 
 		sim = new AutoSimulator(moore, 0);
 		run(sim, input1);
