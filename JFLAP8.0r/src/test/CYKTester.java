@@ -37,6 +37,7 @@ import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 //import jflap.model.grammar.Grammar;
 //import jflap.model.grammar.Production;
@@ -91,7 +92,7 @@ public class CYKTester {
 //		System.out.println(CNFgram.toString());
 		
 		CYKParser parser = new CYKParser(CNFgram);
-		parser.quickParse(SymbolString.createFromDefinition("(000)", CNFgram));
+		parser.quickParse(Symbolizers.symbolize("(000)", CNFgram));
 		System.out.println(parser.isAccept());
 		System.out.println(Arrays.toString(parser.getDerivation().getResultArray()));
 	}

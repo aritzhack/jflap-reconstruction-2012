@@ -10,6 +10,8 @@ import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.DefaultSymbolizer;
+import model.symbols.symbolizer.Symbolizer;
 
 /**
  * Operators that may be performed on a language (set of strings) but not
@@ -158,12 +160,13 @@ public class LanguageSetOperators {
 		for(char i='a';i<='z';i++){
 			alphs.add(new Symbol(i+""));
 		}
-		set.add(SymbolString.createFromDefinition("acdc", alphs));
-		set.add(SymbolString.createFromDefinition("bccd", alphs));
+		Symbolizer s = new DefaultSymbolizer(alphs);
+		set.add(s.symbolize("acdc"));
+		set.add(s.symbolize("bccd"));
 		Set<SymbolString> set2 = new TreeSet<SymbolString>();
-		set2.add(SymbolString.createFromDefinition("ccd", alphs));
-		set2.add(SymbolString.createFromDefinition("d",alphs));
-		set2.add(SymbolString.createFromDefinition("c",alphs));
+		set2.add(s.symbolize("ccd"));
+		set2.add(s.symbolize("d"));
+		set2.add(s.symbolize("c"));
 		System.out.println(rightQuotient(set, set2));
 	}
 }

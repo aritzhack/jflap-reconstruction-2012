@@ -175,9 +175,9 @@ public class SLR1ParseTable {
 	
 	@Override
 	public String toString() {
-		String str = "\t" + UtilFunctions.createDelimitedString(myColumns, "\t") + "\n";
+		String str = "\t" + UtilFunctions.toDelimitedString(myColumns, "\t") + "\n";
 		for (int r = 0; r < myNumRows; r++){
-		str += r + "\t" + UtilFunctions.createDelimitedString(myTable[r],"\t") +"\n";
+		str += r + "\t" + UtilFunctions.toDelimitedString(myTable[r],"\t") +"\n";
 		}
 		return str;
 	}

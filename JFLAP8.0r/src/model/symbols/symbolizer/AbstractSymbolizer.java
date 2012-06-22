@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import util.UtilFunctions;
+
+import debug.JFLAPDebug;
+
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
@@ -37,7 +41,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 			if (o instanceof Symbol)
 				result.add((Symbol) o);
 			else
-				result.addAll(symbolizeUnidentified(in));
+				result.addAll(symbolizeUnidentified((String) o));
 		}
 		return result;
 	}
@@ -48,6 +52,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 		for (String s: split){
 			ss.add(toNewSymbol(s));
 		}
+		JFLAPDebug.print(unIDed);
 		return ss;
 	}
 

@@ -14,6 +14,8 @@ import model.grammar.*;
 import model.grammar.parsing.ParserException;
 import model.regex.*;
 import model.symbols.*;
+import model.symbols.symbolizer.Symbolizer;
+import model.symbols.symbolizer.Symbolizers;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -146,7 +148,8 @@ public class CYKGUI extends JFrame implements JFLAPConstants{
 				public void mousePressed(MouseEvent arg0) {
 					CardLayout cl = (CardLayout) graphicViewPanel.getLayout();
 					cl.show(graphicViewPanel, "name_1304778301065623");
-					SymbolString input = SymbolString.createFromDefinition(textField.getText(), myParser.getGrammar());
+					Symbolizer s = Symbolizers.getSymbolizer(myParser.getGrammar());
+					SymbolString input = s.symbolize(textField.getText());
 					if(input.size()>0){
 						myParser.setInput(input);
 						StepToCompletion.setEnabled(true);
@@ -258,7 +261,7 @@ public class CYKGUI extends JFrame implements JFLAPConstants{
 				for(int i=0;i<myParser.getDerivation().getResultArray().length;i++){
 					list.add(myParser.getDerivation().getProduction(i));
 				}
-				derivationTable.setText(UtilFunctions.createDelimitedString(myParser.getDerivation().getResultArray(),"\n"));
+				derivationTable.setText(UtilFunctions.toDelimitedString(myParser.getDerivation().getResultArray(),"\n"));
 			}else{
 				derivationTable.setText("String is not accepted!");
 			}

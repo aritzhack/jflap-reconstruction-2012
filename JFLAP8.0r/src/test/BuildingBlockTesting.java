@@ -15,6 +15,7 @@ import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.CopyBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 import preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import file.xml.XMLCodec;
@@ -60,7 +61,7 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 				BlockTuringMachine blockTM = (BlockTuringMachine) new XMLCodec().decode(f);
 				outPrintln("After import:\n" + blockTM);
 		//
-				SymbolString s = blockTM.createFromString("1111+1111", false);
+				SymbolString s = Symbolizers.defaultSymbolize("1111+1111", blockTM);
 				AutoSimulator sim1 = new AutoSimulator(blockTM, SingleInputSimulator.DEFAULT);
 				sim1.beginSimulation(s);
 				List<ConfigurationChain> accept1 = sim1.getNextAccept();

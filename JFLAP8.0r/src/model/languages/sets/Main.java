@@ -4,14 +4,17 @@ import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.DefaultSymbolizer;
+import model.symbols.symbolizer.Symbolizer;
 
 public class Main {
 	
 	public static void main (String[] args) {
 		Alphabet alpha = new InputAlphabet();
 		alpha.addAll(new Symbol("a"), new Symbol("ab"));
-		SymbolString a = SymbolString.createFromDefinition("a", alpha);
-		SymbolString ab = SymbolString.createFromDefinition("ab", alpha);
+		Symbolizer s = new DefaultSymbolizer(alpha);
+		SymbolString a = s.symbolize("a");
+		SymbolString ab = s.symbolize("ab");
 		
 		System.out.println(a.getFirst().getString());
 		System.out.println(ab.getFirst().getString());

@@ -25,6 +25,7 @@ import model.grammar.Grammar;
 import model.regex.RegularExpression;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class RegExTest extends TestHarness{
 
@@ -77,7 +78,7 @@ public class RegExTest extends TestHarness{
 		
 		//test input on DFA to confirm equivalence
 		AutoSimulator sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromDefinition(in, dfa));
+		sim.beginSimulation(Symbolizers.symbolize(in, dfa));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 
 		//Minimize DFA
@@ -88,7 +89,7 @@ public class RegExTest extends TestHarness{
 		
 		//test input on DFA to confirm equivalence
 		sim = new AutoSimulator(dfa, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromDefinition(in, dfa));
+		sim.beginSimulation(Symbolizers.symbolize(in, dfa));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//convert DFA to rex 

@@ -295,24 +295,6 @@ public class RegularExpression extends FormalDefinition {
 		return input.subList(0,i+1);
 	}
 
-
-	public static SymbolString toExpression(String in, RegularExpression regex, String delimiter){
-		SymbolString exp = new SymbolString();
-		OperatorAlphabet ops = regex.getOperators();
-		String cur = "";
-		for(int i = 0; i < in.length(); i++){
-			String next = in.charAt(i) + "";
-			if(ops.containsSymbolWithString(next)){
-				Symbol s = ops.getSymbolForString(next);
-				exp.addAll(SymbolString.createFromString(cur, delimiter));
-				exp.add(s);
-				cur = "";
-			}
-			else cur += next;
-		}
-		return exp;
-	}
-
 	@Override
 	public RegularExpression copy() {
 		return new RegularExpression(getInputAlphabet().copy(), 

@@ -20,6 +20,7 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.grammar.parsing.brute.UnrestrictedBruteParser;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 import preferences.JFLAPPreferences;
 
 public class TuringTester {
@@ -124,7 +125,7 @@ public class TuringTester {
 		
 		System.out.println(tm);
 		AutoSimulator simulator = new AutoSimulator(tm, 0);
-		simulator.beginSimulation(SymbolString.createFromDefinition("aabbcc", tapeAlph), new SymbolString(), new SymbolString());
+		simulator.beginSimulation(Symbolizers.defaultSymbolize("aabbcc", tapeAlph), new SymbolString(), new SymbolString());
 		System.out.println(simulator.getNextAccept().get(0));
 		
 		

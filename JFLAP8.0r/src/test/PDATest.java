@@ -29,6 +29,7 @@ import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.typetest.GrammarType;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class PDATest extends TestHarness{
 
@@ -90,7 +91,7 @@ public class PDATest extends TestHarness{
 		//lets try some stuff...
 				AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 				String in = "aabb";
-				sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
+				sim.beginSimulation(Symbolizers.symbolize(in, pda));
 				outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 
 		//convert PDA to CFG
@@ -106,7 +107,7 @@ public class PDATest extends TestHarness{
 		
 		//test Brute Force Parsing
 		RestrictedBruteParser parser = new RestrictedBruteParser(CFG);
-		SymbolString sad = CFG.createFromString(in, false);
+		SymbolString sad = Symbolizers.defaultSymbolize(in, CFG);
 		boolean accept = parser.quickParse(sad);
 		outPrintln("Parse string: " + sad + "\n\t In Language? " + accept);
 	
@@ -124,7 +125,7 @@ public class PDATest extends TestHarness{
 
 		//test LL converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
+		sim.beginSimulation(Symbolizers.symbolize(in, pda));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//Conversion to PDA - LR
@@ -137,7 +138,7 @@ public class PDATest extends TestHarness{
 		
 		//test LR converted PDA
 		sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
-		sim.beginSimulation(SymbolString.createFromDefinition(in, pda));
+		sim.beginSimulation(Symbolizers.symbolize(in, pda));
 		outPrintln("Run string: " + in + "\n\t In Language? " + !sim.getNextAccept().isEmpty());
 		
 		//test remove symbol

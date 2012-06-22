@@ -42,7 +42,7 @@ public class UtilFunctions {
 		}
 
 
-	public static String createDelimitedString(Object[] array,
+	public static String toDelimitedString(Object[] array,
 			String delimiter) {
 		return createDelimitedString(Arrays.asList(array), delimiter);
 	}

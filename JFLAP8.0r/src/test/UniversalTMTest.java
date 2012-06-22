@@ -17,6 +17,7 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class UniversalTMTest {
 	private static State[] q;
@@ -342,7 +343,7 @@ public class UniversalTMTest {
 		System.out.println(universal);
 		
 		AutoSimulator simulator = new AutoSimulator(universal, 0);
-		simulator.beginSimulation(SymbolString.createFromDefinition("101101011101110101011010110", universal), SymbolString.createFromDefinition("110110110", universal), new SymbolString(one));
+		simulator.beginSimulation(Symbolizers.symbolize("101101011101110101011010110", universal), Symbolizers.symbolize("110110110", universal), new SymbolString(one));
 		System.out.println(simulator.getNextAccept());
 	}
 	

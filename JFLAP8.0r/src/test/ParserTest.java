@@ -20,6 +20,7 @@ import model.grammar.parsing.lr.SLR1Parser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class ParserTest extends GrammarTest {
 
@@ -64,9 +65,9 @@ public class ParserTest extends GrammarTest {
 		outPrintln(table.toString());
 		
 		//try LL1 parser
-		String in = "aacd$";
+		String in = "aacd";
 		LL1Parser ll1parse = new LL1Parser(g);
-		boolean accepts = ll1parse.quickParse(SymbolString.createFromDefinition(in, g));
+		boolean accepts = ll1parse.quickParse(Symbolizers.symbolize(in, g));
 		outPrintln("LL1 Accept? " + accepts + "\n" + createPrintout(ll1parse.getDerivation()));
 		
 		//prepare and execute SLR parse
@@ -91,7 +92,7 @@ public class ParserTest extends GrammarTest {
 
 		in = "aaaab";
 		SLR1Parser slr1parse = new SLR1Parser(g);
-		accepts = slr1parse.quickParse(SymbolString.createFromDefinition(in, g));
+		accepts = slr1parse.quickParse(Symbolizers.symbolize(in, g));
 		outPrintln("SLR1 Accept? " + accepts + "\n" + createPrintout(slr1parse.getDerivation()));
 		
 	}

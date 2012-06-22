@@ -5,6 +5,8 @@ import java.util.Arrays;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.DefaultSymbolizer;
+import model.symbols.symbolizer.Symbolizer;
 
 import org.w3c.dom.Element;
 
@@ -13,11 +15,17 @@ import file.xml.formaldef.components.SingleNodeTransducer;
 
 public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 
-	private Alphabet[] myAlphs;
+	private Symbolizer mySymbolizer;
 
 	public SymbolStringTransducer(String tag, Alphabet ... alphs){
+		this(tag, new DefaultSymbolizer(alphs));
+	}
+
+
+	public SymbolStringTransducer(String tag, Symbolizer symbolizer) {
 		super(tag);
-		myAlphs = alphs;
+		mySymbolizer = symbolizer;
+
 	}
 
 
@@ -32,7 +40,7 @@ public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 
 	@Override
 	public SymbolString createInstance(String text) {
-		return SymbolString.createFromDefinition(text, myAlphs);
+		return mySymbolizer.symbolize(text);
 	}
 	
 
