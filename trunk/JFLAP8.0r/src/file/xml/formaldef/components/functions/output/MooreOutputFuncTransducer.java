@@ -7,7 +7,7 @@ import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.OutputFunction;
 import model.automata.transducers.moore.MooreOutputFunction;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

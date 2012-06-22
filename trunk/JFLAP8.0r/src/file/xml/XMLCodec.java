@@ -29,6 +29,9 @@ import javax.xml.parsers.*;
 
 
 
+import model.automata.transducers.moore.MooreMachine;
+import model.grammar.Grammar;
+
 import org.w3c.dom.*;
 
 import util.JFLAPConstants;
@@ -212,6 +215,10 @@ public class XMLCodec extends Codec {
 	@Override
 	public String getDescription() {
 		return "A codec for XML/.jff format files";
+	}
+
+	public static <T> T decode(File f, Class<T> class1) {
+		return (T) new XMLCodec().decode(f);
 	}
 
 }

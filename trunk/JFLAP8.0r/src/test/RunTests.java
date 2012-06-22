@@ -14,9 +14,10 @@ public class RunTests {
 //		RegExTest.class, 
 //		FSATest.class, 
 //		GrammarTest.class,
-		ParserTest.class,
+//		ParserTest.class,
 //		FileTester.class,
-		BuildingBlockTesting.class
+//		BuildingBlockTesting.class,
+		MooreAndMealyTest.class
 	};
 	
 	public static void main(String[] args) {

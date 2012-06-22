@@ -2,7 +2,7 @@ package file.xml.formaldef.components;
 
 import java.util.List;
 
-import model.formaldef.components.symbols.SpecialSymbol;
+import model.symbols.SpecialSymbol;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

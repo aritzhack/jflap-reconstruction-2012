@@ -5,9 +5,9 @@ import oldnewstuff.model.change.rules.Rule;
 import preferences.JFLAPPreferences;
 import errors.BooleanWrapper;
 import model.change.events.SetToEvent;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.StartVariable;
+import model.grammar.Variable;
+import model.symbols.Symbol;
 
 
 public class DefaultModeStartSymbolRule extends Rule {

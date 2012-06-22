@@ -16,9 +16,9 @@ import file.xml.formaldef.FormalDefinitionTransducer;
 
 import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.ExpressionComponent;
 import model.regex.RegularExpression;
+import model.symbols.SymbolString;
 
 public class RegExTransducer extends FormalDefinitionTransducer<RegularExpression> {
 

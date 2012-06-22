@@ -13,8 +13,8 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

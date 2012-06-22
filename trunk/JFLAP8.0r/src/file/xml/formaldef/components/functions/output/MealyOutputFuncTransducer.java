@@ -6,7 +6,7 @@ import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.mealy.MealyOutputFunction;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 public class MealyOutputFuncTransducer extends
 		OutputFunctionTransducer<MealyOutputFunction> {

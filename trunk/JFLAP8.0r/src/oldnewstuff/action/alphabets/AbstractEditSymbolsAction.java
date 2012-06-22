@@ -16,7 +16,7 @@ import javax.swing.KeyStroke;
 import util.view.undo.UndoableAction;
 
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 

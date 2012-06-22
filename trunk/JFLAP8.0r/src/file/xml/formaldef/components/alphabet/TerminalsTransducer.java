@@ -1,8 +1,8 @@
 package file.xml.formaldef.components.alphabet;
 
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.TerminalAlphabet;
+import model.symbols.Symbol;
 
 public class TerminalsTransducer extends AlphabetTransducer {
 

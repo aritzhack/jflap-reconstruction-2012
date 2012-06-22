@@ -3,11 +3,11 @@ package oldnewstuff.model.change.rules.applied;
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 import model.change.events.SetToEvent;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionException;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class BasicProductionRule extends LanguageFunctionRule<Production> {
 

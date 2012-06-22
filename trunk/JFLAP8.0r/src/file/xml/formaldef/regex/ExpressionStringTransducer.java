@@ -2,9 +2,9 @@ package file.xml.formaldef.regex;
 
 import model.automata.InputAlphabet;
 import model.automata.transducers.OutputAlphabet;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.ExpressionComponent;
 import model.regex.OperatorAlphabet;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

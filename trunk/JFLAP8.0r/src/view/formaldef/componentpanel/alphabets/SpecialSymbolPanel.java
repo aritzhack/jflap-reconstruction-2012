@@ -15,8 +15,8 @@ import preferences.JFLAPPreferences;
 
 
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 import model.undo.UndoKeeper;
 
 import view.action.ModifySymbolAction;

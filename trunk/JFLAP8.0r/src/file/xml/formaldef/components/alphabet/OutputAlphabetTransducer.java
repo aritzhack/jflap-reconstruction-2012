@@ -2,7 +2,7 @@ package file.xml.formaldef.components.alphabet;
 
 import model.automata.transducers.OutputAlphabet;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class OutputAlphabetTransducer extends AlphabetTransducer {
 

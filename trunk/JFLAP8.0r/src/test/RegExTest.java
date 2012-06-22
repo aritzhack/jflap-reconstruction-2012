@@ -21,10 +21,10 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.AutomatonSimulator;
 import model.automata.simulate.SingleInputSimulator;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.regex.RegularExpression;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RegExTest extends TestHarness{
 

@@ -5,7 +5,7 @@ import errors.BooleanWrapper;
 import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class BottomOfStackSymbolRule extends PermanentSpecialSymbolRule<StackAlphabet, BottomOfStackSymbol> {
 

@@ -8,7 +8,7 @@ import java.util.List;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public abstract class SetComponentEvent<T extends SetSubComponent<T>> extends UndoableChangeEvent {
 

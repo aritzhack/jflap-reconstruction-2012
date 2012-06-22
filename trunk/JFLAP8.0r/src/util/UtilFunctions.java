@@ -8,9 +8,9 @@ import java.util.List;
 
 import model.automata.State;
 import model.formaldef.FormalDefinition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
+import model.grammar.Terminal;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class UtilFunctions {
 

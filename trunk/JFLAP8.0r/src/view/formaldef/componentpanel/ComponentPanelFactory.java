@@ -5,7 +5,7 @@ import view.formaldef.componentpanel.alphabets.SpecialSymbolPanel;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SpecialSymbol;
+import model.symbols.SpecialSymbol;
 import model.undo.UndoKeeper;
 
 public class ComponentPanelFactory {

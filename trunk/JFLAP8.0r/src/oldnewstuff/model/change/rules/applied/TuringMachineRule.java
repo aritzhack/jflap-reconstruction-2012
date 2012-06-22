@@ -5,7 +5,7 @@ import model.automata.InputAlphabet;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class TuringMachineRule extends FormalDefinitionUsingRule<InputAlphabet, TuringMachine> {

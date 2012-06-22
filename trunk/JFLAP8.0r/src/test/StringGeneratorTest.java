@@ -1,6 +1,5 @@
 package test;
 
-import model.formaldef.components.symbols.Terminal;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -25,19 +24,19 @@ import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.languages.Language;
 import model.languages.samplelanguages.EvenLetterLanguage;
 import model.languages.samplelanguages.OddLetterLanguage;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.*;
 import model.languages.StringGenerator;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class StringGeneratorTest {
 

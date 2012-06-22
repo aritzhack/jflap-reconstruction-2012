@@ -31,23 +31,23 @@ import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.HaltBlock;
-import model.automata.turing.buildingblock.library.StartFinalBlock;
+import model.automata.turing.buildingblock.library.StartHaltBlock;
 import model.automata.turing.buildingblock.library.MoveBlock;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
 import model.automata.turing.buildingblock.library.ShiftBlock;
 import model.automata.turing.buildingblock.library.StartBlock;
 import model.automata.turing.buildingblock.library.WriteBlock;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.regex.RegularExpression;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import util.JFLAPConstants;
 import util.UtilFunctions;
 import file.xml.XMLCodec;
@@ -427,7 +427,7 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		MealyOutputFunction o4 = new MealyOutputFunction(t4, new SymbolString(b));
 
 		transitions.addAll(toCollection(t0,t1,t2,t3,t4));
-		outputFunc.addAll(toCollection(o1,o2,o3));
+		outputFunc.addAll(toCollection(o0, o1,o2,o3, o4));
 		
 		return mealy;
 	}

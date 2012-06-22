@@ -16,7 +16,7 @@ import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 import file.xml.XMLTransducer;
 import file.xml.XMLHelper;
 import file.xml.formaldef.components.functions.FunctionTransducer;

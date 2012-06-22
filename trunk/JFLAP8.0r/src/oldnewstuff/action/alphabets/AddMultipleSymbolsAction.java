@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import errors.BooleanWrapper;
 
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 

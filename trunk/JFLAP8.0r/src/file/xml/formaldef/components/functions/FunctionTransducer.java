@@ -13,8 +13,8 @@ import debug.JFLAPDebug;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import file.xml.BasicTransducer;
 import file.xml.XMLTransducer;
 import file.xml.TransducerFactory;

@@ -28,11 +28,11 @@ import errors.BooleanWrapper;
 import model.change.events.AddEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
 
 

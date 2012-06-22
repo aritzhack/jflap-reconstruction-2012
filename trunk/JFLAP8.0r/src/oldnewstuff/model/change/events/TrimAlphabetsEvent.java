@@ -7,7 +7,7 @@ import java.util.Set;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class TrimAlphabetsEvent extends CompoundUndoableChangeEvent {
 

@@ -4,8 +4,8 @@ import oldnewstuff.model.change.rules.FormalDefinitionRule;
 import errors.BooleanWrapper;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 
 public abstract class PermanentSpecialSymbolRule<T extends Alphabet, S extends SpecialSymbol> extends FormalDefinitionRule<T> {
 

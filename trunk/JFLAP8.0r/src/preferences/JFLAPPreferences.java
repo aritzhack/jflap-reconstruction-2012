@@ -6,14 +6,14 @@ import java.awt.event.InputEvent;
 import java.io.File;
 
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.PermanentSymbol;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.regex.EmptySub;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.UnionOperator;
+import model.symbols.PermanentSymbol;
+import model.symbols.Symbol;
 
 /**
  * A class designed to hold all of the user preferences associated

@@ -11,9 +11,9 @@ import javax.swing.Icon;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
 import model.grammar.ArrowIcon;
+import model.grammar.Terminal;
+import model.symbols.Symbol;
 
 public interface JFLAPConstants {
 

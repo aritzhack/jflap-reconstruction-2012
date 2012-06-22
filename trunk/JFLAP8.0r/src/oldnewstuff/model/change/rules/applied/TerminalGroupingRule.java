@@ -5,8 +5,8 @@ import model.change.events.SetComponentEvent;
 import model.change.events.SetComponentModifyEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.TerminalAlphabet;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class TerminalGroupingRule extends GroupingRule {

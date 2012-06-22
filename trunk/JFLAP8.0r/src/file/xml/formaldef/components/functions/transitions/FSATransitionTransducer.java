@@ -7,7 +7,7 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

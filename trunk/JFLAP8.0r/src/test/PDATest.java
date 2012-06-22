@@ -24,11 +24,11 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.SingleInputSimulator;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class PDATest extends TestHarness{
 
