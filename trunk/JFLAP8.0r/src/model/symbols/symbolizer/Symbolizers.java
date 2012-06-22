@@ -39,6 +39,17 @@ public class Symbolizers {
 
 	}
 
+	/**
+	 * Performs a blind default symbolizing of the input string.
+	 * This means that the string will simply be split into individual
+	 * character symbols, and will all of of the {@link Symbol} class.
+	 * @param in
+	 * @return
+	 */
+	public static SymbolString symbolize(String in){
+		DefaultSymbolizer symbolizer = new DefaultSymbolizer();
+		return symbolizer.symbolize(in);
+	}
 
 	public static SymbolString symbolize(String in, FormalDefinition fd) {
 		Symbolizer s = getSymbolizer(fd);
