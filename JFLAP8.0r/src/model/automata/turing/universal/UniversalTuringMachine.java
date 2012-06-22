@@ -71,7 +71,8 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 		TuringMachineMove R = TuringMachineMove.RIGHT, L = TuringMachineMove.LEFT, S = TuringMachineMove.STAY;
 
 
-		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
+		TransitionSet<MultiTapeTMTransition> functions = this.getTransitions();
+		
 		MultiTapeTMTransition trans = tri(q,0,0, one,one,R, one,one,S ,one,one,R);
 		functions.add(trans);
 
@@ -96,7 +97,7 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 		trans = tri(q,1,2, one,one,S, one,one,S, blank,blank,R);
 		functions.add(trans);
 
-		trans = tri(q,2,2, one,one,R, one,one,R, blank,blank,S);
+		trans = tri(q,2,2, one,one,R, one,one,R, one,one,S);
 		functions.add(trans);
 
 		trans = tri(q,2,3, zero,zero,R, zero,zero,L, one,one,S);
@@ -110,7 +111,6 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 
 		trans = tri(q,3,3, one,one,S, one,one,L, one,one,S);
 		functions.add(trans);
-
 
 		trans = tri(q,3, 4,one,one, S,blank,blank, R,one,one, S);
 		functions.add(trans);
@@ -321,40 +321,15 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 
 		trans = tri(q,32, 33,one,one , S,one,one, S,blank,blank, L);
 		functions.add(trans);
-
-		trans = tri(q,33, 34,one,one, S, one,one, R, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,34, 35,one,one, S,zero,blank, L, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,35, 36,one,one, S,one,blank, L, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,36, 36,one,one, S, one,one, L, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,36, 36,one,one, S, zero,zero, L, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,36, 37,one,one, S, blank,blank, R, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,37, 38,one,one, S, one,blank, R, one, one, S);
-		functions.add(trans);
-
-		trans = tri(q,38, 39,one,one, S, zero,blank, R, one, one, S);
-		functions.add(trans);
 		
 		setStartState(q[0]);
 
-		FinalStateSet finalStates = new FinalStateSet();
-		finalStates.add(q[39]);
+		FinalStateSet finalStates = this.getFinalStateSet();
+		finalStates.add(q[33]);
 
 	}
 
 	private MultiTapeTMTransition tri(State[] q, int from, int to, Symbol r1, Symbol w1, TuringMachineMove m1, Symbol r2, Symbol w2, TuringMachineMove m2, Symbol r3, Symbol w3, TuringMachineMove m3 ){
-
 		if (shouldFlip)
 			return new MultiTapeTMTransition(q[from], q[to], new Symbol[]{r2,r3,r1}, new Symbol[]{w2,w3,w1}, new TuringMachineMove[]{m2,m3,m1});
 		return new MultiTapeTMTransition(q[from], q[to], new Symbol[]{r1,r2,r3}, new Symbol[]{w1,w2,w3}, new TuringMachineMove[]{m1,m2,m3});

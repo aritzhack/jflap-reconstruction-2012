@@ -92,5 +92,6 @@ public interface JFLAPConstants {
 		
 		public static final String TILDE = "~";
 		public static final String NOT = "!";
+		public static final String TM_MARKER = "#";
 
 }

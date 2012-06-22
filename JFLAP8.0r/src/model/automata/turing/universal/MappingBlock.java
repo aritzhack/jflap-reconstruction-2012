@@ -3,6 +3,8 @@ package model.automata.turing.universal;
 import java.util.Map;
 import java.util.TreeMap;
 
+import debug.JFLAPDebug;
+
 import preferences.JFLAPPreferences;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
@@ -25,17 +27,17 @@ public abstract class MappingBlock extends BaseBlockTMBlock {
 	
 	public abstract void updateTuringMachine(Map<Symbol, SymbolString> encodingMap);
 
-	private Map<Symbol, SymbolString> createMap(TapeAlphabet alph){
+	public static Map<Symbol, SymbolString> createMap(TapeAlphabet alph){
 		Map<Symbol, SymbolString> map = new TreeMap<Symbol, SymbolString>();
 		Symbol[] symbols = alph.toArray(new Symbol[0]);
 		Symbol one = new Symbol("1");
-		for (int i = 2; i < alph.size(); i++){
+		for (int i = 0; i < alph.size(); i++){
 			SymbolString ones = new SymbolString();
 			
-			for (int j = 0; j<i; j++)
+			for (int j = 0; j<i+2; j++)
 				ones.add(one);
 			
-			map.put(symbols[i-2], ones);
+			map.put(symbols[i], ones);
 		}
 		
 		map.put(JFLAPPreferences.getTMBlankSymbol(), new SymbolString(one));
