@@ -1,19 +1,19 @@
 package test;
 
 import model.automata.InputAlphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class BruteParserTester {
 	

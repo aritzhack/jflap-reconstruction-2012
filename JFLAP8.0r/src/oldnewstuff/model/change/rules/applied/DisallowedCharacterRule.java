@@ -7,7 +7,7 @@ import model.change.events.SetComponentEvent;
 import model.change.events.SetComponentModifyEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public class DisallowedCharacterRule extends SetComponentRule<Symbol>{

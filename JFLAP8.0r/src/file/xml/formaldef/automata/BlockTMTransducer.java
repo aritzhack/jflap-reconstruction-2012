@@ -24,8 +24,8 @@ import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.BlockLibrary;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import file.xml.formaldef.components.functions.transitions.TransitionSetTransducer;
 import file.xml.formaldef.components.functions.transitions.tm.BlockTransitionTransducer;
 

@@ -10,8 +10,8 @@ import errors.BooleanWrapper;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolHelper;
+import model.symbols.Symbol;
+import model.symbols.SymbolHelper;
 
 
 

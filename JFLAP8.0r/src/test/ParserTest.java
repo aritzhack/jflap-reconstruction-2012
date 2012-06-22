@@ -3,14 +3,13 @@ package test;
 import util.UtilFunctions;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.FirstFollowTable;
@@ -20,6 +19,7 @@ import model.grammar.parsing.lr.SLR1ParseTable;
 import model.grammar.parsing.lr.SLR1Parser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
+import model.symbols.SymbolString;
 
 public class ParserTest extends GrammarTest {
 

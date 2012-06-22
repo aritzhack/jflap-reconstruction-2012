@@ -5,7 +5,7 @@ import errors.BooleanWrapper;
 import model.change.events.SetComponentEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 

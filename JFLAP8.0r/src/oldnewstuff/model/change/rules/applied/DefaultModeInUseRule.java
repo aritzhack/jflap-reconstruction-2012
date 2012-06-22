@@ -13,7 +13,7 @@ import model.change.events.SetComponentModifyEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class DefaultModeInUseRule extends SetComponentRule<Symbol> {
 

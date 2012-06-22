@@ -3,7 +3,7 @@ package oldnewstuff.model.change.events;
 import oldnewstuff.model.change.ChangeEvent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class SetComponentModifyEvent<T extends SetSubComponent<T>> extends SetComponentEvent<T> {
 

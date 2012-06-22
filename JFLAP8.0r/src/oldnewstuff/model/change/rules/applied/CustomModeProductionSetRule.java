@@ -8,10 +8,10 @@ import oldnewstuff.model.change.rules.SetComponentRule;
 import errors.BooleanWrapper;
 import model.change.events.SetComponentEvent;
 import model.change.events.SetComponentModifyEvent;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.Production;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.symbols.Symbol;
 
 public class CustomModeProductionSetRule extends SetComponentRule<Production> {
 

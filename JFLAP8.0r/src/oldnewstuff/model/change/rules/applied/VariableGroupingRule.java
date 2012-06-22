@@ -5,9 +5,9 @@ import errors.BooleanWrapper;
 import model.change.events.SetComponentEvent;
 import model.change.events.SetComponentModifyEvent;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.Grammar;
 import model.grammar.VariableAlphabet;
+import model.symbols.Symbol;
 
 
 public class VariableGroupingRule extends GroupingRule {

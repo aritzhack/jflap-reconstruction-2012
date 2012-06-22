@@ -1,6 +1,6 @@
 package file.xml.formaldef.components;
 
-import model.formaldef.components.symbols.SpecialSymbol;
+import model.symbols.SpecialSymbol;
 
 public abstract class SpecialSymbolTransducer<T extends SpecialSymbol>
 													extends SingleValueTransducer<T> {

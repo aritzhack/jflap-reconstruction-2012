@@ -32,12 +32,12 @@ import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.fsa.FSATransition;
 import model.formaldef.components.functionset.FunctionSet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
+import model.grammar.Terminal;
 import model.grammar.typetest.GrammarType;
 import model.regex.RegularExpression;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class FSATest extends TestHarness{
 

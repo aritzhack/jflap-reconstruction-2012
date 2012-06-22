@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 public abstract class ChangeEvent implements ChangeTypes{

@@ -27,13 +27,13 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
 import model.regex.ExpressionComponent;
 import model.regex.RegularExpression;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

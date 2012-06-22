@@ -13,7 +13,7 @@ import file.xml.formaldef.components.SetComponentTransducer;
 import model.automata.State;
 import model.automata.StateSet;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class StateSetTransducer extends SetComponentTransducer<State> {
 

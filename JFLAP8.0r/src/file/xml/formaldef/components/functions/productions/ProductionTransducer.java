@@ -6,10 +6,10 @@ import java.util.Map;
 import javax.xml.bind.ValidationEvent;
 
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

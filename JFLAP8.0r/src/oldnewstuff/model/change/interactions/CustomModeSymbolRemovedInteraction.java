@@ -9,11 +9,11 @@ import oldnewstuff.model.change.ChangeListener;
 import model.change.events.CompoundUndoableChangeEvent;
 import model.change.events.SetComponentEvent;
 import model.change.events.UndoableEvent;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class CustomModeSymbolRemovedInteraction extends Interaction implements ChangeListener{
 

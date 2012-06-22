@@ -1,7 +1,7 @@
 package file.xml.formaldef.components.alphabet;
 
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

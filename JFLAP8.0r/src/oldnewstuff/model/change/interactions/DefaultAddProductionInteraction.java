@@ -11,11 +11,11 @@ import debug.JFLAPDebug;
 import model.change.events.CompoundUndoableChangeEvent;
 import model.change.events.SetComponentEvent;
 import model.change.events.UndoableEvent;
-import model.formaldef.components.symbols.Symbol;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.symbols.Symbol;
 
 public class DefaultAddProductionInteraction extends Interaction{
 

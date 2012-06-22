@@ -12,7 +12,7 @@ import debug.JFLAPDebug;
 import model.change.events.AdvancedUndoableEvent;
 import model.change.events.SetToEvent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 

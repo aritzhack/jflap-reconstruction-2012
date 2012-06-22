@@ -11,7 +11,7 @@ import view.formaldef.UsesDefinition;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 
 

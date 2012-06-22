@@ -2,7 +2,7 @@ package file.xml.formaldef.components.alphabet;
 
 import model.automata.turing.TapeAlphabet;
 import model.formaldef.components.SetComponent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class TapeAlphabetTransducer extends AlphabetTransducer {
 

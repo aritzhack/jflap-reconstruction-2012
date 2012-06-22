@@ -15,14 +15,14 @@ import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.simulate.AutoSimulator;
 import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class MouseCatTest {
 

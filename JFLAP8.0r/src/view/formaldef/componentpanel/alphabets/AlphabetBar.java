@@ -25,7 +25,7 @@ import view.formaldef.componentpanel.SetComponentBar;
 
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import model.undo.UndoKeeper;
 
 public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T> {

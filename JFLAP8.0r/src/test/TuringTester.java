@@ -17,9 +17,9 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.MultiTapeTMTransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.parsing.brute.UnrestrictedBruteParser;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import preferences.JFLAPPreferences;
 
 public class TuringTester {

@@ -8,7 +8,7 @@ import model.change.events.SetComponentModifyEvent;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 public abstract class IdenticalItemRule<T extends SetSubComponent<T>> extends SetComponentRule<T> {

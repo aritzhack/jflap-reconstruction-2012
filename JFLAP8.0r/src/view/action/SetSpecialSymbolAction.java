@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import model.change.events.SpecialSymbolSetEvent;
-import model.formaldef.components.symbols.SpecialSymbol;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.SpecialSymbol;
+import model.symbols.Symbol;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 
