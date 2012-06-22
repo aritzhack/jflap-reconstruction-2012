@@ -88,4 +88,9 @@ public class CustomSet extends AbstractNumberSet {
 		return sb.toString();
 	}
 
+	@Override
+	public boolean isFinite() {
+		return true;
+	}
+
 }
