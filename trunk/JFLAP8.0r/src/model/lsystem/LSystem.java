@@ -32,10 +32,10 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 

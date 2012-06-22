@@ -14,11 +14,10 @@ import debug.JFLAPDebug;
 import model.automata.State;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.fsa.FSATransition;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.parsing.FirstFollowTable;
 import model.grammar.parsing.lr.rules.AcceptRule;
 import model.grammar.parsing.lr.rules.EndReduceRule;
@@ -26,6 +25,7 @@ import model.grammar.parsing.lr.rules.ReduceRule;
 import model.grammar.parsing.lr.rules.SLR1rule;
 import model.grammar.parsing.lr.rules.ShiftRule;
 import model.grammar.parsing.lr.rules.StateUsingRule;
+import model.symbols.Symbol;
 
 public class SLR1ParseTable {
 

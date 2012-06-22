@@ -15,13 +15,13 @@ import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.acceptors.fsa.*;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.grammar.parsing.*;
 import model.grammar.parsing.cyk.CYKParser;
 import model.grammar.parsing.ll.LL1Parser;
 import model.grammar.typetest.matchers.*;
 import model.regex.RegularExpression;
+import model.symbols.*;
 
 public class StringGenerator {
 

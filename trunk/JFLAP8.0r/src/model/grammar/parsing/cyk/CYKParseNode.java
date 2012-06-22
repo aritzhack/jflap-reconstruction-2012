@@ -1,8 +1,8 @@
 package model.grammar.parsing.cyk;
 
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Production;
+import model.grammar.Variable;
+import model.symbols.SymbolString;
 
 /**
  * The <CODE>CYKParseNode</CODE> is a class that keeps track of a single 

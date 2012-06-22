@@ -11,11 +11,9 @@ import debug.JFLAPDebug;
 
 
 import model.automata.State;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
@@ -26,6 +24,8 @@ import model.grammar.parsing.lr.rules.SLR1rule;
 import model.grammar.parsing.lr.rules.ShiftRule;
 import model.grammar.parsing.lr.rules.StateUsingRule;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 public class SLR1Parser extends Parser {

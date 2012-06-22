@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 public class CompoundComponent {
 	

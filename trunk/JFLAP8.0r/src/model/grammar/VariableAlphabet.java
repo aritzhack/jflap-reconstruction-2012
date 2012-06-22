@@ -6,11 +6,9 @@ import java.util.List;
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.formaldef.rules.AlphabetRule;
 import model.formaldef.rules.GroupingRule;
+import model.symbols.Symbol;
 
 
 

@@ -3,8 +3,7 @@ package model.grammar;
 import java.util.Set;
 import java.util.TreeSet;
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Variable;
+import model.symbols.Symbol;
 
 public class GrammarUtil {
 

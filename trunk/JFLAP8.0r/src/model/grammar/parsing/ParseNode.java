@@ -22,8 +22,8 @@ package model.grammar.parsing;
 
 import javax.swing.tree.*;
 
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;
+import model.symbols.SymbolString;
 
 
 

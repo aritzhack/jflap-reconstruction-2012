@@ -6,9 +6,7 @@ import java.util.List;
 
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
+import model.symbols.Symbol;
 
 
 

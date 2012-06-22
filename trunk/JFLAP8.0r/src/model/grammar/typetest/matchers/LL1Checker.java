@@ -6,16 +6,16 @@ import java.util.TreeSet;
 import preferences.JFLAPPreferences;
 
 
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.GrammarException;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.parsing.FirstFollowTable;
 import model.grammar.parsing.ParserException;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class LL1Checker extends GrammarChecker {
 

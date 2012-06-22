@@ -14,10 +14,8 @@ import model.change.events.SetToEvent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.AlphabetException;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class Production extends LanguageFunction<Production> implements JFLAPConstants{
 

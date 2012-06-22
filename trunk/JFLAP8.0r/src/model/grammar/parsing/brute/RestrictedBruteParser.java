@@ -3,8 +3,8 @@ package model.grammar.parsing.brute;
 import java.util.ArrayList;
 
 import debug.JFLAPDebug;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.Derivation;
 

@@ -14,9 +14,9 @@ import model.change.events.ExpressionChangedEvent;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.regex.operators.Operator;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class ExpressionComponent extends FormalDefinitionComponent implements UsesSymbols{
 

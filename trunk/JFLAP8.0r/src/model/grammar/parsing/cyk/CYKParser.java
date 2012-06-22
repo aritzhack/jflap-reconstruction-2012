@@ -15,10 +15,10 @@ package model.grammar.parsing.cyk;
 
 import java.util.*;
 
-import model.formaldef.components.symbols.*;
 import model.grammar.*;
 import model.grammar.parsing.*;
 import model.grammar.typetest.GrammarType;
+import model.symbols.*;
 
 public class CYKParser extends Parser {
 

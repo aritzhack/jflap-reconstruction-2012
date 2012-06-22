@@ -1,9 +1,9 @@
 package model.grammar.parsing.lr;
 
 import preferences.JFLAPPreferences;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Production;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class SLR1Production extends Production {
 

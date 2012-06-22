@@ -21,12 +21,12 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.Operator;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RegularExpression extends FormalDefinition {
 

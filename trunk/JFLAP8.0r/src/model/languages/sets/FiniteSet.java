@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import model.formaldef.components.symbols.SymbolString;
 import model.languages.SetComparator;
+import model.symbols.SymbolString;
 
 /**
  * 

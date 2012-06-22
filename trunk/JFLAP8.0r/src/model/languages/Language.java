@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.grammar.typetest.matchers.ContextFreeChecker;
+import model.symbols.SymbolString;
 
 public abstract class Language{
 	

@@ -1,6 +1,6 @@
 package model.languages.sets;
 
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.SymbolString;
 
 /**
  * Provides a generic interface for set classes in JFLAP to implement

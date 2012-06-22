@@ -1,16 +1,16 @@
 package model.languages.samplelanguages;
 
 import model.formaldef.components.alphabets.AlphabetException;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.languages.Language;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class ContainsSubstringLanguage extends Language{
 	private SymbolString mySubstring;

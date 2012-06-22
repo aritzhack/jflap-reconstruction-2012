@@ -8,8 +8,8 @@ import java.util.TreeSet;
 
 import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * Operators that may be performed on a language (set of strings) but not

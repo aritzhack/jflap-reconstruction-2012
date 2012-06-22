@@ -7,8 +7,8 @@ import java.util.TreeSet;
 import util.UtilFunctions;
 
 import model.automata.State;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.Terminal;
+import model.grammar.Terminal;
+import model.symbols.Symbol;
 
 public class SLR1DFAState extends State{
 

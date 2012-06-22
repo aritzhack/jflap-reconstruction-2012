@@ -2,7 +2,7 @@ package model.grammar.parsing.cyk.gui;
 
 import javax.swing.table.DefaultTableModel;
 
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 @SuppressWarnings("serial")
 public class CYKTableModel extends DefaultTableModel {

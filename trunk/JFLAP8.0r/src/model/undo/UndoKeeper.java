@@ -17,7 +17,7 @@ import javax.swing.undo.UndoManager;
 
 import model.change.events.SetToEvent;
 import model.change.events.UndoableEvent;
-import model.formaldef.components.symbols.Symbol;
+import model.symbols.Symbol;
 
 import debug.JFLAPDebug;
 

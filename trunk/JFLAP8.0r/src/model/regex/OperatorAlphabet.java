@@ -5,11 +5,11 @@ import oldnewstuff.main.JFLAP;
 import preferences.JFLAPPreferences;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.KleeneStar;
 import model.regex.operators.OpenGroup;
 import model.regex.operators.UnionOperator;
+import model.symbols.Symbol;
 
 public class OperatorAlphabet extends Alphabet {
 

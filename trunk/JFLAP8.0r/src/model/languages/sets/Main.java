@@ -2,8 +2,8 @@ package model.languages.sets;
 
 import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class Main {
 	

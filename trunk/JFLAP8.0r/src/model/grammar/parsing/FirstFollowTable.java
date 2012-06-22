@@ -13,18 +13,18 @@ import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.GrammarUtil;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.grammar.typetest.matchers.ContextFreeChecker;
 import model.grammar.typetest.matchers.GrammarChecker;
 import model.grammar.typetest.matchers.UnrestrictedChecker;
 import model.regex.EmptySub;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
  * An object representing the First/Follow table for

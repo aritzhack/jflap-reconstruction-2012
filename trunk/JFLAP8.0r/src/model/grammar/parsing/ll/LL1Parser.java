@@ -3,16 +3,16 @@ package model.grammar.parsing.ll;
 import preferences.JFLAPPreferences;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
-import model.formaldef.components.symbols.Symbol;
-import model.formaldef.components.symbols.SymbolString;
-import model.formaldef.components.symbols.Terminal;
-import model.formaldef.components.symbols.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 
 public class LL1Parser extends Parser {
