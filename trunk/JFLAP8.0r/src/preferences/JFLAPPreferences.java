@@ -44,7 +44,6 @@ public class JFLAPPreferences {
 	
 	/** The main mask for keystrokes in a menu. */
 	private static int MAIN_MENU_MASK;
-	private static boolean isUserDefinedMode = true;
 
 	public static String getSymbolStringDelimiter() {
 		return " ";
@@ -55,6 +54,10 @@ public class JFLAPPreferences {
 	}
 	
 	public static final Terminal SLR_MARKER = new Terminal("_");
+	public static final boolean CUSTOM_MODE = true,
+								DEFAULT_MODE = false;
+	
+	public static boolean MODE = DEFAULT_MODE;
 
 	public static int getDefaultTMBufferSize(){
 		return 5;
@@ -133,16 +136,20 @@ public class JFLAPPreferences {
 		return 1;
 	}
 
-	public static boolean isUserDefinedMode() {
-		return isUserDefinedMode;
+	public static void setToCustomMode(){
+		MODE = CUSTOM_MODE;
+	}
+	
+	public static void setDefaultMode(){
+		MODE = DEFAULT_MODE;
+	}
+	
+	public static boolean isCustomMode() {
+		return MODE;
 	}
 
 	public static Variable getDefaultStartVariable() {
 		return new Variable("S");
-	}
-
-	public static void setUserDefinedMode(boolean b) {
-		isUserDefinedMode = b;
 	}
 
 	public static GroupingPair getVariableGrouping() {

@@ -48,6 +48,8 @@ import model.grammar.VariableAlphabet;
 import model.regex.RegularExpression;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizer;
+import model.symbols.symbolizer.Symbolizers;
 import util.JFLAPConstants;
 import util.UtilFunctions;
 import file.xml.XMLCodec;
@@ -219,7 +221,8 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 
 		// set regex
 		String in = "((a+b)*+c)";
-		regex.setTo(RegularExpression.toExpression(in, regex, null));
+		Symbolizer s = Symbolizers.getSymbolizer(regex);
+		regex.setTo(s.symbolize(in));
 		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
 		// trim alphabets
 		regex.trimAlphabets();

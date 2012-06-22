@@ -1,5 +1,7 @@
 package test;
 
+import java.util.Arrays;
+
 import javax.swing.JOptionPane;
 
 import debug.JFLAPDebug;
@@ -15,9 +17,9 @@ public class RunTests {
 //		FSATest.class, 
 //		GrammarTest.class,
 //		ParserTest.class,
-//		FileTester.class,
+		FileTester.class,
 //		BuildingBlockTesting.class,
-		MooreAndMealyTest.class
+//		MooreAndMealyTest.class
 	};
 	
 	public static void main(String[] args) {
@@ -30,8 +32,10 @@ public class RunTests {
 		System.out.println("Running: " + c);
 		c.newInstance();
 		}catch(Exception e){
-			if (e instanceof JFLAPException)
+			if (e instanceof JFLAPException){
 				showMessage((JFLAPException) e);
+				JFLAPDebug.printErr(e);
+			}
 			else
 				e.printStackTrace();
 		}

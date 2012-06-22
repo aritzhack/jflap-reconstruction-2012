@@ -44,10 +44,10 @@ public class SymbolString extends LinkedList<Symbol> implements Comparable<Symbo
 Copyable,
 Settable<SymbolString>{
 
-	public SymbolString(String in, FormalDefinition def){
-		super();
-		this.addAll(SymbolString.createFromDefinition(in, def));
-	}
+//	public SymbolString(String in, FormalDefinition def){
+//		super();
+//		this.addAll(SymbolString.createFromDefinition(in, def));
+//	}
 
 	public SymbolString() {
 		super();
@@ -138,7 +138,7 @@ Settable<SymbolString>{
 	public String toString(){
 		if (this.isEmpty()) 
 			return JFLAPPreferences.getEmptyStringSymbol();
-		else if(JFLAPPreferences.isUserDefinedMode())
+		else if(JFLAPPreferences.isCustomMode())
 			return UtilFunctions.createDelimitedString(this, 
 					JFLAPPreferences.getSymbolStringDelimiter());
 		return  UtilFunctions.createDelimitedString(this, "");
@@ -203,51 +203,51 @@ Settable<SymbolString>{
 	}
 
 
-	public static SymbolString createFromDefinition(String in,
-			FormalDefinition def) {
-		return createFromDefinition(in, def.getAlphabets().toArray(new Alphabet[0]));
+//	public static SymbolString createFromDefinition(String in,
+//			FormalDefinition def) {
+//		return createFromDefinition(in, def.getAlphabets().toArray(new Alphabet[0]));
+//
+//	}
 
-	}
-
-	public static SymbolString createFromDefinition(String in,
-			Alphabet ... alphs) {
-
-		if (in == null ||in.length() == 0 || 
-				in == JFLAPPreferences.getEmptyStringSymbol()) 
-			return new SymbolString();
-
-		in = removeDelimiters(in);
-		ArrayList<SymbolString> options = new ArrayList<SymbolString>();
-
-		for (int i = in.length(); i > 0; i--){
-			SymbolString symbols = new SymbolString();
-			String temp = in.substring(0,i);
-			for (Alphabet alph: alphs){
-				if (alph.containsSymbolWithString(temp)){
-					symbols.add(alph.getByString(temp));
-					symbols.addAll(createFromDefinition(in.substring(i), alphs));
-					break;
-				}
-			}
-			if(symbols.stringLength() == in.length()){
-				return symbols;
-			}
-			else if(!symbols.isEmpty())
-				options.add(symbols);
-		}
-		SymbolString max = new SymbolString();
-		for (SymbolString s: options){
-			if (max.stringLength() < s.stringLength())
-				max = s;
-		}
-		return max;
-	}
-
-	public static SymbolString createFromString(String in, String delimiter) {
-		if (delimiter == null)
-			return toSingleCharSymbols(in);
-		return toMultiCharSymbols(in, delimiter, JFLAPPreferences.getVariableGrouping());
-	}
+//	public static SymbolString createFromDefinition(String in,
+//			Alphabet ... alphs) {
+//
+//		if (in == null ||in.length() == 0 || 
+//				in == JFLAPPreferences.getEmptyStringSymbol()) 
+//			return new SymbolString();
+//
+//		in = removeDelimiters(in);
+//		ArrayList<SymbolString> options = new ArrayList<SymbolString>();
+//
+//		for (int i = in.length(); i > 0; i--){
+//			SymbolString symbols = new SymbolString();
+//			String temp = in.substring(0,i);
+//			for (Alphabet alph: alphs){
+//				if (alph.containsSymbolWithString(temp)){
+//					symbols.add(alph.getByString(temp));
+//					symbols.addAll(createFromDefinition(in.substring(i), alphs));
+//					break;
+//				}
+//			}
+//			if(symbols.stringLength() == in.length()){
+//				return symbols;
+//			}
+//			else if(!symbols.isEmpty())
+//				options.add(symbols);
+//		}
+//		SymbolString max = new SymbolString();
+//		for (SymbolString s: options){
+//			if (max.stringLength() < s.stringLength())
+//				max = s;
+//		}
+//		return max;
+//	}
+//
+//	public static SymbolString createFromString(String in, String delimiter) {
+//		if (delimiter == null)
+//			return toSingleCharSymbols(in);
+//		return toMultiCharSymbols(in, delimiter, JFLAPPreferences.getVariableGrouping());
+//	}
 
 	private static SymbolString toMultiCharSymbols(String input, 
 			String delimiter,
@@ -307,23 +307,23 @@ Settable<SymbolString>{
 		return s;
 	}
 
-	public static SymbolString createForMode(String in) {
-		String delimiter = null;
-		if (JFLAPPreferences.isUserDefinedMode())
-			delimiter = JFLAPPreferences.getSymbolStringDelimiter();
-		return createFromString(in, delimiter);
-	}
-
-	public static boolean checkAndSpawnError(String error, String in, Alphabet ... alphs){
-		if (!SymbolString.canBeParsed(in, alphs)){
-			JOptionPane.showMessageDialog(null, 
-					error,
-					"Bad Input",
-					JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		return true;
-	}
+//	public static SymbolString createForMode(String in) {
+//		String delimiter = null;
+//		if (JFLAPPreferences.isUserDefinedMode())
+//			delimiter = JFLAPPreferences.getSymbolStringDelimiter();
+//		return createFromString(in, delimiter);
+//	}
+//
+//	public static boolean checkAndSpawnError(String error, String in, Alphabet ... alphs){
+//		if (!SymbolString.canBeParsed(in, alphs)){
+//			JOptionPane.showMessageDialog(null, 
+//					error,
+//					"Bad Input",
+//					JOptionPane.ERROR_MESSAGE);
+//			return false;
+//		}
+//		return true;
+//	}
 
 	public static SymbolString concat(SymbolString ... strings) {
 		SymbolString concat = new SymbolString();
@@ -332,14 +332,14 @@ Settable<SymbolString>{
 		return concat;
 	}
 
-	public static boolean canBeParsed(String input, FormalDefinition def) {
-		return canBeParsed(input, def.getAlphabets().toArray(new Alphabet[0]));
-	}
-
-	public static boolean canBeParsed(String input, Alphabet ... alphs) {
-		return SymbolString.isEmpty(input) || 
-				removeDelimiters(createFromDefinition(input, alphs).toString()).equals(removeDelimiters(input));
-	}
+//	public static boolean canBeParsed(String input, FormalDefinition def) {
+//		return canBeParsed(input, def.getAlphabets().toArray(new Alphabet[0]));
+//	}
+//
+//	public static boolean canBeParsed(String input, Alphabet ... alphs) {
+//		return SymbolString.isEmpty(input) || 
+//				removeDelimiters(createFromDefinition(input, alphs).toString()).equals(removeDelimiters(input));
+//	}
 
 	private static String removeDelimiters(String input) {
 		return input.replaceAll(JFLAPPreferences.getSymbolStringDelimiter(), "");

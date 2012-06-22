@@ -24,6 +24,7 @@ import model.automata.transducers.moore.MooreOutputFunction;
 import model.grammar.Grammar;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class MooreAndMealyTest extends TestHarness {
 
@@ -39,8 +40,8 @@ public class MooreAndMealyTest extends TestHarness {
 		
 		outPrintln("Moore Machine :\n" + moore.toString());
 		
-		SymbolString input1 = moore.createFromString("AAAABBBBCCCC", false);
-		SymbolString input2 = moore.createFromString("AAABBBBABBBABAB", false);
+		SymbolString input1 = Symbolizers.defaultSymbolize("AAAABBBBCCCC", moore);
+		SymbolString input2 = Symbolizers.defaultSymbolize("AAABBBBABBBABAB", moore);
 
 		sim = new AutoSimulator(moore, 0);
 		run(sim, input1);

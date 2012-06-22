@@ -23,6 +23,7 @@ import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class MouseCatTest {
 
@@ -47,7 +48,7 @@ public class MouseCatTest {
 		OutPrintln(pda.toString());
 		
 		//read input in from a test program, initialize simulator
-		SymbolString input = SymbolString.createFromDefinition(createInput(),pda);
+		SymbolString input = Symbolizers.symbolize(createInput(),pda);
 		AutoSimulator sim = new AutoSimulator(pda, SingleInputSimulator.DEFAULT);
 		sim.beginSimulation(input);
 		

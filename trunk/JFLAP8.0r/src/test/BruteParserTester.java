@@ -14,6 +14,7 @@ import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public class BruteParserTester {
 	
@@ -60,7 +61,7 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(SymbolString.createFromDefinition("aaaaaa", gram)));
+		System.out.println(parser.quickParse(Symbolizers.symbolize("aaaaaa", gram)));
 		System.out.println(parser.getNumberOfNodes());
 	}
 
