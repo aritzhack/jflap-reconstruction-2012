@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><structure type="regex">&#13;
-	<structure type="exp">&#13;
-		<exp>((a+b)*+c)</exp>&#13;
-	</structure>&#13;
 	<structure type="input_alph">&#13;
 		<symbol>a</symbol>&#13;
 		<symbol>b</symbol>&#13;
 		<symbol>c</symbol>&#13;
+	</structure>&#13;
+	<structure type="exp">&#13;
+		<exp>((a+b)*+c)</exp>&#13;
 	</structure>&#13;
 </structure>
