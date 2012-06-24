@@ -9,9 +9,11 @@ import javax.swing.JScrollPane;
 import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
+import universe.preferences.PreferenceChangeListener;
 import view.formaldef.FormalDefinitionView;
 
-public class GrammarView extends FormalDefinitionView<Grammar> {
+public class GrammarView extends FormalDefinitionView<Grammar>{
 
 	private ProductionTable myTable;
 
@@ -31,6 +33,11 @@ public class GrammarView extends FormalDefinitionView<Grammar> {
 		return new ProductionTable(definition, 
 										keeper, 
 										editable);
+	}
+	
+	@Override
+	public String getName() {
+		return "Grammar Editor";
 	}
 
 }

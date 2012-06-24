@@ -11,7 +11,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 
-import preferences.JFLAPPreferences;
 
 
 import model.formaldef.components.FormalDefinitionComponent;
@@ -19,6 +18,7 @@ import model.symbols.SpecialSymbol;
 import model.symbols.Symbol;
 import model.undo.UndoKeeper;
 
+import universe.preferences.JFLAPPreferences;
 import view.action.ModifySymbolAction;
 import view.action.SetSpecialSymbolAction;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
@@ -47,8 +47,10 @@ public class SpecialSymbolPanel extends DefinitionComponentPanel<SpecialSymbol>{
 
 	@Override
 	public void update(ChangeEvent e) {
-		if (e.getSource() instanceof SpecialSymbol)
-			myButton.setText(mySpecialSymbol.getSymbol().toString());
+		if (e.getSource() instanceof SpecialSymbol){
+			SpecialSymbol ss = (SpecialSymbol) e.getSource();
+			myButton.setText(ss.symbolOnlyString());
+		}
 	}
 
 	public JPopupMenu getMenu() {

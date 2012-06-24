@@ -6,8 +6,8 @@ import java.util.List;
 
 import debug.JFLAPDebug;
 
-import preferences.JFLAPPreferences;
 
+import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 import model.automata.AutomatonException;
 import model.automata.InputAlphabet;

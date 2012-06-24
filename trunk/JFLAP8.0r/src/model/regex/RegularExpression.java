@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import oldnewstuff.view.Updateable;
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 

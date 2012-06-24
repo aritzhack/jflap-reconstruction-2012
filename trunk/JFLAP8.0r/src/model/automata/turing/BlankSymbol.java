@@ -2,7 +2,7 @@ package model.automata.turing;
 
 import java.util.Set;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 
 import errors.BooleanWrapper;
 import model.formaldef.components.FormalDefinitionComponent;

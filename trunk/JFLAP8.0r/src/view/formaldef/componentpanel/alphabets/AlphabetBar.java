@@ -13,10 +13,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 
-import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
+import universe.preferences.JFLAPPreferences;
 import view.action.ModifySymbolAction;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
 import view.formaldef.componentpanel.SetComponentBar;

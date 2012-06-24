@@ -2,7 +2,7 @@ package oldnewstuff.model.change.rules.applied;
 
 import oldnewstuff.model.change.ChangeEvent;
 import oldnewstuff.model.change.rules.Rule;
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import errors.BooleanWrapper;
 import model.change.events.SetToEvent;
 import model.grammar.StartVariable;

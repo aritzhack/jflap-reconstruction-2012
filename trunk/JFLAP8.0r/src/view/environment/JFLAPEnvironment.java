@@ -1,5 +1,6 @@
 package view.environment;
 
+import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
@@ -15,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import debug.JFLAPDebug;
+
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
@@ -26,28 +29,36 @@ import file.xml.XMLTransducer;
 
 public class JFLAPEnvironment extends JFrame{
 
+	
 	private File myFile;
 	private JTabbedPane myTabbedPane;
-	private JFLAPMenuBar myMenu;
 	private Component myPrimaryView;
 	private boolean amDirty;
-
-	public JFLAPEnvironment(File f){
-		this(ViewFactory.createView(f));
+	private int myID;
+	private List<TabChangeListener> myListeners;
+	
+	
+	public JFLAPEnvironment(Object model, int id){
+		this(ViewFactory.createView(model), id);
+	}
+	
+	public JFLAPEnvironment(File f, int id){
+		this(ViewFactory.createView(f), id);
 		setFile(f);
 	}
 	
-	private void setFile(File f) {
-		myFile= f;
-	}
+	public JFLAPEnvironment(Component component, int id){
+		super(JFLAPConstants.VERSION_STRING);
 
-	public JFLAPEnvironment(Component component){
-		super("JFLAP v" + JFLAPConstants.VERSION);
-		myTabbedPane = new SpecialTabbedPane();
-		myPrimaryView = component;
+		myListeners = new ArrayList<TabChangeListener>();
 		
-		myMenu = MenuFactory.createMenu(this);
-		this.setJMenuBar(myMenu);
+		myID = id;
+		myTabbedPane = new SpecialTabbedPane();
+		this.add(myTabbedPane);
+		myPrimaryView = component;
+		addView(component);
+		JFLAPMenuBar menu = MenuFactory.createMenu(this);
+		this.setJMenuBar(menu);
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -56,10 +67,32 @@ public class JFLAPEnvironment extends JFrame{
 			}
 
 		});
-		
-		addView(component);
+		this.pack();
+		this.setVisible(true);
 	}
 	
+	public void addTabListener(TabChangeListener menu) {
+		myListeners.add(menu);
+	}
+
+	private void setFile(File f) {
+		JFLAPDebug.print("Set File: " + f.getName());
+		myFile= f;
+		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName() + ")");
+	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof JFLAPEnvironment)
+			return this.getID() == ((JFLAPEnvironment) obj).getID();
+		return super.equals(obj);
+	}
+	
+	public int getID() {
+		return myID;
+	}
+
 	public boolean close(boolean save) {
 		if (save && this.isDirty()){
 			int result = JOptionPane.showConfirmDialog(this, 
@@ -72,10 +105,10 @@ public class JFLAPEnvironment extends JFrame{
 			}
 		}
 		this.dispose();
-		return save;
+		return true;
 	}
 	
-	private boolean save(boolean saveAs) {
+	public boolean save(boolean saveAs) {
 		if (saveAs || myFile == null){
 			XMLFileChooser chooser = new XMLFileChooser();
 			int n = chooser.showSaveDialog(this);
@@ -122,11 +155,23 @@ public class JFLAPEnvironment extends JFrame{
 	
 	public void addView(Component component) {
 		myTabbedPane.add(component);
-		myTabbedPane.setSelectedComponent(component);
+//		myTabbedPane.setSelectedComponent(component);
+
 		if (component instanceof EditingPanel)
 			amDirty = true;
+		distributeTabChangedEvent();
+		myTabbedPane.revalidate();
+		this.repaint();
 	}
 	
+	private void distributeTabChangedEvent() {
+		for (TabChangeListener l: myListeners){
+			l.tabChanged(new TabChangedEvent(myTabbedPane.getSelectedComponent(), 
+												myTabbedPane.getTabCount()));
+		}
+		
+	}
+
 	public void closeActiveTab() {
 		closeTab(myTabbedPane.getSelectedIndex());
 	}
@@ -136,11 +181,13 @@ public class JFLAPEnvironment extends JFrame{
 		myTabbedPane.remove(i);
 		if (c instanceof EditingPanel)
 			amDirty = true;
+		distributeTabChangedEvent();
+		myTabbedPane.revalidate();
+		this.repaint();
 	}
 
 	public void update() {
 		updatePrimaryPanel();
-		updateMenuBar();
 		this.repaint();
 	}
 
@@ -149,10 +196,6 @@ public class JFLAPEnvironment extends JFrame{
 		if (myPrimaryView instanceof EditingPanel)
 			((EditingPanel) myPrimaryView).setEditable(enabled);
 		myTabbedPane.setEnabledAt(0, enabled);
-	}
-
-	private void updateMenuBar() {
-		myMenu.update();
 	}
 
 	@Override
@@ -176,12 +219,31 @@ public class JFLAPEnvironment extends JFrame{
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
 			JFLAPEnvironment.this.update();
+			distributeTabChangedEvent();
 		}
 	}
 
 
 	public int getTabCount() {
 		return myTabbedPane.getTabCount();
+	}
+
+	public boolean hasFile() {
+		return myFile != null;
+	}
+
+	public String getFileName() {
+		if (!hasFile()) return "";
+		return myFile.getName();
+	}
+
+	public Component getCurrentView() {
+		return myTabbedPane.getSelectedComponent();
+	}
+	
+	@Override
+	public String toString() {
+		return "Environment: " + this.getFileName() + " | id: " + this.getID();
 	}
 	
 }

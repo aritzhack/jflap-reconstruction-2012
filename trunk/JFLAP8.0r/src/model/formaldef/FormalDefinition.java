@@ -14,12 +14,12 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import preferences.JFLAPPreferences;
 
 
 
 import debug.JFLAPDebug;
 
+import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 import util.JFLAPConstants;
 

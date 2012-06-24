@@ -27,8 +27,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
-import oldnewstuff.controller.JFLAPController;
-import oldnewstuff.controller.menus.MenuConstants;
+import util.JFLAPConstants;
+import view.environment.JFLAPEnvironment;
 
 
 /**
@@ -39,7 +39,7 @@ import oldnewstuff.controller.menus.MenuConstants;
  */
 
 public class CloseWindowAction extends AbstractAction {
-	private JFLAPController myController;
+	private JFLAPEnvironment myEnvironment;
 
 	/**
 	 * Instantiates a <CODE>CloseWindowAction</CODE>.
@@ -48,17 +48,17 @@ public class CloseWindowAction extends AbstractAction {
 	 *            the <CODE>EnvironmentFrame</CODE> to dismiss when an action
 	 *            is registered
 	 */
-	public CloseWindowAction(JFLAPController c) {
+	public CloseWindowAction(JFLAPEnvironment e) {
 		super("Close", null);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W,
-				MenuConstants.getMainMenuMask()));
-		myController = c;
+				JFLAPConstants.MAIN_MENU_MASK));
+		myEnvironment = e;
 	}
 
 	/**
 	 * Handles the closing of the window.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		myController.close(true);
+		myEnvironment.close(true);
 	}
 }

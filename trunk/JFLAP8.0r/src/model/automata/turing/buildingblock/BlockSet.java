@@ -13,7 +13,7 @@ import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 
 public class BlockSet extends StateSet implements UsesSymbols{
 	

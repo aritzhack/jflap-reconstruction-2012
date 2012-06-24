@@ -3,8 +3,8 @@ package model.automata.turing.buildingblock;
 import java.util.Collection;
 import java.util.Set;
 
-import preferences.JFLAPPreferences;
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 import model.automata.AutomatonException;

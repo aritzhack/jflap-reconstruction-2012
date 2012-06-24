@@ -1,6 +1,6 @@
 package model.regex;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.grammar.Terminal;
 import model.symbols.Symbol;
 

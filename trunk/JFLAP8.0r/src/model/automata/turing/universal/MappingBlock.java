@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import debug.JFLAPDebug;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.buildingblock.library.BaseBlockTMBlock;

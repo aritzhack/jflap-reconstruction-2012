@@ -3,8 +3,11 @@ package view;
 import java.awt.Component;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import debug.JFLAPDebug;
 
 import view.grammar.GrammarView;
 
@@ -17,7 +20,7 @@ public class ViewFactory {
 	private static Map<Class, Class<? extends Component>> myClassToComponent;
 
 	static{
-		myClassToComponent = new TreeMap<Class, Class<? extends Component>>();
+		myClassToComponent = new HashMap<Class, Class<? extends Component>>();
 		myClassToComponent.put(Grammar.class, GrammarView.class);
 	}
 	
@@ -25,7 +28,8 @@ public class ViewFactory {
 		return createView(new XMLCodec().decode(f));
 	}
 
-	private static Component createView(Object decode) {
+	public static Component createView(Object decode) {
+		JFLAPDebug.print("Createing View");
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
 		try {

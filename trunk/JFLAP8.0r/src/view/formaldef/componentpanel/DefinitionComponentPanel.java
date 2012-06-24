@@ -12,7 +12,7 @@ import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.SuperMouseAdapter;
 import view.EditingPanel;

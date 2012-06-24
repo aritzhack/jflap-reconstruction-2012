@@ -14,13 +14,13 @@ import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 
-import preferences.JFLAPPreferences;
 
 
 import debug.JFLAPDebug;
 
 
 
+import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 import util.UtilFunctions;
 

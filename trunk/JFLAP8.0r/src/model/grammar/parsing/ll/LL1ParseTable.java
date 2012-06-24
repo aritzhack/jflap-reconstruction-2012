@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import preferences.JFLAPPreferences;
 
+import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 

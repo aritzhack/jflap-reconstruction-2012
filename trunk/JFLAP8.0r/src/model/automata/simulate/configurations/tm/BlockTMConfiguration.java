@@ -5,10 +5,10 @@ import java.util.List;
 
 import oldnewstuff.main.JFLAP;
 
-import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import model.automata.Automaton;
 import model.automata.State;

@@ -2,7 +2,7 @@ package model.automata.simulate.configurations.tm;
 
 import java.util.LinkedList;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 

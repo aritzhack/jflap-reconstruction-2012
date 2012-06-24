@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
+import model.change.events.AdvancedChangeEvent;
 import model.change.events.ModifyEvent;
 import model.change.events.SetToEvent;
 import model.change.events.SpecialSymbolSetEvent;
@@ -22,7 +23,7 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.StartVariable;
 import model.grammar.VariableAlphabet;
 
-public abstract class SpecialSymbol extends FormalDefinitionComponent implements UsesSymbols, ChangeListener {
+public abstract class SpecialSymbol extends FormalDefinitionComponent implements UsesSymbols{
 
 	private Symbol mySymbol;
 
@@ -38,7 +39,6 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	}
 
-
 	public SpecialSymbol(){
 		this((Symbol) null);
 	}
@@ -49,17 +49,11 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	public boolean setSymbol(Symbol s) {
 		if (isPermanent()) return false;
-		if (s == null){
-			mySymbol = s;
-			return true;
-		}
-		if (mySymbol == null && s != null){
-			mySymbol = s;
-			mySymbol.addListener(this);
-			distributeChanged();
-			return true;
-		}
-		return mySymbol.setTo(s);
+
+		Symbol old = mySymbol;
+		mySymbol = s;
+		distributeChange(new SpecialSymbolSetEvent(this, old, s));
+		return true;
 
 	}
 
@@ -90,10 +84,12 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	@Override
 	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
-		if (this.equals(s)){
-			this.clear();
-			return true;
+		if (getAlphabetClass().isAssignableFrom(a.getClass())){
+			if (mySymbol != null && s.contains(mySymbol))
+				this.clear();
+
 		}
+
 		return false;
 	}
 
@@ -127,11 +123,5 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	public String symbolOnlyString() {
 		if (getSymbol() == null) return "";
 		return getSymbol().toString();
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		if (e instanceof SetToEvent)
-			this.distributeChange(new ModifyEvent(this, (SetToEvent) e));
 	}
 }
