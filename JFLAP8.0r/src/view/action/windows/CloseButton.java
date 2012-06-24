@@ -21,17 +21,6 @@
 package view.action.windows;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import oldnewstuff.controller.JFLAPController;
 import util.view.ActionLinkedButton;
 import view.environment.JFLAPEnvironment;
 

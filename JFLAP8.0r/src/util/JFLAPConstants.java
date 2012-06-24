@@ -94,4 +94,8 @@ public interface JFLAPConstants {
 		public static final String NOT = "!";
 		public static final String TM_MARKER = "#";
 
+		public static final String RESOURCE_ROOT = System.getProperty("user.dir")+"/src/resources";
+
+		public static final String VERSION_STRING = "JFLAP v" + JFLAPConstants.VERSION;
+
 }

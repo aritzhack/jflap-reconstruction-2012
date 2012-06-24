@@ -16,7 +16,7 @@ import model.automata.turing.buildingblock.library.CopyBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import file.xml.XMLCodec;
 

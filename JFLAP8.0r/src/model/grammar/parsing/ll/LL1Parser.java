@@ -1,6 +1,6 @@
 package model.grammar.parsing.ll;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.algorithms.AlgorithmException;
 import model.algorithms.AlgorithmStep;
 import model.grammar.Grammar;

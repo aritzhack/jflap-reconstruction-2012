@@ -1,7 +1,10 @@
 package model.grammar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+
+import universe.preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 

@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import view.EditingPanel;
 import view.grammar.Magnifiable;
 import view.grammar.TableTextSizeSlider;
-import view.undo.UndoPanel;
+import view.undoing.UndoPanel;
 
 import model.formaldef.FormalDefinition;
 import model.undo.UndoKeeper;
@@ -59,5 +59,14 @@ public abstract class FormalDefinitionView<T extends FormalDefinition> extends E
 
 	public abstract JComponent createCentralPanel(T definition, UndoKeeper keeper, boolean editable);
 	
+	public Component getCentralPanel(){
+		return myCentralPanel;
+	}
 	
+	public T getDefintion(){
+		return myDefinition;
+	}
+	
+	@Override
+	public abstract String getName();
 }

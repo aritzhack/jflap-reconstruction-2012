@@ -31,9 +31,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import preferences.JFLAPPreferences;
 
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 import model.grammar.Grammar;

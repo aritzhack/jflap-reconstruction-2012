@@ -28,8 +28,9 @@ public class SetSpecialSymbolAction extends UndoingAction {
 						mySpecialSymbol.getSymbol().toString():
 						"");
 		if (toString == null) return null;
-		Symbol from = mySpecialSymbol.getSymbol().copy(),
-				to = new Symbol(toString);
+		Symbol from = mySpecialSymbol.getSymbol();
+		from = from == null ? null : from.copy();
+		Symbol to = new Symbol(toString);
 		
 		return new SpecialSymbolSetEvent(mySpecialSymbol, from, to);
 	}

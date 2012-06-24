@@ -1,6 +1,6 @@
 package model.grammar.parsing.lr;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.grammar.Production;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;

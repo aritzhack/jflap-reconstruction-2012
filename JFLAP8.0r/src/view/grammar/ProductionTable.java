@@ -16,7 +16,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
@@ -25,10 +24,12 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
+import util.ISelector;
 import util.JFLAPConstants;
 
 public class ProductionTable extends HighlightTable 
-						implements JFLAPConstants, Magnifiable, ChangeListener{
+						implements JFLAPConstants, Magnifiable, ChangeListener, ISelector{
 
 	private boolean amEditable;
 
@@ -50,27 +51,6 @@ public class ProductionTable extends HighlightTable
 		g.getProductionSet().addListener(this);
 		initView();
 		myKeeper = keeper;
-		this.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if ( e.getModifiers() == JFLAPConstants.MAIN_MENU_MASK &&
-						e.getKeyCode() == KeyEvent.VK_D &&
-						amEditable){
-					int[] rows = getSelectedRows();
-					myKeeper.beginCombine();
-					boolean shouldAdd = false;
-					for (int i : rows){
-						shouldAdd = ((ProductionTableModel) getModel()).remove(i);
-						if (!shouldAdd) break;
-					}
-					myKeeper.endCombine(shouldAdd);
-
-					e.consume();
-					clearSelection();
-					updateUI();
-				}
-			}
-		});
 	}
 
 
@@ -157,6 +137,26 @@ public class ProductionTable extends HighlightTable
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		this.updateUI();
+	}
+
+
+
+
+	@Override
+	public boolean deleteSelected() {
+		int[] rows = getSelectedRows();
+		myKeeper.beginCombine();
+		boolean shouldAdd = false;
+		for (int i = 0; i < rows.length; i++){
+			int index = rows[i]-i;
+			shouldAdd = ((ProductionTableModel) getModel()).remove(index);
+			if (!shouldAdd) break;
+		}
+		myKeeper.endCombine(shouldAdd);
+
+		setRowSelectionInterval(0, 0);
+		updateUI();
+		return shouldAdd;
 	}
 
 }

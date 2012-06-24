@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
-import preferences.JFLAPPreferences;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -50,6 +49,7 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizer;
 import model.symbols.symbolizer.Symbolizers;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.UtilFunctions;
 import file.xml.XMLCodec;

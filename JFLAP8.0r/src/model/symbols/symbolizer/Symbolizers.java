@@ -6,7 +6,7 @@ import java.util.Map;
 
 import debug.JFLAPDebug;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.Grammar;

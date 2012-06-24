@@ -23,18 +23,12 @@ package view.action.windows;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import oldnewstuff.controller.JFLAPController;
 import oldnewstuff.controller.menus.MenuConstants;
+import util.JFLAPConstants;
 import view.environment.JFLAPEnvironment;
 
 
@@ -68,7 +62,7 @@ public class CloseTabAction extends AbstractAction {
 
 
 	private static Icon getIcon(boolean usingIcon) {
-		return usingIcon ? new ImageIcon(CloseTabAction.class.getResource("/ICON/x.gif")) : null;
+		return usingIcon ? new ImageIcon(JFLAPConstants.RESOURCE_ROOT + "/ICON/x.gif") : null;
 	}
 
 

@@ -51,7 +51,6 @@ public class UndoKeeper implements ChangeListener{
 	}
 
 	public <T extends Copyable> void registerChange(IUndoRedo toAdd){
-		JFLAPDebug.print("Registered: " + toAdd.getName());
 		if (amLocked) 
 			return;
 		else if (amCombining){
@@ -60,7 +59,8 @@ public class UndoKeeper implements ChangeListener{
 			else
 				myCombineAction.add(toAdd);
 		}
-		else{
+		else if(toAdd != null){
+			
 			myUndoQueue.push(toAdd);
 			myRedoQueue.clear();
 			broadcastStateChange();

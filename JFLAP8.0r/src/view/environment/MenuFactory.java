@@ -8,9 +8,10 @@ import view.menus.JFLAPMenuBar;
 
 public class MenuFactory {
 
-	public static JFLAPMenuBar createMenu(JFLAPEnvironment component) {
-		
-		return null;
+	public static JFLAPMenuBar createMenu(JFLAPEnvironment e) {
+		JFLAPMenuBar menu = new JFLAPMenuBar(e);
+		e.addTabListener(menu);
+		return menu;
 	}
 
 }

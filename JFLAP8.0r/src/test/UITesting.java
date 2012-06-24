@@ -5,8 +5,9 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import preferences.JFLAPPreferences;
 
+import universe.JFLAPUniverse;
+import universe.preferences.JFLAPPreferences;
 import view.grammar.GrammarView;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
@@ -35,5 +36,6 @@ public class UITesting {
 		frame.add(new GrammarView(gram, keeper, true));
 		frame.pack();
 		frame.setVisible(true);
+		JFLAPUniverse.showMainMenu();
 	}
 }

@@ -16,11 +16,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 
-import preferences.JFLAPPreferences;
 
 
 import debug.JFLAPDebug;
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 
@@ -75,7 +75,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	@Override
 	public Object[] set(int index, Object[] input) {
 		Object[] old = this.get(index);
-		if (index >= this.myProductions.size())
+		if (index >= this.myOrderedProductions.size())
 			this.add(input); 
 		else {
 			Production to = this.objectToProduction(input);
@@ -124,6 +124,8 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	public Object[] remove(int index) {
 		if (index >= myOrderedProductions.size()) return EMPTY;
 		Production remove = myOrderedProductions.get(index);
+		JFLAPDebug.print(myOrderedProductions);
+		JFLAPDebug.print(remove + " | "+index);
 		RemoveOrderedProdEvent event =
 				new RemoveOrderedProdEvent(remove, index);
 		myKeeper.applyAndListen(event);
@@ -216,8 +218,10 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 
 		@Override
 		public boolean redo() {
-			myOrderedProductions.add(myIndex, myProduction);
-			return super.redo();
+			boolean redone = super.redo();
+			if (redone)
+				myOrderedProductions.add(myIndex, myProduction);
+			return redone;
 		}
 
 	}
@@ -236,8 +240,10 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 
 		@Override
 		public boolean undo() {
-			myOrderedProductions.add(myIndex, myProduction);
-			return super.undo();
+			boolean undone = super.undo();
+			if (undone)
+				myOrderedProductions.add(myIndex, myProduction);
+			return undone;
 		}
 
 		@Override

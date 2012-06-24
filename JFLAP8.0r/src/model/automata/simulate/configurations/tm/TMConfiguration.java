@@ -1,6 +1,6 @@
 package model.automata.simulate.configurations.tm;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;

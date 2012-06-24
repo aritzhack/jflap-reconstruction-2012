@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import preferences.JFLAPPreferences;
+import universe.preferences.JFLAPPreferences;
 
 
 import debug.JFLAPDebug;
