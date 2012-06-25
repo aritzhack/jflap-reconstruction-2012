@@ -2,6 +2,7 @@ package test;
 
 import debug.JFLAPDebug;
 import model.automata.simulate.AutoSimulator;
+import model.automata.simulate.configurations.tm.BlockTMConfiguration;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
@@ -9,6 +10,8 @@ import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
 import model.automata.turing.universal.ConvertInputBlock;
+import model.automata.turing.universal.ConvertedUniversalTM;
+import model.automata.turing.universal.RetrieveOutputBlock;
 import model.automata.turing.universal.TMtoEncodingConversion;
 import model.automata.turing.universal.UniversalTuringMachine;
 import model.symbols.Symbol;
@@ -23,7 +26,8 @@ public class TuringTester {
 ////		states.add(new State("q2",2));
 		TapeAlphabet tapeAlph = new TapeAlphabet();
 		tapeAlph.addAll(new Symbol("a"), new Symbol("b"), new Symbol("c"));
-//		BlankSymbol blank = new BlankSymbol();
+		BlankSymbol blank = new BlankSymbol();
+		tapeAlph.add(blank.getSymbol());
 //		InputAlphabet inputAlph = new InputAlphabet();
 //		inputAlph.addAll(new Symbol("a"), new Symbol("b"));
 //		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
@@ -40,15 +44,15 @@ public class TuringTester {
 		MultiTapeTuringMachine tm = (MultiTapeTuringMachine) new MoveUntilBlock(TuringMachineMove.RIGHT, new Symbol("a"), tapeAlph, new BlankSymbol(), 0).getTuringMachine();
 		System.out.println(tm);
 		
-		TMtoEncodingConversion converter = new TMtoEncodingConversion(tm);
-		converter.stepToCompletion();
-		System.out.println(converter.getEncoding());
+//		TMtoEncodingConversion converter = new TMtoEncodingConversion(tm);
+//		converter.stepToCompletion();
+//		System.out.println(converter.getEncoding());
 		
 		tapeAlph = new TapeAlphabet();
 		tapeAlph.addAll(new Symbol("a"), new Symbol("b"), new Symbol("c"));
-		
-		ConvertInputBlock block = new ConvertInputBlock(converter.getEncoding(), tapeAlph, new BlankSymbol(), 0);
-		BlockTuringMachine convert = block.getTuringMachine();
+		tapeAlph.add(blank.getSymbol());
+//		ConvertInputBlock block = new ConvertInputBlock(converter.getEncoding(), tapeAlph, new BlankSymbol(), 0);
+//		ConvertedUniversalTM uni = new ConvertedUniversalTM(tm);
 		
 //		Symbol zero = new Symbol("0"), one = new Symbol("1");
 //		SymbolString en = converter.getEncoding();
@@ -62,9 +66,17 @@ public class TuringTester {
 //		UniversalTuringMachine uni = new UniversalTuringMachine(false);
 //		System.out.println(uni);
 //		
-		AutoSimulator sim = new AutoSimulator(convert, 0);
-		sim.beginSimulation(Symbolizers.symbolize("abbbccca", convert));
-		System.out.println(sim.getNextAccept());
+		RetrieveOutputBlock block = new RetrieveOutputBlock(tapeAlph, blank, 0);
+		System.out.println(block.getTuringMachine());
+		SymbolString input = Symbolizers.symbolize("10110111011101110111101111011110110", block.getTuringMachine());
+		System.out.print(input.size());
+		BlockTMConfiguration config = new BlockTMConfiguration(block.getTuringMachine(), block.getTuringMachine().getStartState(),
+							32, input);
+		
+		AutoSimulator sim = new AutoSimulator(tm, 0);
+		sim.beginSimulation(config);
+		System.out.println(sim.getNextHalt());
+		
 //		
 ////		StayOptionRemover remover = new StayOptionRemover(tm);
 ////		remover.stepToCompletion();
