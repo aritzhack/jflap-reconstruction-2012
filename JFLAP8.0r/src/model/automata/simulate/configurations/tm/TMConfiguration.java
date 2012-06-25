@@ -1,5 +1,6 @@
 package model.automata.simulate.configurations.tm;
 
+import debug.JFLAPDebug;
 import universe.preferences.JFLAPPreferences;
 import model.automata.Automaton;
 import model.automata.State;
@@ -10,6 +11,7 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
 public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Transition<T>> 
 														extends Configuration<S,T> {

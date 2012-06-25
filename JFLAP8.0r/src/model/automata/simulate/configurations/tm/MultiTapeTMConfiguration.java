@@ -54,10 +54,9 @@ public class MultiTapeTMConfiguration extends TMConfiguration<MultiTapeTuringMac
 			TuringMachineMove move = trans.getMove(i);
 			int pos = this.getPositionForIndex(i);
 			SymbolString tape = clones[i];
-			
+			clones[i] = clones[i].replace(this.getPositionForIndex(i), write);
 			clones[i] = updateTape(move, pos, tape);
 			
-			clones[i] = clones[i].replace(this.getPositionForIndex(i), write);
 		}
 		return clones;
 	}
