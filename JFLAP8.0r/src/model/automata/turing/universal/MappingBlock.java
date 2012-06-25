@@ -6,16 +6,16 @@ import java.util.TreeMap;
 
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
-import model.automata.turing.buildingblock.library.BaseBlockTMBlock;
+import model.automata.turing.buildingblock.library.BlockTMUpdatingBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import universe.preferences.JFLAPPreferences;
 
-public abstract class MappingBlock extends BaseBlockTMBlock {
+public abstract class MappingBlock extends BlockTMUpdatingBlock {
 
-	public MappingBlock(TapeAlphabet alph, BlankSymbol blank, String name,
-			int id) {
-		super(alph, blank, name, id);
+	public MappingBlock(TapeAlphabet alph, String name,
+			int id, Object ... args) {
+		super(alph, name, id, args);
 	}
 
 	@Override

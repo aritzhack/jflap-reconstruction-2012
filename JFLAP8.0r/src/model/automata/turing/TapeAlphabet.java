@@ -11,7 +11,6 @@ import javax.swing.event.ChangeListener;
 import debug.JFLAPDebug;
 
 import model.automata.turing.buildingblock.Block;
-import model.automata.turing.buildingblock.library.BaseMultiTapeBlock;
 import model.automata.turing.buildingblock.library.ShiftBlock;
 import model.automata.turing.buildingblock.library.SingleShiftBlock;
 import model.formaldef.components.FormalDefinitionComponent;
