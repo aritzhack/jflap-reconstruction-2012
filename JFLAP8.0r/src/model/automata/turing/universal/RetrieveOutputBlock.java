@@ -139,6 +139,7 @@ public class RetrieveOutputBlock extends MappingBlock{
 		TapeAlphabet tape = tm.getTapeAlphabet();
 		BlankSymbol blank = new BlankSymbol();
 		
+		
 		Block rightBlock1, rightBlock2 = rightFromState;
 		Block leftBlock1, leftBlock2 = leftFromState;
 		BlockTransition trans;

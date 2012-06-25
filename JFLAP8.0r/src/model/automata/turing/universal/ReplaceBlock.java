@@ -32,7 +32,6 @@ public class ReplaceBlock extends BlockTMUpdatingBlock {
 		int id =0;
 		
 		BlockTuringMachine tm = getTuringMachine();
-		BlockSet blocks = tm.getStates();
 		TapeAlphabet tape = tm.getTapeAlphabet();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 		BlankSymbol blank = new BlankSymbol();
@@ -57,6 +56,7 @@ public class ReplaceBlock extends BlockTMUpdatingBlock {
 		b1=b2;
 		b2 = new HaltBlock(id++);
 		trans = new BlockTransition(b1, b2, tilde);
+		transitions.add(trans);
 		tm.getFinalStateSet().add(b2);
 	}
 
