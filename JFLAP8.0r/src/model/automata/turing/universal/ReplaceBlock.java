@@ -22,6 +22,14 @@ public class ReplaceBlock extends BlockTMUpdatingBlock {
 	public ReplaceBlock(TuringMachineMove direction, Symbol symbol, TapeAlphabet alph, int id) {
 		super(alph, "Replace_"+symbol.getString(), id, direction, symbol);
 		
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		TuringMachineMove direction = (TuringMachineMove) args[0];
+		Symbol symbol = (Symbol) args[1];
+		int id =0;
 		
 		BlockTuringMachine tm = getTuringMachine();
 		BlockSet blocks = tm.getStates();
@@ -50,13 +58,6 @@ public class ReplaceBlock extends BlockTMUpdatingBlock {
 		b2 = new HaltBlock(id++);
 		trans = new BlockTransition(b1, b2, tilde);
 		tm.getFinalStateSet().add(b2);
-	}
-
-	@Override
-	public void constructFromBase(TapeAlphabet parentAlph,
-			TuringMachine localTM, Object... args) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
