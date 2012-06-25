@@ -11,17 +11,11 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
-public class MoveBlock extends BaseMultiTapeBlock {
+public class MoveBlock extends MultiTapeUpdatingBlock {
 	private TuringMachineMove myDirection;
 	
-	public MoveBlock(TuringMachineMove direction, TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, createName(direction), id);
-		
-		myDirection = direction;
-
-		addStartAndFinalStates();
-		
-		updateTuringMachine(alph);
+	public MoveBlock(TuringMachineMove direction, TapeAlphabet alph,int id) {
+		super(alph, createName(direction), id, direction);
 	}
 
 	private static String createName(TuringMachineMove direction){
@@ -38,5 +32,14 @@ public class MoveBlock extends BaseMultiTapeBlock {
 		for(Symbol term : tape){
 			transitions.add(new MultiTapeTMTransition(start, finish, term, term, myDirection));
 		}
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		
+		myDirection = (TuringMachineMove) args[0];
+
+		addStartAndFinalStates(getTuringMachine());
 	}
 }

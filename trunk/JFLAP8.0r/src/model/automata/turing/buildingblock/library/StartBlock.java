@@ -9,8 +9,8 @@ import model.symbols.Symbol;
 
 public class StartBlock extends StartHaltBlock {
 
-	public StartBlock(TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, BlockLibrary.START, id);
+	public StartBlock(int id) {
+		super(BlockLibrary.START, id);
 	}
 
 }

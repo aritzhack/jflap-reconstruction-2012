@@ -20,43 +20,31 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
+import model.automata.turing.buildingblock.UpdatingBlock;
 import model.change.events.AdvancedChangeEvent;
 
-public abstract class BaseBlockTMBlock extends Block implements ChangeListener{
+public abstract class BlockTMUpdatingBlock extends UpdatingBlock{
 
-	public BaseBlockTMBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
-		super(createTuringMachine(blank, alph), name, id);
-		alph.addListener(this);
-//		JFLAPDebug.print("ORIGINAL: " + alph);
-	}
 	
-	private static BlockTuringMachine createTuringMachine(BlankSymbol blank, TapeAlphabet alph) {
-		
-		BlockTuringMachine tm = new BlockTuringMachine(new BlockSet(), 
-																alph.copy(),
-																blank, 
-																new InputAlphabet(), 
-																new TransitionSet<BlockTransition>(),
-																new StartState(), 
-																new FinalStateSet());
-		return tm;
-	}
 	
+	public BlockTMUpdatingBlock(TapeAlphabet parentAlph,
+			String name, int id, Object ... args) {
+		super(parentAlph, name, id, args);
+	}
+
 	@Override
 	public BlockTuringMachine getTuringMachine() {
 		return (BlockTuringMachine) super.getTuringMachine();
 	}
 	
 	@Override
-	public void stateChanged(ChangeEvent e) {
-		if(!(e instanceof AdvancedChangeEvent))
-		return;
-		AdvancedChangeEvent event = (AdvancedChangeEvent) e;
-		if(event.comesFrom(TapeAlphabet.class)){
-			updateTuringMachine((TapeAlphabet) event.getSource());
+	public void updateTuringMachine(TapeAlphabet tape) {
+		BlockSet blocks = getTuringMachine().getStates();
+		
+		for(State block : blocks){
+			if (block instanceof UpdatingBlock)
+				((UpdatingBlock) block).updateTuringMachine(tape);
 		}
 	}
 	
-	public abstract void updateTuringMachine(TapeAlphabet tape);
-
 }

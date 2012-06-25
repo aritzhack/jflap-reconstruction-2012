@@ -25,25 +25,25 @@ public class BlockLibrary {
 
 		//FinalBlock
 		if (parts[0].equals(FINAL) && parts.length == 1){
-			return new HaltBlock(alph, new BlankSymbol(), id);
+			return new HaltBlock(id);
 		}
 		//StartBlock
 		else if(parts[0].equals(START) && parts.length == 1){
-			return new StartBlock(alph, new BlankSymbol(), id);
+			return new StartBlock(id);
 		}
 		//MoveBlock family
 		else if(parts[0].equals(MOVE) && isMove(parts[1])){
 			
 			//MoveBlock
 			if (parts.length == 2){
-				return new MoveBlock(toMove(parts[1]), alph, new BlankSymbol(), id);
+				return new MoveBlock(toMove(parts[1]), alph,  id);
 			}
 			//MoveUntilBlock
 			else if(parts[2].equals(UNTIL) &&
 					alph.containsSymbolWithString(parts[3])
 					&& parts.length == 4){
 				return new MoveUntilBlock(toMove(parts[1]), 
-						alph.getSymbolForString(parts[3]), alph, new BlankSymbol(), id);
+						alph.getSymbolForString(parts[3]), alph,  id);
 
 			}
 			//MoveUntilNotBlock
@@ -52,7 +52,7 @@ public class BlockLibrary {
 					alph.containsSymbolWithString(parts[4]) &&
 					parts.length == 5){
 				return new MoveUntilNotBlock(toMove(parts[1]), 
-						alph.getSymbolForString(parts[4]), alph, new BlankSymbol(), id);
+						alph.getSymbolForString(parts[4]), alph,  id);
 	
 			}
 		}
@@ -61,24 +61,24 @@ public class BlockLibrary {
 				isMove(parts[1])){
 			//ShiftBlock
 			if(parts.length == 2){
-				return new ShiftBlock(toMove(parts[1]), alph, new BlankSymbol(), id);
+				return new ShiftBlock(toMove(parts[1]), alph,  id);
 			}
 			//SingleShiftBlock
 			else if (parts.length == 3 && 
 					alph.containsSymbolWithString(parts[2])){
 				return new SingleShiftBlock(alph.getSymbolForString(parts[2]), 
-						toMove(parts[1]), alph, new BlankSymbol(), id);
+						toMove(parts[1]), alph,  id);
 			}
 
 		}
 		//WriteBlock
 		else if(parts[0].equals(WRITE) && parts.length == 2 &&
 				alph.containsSymbolWithString(parts[1])){
-			return new WriteBlock(alph.getSymbolForString(parts[1]), alph, new BlankSymbol(), id);
+			return new WriteBlock(alph.getSymbolForString(parts[1]), alph,  id);
 
 		}
 		else if (parts[0].equals(COPY) && parts.length == 1)
-			return new CopyBlock(alph, new BlankSymbol(), id);
+			return new CopyBlock(alph,  id);
 		return null;
 	}
 

@@ -33,7 +33,7 @@ import model.symbols.SymbolString;
  * @author Julian
  *
  */
-public class SingleShiftBlock extends BaseBlockTMBlock {
+public class SingleShiftBlock extends BlockTMUpdatingBlock {
 
 	private TuringMachineMove myShift;
 	private TuringMachineMove myOpposite;
@@ -41,78 +41,12 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 	private Block myPivot;
 	private Symbol myMarker;
 
-	public SingleShiftBlock(Symbol s, TuringMachineMove direction, TapeAlphabet tape, BlankSymbol blank, int id) {
-		super(tape, blank, BlockLibrary.SHIFT + BlockLibrary.UNDSCR +direction.char_abbr+"_" + s, id);
+	public SingleShiftBlock(Symbol s, TuringMachineMove direction, TapeAlphabet tape, int id) {
+		super(tape, BlockLibrary.SHIFT + BlockLibrary.UNDSCR +direction.char_abbr+"_" + s, id, direction, s);
 		if (direction == TuringMachineMove.STAY)
 			throw new AutomatonException("You may not shift with a stay option.");
 
-		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		
-		
-		TapeAlphabet alph = tm.getTapeAlphabet();
-		TransitionSet<BlockTransition> transitions = tm.getTransitions();
-		
-		BlockSet blocks = tm.getStates();
-		
-		myLoops = new ArrayList<Loop>();
-		myMarker = new Symbol(getBestMarker(alph));
-
-		myShift = direction;
-		myOpposite = direction == TuringMachineMove.RIGHT ? TuringMachineMove.LEFT : TuringMachineMove.RIGHT;
-		id = 0;
-
-		Block b1 = new StartBlock(alph, blank, id++);
-		tm.setStartState(b1);
-		Block b2 = new MoveBlock(myShift, alph, blank, id++);
-		BlockTransition trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-
-		b1=b2;
-		b2 = new WriteBlock(myMarker, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(s));
-		transitions.add(trans);
-
-		
-		b1=b2;
-		b2 = new MoveBlock(myOpposite, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(myMarker));
-		transitions.add(trans);
-
-		
-		b1=b2;
-		b2 = new WriteBlock(blank.getSymbol(), alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-
-		b1=b2;
-		myPivot = new MoveBlock(myOpposite, alph, blank, id++);
-		trans = new BlockTransition(b1,myPivot, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-
-		//do all loops
-		updateTuringMachine(tape);
-
-		b1=myPivot;
-		b2 = new MoveUntilBlock(myShift, myMarker, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(blank.getSymbol()));
-		transitions.add(trans);
-
-		b1=b2;
-		b2 = new WriteBlock(s, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-
-		b1=b2;
-		b2 = new MoveBlock(myOpposite, alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-
-		
-		b1=b2;
-		b2 = new HaltBlock(alph, blank, id++);
-		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
-		transitions.add(trans);
-		tm.getFinalStateSet().add(b2);
 		
 	}
 
@@ -168,13 +102,13 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 		BlankSymbol blank = new BlankSymbol();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 
-		Block b1 = new WriteBlock(blank.getSymbol(), local, blank, blocks.getNextUnusedID());
+		Block b1 = new WriteBlock(blank.getSymbol(), local, blocks.getNextUnusedID());
 		blocks.add(b1);
-		Block b2 = new MoveBlock(myShift, local, blank, blocks.getNextUnusedID());
+		Block b2 = new MoveBlock(myShift, local, blocks.getNextUnusedID());
 		blocks.add(b2);
-		Block b3 = new WriteBlock(s, local, blank, blocks.getNextUnusedID());
+		Block b3 = new WriteBlock(s, local, blocks.getNextUnusedID());
 		blocks.add(b3);
-		Block b4 = new MoveBlock(myOpposite, local, blank, blocks.getNextUnusedID());
+		Block b4 = new MoveBlock(myOpposite, local, blocks.getNextUnusedID());
 		blocks.add(b4);
 
 		BlockTransition t1 = new BlockTransition(myPivot, b1, new SymbolString(s));
@@ -199,6 +133,76 @@ public class SingleShiftBlock extends BaseBlockTMBlock {
 			symbol = a;
 			this.blocks = blocks;
 		}
+	}
+
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		BlockTuringMachine tm = (BlockTuringMachine) localTM;
+		
+		BlankSymbol blank = new BlankSymbol();
+		TapeAlphabet alph = tm.getTapeAlphabet();
+		TransitionSet<BlockTransition> transitions = tm.getTransitions();
+		
+		BlockSet blocks = tm.getStates();
+		
+		myLoops = new ArrayList<Loop>();
+		myMarker = new Symbol(getBestMarker(alph));
+
+		myShift = (TuringMachineMove) args[0];
+		myOpposite = myShift == TuringMachineMove.RIGHT ? TuringMachineMove.LEFT : TuringMachineMove.RIGHT;
+		int id = 0;
+		Symbol s = (Symbol) args[1];
+		Block b1 = new StartBlock(id++);
+		tm.setStartState(b1);
+		Block b2 = new MoveBlock(myShift, alph, id++);
+		BlockTransition trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+
+		b1=b2;
+		b2 = new WriteBlock(myMarker, alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(s));
+		transitions.add(trans);
+
+		
+		b1=b2;
+		b2 = new MoveBlock(myOpposite, alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(myMarker));
+		transitions.add(trans);
+
+		
+		b1=b2;
+		b2 = new WriteBlock(blank.getSymbol(), alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+
+		b1=b2;
+		myPivot = new MoveBlock(myOpposite, alph, id++);
+		trans = new BlockTransition(b1,myPivot, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+
+		b1=myPivot;
+		b2 = new MoveUntilBlock(myShift, myMarker, alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(blank.getSymbol()));
+		transitions.add(trans);
+
+		b1=b2;
+		b2 = new WriteBlock(s, alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+
+		b1=b2;
+		b2 = new MoveBlock(myOpposite, alph, id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+
+		
+		b1=b2;
+		b2 = new HaltBlock(id++);
+		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
+		transitions.add(trans);
+		tm.getFinalStateSet().add(b2);		
 	}
 
 }
