@@ -67,7 +67,7 @@ public class TuringTester {
 //		System.out.println(uni);
 		Symbol zero = new Symbol("0"), one = new Symbol("1");
 //		
-		RetrieveOutputBlock block = new RetrieveOutputBlock(tapeAlph, blank, 0);
+		RetrieveOutputBlock block = new RetrieveOutputBlock(tapeAlph, 0);
 		SymbolString input = new SymbolString(one,zero,one,one,zero, one,one,one,zero,one,one,one,zero,one,one,one,zero,one,one,one,one,zero,one,one,one,one,zero,one,one,one,one,zero,one,one,zero);
 		BlockTMConfiguration config = new BlockTMConfiguration(block.getTuringMachine(), block.getTuringMachine().getStartState(),
 							32, input);

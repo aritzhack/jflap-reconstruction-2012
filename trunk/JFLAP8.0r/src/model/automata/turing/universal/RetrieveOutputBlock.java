@@ -28,21 +28,11 @@ import model.symbols.SymbolString;
 public class RetrieveOutputBlock extends MappingBlock{
 	
 	private Block rightPivot, leftPivot, rightFromState, leftFromState;
-	private Symbol tilde = new Symbol(TILDE), hash = new Symbol(TM_MARKER), zero = new Symbol("0"), one = new Symbol("1");
+	private Symbol tilde, hash, zero, one;
 	private Set<Block> loops;
 	
 	public RetrieveOutputBlock(TapeAlphabet alph, int id) {
-		super(alph, "Translate output", id);
-		
-		loops = new TreeSet<Block>();
-		
-		BlockTuringMachine tm = getTuringMachine();
-		TapeAlphabet tape = tm.getTapeAlphabet();
-		TransitionSet<BlockTransition> transitions = tm.getTransitions();
-		initMarkers(tape, tm, transitions);
-		initTranslates(tape);
-		updateTuringMachine(tape);
-		
+		super(alph, "Translate output", id);		
 	}
 
 	private void initTranslates(TapeAlphabet alph) {
@@ -197,7 +187,18 @@ public class RetrieveOutputBlock extends MappingBlock{
 	@Override
 	public void constructFromBase(TapeAlphabet parentAlph,
 			TuringMachine localTM, Object... args) {
-		// TODO Auto-generated method stub
+
+		loops = new TreeSet<Block>();
+		tilde = new Symbol(TILDE);
+		hash = new Symbol(TM_MARKER);
+		zero = new Symbol("0");
+		one = new Symbol("1");
+		BlockTuringMachine tm = getTuringMachine();
+		TapeAlphabet tape = tm.getTapeAlphabet();
+		TransitionSet<BlockTransition> transitions = tm.getTransitions();
+		initMarkers(tape, tm, transitions);
+		initTranslates(tape);
+		updateTuringMachine(tape);
 		
 	}
 
