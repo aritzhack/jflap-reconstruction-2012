@@ -39,16 +39,14 @@ public class RetrieveOutputBlock extends MappingBlock{
 		BlockTuringMachine tm = getTuringMachine();
 		TapeAlphabet tape = tm.getTapeAlphabet();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
+		initMarkers(tape, blank, tm, transitions);
+		initTranslates(tape);
+		updateTuringMachine(tape);
 		
-		initMarkers(alph, blank, tm, transitions);
-		initTranslates();
-
-		updateTuringMachine(alph);
 	}
 
-	private void initTranslates() {
+	private void initTranslates(TapeAlphabet alph) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
-		TapeAlphabet alph = tm.getTapeAlphabet();
 		BlockSet blocks = tm.getStates();
 		BlankSymbol blank = new BlankSymbol();
 		int id = blocks.getNextUnusedID();

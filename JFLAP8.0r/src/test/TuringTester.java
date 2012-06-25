@@ -24,10 +24,10 @@ public class TuringTester {
 //		states.add(new State("q0",0));
 //		states.add(new State("q1",1));
 ////		states.add(new State("q2",2));
-		TapeAlphabet tapeAlph = new TapeAlphabet();
-		tapeAlph.addAll(new Symbol("a"), new Symbol("b"), new Symbol("c"));
+//		TapeAlphabet tapeAlph = new TapeAlphabet();
+//		tapeAlph.addAll(new Symbol("a"), new Symbol("b"), new Symbol("c"));
 		BlankSymbol blank = new BlankSymbol();
-		tapeAlph.add(blank.getSymbol());
+//		tapeAlph.add(blank.getSymbol());
 //		InputAlphabet inputAlph = new InputAlphabet();
 //		inputAlph.addAll(new Symbol("a"), new Symbol("b"));
 //		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
@@ -41,14 +41,14 @@ public class TuringTester {
 //		int numTapes = 1;
 //		MultiTapeTuringMachine tm = new MultiTapeTuringMachine(states, tapeAlph, blank, inputAlph, functions, start, finalStates, numTapes);
 //		
-		MultiTapeTuringMachine tm = (MultiTapeTuringMachine) new MoveUntilBlock(TuringMachineMove.RIGHT, new Symbol("a"), tapeAlph, new BlankSymbol(), 0).getTuringMachine();
-		System.out.println(tm);
+//		MultiTapeTuringMachine tm = (MultiTapeTuringMachine) new MoveUntilBlock(TuringMachineMove.RIGHT, new Symbol("a"), tapeAlph, new BlankSymbol(), 0).getTuringMachine();
+//		System.out.println(tm);
 		
 //		TMtoEncodingConversion converter = new TMtoEncodingConversion(tm);
 //		converter.stepToCompletion();
 //		System.out.println(converter.getEncoding());
 		
-		tapeAlph = new TapeAlphabet();
+		TapeAlphabet tapeAlph = new TapeAlphabet();
 		tapeAlph.addAll(new Symbol("a"), new Symbol("b"), new Symbol("c"));
 		tapeAlph.add(blank.getSymbol());
 //		ConvertInputBlock block = new ConvertInputBlock(converter.getEncoding(), tapeAlph, new BlankSymbol(), 0);
@@ -65,15 +65,14 @@ public class TuringTester {
 //		
 //		UniversalTuringMachine uni = new UniversalTuringMachine(false);
 //		System.out.println(uni);
+		Symbol zero = new Symbol("0"), one = new Symbol("1");
 //		
 		RetrieveOutputBlock block = new RetrieveOutputBlock(tapeAlph, blank, 0);
-		System.out.println(block.getTuringMachine());
-		SymbolString input = Symbolizers.symbolize("10110111011101110111101111011110110", block.getTuringMachine());
-		System.out.print(input.size());
+		SymbolString input = new SymbolString(one,zero,one,one,zero, one,one,one,zero,one,one,one,zero,one,one,one,zero,one,one,one,one,zero,one,one,one,one,zero,one,one,one,one,zero,one,one,zero);
 		BlockTMConfiguration config = new BlockTMConfiguration(block.getTuringMachine(), block.getTuringMachine().getStartState(),
 							32, input);
-		
-		AutoSimulator sim = new AutoSimulator(tm, 0);
+		System.out.println(block.getTuringMachine());
+		AutoSimulator sim = new AutoSimulator(block.getTuringMachine(), 0);
 		sim.beginSimulation(config);
 		System.out.println(sim.getNextHalt());
 		

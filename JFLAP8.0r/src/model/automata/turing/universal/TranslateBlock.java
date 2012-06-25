@@ -18,11 +18,12 @@ import model.symbols.Symbol;
 
 public class TranslateBlock extends BaseBlockTMBlock {
 
-	public TranslateBlock(TapeAlphabet alph, BlankSymbol blank,
+	public TranslateBlock(TapeAlphabet tape, BlankSymbol blank,
 			int id) {
-		super(alph, blank, "Translate", id);
+		super(tape, blank, "Translate", id);
 		
 		BlockTuringMachine tm = getTuringMachine();
+		TapeAlphabet alph = tm.getTapeAlphabet();
 		BlockSet blocks = tm.getStates();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 		
@@ -48,6 +49,7 @@ public class TranslateBlock extends BaseBlockTMBlock {
 		transitions.add(trans);
 		
 		tm.getFinalStateSet().add(b2);
+		updateTuringMachine(tape);
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class TranslateBlock extends BaseBlockTMBlock {
 		for(State block : getTuringMachine().getStates()){
 			if(block instanceof BaseBlockTMBlock)
 			((BaseBlockTMBlock) block).updateTuringMachine(tape);
+			
 		}
 	}
 
