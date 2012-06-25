@@ -1,5 +1,6 @@
 package model.automata.turing.universal;
 
+import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -38,7 +39,7 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 
 	@Override
 	public TMConfiguration createInitalConfig(SymbolString input, int pos) {
-
+		JFLAPDebug.print(input);
 		//input is: TRANS00INPUT00STATE
 		SymbolString[] parts = input.split(TAPE_DELIMITER.toArray(new Symbol[0]));
 		

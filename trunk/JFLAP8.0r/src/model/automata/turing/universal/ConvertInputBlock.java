@@ -77,22 +77,6 @@ public class ConvertInputBlock extends MappingBlock{
 		}
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), alph, blank, id++);
-		addTransition(b1, b2, tilde);
-		
-		b1=b2;
-		b2 = new WriteBlock(new Symbol("0"), alph, blank, id++);
-		addTransition(b1, b2, tilde);
-		
-		b1=b2;
-		b2 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
-		addTransition(b1, b2, tilde);
-		
-		b1=b2;
-		b2 = new WriteBlock(new Symbol("1"), alph, blank, id++);
-		addTransition(b1, b2, tilde);
-		
-		b1=b2;
 		b2 = new HaltBlock(alph, blank, id++);
 		addTransition(b1, b2, tilde);
 		
@@ -120,14 +104,7 @@ public class ConvertInputBlock extends MappingBlock{
 			tape.add(s);
 		}
 		
-		alph.retainAll(tape);
-		alph.addAll(tape);
-		alph.add(new Symbol(TM_MARKER));
-		
-		tape.remove(new Symbol(TM_MARKER));
-		tape.remove(blank.getSymbol());
-		
-		for(BlockTransition transition : transitions){
+		for(BlockTransition transition : transitions.toArray(new BlockTransition[0])){
 			Block to = transition.getToState(), from = transition.getFromState();
 			
 			if(loops.contains(to) || loops.contains(from)){
