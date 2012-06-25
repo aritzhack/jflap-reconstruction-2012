@@ -19,5 +19,8 @@ public abstract class Function {
 	 * @return
 	 */
 	public abstract boolean canDerive(int y);
+	
+	
+	public abstract String toString();
 
 }

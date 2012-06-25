@@ -1,9 +1,10 @@
 package model.numbersets.controller;
 
 
+import model.numbersets.AbstractNumberSet;
 import model.numbersets.defined.PredefinedSet;
 
-public abstract class PredefinedSetController {
+public class PredefinedSetController extends AbstractSetController {
 	
 	PredefinedSet set;
 	
@@ -15,6 +16,19 @@ public abstract class PredefinedSetController {
 	
 	public void showNextElement() {
 		
+	}
+
+
+	@Override
+	public int getNextElement() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public AbstractNumberSet getSet() {
+		return set;
 	}
 
 }

@@ -3,6 +3,7 @@ package model.numbersets.gui;
 import java.awt.Dimension;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -18,6 +19,7 @@ public class SetPropertiesBox extends JPanel {
 		
 		myProperties = new JTextArea();
 		
+		this.add(new JLabel("Properties of the Set"));
 		this.add(init());
 		this.setPreferredSize(new Dimension(500, 500));
 		

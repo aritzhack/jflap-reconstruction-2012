@@ -50,7 +50,6 @@ public class SetCreationPanel extends JPanel {
 				frame.setVisible(true);
 				frame.setLocationRelativeTo(null);
 				
-				System.out.println(frame.isVisible() + " " + frame.isActive());
 			}
 			
 		});

@@ -12,13 +12,16 @@ import java.util.TreeSet;
 
 public class CustomSet extends AbstractNumberSet {
 
+	
 	private String name;
 	private String description;
 
 	private Set<Integer> elements;
+	private int position;
 
 	public CustomSet() {
 		elements = new TreeSet<Integer>();
+		position = 0;
 	}
 
 	public CustomSet(int... i) {
@@ -42,15 +45,10 @@ public class CustomSet extends AbstractNumberSet {
 	 * with that value
 	 * 
 	 * @param value
-	 *            to remove
-	 * @return true if value was found and removed from set, else false
+	 *          number to remove
 	 */
-	public boolean remove(int value) {
-		if (elements.contains(value)) {
-			elements.remove(value);
-			return true;
-		}
-		return false;
+	public void remove(int value) {
+		elements.remove(value);
 	}
 	
 	public Set<Integer> getSet () {
@@ -62,6 +60,8 @@ public class CustomSet extends AbstractNumberSet {
 	}
 
 	public void setName(String name) {
+		System.out.println("Named " + name);
+		
 		this.name = name;
 	}
 
@@ -82,8 +82,8 @@ public class CustomSet extends AbstractNumberSet {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getName() + "\n");
-		sb.append(getDescription() + "\n");
+//		sb.append(getName() + "\n");
+//		sb.append(getDescription() + "\n");
 		sb.append(elements.toString());
 		return sb.toString();
 	}
@@ -92,5 +92,6 @@ public class CustomSet extends AbstractNumberSet {
 	public boolean isFinite() {
 		return true;
 	}
+
 
 }

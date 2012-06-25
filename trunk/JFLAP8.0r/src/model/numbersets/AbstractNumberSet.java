@@ -14,4 +14,6 @@ public abstract class AbstractNumberSet {
 	
 	public abstract boolean isFinite ();
 	
+	
+	
 }
