@@ -10,32 +10,17 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
-public class MoveUntilNotBlock extends BaseMultiTapeBlock{
+public class MoveUntilNotBlock extends MultiTapeUpdatingBlock{
 
 	private MultiTapeTMTransition myNotTransition;
 	private Symbol mySymbol;
 	private TuringMachineMove myDirection;
 	
 	public MoveUntilNotBlock(TuringMachineMove direction, Symbol read,
-			TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, createName(direction, read), id);
+			TapeAlphabet alph, int id) {
+		super(alph, createName(direction, read), id, read, direction);
 		
-		mySymbol = read;
-	
-		addStartAndFinalStates();
 		
-		TuringMachine tm = getTuringMachine();
-		StateSet states = tm.getStates();
-		
-		State start = tm.getStartState();
-		State intermediateState = states.createAndAddState();
-		
-		myNotTransition = new MultiTapeTMTransition(intermediateState, 
-				intermediateState, read, read, direction);
-		myDirection = direction;
-		
-		tm.getTransitions().add(myNotTransition);
-		updateTuringMachine(alph);
 	}
 	
 	private static String createName(TuringMachineMove direction, Symbol read){
@@ -66,6 +51,25 @@ public class MoveUntilNotBlock extends BaseMultiTapeBlock{
 				transitions.add(new MultiTapeTMTransition(intermediate, finish, term, term, TuringMachineMove.STAY));
 			}
 		}
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		mySymbol = (Symbol) args[0];
+		myDirection = (TuringMachineMove) args[1];
+		addStartAndFinalStates(localTM);
+		
+		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
+		
+		State start = tm.getStartState();
+		State intermediateState = states.createAndAddState();
+		
+		myNotTransition = new MultiTapeTMTransition(intermediateState, 
+				intermediateState, mySymbol, mySymbol, myDirection);
+		
+		tm.getTransitions().add(myNotTransition);
 	}
 
 }

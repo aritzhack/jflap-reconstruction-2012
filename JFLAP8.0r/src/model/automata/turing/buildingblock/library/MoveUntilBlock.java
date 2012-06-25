@@ -19,32 +19,16 @@ import model.symbols.Symbol;
  * @author Ian McMahon
  * 
  */
-public class MoveUntilBlock extends BaseMultiTapeBlock {
+public class MoveUntilBlock extends MultiTapeUpdatingBlock {
 	private MultiTapeTMTransition myFinalTransition;
 	private Symbol mySymbol;
 	private TuringMachineMove myMove;
 	
 	public MoveUntilBlock(TuringMachineMove direction, Symbol read,
-			TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, createName(direction, read), id);
+			TapeAlphabet alph, int id) {
+		super(alph, createName(direction, read), id, direction, read);
 		
-		mySymbol = read;
-		myMove = direction;
-	
-		addStartAndFinalStates();
 		
-		TuringMachine tm = getTuringMachine();
-		StateSet states = tm.getStates();
-		
-		State start = tm.getStartState();
-		State intermediateState = states.createAndAddState();
-		State finalState = tm.getFinalStateSet().first();
-		
-		myFinalTransition = new MultiTapeTMTransition(intermediateState, 
-				finalState, read, read, TuringMachineMove.STAY);
-		
-		tm.getTransitions().add(myFinalTransition);
-		updateTuringMachine(alph);
 	}
 	
 	private static String createName(TuringMachineMove direction, Symbol read){
@@ -74,5 +58,26 @@ public class MoveUntilBlock extends BaseMultiTapeBlock {
 				transitions.add(new MultiTapeTMTransition(intermediate, intermediate, term, term, myMove));
 			}
 		}
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		myMove = (TuringMachineMove) args[0];
+		mySymbol = (Symbol) args[1];
+
+		addStartAndFinalStates(localTM);
+		
+		TuringMachine tm = getTuringMachine();
+		StateSet states = tm.getStates();
+		
+		State start = tm.getStartState();
+		State intermediateState = states.createAndAddState();
+		State finalState = tm.getFinalStateSet().first();
+		
+		myFinalTransition = new MultiTapeTMTransition(intermediateState, 
+				finalState, mySymbol, mySymbol, TuringMachineMove.STAY);
+		
+		tm.getTransitions().add(myFinalTransition);
 	}
 }

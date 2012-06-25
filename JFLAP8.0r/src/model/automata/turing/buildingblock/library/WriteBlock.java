@@ -9,19 +9,15 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
+import model.automata.turing.buildingblock.UpdatingBlock;
 import model.symbols.Symbol;
 
-public class WriteBlock extends BaseMultiTapeBlock {
+public class WriteBlock extends MultiTapeUpdatingBlock {
 	private Symbol myWrite;
 
-	public WriteBlock(Symbol write, TapeAlphabet alph, BlankSymbol blank, int id) {
-		super(alph, blank, BlockLibrary.WRITE + BlockLibrary.UNDSCR +write, id);
+	public WriteBlock(Symbol write, TapeAlphabet alph, int id) {
+		super(alph, BlockLibrary.WRITE + BlockLibrary.UNDSCR +write, id, write);
 		
-		myWrite = write;
-		
-		addStartAndFinalStates();
-		
-		updateTuringMachine(alph);
 	}
 
 	@Override
@@ -36,6 +32,16 @@ public class WriteBlock extends BaseMultiTapeBlock {
 			transitions.add(new MultiTapeTMTransition(start, finish, term, myWrite, TuringMachineMove.STAY));
 		}
 
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		myWrite = (Symbol) args[0];
+		
+		addStartAndFinalStates(getTuringMachine());
+		
+		
 	}
 
 }

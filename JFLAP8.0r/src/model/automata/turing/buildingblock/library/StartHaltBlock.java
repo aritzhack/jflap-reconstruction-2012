@@ -5,12 +5,13 @@ import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
+import model.automata.turing.buildingblock.Block;
 
-public abstract class StartHaltBlock extends BaseMultiTapeBlock {
+public abstract class StartHaltBlock extends Block {
 
 
-	public StartHaltBlock(TapeAlphabet alph, BlankSymbol blank, String name, int id) {
-		super(alph, blank, name, id);
+	public StartHaltBlock(String name, int id) {
+		super(new MultiTapeTuringMachine(1), name, id);
 		
 		TuringMachine tm = getTuringMachine();
 		
@@ -18,12 +19,7 @@ public abstract class StartHaltBlock extends BaseMultiTapeBlock {
 		tm.setStartState(start);
 		tm.getFinalStateSet().add(start);
 		
-		updateTuringMachine(alph);
 	}
 
-	@Override
-	public void updateTuringMachine(TapeAlphabet tape) {
-		//Do nothing, single state TM used for start and final blocks
-	}
 
 }

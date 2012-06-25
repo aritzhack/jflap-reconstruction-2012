@@ -4,71 +4,71 @@ import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
+import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
+import model.automata.turing.buildingblock.UpdatingBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public class DuplicateCharBlock extends BaseBlockTMBlock {
+public class DuplicateCharBlock extends BlockTMUpdatingBlock {
 
 	private Symbol mySymbol;
 
-	public DuplicateCharBlock(TapeAlphabet alph, BlankSymbol blank, int id, Symbol character) {
-		super(alph, blank, 
-				BlockLibrary.DUPLICATE+ BlockLibrary.UNDSCR + character, id);
+	public DuplicateCharBlock(TapeAlphabet alph, int id, Symbol character) {
+		super(alph, BlockLibrary.DUPLICATE+ BlockLibrary.UNDSCR + character, id, character);
 		
-		mySymbol = character;
 		
+	}
+
+	@Override
+	public void constructFromBase(TapeAlphabet alph,
+			TuringMachine localTM, Object... args) {
+		
+		mySymbol = (Symbol) args[0];
+		BlankSymbol blank = new BlankSymbol();
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		
 		TapeAlphabet tapeAlph = tm.getTapeAlphabet();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 		
 		BlockSet blocks = tm.getStates();
-		id = 0;
+		int id = 0;
 		
-		Block b1 = new StartBlock(alph, blank, id++);
+		Block b1 = new StartBlock(id++);
 		tm.setStartState(b1);
-		Block b2 = new WriteBlock(blank.getSymbol(), alph, blank, id++);
+		Block b2 = new WriteBlock(blank.getSymbol(), alph, id++);
 		BlockTransition trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), tapeAlph, blank, id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), tapeAlph, id++);
 		trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new WriteBlock(mySymbol, alph, blank, id++);
+		b2 = new WriteBlock(mySymbol, alph,  id++);
 		trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), tapeAlph, blank, id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), tapeAlph,  id++);
 		trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new WriteBlock(mySymbol, alph, blank, id++);
+		b2 = new WriteBlock(mySymbol, alph,  id++);
 		trans = new BlockTransition(b1, b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		
 		b1=b2;
-		b2 = new HaltBlock(alph, blank, id++);
+		b2 = new HaltBlock(id++);
 		trans = new BlockTransition(b1,b2, new SymbolString(new Symbol(TILDE)));
 		transitions.add(trans);
 		tm.getFinalStateSet().add(b2);
 	}
 
-	@Override
-	public void updateTuringMachine(TapeAlphabet tape) {
-		BlockSet blocks = getTuringMachine().getStates();
-		
-		for(State block : blocks){
-			((BaseMultiTapeBlock) block).updateTuringMachine(tape);
-		}
-	}
 }

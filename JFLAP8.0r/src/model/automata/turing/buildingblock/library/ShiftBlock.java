@@ -10,6 +10,7 @@ import debug.JFLAPDebug;
 
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
+import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
@@ -19,7 +20,7 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public class ShiftBlock extends BaseBlockTMBlock {
+public class ShiftBlock extends BlockTMUpdatingBlock {
 
 	private StartBlock myStart;
 	private Map<Symbol, Block> mySubBlocks;
@@ -27,14 +28,8 @@ public class ShiftBlock extends BaseBlockTMBlock {
 
 	public ShiftBlock(TuringMachineMove shift, 
 						TapeAlphabet tape, 
-						BlankSymbol blank, 
 						int id) {
-		super(tape, blank, BlockLibrary.SHIFT + BlockLibrary.UNDSCR+shift.char_abbr, id);
-		mySubBlocks = new TreeMap<Symbol, Block>();
-		myShift = shift;
-		myStart = new StartBlock(tape, blank, 0);
-		this.getTuringMachine().setStartState(myStart);
-		updateTuringMachine(tape);
+		super(tape, BlockLibrary.SHIFT + BlockLibrary.UNDSCR+shift.char_abbr, id, shift);
 	}
 	
 
@@ -52,8 +47,7 @@ public class ShiftBlock extends BaseBlockTMBlock {
 			}
 		}
 		for (Symbol s: symbols){
-			Block block = new SingleShiftBlock(s, myShift, tape, 
-									new BlankSymbol(), blocks.getNextUnusedID());
+			Block block = new SingleShiftBlock(s, myShift, tape, blocks.getNextUnusedID());
 			blocks.add(block);
 			mySubBlocks.put(s, block);
 			BlockTransition trans = new BlockTransition(myStart, block, 
@@ -61,6 +55,16 @@ public class ShiftBlock extends BaseBlockTMBlock {
 			tm.getTransitions().add(trans);
 			tm.getFinalStateSet().add(block);
 		}
+	}
+
+
+	@Override
+	public void constructFromBase(TapeAlphabet parentAlph,
+			TuringMachine localTM, Object... args) {
+		mySubBlocks = new TreeMap<Symbol, Block>();
+		myShift = (TuringMachineMove) args[0];
+		myStart = new StartBlock(0);
+		this.getTuringMachine().setStartState(myStart);		
 	}
 
 
