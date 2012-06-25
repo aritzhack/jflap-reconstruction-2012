@@ -9,9 +9,11 @@ package model.numbersets.defined;
 import java.util.Set;
 import java.util.TreeSet;
 
-public abstract class PredefinedSet {
+import model.numbersets.AbstractNumberSet;
+
+public abstract class PredefinedSet extends AbstractNumberSet{
 	
-	protected static final int DEFAULT_NUMBER_TO_ADD = 50;
+	public static final int DEFAULT_NUMBER_TO_ADD = 50;
 	
 	protected Set<Integer> myValues;
 	
@@ -122,6 +124,18 @@ public abstract class PredefinedSet {
 		return sb.toString();
 	}
 
+	
+	@Override
+	/**
+	 * Return false since all of the predefined sets are infinite sets
+	 * 
+	 * @return false
+	 */
+	public boolean isFinite () {
+		return false;
+	}
+	
+	
 	
 	
 }

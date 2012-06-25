@@ -46,23 +46,29 @@ public class CustomSetEditor extends JPanel {
 	public CustomSetEditor() {
 		myController = new CustomSetController();
 		
-		this.setLayout(new GridLayout(4, 1));
+		this.setLayout(new GridLayout(1, 0));
 		
-		//this.add(initName());
-		this.add(addElements());
+		initAll();
+		
+		this.add(myNameField);
+		this.add(myInputArea);
 		
 		myDisplayArea = new JTextArea();
 		myDisplayArea.setEditable(false);
 		this.add(myDisplayArea, BorderLayout.PAGE_END);
 		
 	}
+	
+	private void initAll () {
+		initName();
+		initInputArea();
+	}
+	
 
-	private JComponent addElements () {
+	private JComponent initInputArea () {
 		myInputArea = new JTextField(50);
 		myInputArea.setToolTipText("Add integers separated by commas or spaces. ");
 
-		JLabel label = new JLabel("Enter integers separated by commas or spaces");
-		label.setLabelFor(myInputArea);
 		
 		myInputArea.addActionListener(new ActionListener() {
 
@@ -83,17 +89,6 @@ public class CustomSetEditor extends JPanel {
 		myNameField.setEditable(true);
 		
 		return myNameField;
-	}
-	
-
-	public static void main(String[] args) {
-
-		JFrame frame = new JFrame();
-		frame.getContentPane().add(new CustomSetEditor());
-
-		frame.pack();
-		frame.setAlwaysOnTop(true);
-		frame.setVisible(true);
 	}
 
 }

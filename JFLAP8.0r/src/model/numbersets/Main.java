@@ -1,62 +1,37 @@
 package model.numbersets;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.awt.GridLayout;
 
-import model.numbersets.defined.FunctionSet;
-import model.numbersets.defined.PrimeSet;
-import model.numbersets.function.LinearFunction;
+import javax.swing.JFrame;
 
-
+import model.numbersets.gui.ActiveSetDisplay;
+import model.numbersets.gui.SetCreationPanel;
+import model.numbersets.gui.SetOperationsPanel;
+import model.numbersets.gui.SetPropertiesBox;
 
 public class Main {
-	
-	public static void print (Object o) {
+
+	public static void print(Object o) {
 		System.out.println(o);
 	}
-	
-	public static void main (String[] args) {
-	
-		// Fibonacci sets
-//		PredefinedSet fib = new FibonacciSet();
-//		print(fib);
-//		print(fib.contains(34));	//true
-//		print(fib.contains(0));		//false
-//		print(fib.getValuesInRange(15, 50));
-//		print(fib.generateNextNumbers(3));
+
+	public static void main(String[] args) {
+
+		JFrame frame = new JFrame();
+		
+		frame.setLayout(new GridLayout(1, 1));
+		
+		frame.add(new ActiveSetDisplay());
+		frame.add(new SetOperationsPanel());
+		
+		frame.add(new SetCreationPanel());
+		frame.add(new SetPropertiesBox());
 		
 		
-		// Prime sets
-		
-		
-		
-		
-		// Multiples of __ sets
-		
-		
-		
-		
-		
-		// Congruence sets
-		
-		// Even sets
-		
-		
-		
-		// Odd sets
-		
-		
-		
-		
-		// set properties
-//		FunctionSet func = new FunctionSet(new LinearFunction(2, 1));
-//		PrimeSet prime = new PrimeSet();
-		
-//		print(func.getSet());
-//		print(prime.getSet());
-//		print(SetProperties.intersection(func.getSet(), prime.getSet()));
-		
-		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
 
 	}
 

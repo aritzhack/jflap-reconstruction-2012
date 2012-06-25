@@ -1,32 +1,27 @@
 package model.numbersets.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import model.numbersets.AbstractNumberSet;
 
-/**
- * Maintain a collection of the active sets
- * 
- * @author peggyli
- * 
- */
+public class SelectedSetsRegistry extends SetRegistry {
 
-public class ActiveSetsRegistry extends SetRegistry {
+	private ArrayList<AbstractNumberSet> mySelectedSets;
 
-	private ArrayList<AbstractNumberSet> myActiveSets;
-
-	public ActiveSetsRegistry() {
-		myActiveSets = new ArrayList<AbstractNumberSet>();
+	public SelectedSetsRegistry() {
+		mySelectedSets = new ArrayList<AbstractNumberSet>();
 	}
 
 	@Override
 	public void remove(AbstractNumberSet s) {
-		myActiveSets.remove(s);
+		mySelectedSets.remove(s);
 	}
 
 	@Override
 	public void add(AbstractNumberSet s) {
-		myActiveSets.add(s);
+		mySelectedSets.add(s);
 	}
 
 
