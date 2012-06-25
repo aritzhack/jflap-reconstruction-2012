@@ -16,27 +16,19 @@ import model.change.events.AdvancedChangeEvent;
 
 public abstract class UpdatingBlock extends Block implements ChangeListener {
 	
-	public UpdatingBlock(TapeAlphabet parentAlph, String name, int id, Object ... args) {
-		super(createTuringMachine(parentAlph), name, id);
+	public UpdatingBlock(TuringMachine tm, 
+						TapeAlphabet parentAlph, 
+						String name, 
+						int id, 
+						Object ... args) {
+		super(tm, name, id);
 		parentAlph.addListener(this);
-		constructFromBase(parentAlph, this.getTuringMachine(), args);
+		constructFromBase(parentAlph, tm, args);
 		this.updateTuringMachine(parentAlph);
 	}
 
 	public abstract void constructFromBase(TapeAlphabet parentAlph, TuringMachine localTM, Object ... args);
 
-	private static BlockTuringMachine createTuringMachine(TapeAlphabet alph) {
-
-		BlockTuringMachine tm = new BlockTuringMachine(new BlockSet(), 
-				alph.copy(),
-				new BlankSymbol(), 
-				new InputAlphabet(), 
-				new TransitionSet<BlockTransition>(),
-				new StartState(), 
-				new FinalStateSet());
-		return tm;
-	}
-	
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if(!(e instanceof AdvancedChangeEvent))

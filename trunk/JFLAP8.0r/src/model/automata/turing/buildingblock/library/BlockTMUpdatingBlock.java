@@ -29,9 +29,22 @@ public abstract class BlockTMUpdatingBlock extends UpdatingBlock{
 	
 	public BlockTMUpdatingBlock(TapeAlphabet parentAlph,
 			String name, int id, Object ... args) {
-		super(parentAlph, name, id, args);
+		super(createTuringMachine(parentAlph), parentAlph, name, id, args);
 	}
 
+	
+	private static BlockTuringMachine createTuringMachine(TapeAlphabet alph) {
+
+		BlockTuringMachine tm = new BlockTuringMachine(new BlockSet(), 
+				alph.copy(),
+				new BlankSymbol(), 
+				new InputAlphabet(), 
+				new TransitionSet<BlockTransition>(),
+				new StartState(), 
+				new FinalStateSet());
+		return tm;
+	}
+	
 	@Override
 	public BlockTuringMachine getTuringMachine() {
 		return (BlockTuringMachine) super.getTuringMachine();

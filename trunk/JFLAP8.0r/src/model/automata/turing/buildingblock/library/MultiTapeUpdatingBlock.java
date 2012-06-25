@@ -15,6 +15,8 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
+import model.automata.turing.buildingblock.BlockSet;
+import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.UpdatingBlock;
 import model.change.events.AdvancedChangeEvent;
 
@@ -22,9 +24,28 @@ public abstract class MultiTapeUpdatingBlock extends UpdatingBlock implements Ch
 
 	
 
-	public MultiTapeUpdatingBlock(TapeAlphabet parentAlph, String name, 
-										int id, Object...args) {
-		super(parentAlph, name, id, args);
+	public MultiTapeUpdatingBlock(TapeAlphabet parentAlph,
+			String name, int id, Object ... args) {
+		super(createTuringMachine(parentAlph), parentAlph, name, id, args);
+	}
+
+	
+	private static MultiTapeTuringMachine createTuringMachine(TapeAlphabet alph) {
+
+		MultiTapeTuringMachine tm = new MultiTapeTuringMachine(new StateSet(), 
+				alph.copy(),
+				new BlankSymbol(), 
+				new InputAlphabet(), 
+				new TransitionSet<MultiTapeTMTransition>(),
+				new StartState(), 
+				new FinalStateSet(),
+				1);
+		return tm;
+	}
+	
+	@Override
+	public MultiTapeTuringMachine getTuringMachine() {
+		return (MultiTapeTuringMachine) super.getTuringMachine();
 	}
 
 	public static void addStartAndFinalStates(TuringMachine tm){
