@@ -35,6 +35,7 @@ import model.grammar.parsing.ParserException;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.operators.UnionOperator;
+import model.symbols.symbolizer.Symbolizers;
 
 
 
@@ -88,11 +89,9 @@ Settable<SymbolString>{
 	public int indexOfSubSymbolString(SymbolString o) {
 		if (o.isEmpty()) return 0;
 		for (int i = 0; i <= this.size()-o.size(); i++){
-			Boolean check = true;
-			for (int j = 0; j < o.size(); j++){
-				check = check && this.get(i+j).equals(o.get(j));
-			}
-			if (check) return i;
+			SymbolString sub = this.subList(i, i+o.size());
+			if (sub.equals(o))
+				return i;
 		}
 		return -1;
 	}
@@ -448,9 +447,9 @@ Settable<SymbolString>{
 		while((index = copy.indexOf(delimiter)) != -1){
 			SymbolString[] innerSplit =  copy.splitOnIndex(index);
 			split.add(innerSplit[0]);
-			copy = innerSplit[1].tailList(index+2);
+			copy = innerSplit[1].tailList(delimiter.size());
 		}
-		
+		split.add(copy);
 		return split.toArray(new SymbolString[0]);
 	}
 
