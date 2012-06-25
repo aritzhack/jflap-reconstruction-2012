@@ -61,13 +61,15 @@ public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Tran
 	}
 
 
-	public static SymbolString updateTape(TuringMachineMove move, int pos, SymbolString tape) {
-		SymbolString temp = new SymbolString(tape);
-		if (pos == temp.size()-1)
-			temp.add(JFLAPPreferences.getTMBlankSymbol());
-		else if (pos == 0 && move == TuringMachineMove.LEFT)
-			temp.addFirst(JFLAPPreferences.getTMBlankSymbol());
-		return temp;
+	public static int updateTape(TuringMachineMove move, int pos, SymbolString tape) {
+		if (pos == tape.size()-1){
+			tape.add(JFLAPPreferences.getTMBlankSymbol());
+		}
+		else if (pos == 0 && move == TuringMachineMove.LEFT){
+			tape.addFirst(JFLAPPreferences.getTMBlankSymbol());
+			return 1;
+		}
+		return 0;
 	}
 	
 	public static int reBufferString(SymbolString input, int pos, int bufferSize){
