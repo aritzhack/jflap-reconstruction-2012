@@ -45,6 +45,7 @@ public class RetrieveOutputBlock extends MappingBlock{
 		
 		Block b1 = rightPivot = new MoveUntilBlock(TuringMachineMove.LEFT, zero, alph,id++);
 		addTransition(lastBlock, b1, tilde);
+		
 		Block b2 = rightOut = new TranslateBlock(alph,id++);
 		addTransition(b1, b2, tilde);
 		
@@ -115,15 +116,8 @@ public class RetrieveOutputBlock extends MappingBlock{
 	@Override
 	public void updateTuringMachine(Map<Symbol, SymbolString> encodingMap) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
-		TapeAlphabet alph = tm.getTapeAlphabet();
 		BlockSet blocks = tm.getStates();
-		BlankSymbol blank = new BlankSymbol();
-		
-		Set<Symbol> tape = new TreeSet<Symbol>();
-		for(Symbol s : encodingMap.keySet()){
-			tape.add(s);
-		}
-		
+				
 		for(Block state : loops){
 			blocks.remove(state);
 		}
@@ -137,12 +131,11 @@ public class RetrieveOutputBlock extends MappingBlock{
 		BlockTuringMachine tm = getTuringMachine();
 		BlockSet blocks = tm.getStates();
 		TapeAlphabet tape = tm.getTapeAlphabet();
-		BlankSymbol blank = new BlankSymbol();
 		
+		Symbol blank = new BlankSymbol().getSymbol();
 		
 		Block rightBlock1, rightBlock2 = rightFromState;
 		Block leftBlock1, leftBlock2 = leftFromState;
-		BlockTransition trans;
 		int id = blocks.getNextUnusedID();
 		
 		for(int i=2; i<=encodingMap.size();i++){
@@ -159,7 +152,7 @@ public class RetrieveOutputBlock extends MappingBlock{
 			addTransition(rightBlock2, replaceRight, zero);
 			
 			Block replaceLeft = new ReplaceBlock(TuringMachineMove.LEFT, a, tape,id++);
-			addTransition(leftBlock2, replaceLeft, blank.getSymbol());
+			addTransition(leftBlock2, replaceLeft, blank);
 			
 			addTransition(replaceRight, rightPivot, tilde);
 			addTransition(replaceLeft, leftPivot, tilde);
@@ -179,11 +172,6 @@ public class RetrieveOutputBlock extends MappingBlock{
 		}
 		return null;
 	}
-	
-	private void addTransition(Block from, Block to, Symbol input) {
-		TransitionSet<BlockTransition> trans = this.getTuringMachine().getTransitions();
-		trans.add(new BlockTransition(from, to, input));
-	}
 
 	@Override
 	public void constructFromBase(TapeAlphabet parentAlph,
@@ -194,9 +182,11 @@ public class RetrieveOutputBlock extends MappingBlock{
 		hash = new Symbol(TM_MARKER);
 		zero = new Symbol("0");
 		one = new Symbol("1");
+		
 		BlockTuringMachine tm = getTuringMachine();
 		TapeAlphabet tape = tm.getTapeAlphabet();
 		TransitionSet<BlockTransition> transitions = tm.getTransitions();
+		
 		initMarkers(tape, tm, transitions);
 		initTranslates(tape);
 		updateTuringMachine(tape);

@@ -1,18 +1,13 @@
 package model.automata.turing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import debug.JFLAPDebug;
-
 
 import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 import model.automata.AutomatonException;
 import model.automata.InputAlphabet;
 import model.automata.State;
-import model.automata.SingleInputTransition;
 import model.automata.Transition;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;

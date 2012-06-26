@@ -1,27 +1,18 @@
 package model.automata.turing.buildingblock.library;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import debug.JFLAPDebug;
-
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.turing.BlankSymbol;
-import model.automata.turing.MultiTapeTMTransition;
-import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
-import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.UpdatingBlock;
-import model.change.events.AdvancedChangeEvent;
+import model.symbols.Symbol;
 
 public abstract class BlockTMUpdatingBlock extends UpdatingBlock{
 
@@ -58,6 +49,11 @@ public abstract class BlockTMUpdatingBlock extends UpdatingBlock{
 			if (block instanceof UpdatingBlock)
 				((UpdatingBlock) block).updateTuringMachine(tape);
 		}
+	}
+	
+	public void addTransition(Block from, Block to, Symbol input){
+		TransitionSet<BlockTransition> trans = this.getTuringMachine().getTransitions();
+		trans.add(new BlockTransition(from, to, input));
 	}
 	
 }

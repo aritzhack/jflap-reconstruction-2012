@@ -1,19 +1,5 @@
 package model.automata.turing;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
-
-
-import javax.swing.JOptionPane;
-import javax.swing.event.ChangeListener;
-
-import debug.JFLAPDebug;
-
-import model.automata.turing.buildingblock.Block;
-import model.automata.turing.buildingblock.library.ShiftBlock;
-import model.automata.turing.buildingblock.library.SingleShiftBlock;
-import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 
 

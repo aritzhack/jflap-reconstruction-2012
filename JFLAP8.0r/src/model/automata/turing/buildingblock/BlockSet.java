@@ -1,19 +1,15 @@
 package model.automata.turing.buildingblock;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.turing.MultiTapeTuringMachine;
-import model.automata.turing.TuringMachine;
-import model.formaldef.FormalDefinitionException;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
-import universe.preferences.JFLAPPreferences;
 
 public class BlockSet extends StateSet implements UsesSymbols{
 	

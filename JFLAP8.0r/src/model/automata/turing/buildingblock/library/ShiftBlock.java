@@ -1,14 +1,10 @@
 package model.automata.turing.buildingblock.library;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import debug.JFLAPDebug;
-
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
@@ -16,7 +12,6 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
@@ -35,9 +30,22 @@ public class ShiftBlock extends BlockTMUpdatingBlock {
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
+		BlockTuringMachine tm = getTuringMachine();
 		BlockSet blocks = tm.getStates();
 		Set<Symbol> symbols = new TreeSet<Symbol>(tape);
+		
+		removeSubblocks(blocks, symbols);
+		
+		for (Symbol s: symbols){
+			Block block = new SingleShiftBlock(s, myShift, tape, blocks.getNextUnusedID());
+			mySubBlocks.put(s, block);
+			addTransition(myStart, block, new Symbol(TILDE));
+			tm.getFinalStateSet().add(block);
+		}
+	}
+
+
+	private void removeSubblocks(BlockSet blocks, Set<Symbol> symbols) {
 		for (Symbol sym: mySubBlocks.keySet().toArray(new Symbol[0])){
 			if (symbols.contains(sym))
 				symbols.remove(sym);
@@ -45,15 +53,6 @@ public class ShiftBlock extends BlockTMUpdatingBlock {
 				blocks.remove(mySubBlocks.get(sym));
 				mySubBlocks.remove(sym);
 			}
-		}
-		for (Symbol s: symbols){
-			Block block = new SingleShiftBlock(s, myShift, tape, blocks.getNextUnusedID());
-			blocks.add(block);
-			mySubBlocks.put(s, block);
-			BlockTransition trans = new BlockTransition(myStart, block, 
-											new SymbolString(new Symbol(TILDE)));
-			tm.getTransitions().add(trans);
-			tm.getFinalStateSet().add(block);
 		}
 	}
 

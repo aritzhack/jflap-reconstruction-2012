@@ -1,13 +1,10 @@
 package model.automata.turing.buildingblock.library;
 
-import model.automata.InputAlphabet;
-import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
-import model.automata.acceptors.FinalStateSet;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
@@ -41,7 +38,7 @@ public class MoveUntilBlock extends MultiTapeUpdatingBlock {
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		TuringMachine tm = getTuringMachine();
+		MultiTapeTuringMachine tm = getTuringMachine();
 		StateSet states = tm.getStates();
 		
 		TransitionSet<MultiTapeTMTransition> transitions = tm.getTransitions();
@@ -68,10 +65,9 @@ public class MoveUntilBlock extends MultiTapeUpdatingBlock {
 
 		addStartAndFinalStates(localTM);
 		
-		TuringMachine tm = getTuringMachine();
+		MultiTapeTuringMachine tm = getTuringMachine();
 		StateSet states = tm.getStates();
 		
-		State start = tm.getStartState();
 		State intermediateState = states.createAndAddState();
 		State finalState = tm.getFinalStateSet().first();
 		

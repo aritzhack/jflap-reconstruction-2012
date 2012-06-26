@@ -1,15 +1,11 @@
 package model.automata.turing.buildingblock.library;
 
-import debug.JFLAPDebug;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.TransitionSet;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.automata.turing.buildingblock.UpdatingBlock;
 import model.symbols.Symbol;
 
 public class WriteBlock extends MultiTapeUpdatingBlock {

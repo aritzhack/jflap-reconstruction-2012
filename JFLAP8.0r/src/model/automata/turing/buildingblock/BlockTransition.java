@@ -1,6 +1,5 @@
 package model.automata.turing.buildingblock;
 
-import java.util.Collection;
 import java.util.Set;
 
 
@@ -10,10 +9,6 @@ import util.JFLAPConstants;
 import model.automata.AutomatonException;
 import model.automata.InputAlphabet;
 import model.automata.SingleInputTransition;
-import model.automata.State;
-import model.automata.Transition;
-import model.automata.turing.TapeAlphabet;
-import model.formaldef.components.SetSubComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;

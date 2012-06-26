@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import model.automata.State;
-import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
