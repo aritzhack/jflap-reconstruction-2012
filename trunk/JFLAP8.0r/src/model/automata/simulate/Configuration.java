@@ -82,7 +82,6 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 
 	public LinkedList<Configuration<S,T>> getNextConfigurations() {
 		LinkedList<Configuration<S,T>> configs = new LinkedList<Configuration<S,T>>();
-		JFLAPDebug.print(this);
 
 		if (!this.hasNextState()&&
 				!(this.isAccept() || this.isReject())){
