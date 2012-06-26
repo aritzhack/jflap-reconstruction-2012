@@ -4,10 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import oldnewstuff.main.JFLAP;
-
-import debug.JFLAPDebug;
-
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
@@ -25,6 +21,12 @@ import model.automata.turing.buildingblock.library.WriteBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
+/**
+ * Block used to decode the output of a Universal TM into the corresponding
+ * Symbol encoding used by the TM being simulated.
+ * @author Ian McMahon
+ *
+ */
 public class RetrieveOutputBlock extends MappingBlock{
 	
 	private Block rightPivot, leftPivot, rightFromState, leftFromState;
@@ -35,6 +37,9 @@ public class RetrieveOutputBlock extends MappingBlock{
 		super(alph, "Translate output", id);		
 	}
 
+	/**
+	 * Initializes blocks whose order is not changed by a change in the TapeAlphabet.
+	 */
 	private void initTranslates(TapeAlphabet alph) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		BlockSet blocks = tm.getStates();
@@ -46,7 +51,7 @@ public class RetrieveOutputBlock extends MappingBlock{
 		Block b1 = rightPivot = new MoveUntilBlock(TuringMachineMove.LEFT, zero, alph,id++);
 		addTransition(lastBlock, b1, tilde);
 		
-		Block b2 = rightOut = new TranslateBlock(alph,id++);
+		Block b2 = rightOut = new WriteRightBlock(alph,id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -54,11 +59,11 @@ public class RetrieveOutputBlock extends MappingBlock{
 		addTransition(b1, b2, hash);
 		
 		b1=b2;
-		b2 = new TranslateBlock(alph,id++);
+		b2 = new WriteRightBlock(alph,id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
-		b2 = leftFromState = new TranslateBlock(alph,id++);
+		b2 = leftFromState = new WriteRightBlock(alph,id++);
 		addTransition(b1, b2, one);
 		
 		b1=b2;
@@ -74,10 +79,15 @@ public class RetrieveOutputBlock extends MappingBlock{
 		addTransition(b1, b2, tilde);
 		tm.getFinalStateSet().add(b2);
 		
-		rightFromState = new TranslateBlock(alph,id++);
+		rightFromState = new WriteRightBlock(alph,id++);
 		addTransition(rightOut, rightFromState, one);
 	}
 
+	/**
+	 * Initializes the tape so that the right end is marked with a hash, the
+	 * left end is marked by a zero (followed by a unary encoded blank), and the
+	 * head is at the position the Universal TM halted at.
+	 */
 	private void initMarkers(TapeAlphabet alph, BlockTuringMachine tm, TransitionSet<BlockTransition> transitions) {
 		int id = 0;
 		BlankSymbol blank = new BlankSymbol();
@@ -126,6 +136,12 @@ public class RetrieveOutputBlock extends MappingBlock{
 		translateBothSides(encodingMap);
 	}
 
+	/**
+	 * Creates blocks for both right and left side (in respect to the position the
+	 * Universal TM halted at) which delete unary encodings and insert the corresponding
+	 * Symbol at the correct position at the right of the tape. Deletes and remakes
+	 * blocks if the TapeAlphabet changes.
+	 */
 	private void translateBothSides(
 			Map<Symbol, SymbolString> encodingMap) {
 		BlockTuringMachine tm = getTuringMachine();
@@ -140,11 +156,11 @@ public class RetrieveOutputBlock extends MappingBlock{
 		
 		for(int i=2; i<=encodingMap.size();i++){
 			rightBlock1=rightBlock2; 
-			rightBlock2 = new TranslateBlock(tape,id++);
+			rightBlock2 = new WriteRightBlock(tape,id++);
 			addTransition(rightBlock1, rightBlock2, one);
 			
 			leftBlock1=leftBlock2;
-			leftBlock2 = new TranslateBlock(tape,id++);
+			leftBlock2 = new WriteRightBlock(tape,id++);
 			addTransition(leftBlock1, leftBlock2, one);
 			
 			Symbol a = getKeyForValue(encodingMap, i);
@@ -165,6 +181,10 @@ public class RetrieveOutputBlock extends MappingBlock{
 
 	}
 
+	/**
+	 * Helper method used to retrieve the Symbol mapped to the unary encoding of length
+	 * <i>oneLength</i>
+	 */
 	private Symbol getKeyForValue(Map<Symbol, SymbolString> encodingMap, int oneLength){
 		for(Symbol s : encodingMap.keySet()){
 			if(encodingMap.get(s).size()==oneLength)

@@ -8,6 +8,11 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
+/**
+ * Building block used to write a single character in place (Stay) over any other character.
+ * @author Ian McMahon
+ *
+ */
 public class WriteBlock extends MultiTapeUpdatingBlock {
 	private Symbol myWrite;
 

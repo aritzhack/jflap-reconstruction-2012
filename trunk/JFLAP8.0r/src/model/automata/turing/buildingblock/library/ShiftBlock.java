@@ -10,11 +10,16 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
-import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.symbols.Symbol;
-import model.symbols.SymbolString;
 
+/**
+ * Block used to delete character currently under read head 
+ * and shift entire tape either right or left (specified by shift)
+ * 
+ * @author Julian, Ian McMahon
+ *
+ */
 public class ShiftBlock extends BlockTMUpdatingBlock {
 
 	private StartBlock myStart;

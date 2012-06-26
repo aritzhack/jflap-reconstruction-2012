@@ -14,6 +14,11 @@ import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.symbols.Symbol;
 
+/**
+ * Block used to duplicate input from the tape once to the right.
+ * @author Ian McMahon
+ *
+ */
 public class CopyBlock extends BlockTMUpdatingBlock {
 
 	private Symbol marker, tilde;
@@ -68,7 +73,7 @@ public class CopyBlock extends BlockTMUpdatingBlock {
 	public void constructFromBase(TapeAlphabet alph,
 			TuringMachine localTM, Object... args) {
 		myLoops = new HashSet<Block>();
-		BlankSymbol blank = new BlankSymbol();
+		Symbol blank = new BlankSymbol().getSymbol();
 		
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 
@@ -80,7 +85,7 @@ public class CopyBlock extends BlockTMUpdatingBlock {
 		
 		Block b1 = new StartBlock(id++);
 		tm.setStartState(b1);
-		Block b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), tapeAlph, id++);
+		Block b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank, tapeAlph, id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -88,7 +93,7 @@ public class CopyBlock extends BlockTMUpdatingBlock {
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), tapeAlph, id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank, tapeAlph, id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -100,7 +105,7 @@ public class CopyBlock extends BlockTMUpdatingBlock {
 		addTransition(b1, b2, marker);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), tapeAlph, id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank, tapeAlph, id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;

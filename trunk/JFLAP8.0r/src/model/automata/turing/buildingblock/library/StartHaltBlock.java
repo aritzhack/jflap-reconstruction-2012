@@ -4,6 +4,12 @@ import model.automata.State;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.buildingblock.Block;
 
+/**
+ * Superclass of start and halt building blocks which are single state, no transition
+ * Turing machines used to signal starting and halting of a Block Turing Machine.
+ * @author Ian McMahon
+ *
+ */
 public abstract class StartHaltBlock extends Block {
 
 

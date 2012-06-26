@@ -4,8 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import debug.JFLAPDebug;
-
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
@@ -23,6 +21,12 @@ import model.automata.turing.buildingblock.library.WriteBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
+/**
+ * Block which converts tape input to unary encoding of a TM followed by
+ * the unary representation of original input, for use in Universal TM simulation.
+ * @author Ian McMahon
+ *
+ */
 public class ConvertInputBlock extends MappingBlock{
 
 	private SymbolString myTransitionEncoding;

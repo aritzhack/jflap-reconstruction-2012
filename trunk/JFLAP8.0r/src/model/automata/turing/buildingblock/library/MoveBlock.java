@@ -8,6 +8,11 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
+/**
+ * Building block that moves the Turing machine head either right or
+ * left one move, as specified by direction.
+ * @author Ian McMahon
+ */
 public class MoveBlock extends MultiTapeUpdatingBlock {
 	private TuringMachineMove myDirection;
 	

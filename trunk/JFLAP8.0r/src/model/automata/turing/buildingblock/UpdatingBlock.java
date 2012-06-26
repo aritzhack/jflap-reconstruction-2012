@@ -7,6 +7,12 @@ import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.change.events.AdvancedChangeEvent;
 
+/**
+ * Superclass for all blocks that need to implement internal changes
+ * when the TapeAlphabet is modified.
+ * @author Julian
+ *
+ */
 public abstract class UpdatingBlock extends Block implements ChangeListener {
 	
 	public UpdatingBlock(TuringMachine tm, 

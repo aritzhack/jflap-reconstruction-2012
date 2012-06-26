@@ -1,12 +1,10 @@
 package model.automata.turing.buildingblock.library;
 
-import model.automata.State;
-import model.automata.TransitionSet;
-import model.automata.turing.BlankSymbol;
-import model.automata.turing.TapeAlphabet;
-import model.automata.turing.TuringMachine;
-import model.symbols.Symbol;
-
+/**
+ * Marks the start of any Block Turing Machine
+ * @author Ian McMahon
+ *
+ */
 public class StartBlock extends StartHaltBlock {
 
 	public StartBlock(int id) {
