@@ -20,6 +20,14 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import errors.BooleanWrapper;
 
+/**
+ * Maps a single-tape, single-final state Turing machine to unary encoding 
+ * to be simulated in a Universal TM. Start state is mapped to 1, final to 11,
+ * all others are 111+ based on ID number. Final encoding is based off 
+ * transitions as explained in <CODE>convertTM</CODE>.
+ * @author Ian McMahon
+ *
+ */
 public class TMtoEncodingConversion extends
 		FormalDefinitionAlgorithm<MultiTapeTuringMachine> {
 	private Symbol one, zero;
@@ -106,6 +114,10 @@ public class TMtoEncodingConversion extends
 
 	}
 
+	/**
+	 * Unary maps blank symbol to 1, and the remainder of the TapeAlphabet to 11+ 
+	 * in natural ascending order.
+	 */
 	private boolean makeAlphabetMap() {
 		TapeAlphabet alph = getOriginalDefinition().getTapeAlphabet();
 		
@@ -136,6 +148,10 @@ public class TMtoEncodingConversion extends
 		}
 	}
 	
+	/**
+	 * As explained in class description, states are mapped to unary encoding
+	 * starting at 1. The start state is always 1, final state is always 11.
+	 */
 	private boolean convertStates(){
 		stateMap.clear();
 		
@@ -172,7 +188,6 @@ public class TMtoEncodingConversion extends
 
 		@Override
 		public String getDescription() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -188,6 +203,12 @@ public class TMtoEncodingConversion extends
 		
 	}
 	
+	/**
+	 * Using unary encodings of the States, Symbols, and TuringMachineMoves (from earlier steps),
+	 * encodes each transition to the unary mapping form: 
+	 * <i>from 0 read 0 to 0 write 0 move 0 </i>
+	 * and appends it to a single SymbolString until all transitions are converted.
+	 */
 	private boolean convertTM(){
 		MultiTapeTuringMachine tm = getOriginalDefinition();
 		
@@ -219,6 +240,9 @@ public class TMtoEncodingConversion extends
 		return true;
 	}
 	
+	/**
+	 * Maps (unary) the moves left to 1, stay to 11, and right to 111
+	 */
 	private void constructMoveMap(){
 		one = new Symbol("1");
 		zero = new Symbol("0");

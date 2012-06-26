@@ -11,10 +11,11 @@ import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
 /**
- * Sample building block
+ * Building block that moves Turing machine head (minimum once) either 
+ * right or left, as specified by direction, until it reads the specified
+ * Symbol.
  * 
  * @author Ian McMahon
- * 
  */
 public class MoveUntilBlock extends MultiTapeUpdatingBlock {
 	private MultiTapeTMTransition myFinalTransition;

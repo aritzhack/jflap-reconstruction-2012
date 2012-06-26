@@ -16,6 +16,12 @@ import model.automata.turing.buildingblock.library.WriteBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
+/**
+ * Subblock used by ConvertInputBlock to replace a Symbol with its unary
+ * encoding at the right end of the tape.
+ * @author Ian McMahon
+ *
+ */
 public class UnaryEncodingBlock extends BlockTMUpdatingBlock {
 	int myLength;
 	

@@ -3,6 +3,15 @@ package model.algorithms.conversion.autotogram;
 import model.automata.State;
 import model.symbols.Symbol;
 
+/**
+ * Variable mapping for single-tape Turing Machine to Unrestricted Grammar conversion algorithm 
+ * as defined in the Linz book. Variables are mapped to form Vab or Vaib where a is a Symbol
+ * from InputAlphabet U {blank}, b is a Symbol from the TapeAlphabet, i is the ID of State qi in 
+ * the StateSet of the Turing Machine.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class TMVariableMapping extends VariableMapping{
 	private State myState;
 	private Symbol myA;

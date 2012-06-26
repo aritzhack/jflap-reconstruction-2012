@@ -14,6 +14,14 @@ import model.automata.turing.buildingblock.library.StartBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
+/**
+ * Block Turing machine that takes a single-tape TM, converts it to unary
+ * Universal TM encoding, converts tape input to same encoding, simulates
+ * original TM using a Universal TM, then (if accepted) translates tape 
+ * back to original alphabet (still marking correct position).
+ * @author Ian McMahon, Julian
+ *
+ */
 public class ConvertedUniversalTM extends BlockTuringMachine {
 
 	private SymbolString myEncoding;

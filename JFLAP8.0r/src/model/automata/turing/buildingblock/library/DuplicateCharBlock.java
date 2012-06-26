@@ -8,14 +8,18 @@ import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.symbols.Symbol;
 
+/**
+ * Block used in CopyBlock which duplicates a single Symbol at 
+ * the next blank space to the right.
+ * @author Ian McMahon
+ *
+ */
 public class DuplicateCharBlock extends BlockTMUpdatingBlock {
 
 	private Symbol mySymbol;
 
 	public DuplicateCharBlock(TapeAlphabet alph, int id, Symbol character) {
 		super(alph, BlockLibrary.DUPLICATE+ BlockLibrary.UNDSCR + character, id, character);
-		
-		
 	}
 
 	@Override

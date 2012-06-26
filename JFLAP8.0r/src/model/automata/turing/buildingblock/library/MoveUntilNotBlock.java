@@ -10,6 +10,12 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 
+/**
+ * Building block used to move (minimum one move) either right or left,
+ * modifying nothing, until the read head reaches something that is not
+ * the specified Symbol.
+ * @author Ian McMahon
+ */
 public class MoveUntilNotBlock extends MultiTapeUpdatingBlock{
 
 	private MultiTapeTMTransition myNotTransition;
