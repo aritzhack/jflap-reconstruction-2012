@@ -35,24 +35,37 @@ public class ConvertInputBlock extends MappingBlock{
 		updateTuringMachine(tape);
 		
 	}
-	
-	private void addTransition(Block from, Block to, Symbol input) {
-		TransitionSet<BlockTransition> trans = this.getTuringMachine().getTransitions();
-		trans.add(new BlockTransition(from, to, input));
-	}
 
 	@Override
 	public void updateTuringMachine(Map<Symbol, SymbolString> encodings) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		TapeAlphabet alph = tm.getTapeAlphabet();
-		TransitionSet<BlockTransition> transitions = tm.getTransitions();
 		BlockSet blocks = tm.getStates();
-		BlankSymbol blank = new BlankSymbol();
 		
 		Set<Symbol> tape = new TreeSet<Symbol>();
 		for(Symbol s : encodings.keySet()){
 			tape.add(s);
 		}
+		
+		removeOldLoops();
+		
+		for(Symbol term : tape){
+				SymbolString ones = encodings.get(term);
+				Block mapBlock = new UnaryEncodingBlock(ones, alph, blocks.getNextUnusedID());
+				
+				addTransition(myRightPivot, mapBlock, term);
+				addTransition(mapBlock, myLeftBlank, new Symbol(TILDE));
+				
+				loops.add(mapBlock);
+			
+		}
+
+	}
+	
+	private void removeOldLoops(){
+		TransitionSet<BlockTransition> transitions = getTuringMachine().getTransitions();
+		BlockSet blocks = getTuringMachine().getStates();
+		
 		
 		for(BlockTransition transition : transitions.toArray(new BlockTransition[0])){
 			Block to = transition.getToState(), from = transition.getFromState();
@@ -63,18 +76,6 @@ public class ConvertInputBlock extends MappingBlock{
 		}
 		
 		loops.clear();
-		
-		for(Symbol term : tape){
-				SymbolString ones = encodings.get(term);
-				Block mapBlock = new ToMapBlock(ones, alph, blocks.getNextUnusedID());
-				
-				addTransition(myRightPivot, mapBlock, term);
-				addTransition(mapBlock, myLeftBlank, new Symbol(TILDE));
-				
-				loops.add(mapBlock);
-			
-		}
-
 	}
 
 	@Override
@@ -85,9 +86,7 @@ public class ConvertInputBlock extends MappingBlock{
 	
 		BlockTuringMachine tm = getTuringMachine();
 		TapeAlphabet alph = tm.getTapeAlphabet();
-		BlockSet blocks = tm.getStates();
-		TransitionSet<BlockTransition> transitions = tm.getTransitions();
-		BlankSymbol blank = new BlankSymbol();
+		Symbol blank = new BlankSymbol().getSymbol();
 		
 		int id=0;
 		Symbol tilde = new Symbol(TILDE);
@@ -95,7 +94,7 @@ public class ConvertInputBlock extends MappingBlock{
 		Block b1 = new StartBlock(id++);
 		tm.setStartState(b1);
 		
-		Block b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), alph,id++);
+		Block b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank, alph,id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -103,7 +102,7 @@ public class ConvertInputBlock extends MappingBlock{
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
-		myLeftBlank = b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), alph,id++);
+		myLeftBlank = b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank, alph,id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -131,7 +130,6 @@ public class ConvertInputBlock extends MappingBlock{
 		addTransition(b1, b2, tilde);
 		
 		tm.getFinalStateSet().add(b2);
-		
 		
 	}
 }

@@ -1,11 +1,9 @@
 package model.automata.turing;
 
-import java.util.Set;
 
 import universe.preferences.JFLAPPreferences;
 
 import errors.BooleanWrapper;
-import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.SpecialSymbol;
 import model.symbols.Symbol;

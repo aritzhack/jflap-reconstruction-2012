@@ -1,6 +1,5 @@
 package model.automata.turing.buildingblock.library;
 
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import model.automata.InputAlphabet;
@@ -14,11 +13,7 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
-import model.automata.turing.buildingblock.Block;
-import model.automata.turing.buildingblock.BlockSet;
-import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.UpdatingBlock;
-import model.change.events.AdvancedChangeEvent;
 
 public abstract class MultiTapeUpdatingBlock extends UpdatingBlock implements ChangeListener{
 

@@ -3,8 +3,8 @@ package model.automata.turing.buildingblock.library;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
@@ -33,7 +33,7 @@ public class MoveUntilNotBlock extends MultiTapeUpdatingBlock{
 
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
-		TuringMachine tm = getTuringMachine();
+		MultiTapeTuringMachine tm = getTuringMachine();
 		StateSet states = tm.getStates();
 		
 		TransitionSet<MultiTapeTMTransition> transitions = getTuringMachine().getTransitions();
@@ -60,10 +60,9 @@ public class MoveUntilNotBlock extends MultiTapeUpdatingBlock{
 		myDirection = (TuringMachineMove) args[1];
 		addStartAndFinalStates(localTM);
 		
-		TuringMachine tm = getTuringMachine();
+		MultiTapeTuringMachine tm = getTuringMachine();
 		StateSet states = tm.getStates();
 		
-		State start = tm.getStartState();
 		State intermediateState = states.createAndAddState();
 		
 		myNotTransition = new MultiTapeTMTransition(intermediateState, 

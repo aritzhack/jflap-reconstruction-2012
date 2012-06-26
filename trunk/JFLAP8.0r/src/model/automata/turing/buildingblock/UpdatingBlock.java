@@ -3,13 +3,6 @@ package model.automata.turing.buildingblock;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import oldnewstuff.view.Updateable;
-
-import model.automata.InputAlphabet;
-import model.automata.StartState;
-import model.automata.TransitionSet;
-import model.automata.acceptors.FinalStateSet;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.change.events.AdvancedChangeEvent;

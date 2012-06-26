@@ -1,10 +1,7 @@
 package model.automata.turing.buildingblock.library;
 
-import debug.JFLAPDebug;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.TransitionSet;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
