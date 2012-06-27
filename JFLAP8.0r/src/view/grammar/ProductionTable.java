@@ -28,6 +28,7 @@ import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.ISelector;
 import util.JFLAPConstants;
+import util.view.SelectingEditor;
 
 public class ProductionTable extends HighlightTable 
 						implements JFLAPConstants, Magnifiable, ChangeListener, ISelector{
@@ -88,7 +89,7 @@ public class ProductionTable extends HighlightTable
 	}
 
 	private TableCellEditor createEditor() {
-		return new SelectingEditor(new JTextField()){
+		return new LambdaRemovingEditor(){
 			@Override
 			public boolean isCellEditable(EventObject e) {
 				if (e instanceof KeyEvent){
