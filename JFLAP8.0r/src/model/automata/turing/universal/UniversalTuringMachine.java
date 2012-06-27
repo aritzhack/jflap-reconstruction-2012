@@ -1,5 +1,6 @@
 package model.automata.turing.universal;
 
+import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
 import model.automata.State;
 import model.automata.StateSet;
@@ -40,11 +41,11 @@ public class UniversalTuringMachine extends MultiTapeTuringMachine {
 		// input is: TRANS00INPUT
 		SymbolString[] parts = input.split(TAPE_DELIMITER
 				.toArray(new Symbol[0]));
-
+		
 		if (parts.length != 2)
 			throw new AlgorithmException("An error occurred splitting " + input
 					+ " while " + "preparing a Universal TM inital config");
-
+		parts[0].add(new Symbol("0"));
 		SymbolString stateEncoding = new SymbolString(new Symbol("1"));
 		// Alternate definition of turing machine
 		return new MultiTapeTMConfiguration(this, this.getStartState(),
