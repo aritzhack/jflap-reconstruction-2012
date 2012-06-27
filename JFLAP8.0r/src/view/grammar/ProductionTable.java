@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.EventObject;
 
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
@@ -31,8 +32,6 @@ import util.JFLAPConstants;
 public class ProductionTable extends HighlightTable 
 						implements JFLAPConstants, Magnifiable, ChangeListener, ISelector{
 
-	private boolean amEditable;
-
 	private UndoKeeper myKeeper;
 
 
@@ -47,7 +46,7 @@ public class ProductionTable extends HighlightTable
 	 */
 	public ProductionTable(Grammar g, UndoKeeper keeper, boolean editable) {
 		super(new ProductionTableModel(g, keeper));
-		amEditable = editable;
+		setEnabled(editable);
 		g.getProductionSet().addListener(this);
 		initView();
 		myKeeper = keeper;
@@ -89,8 +88,17 @@ public class ProductionTable extends HighlightTable
 	}
 
 	private TableCellEditor createEditor() {
-		//		return new SelectingEditor(new AlphabetLinkedTextField());
-		return new SelectingEditor(new JTextField());
+		return new SelectingEditor(new JTextField()){
+			@Override
+			public boolean isCellEditable(EventObject e) {
+				if (e instanceof KeyEvent){
+					int mod = ((KeyEvent) e).getModifiers();
+					if (mod == JFLAPPreferences.getMainMenuMask())
+						return false;
+				}
+				return super.isCellEditable(e);
+			}
+		};
 	}
 
 	/** Modified to use the set renderer highlighter. */

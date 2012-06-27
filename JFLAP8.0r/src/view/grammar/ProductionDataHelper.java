@@ -33,6 +33,7 @@ import model.change.events.SetToEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.parsing.FirstFollowTable;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizer;
@@ -83,7 +84,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 				Production from = myOrderedProductions.get(index);
 				SetToEvent<Production> set = 
 						new SetToEvent<Production>(from, from.copy(), to);
-				myKeeper.applyAndListen(set);
+				if (!myKeeper.applyAndListen(set));
 			}
 			else{
 				remove(index);
@@ -171,31 +172,20 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		return object.equals(JFLAPPreferences.getEmptyStringSymbol());
 	}
 
-	/**
-	 * checks if the booleanwrapper is actually an error and adds it to the 
-	 * error cache if so. Returns true if the error was added to the cache.
-	 * @param error
-	 * @return
-	 */
-	public boolean checkAndAddError(BooleanWrapper error){
-		if (error.isError())
-			myWrappers.add(error);
-		return error.isError();
+
+	public Production[] getOrderedProductions() {
+		return myOrderedProductions.toArray(new Production[0]);
 	}
 	
-	public boolean hasErrors(){
-		for (BooleanWrapper bw : myWrappers){
-			if (bw.isError())
-				return true;
+	public boolean applyOrdering(Production[] order){
+		for (int i = 0; i< order.length;i++){
+			Production p = order[i];
+			boolean applied = myOrderedProductions.remove(p) &&
+								myOrderedProductions.add(p);
+			if (!applied)
+				return applied;
 		}
-		return false;
-	}
-
-	public String getAndClearErrors(){
-		String message = "The following issues occured in the most recently added production:\n" +
-				BooleanWrapper.createErrorLog(myWrappers.toArray(new BooleanWrapper[0]));
-		myWrappers.clear();
-		return message;
+		return true;
 	}
 
 	
@@ -252,4 +242,5 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		}
 
 	}
+
 }

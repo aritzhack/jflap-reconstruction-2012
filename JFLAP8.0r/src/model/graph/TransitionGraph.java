@@ -19,15 +19,24 @@
 
 package model.graph;
 
+import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import util.arrows.CurvedArrow;
+import util.arrows.CurvedArrowHelper;
+
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
+import model.automata.Transition;
 
 
 /**
@@ -39,7 +48,7 @@ import model.automata.SingleInputTransition;
  *
  * @param <T>
  */
-public class TransitionGraph<T extends SingleInputTransition<T>> extends DirectedGraph<State> 
+public class TransitionGraph<T extends Transition<T>> extends DirectedGraph<State> 
 														implements ChangeListener {	
 
 	private Automaton<T> myAutomaton;
@@ -60,12 +69,15 @@ public class TransitionGraph<T extends SingleInputTransition<T>> extends Directe
 
 	private void update() {
 		this.clear();
+		for (State s: myAutomaton.getStates())
+			this.addVertex(s, new Point((int)(Math.random()*200),(int) (Math.random()*200)));
 		for (T t: myAutomaton.getTransitions()){
 			addTransition(t);
 		}
 	}
 
 	private void addTransition(T t) {
+		JFLAPDebug.print(t);
 		addEdge(t.getFromState(), t.getToState());
 		myLabelToTransitionMap.put(t, t.getLabelText());
 	}
@@ -74,6 +86,15 @@ public class TransitionGraph<T extends SingleInputTransition<T>> extends Directe
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
 		update();
+	}
+
+	public Point2D getControlPt(State from, State to) {
+		return CurvedArrowHelper.getCenterPoint(pointForVertex(from), pointForVertex(from));
+	}
+
+	public List<T> getOrderedTransitions(State from, State to) {
+		
+		return null;
 	}
 
 }

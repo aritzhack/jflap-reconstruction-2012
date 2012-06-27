@@ -37,6 +37,7 @@ import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 import model.grammar.Grammar;
+import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.undo.UndoKeeper;
 
@@ -55,7 +56,7 @@ import model.undo.UndoKeeper;
  */
 
 public class ProductionTableModel extends GrowableTableModel 
-								implements JFLAPConstants{
+implements JFLAPConstants{
 
 
 	/**
@@ -68,12 +69,12 @@ public class ProductionTableModel extends GrowableTableModel
 	 */
 	public ProductionTableModel(Grammar g, UndoKeeper keeper) {
 		super(3, new ProductionDataHelper(g, keeper));
-//		this.addTableModelListener(new TableModelListener() {
-//			@Override
-//			public void tableChanged(TableModelEvent e) {
-//				ProductionDataHelper data = (ProductionDataHelper) ProductionTableModel.this.getData();
-//			}
-//		});
+		//		this.addTableModelListener(new TableModelListener() {
+		//			@Override
+		//			public void tableChanged(TableModelEvent e) {
+		//				ProductionDataHelper data = (ProductionDataHelper) ProductionTableModel.this.getData();
+		//			}
+		//		});
 	}
 
 	/**
@@ -92,6 +93,16 @@ public class ProductionTableModel extends GrowableTableModel
 		return "";
 	}
 
+	public Production[] getOrderedProductions() {
+		return ((ProductionDataHelper) getData()).getOrderedProductions();
+	}
+
+	public boolean applyOrdering(Production[] order){
+		boolean applied = ((ProductionDataHelper) getData()).applyOrdering(order);
+		fireTableDataChanged();
+		return applied;
+	}
+
 	/**
 	 * Everything in the table model is editable except for the middle arrow.
 	 * 
@@ -106,8 +117,8 @@ public class ProductionTableModel extends GrowableTableModel
 	public boolean isCellEditable(int row, int column) {
 		return column != 1;
 	}
-	
-	
+
+
 
 	/**
 	 * Initializes a row. For this particular object, a row is two strings
@@ -135,7 +146,7 @@ public class ProductionTableModel extends GrowableTableModel
 		return column == 1 ? Icon.class : String.class;
 	}
 
-	
+
 	/**
 	 * Returns the object at a particular location in the model. This is
 	 * overridden to see that the arrow does not display itself in the last
@@ -155,21 +166,19 @@ public class ProductionTableModel extends GrowableTableModel
 			return super.getValueAt(row, column);
 		}
 		String s = (String) super.getValueAt(row, column);
+
 		return s == JFLAPPreferences.getEmptyStringSymbol() && 
 				(column == 0 || row == this.getRowCount()) ? "" : s ;
 	}
-	
-
-	
 
 	@Override
 	public boolean checkEmpty(int row) {
 		return this.getValueAt(row, 0).toString().length() == 0 &&
 				(this.getValueAt(row, 2).toString().length() == 0 ||
-						this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyStringSymbol());
+				this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyStringSymbol());
 	}
 
-	
+
 	/** Constants to be used for columns**/
 	private static final int LHS_COLUMN = 0, RHS_COLUMN = 2;
 
@@ -178,6 +187,6 @@ public class ProductionTableModel extends GrowableTableModel
 		return this.getData().remove(i) != null;
 	}
 
-	
-	
+
+
 }

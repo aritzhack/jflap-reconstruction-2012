@@ -2,10 +2,15 @@ package model.symbols.symbolizer;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.management.RuntimeErrorException;
 
 import util.UtilFunctions;
 
@@ -20,6 +25,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 
 	
 	private Alphabet[] myAlphs;
+	private Map<String, Collection<Object>> myMap;
 
 	public AbstractSymbolizer(FormalDefinition fd){
 		this(fd.getAlphabets());
@@ -27,6 +33,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 	
 	public AbstractSymbolizer(Alphabet ... alphs) {
 		myAlphs = alphs;
+		myMap = new HashMap<String, Collection<Object>>();
 	}
 	
 	public Alphabet[] getAlphabets() {
@@ -35,6 +42,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 	
 	@Override
 	public SymbolString symbolize(String in){
+		myMap.clear();
 		Collection<Object> extracted = extractSymbols(in);
 		SymbolString result = new SymbolString();
 		for (Object o : extracted){
@@ -62,13 +70,16 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 	public abstract String[] splitToSymbols(String unIDed);
 
 	private Collection<Object> extractSymbols(String in) {
-		
+
 		if (in == null ||in.length() == 0) 
 			return new ArrayList<Object>();
 
-		Alphabet[] alphs = this.getAlphabets();
+		if (myMap.containsKey(in))
+			return myMap.get(in);
 		
+		Alphabet[] alphs = this.getAlphabets();
 		ArrayList<List<Object>> options = new ArrayList<List<Object>>();
+
 		
 		for (int i = in.length(); i > 0; i--){
 			List<Object> temp = new ArrayList<Object>();
@@ -93,7 +104,7 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 				best = option;
 		}
 		
-		
+		myMap.put(in, best);
 		return best;
 	}
 

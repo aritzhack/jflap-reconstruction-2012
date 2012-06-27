@@ -23,7 +23,7 @@ public class ModifySymbolAction extends UndoingAction {
 	private Symbol mySymbol;
 
 	public ModifySymbolAction(Symbol s, UndoKeeper keeper) {
-		super("Modify Symbol", keeper);
+		super("Modify " + s.getDescriptionName(), keeper);
 		mySymbol = s;
 	}
 
