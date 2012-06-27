@@ -2,6 +2,8 @@ package model.automata.turing.universal;
 
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
@@ -41,7 +43,6 @@ public class ConvertedUniversalTM extends BlockTuringMachine {
 
 	private void constructMachine(SymbolString encoding) {
 		TapeAlphabet alph = getTapeAlphabet();
-		BlankSymbol blank = new BlankSymbol();
 		Block start = new StartBlock(0);
 		Block convertTo = new ConvertInputBlock(encoding, alph, 1);
 		Block univTM = new UniversalTMBlock(2);

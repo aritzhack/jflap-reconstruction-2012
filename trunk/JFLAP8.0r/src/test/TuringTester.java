@@ -4,20 +4,14 @@ import java.io.File;
 
 import model.automata.State;
 import model.automata.TransitionSet;
-import model.automata.simulate.AutoSimulator;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
-import model.symbols.symbolizer.Symbolizers;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
 
 public class TuringTester {
-	//Hey Julian, I wrote this with the file stuff so I don't have to write them again,
-	//but you should check out the last one I did. it's from pg 134 of the JFLAP book,
-	//and is very nondeterministic, and it looks to me like the printout of the accept
-	//isn't complete (though it still accepts it). Something to check.
 	
 	public static void main(String[]args){
 		String toSave = System.getProperties().getProperty("user.dir")
@@ -74,7 +68,6 @@ public class TuringTester {
 		
 		Symbol a = new Symbol("a"), X = new Symbol("X"), b = new Symbol("b");
 		TuringMachineMove R= TuringMachineMove.RIGHT, L=TuringMachineMove.LEFT;
-		int id=0;
 		
 		State[] q = new State[8];
 		for(int i=0; i<8; i++){
@@ -252,10 +245,6 @@ public class TuringTester {
 		add2TapeTrans(transitions, q[1], q[2], blank, blank, S, blank, blank, S);
 		add2TapeTrans(transitions, q[1], q[2], blank, blank, S, a, a, R);
 		add2TapeTrans(transitions, q[1], q[2], blank, blank, S, b, b, R);
-
-		AutoSimulator sim = new AutoSimulator(tm, 0);
-		sim.beginSimulation(Symbolizers.symbolize("abaa"), Symbolizers.symbolize("ababaabaab"));
-		JFLAPDebug.print(sim.getNextAccept());
 		
 		return tm;
 	

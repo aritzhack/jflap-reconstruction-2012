@@ -14,6 +14,7 @@ import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.HaltBlock;
+import model.automata.turing.buildingblock.library.MoveBlock;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
 import model.automata.turing.buildingblock.library.ShiftBlock;
 import model.automata.turing.buildingblock.library.StartBlock;
@@ -43,20 +44,19 @@ public class RetrieveOutputBlock extends MappingBlock{
 	private void initTranslates(TapeAlphabet alph) {
 		BlockTuringMachine tm = (BlockTuringMachine) getTuringMachine();
 		BlockSet blocks = tm.getStates();
-		BlankSymbol blank = new BlankSymbol();
+		Symbol blank = tm.getBlankSymbol();
 		int id = blocks.getNextUnusedID();
 		
 		Block rightOut, lastBlock = blocks.getStateWithID(id-1);
 		
-		Block b1 = rightPivot = new MoveUntilBlock(TuringMachineMove.LEFT, zero, alph,id++);
-		addTransition(lastBlock, b1, tilde);
+		Block b1 = rightPivot = new MoveUntilBlock(TuringMachineMove.LEFT, blank, alph,id++);
 		
 		Block b2 = rightOut = new WriteRightBlock(alph,id++);
 		addTransition(b1, b2, tilde);
+		addTransition(lastBlock, b2, tilde);
 		
 		b1=b2;
 		b2 = leftPivot = new MoveUntilBlock(TuringMachineMove.LEFT, zero, alph,id++);
-		addTransition(b1, b2, hash);
 		
 		b1=b2;
 		b2 = new WriteRightBlock(alph,id++);
@@ -66,9 +66,20 @@ public class RetrieveOutputBlock extends MappingBlock{
 		b2 = leftFromState = new WriteRightBlock(alph,id++);
 		addTransition(b1, b2, one);
 		
+		for(int i=0; i<3;i++){
+			b1=b2;
+			b2 = new MoveBlock(TuringMachineMove.LEFT, alph, id++);
+			addTransition(b1, b2, blank);
+		}
+		
+		b1=b2;
+		b2 = new WriteBlock(blank, alph, id++);
+		addTransition(b1, leftPivot, one);
+		addTransition(b1, b2, hash);
+		
 		b1=b2;
 		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, hash, alph,id++);
-		addTransition(b1, b2, blank.getSymbol());
+		addTransition(b1, b2, tilde);
 		
 		b1=b2;
 		b2 = new ShiftBlock(TuringMachineMove.LEFT, alph,id++);
@@ -81,16 +92,25 @@ public class RetrieveOutputBlock extends MappingBlock{
 		
 		rightFromState = new WriteRightBlock(alph,id++);
 		addTransition(rightOut, rightFromState, one);
+		addTransition(rightFromState, leftPivot, hash);
+		
+		//This block will take the first blank to the right of input and write over
+		//anything to the right of it until the marker(ie. get rid of extra encoded blanks)
+		b1 = new WriteRightBlock(alph, id++);
+		addTransition(rightFromState, b1, zero);
+		addTransition(b1, b1, zero);
+		addTransition(b1, b1, one);
+		addTransition(b1, leftPivot, hash);
 	}
 
 	/**
-	 * Initializes the tape so that the right end is marked with a hash, the
-	 * left end is marked by a zero (followed by a unary encoded blank), and the
+	 * Initializes the tape so that the right end is marked with a hash (with the farmost 0 deleted), the
+	 * left end is marked by a hash (followed by a zero and a unary encoded blank), and the
 	 * head is at the position the Universal TM halted at.
 	 */
 	private void initMarkers(TapeAlphabet alph, BlockTuringMachine tm, TransitionSet<BlockTransition> transitions) {
 		int id = 0;
-		BlankSymbol blank = new BlankSymbol();
+		Symbol blank = tm.getBlankSymbol();
 		
 		Block b1 = new StartBlock(id++);
 		tm.setStartState(b1);
@@ -98,7 +118,11 @@ public class RetrieveOutputBlock extends MappingBlock{
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank.getSymbol(), alph,id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.RIGHT, blank, alph,id++);
+		addTransition(b1, b2, tilde);
+		
+		b1=b2;
+		b2 = new MoveBlock(TuringMachineMove.LEFT, alph, id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2; 
@@ -106,11 +130,19 @@ public class RetrieveOutputBlock extends MappingBlock{
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
-		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank.getSymbol(), alph,id++);
+		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank, alph,id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
 		b2 = new WriteBlock(zero, alph,id++);
+		addTransition(b1, b2, tilde);
+		
+		b1=b2;
+		b2 = new MoveBlock(TuringMachineMove.LEFT, alph, id++);
+		addTransition(b1, b2, tilde);
+		
+		b1=b2;
+		b2 = new WriteBlock(hash, alph, id++);
 		addTransition(b1, b2, tilde);
 		
 		b1=b2;
@@ -120,7 +152,10 @@ public class RetrieveOutputBlock extends MappingBlock{
 		b1=b2;
 		b2 = new WriteBlock(one, alph,id++);
 		addTransition(b1, b2, tilde);
-	
+		
+		b1=b2;
+		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, zero, alph, id);
+		addTransition(b1, b2, tilde);
 	}
 
 	@Override
@@ -164,16 +199,30 @@ public class RetrieveOutputBlock extends MappingBlock{
 			addTransition(leftBlock1, leftBlock2, one);
 			
 			Symbol a = getKeyForValue(encodingMap, i);
-			Block replaceRight = new ReplaceBlock(TuringMachineMove.RIGHT, a, tape,id++);
-			addTransition(rightBlock2, replaceRight, zero);
+			
+			Block writeOverZero = new WriteBlock(blank, tape, id++);
+			addTransition(rightBlock2, writeOverZero, zero);
+			
+			Block replaceZero = new ReplaceBlock(TuringMachineMove.RIGHT, a, tape,id++);
+			addTransition(writeOverZero, replaceZero, tilde);
+			
+			Block ifHash = new MoveUntilBlock(TuringMachineMove.RIGHT, blank, tape, id++);
+			addTransition(rightBlock2, ifHash, hash);
+			
+			Block replaceHash = new WriteBlock(a, tape, id++);
+			addTransition(ifHash, replaceHash, tilde);
+			addTransition(replaceHash, leftPivot, tilde);
 			
 			Block replaceLeft = new ReplaceBlock(TuringMachineMove.LEFT, a, tape,id++);
 			addTransition(leftBlock2, replaceLeft, blank);
 			
-			addTransition(replaceRight, rightPivot, tilde);
+			addTransition(replaceZero, rightPivot, tilde);
 			addTransition(replaceLeft, leftPivot, tilde);
 			
-			loops.add(replaceRight);
+			loops.add(writeOverZero);
+			loops.add(replaceZero);
+			loops.add(ifHash);
+			loops.add(replaceHash);
 			loops.add(rightBlock2);
 			loops.add(replaceLeft);
 			loops.add(leftBlock2);
