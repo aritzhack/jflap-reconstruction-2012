@@ -84,20 +84,13 @@ public class Main {
 			// Eh, that shouldn't happen.
 		}
 		
-		// Set the AWT exception handler. This may not work in future
-		// Java versions.
 		try {
-			// This is a useless statement that forces the catcher to
-			// compile.
-			if (ThrowableCatcher.class == null)
-				;
 			System.setProperty("sun.awt.exception.handler",
-			"gui.ThrowableCatcher");
+					ThrowableCatcher.class.getName());
 		} catch (SecurityException e) {
 			System.err.println("Warning: could not set the "
 					+ "AWT exception handler.");
-		}
-		
+		}		
 		// Apple is stupid.
 		try {
 			// Well, Apple WAS stupid...

@@ -38,11 +38,11 @@ import errors.BooleanWrapper;
 
 
 public abstract class FormalDefinition extends ChangingObject implements Describable, 
-																			UsesSymbols, 
-																			ChangeListener, 
-																			ChangeTypes,
-																			JFLAPConstants,
-																			Copyable{
+UsesSymbols, 
+ChangeListener, 
+ChangeTypes,
+JFLAPConstants,
+Copyable{
 
 	private LinkedList<FormalDefinitionComponent> myComponents;
 
@@ -96,18 +96,18 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 	}
 
-//	@Override
-//	public FormalDefinition copy() {
-//		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
-//		for (FormalDefinitionComponent comp : this.getComponents())
-//			cloned.add(comp.copy());
-//		cloned.trimToSize();
-//		try {
-//			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray());
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		} 
-//	}
+	//	@Override
+	//	public FormalDefinition copy() {
+	//		ArrayList<FormalDefinitionComponent> cloned = new ArrayList<FormalDefinitionComponent>();
+	//		for (FormalDefinitionComponent comp : this.getComponents())
+	//			cloned.add(comp.copy());
+	//		cloned.trimToSize();
+	//		try {
+	//			return (FormalDefinition) this.getClass().getConstructors()[0].newInstance(cloned.toArray());
+	//		} catch (Exception e) {
+	//			throw new RuntimeException(e);
+	//		} 
+	//	}
 
 	public BooleanWrapper[] isComplete() {
 		ArrayList<BooleanWrapper> incomplete = new ArrayList<BooleanWrapper>();
@@ -195,12 +195,12 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 
 	public abstract FormalDefinition alphabetAloneCopy();
 
-	
-	
+
+
 	////////////////////////////////////////////////////	
 	////////////////// INTERACTIONS ////////////////////
 	////////////////////////////////////////////////////
-	
+
 	@Override
 	public void stateChanged(ChangeEvent event) {
 		if (event instanceof AdvancedChangeEvent)
@@ -210,26 +210,25 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 	public void componentChanged(AdvancedChangeEvent event){
 		for (FormalDefinitionComponent comp : this.getComponents()){
 			if (!event.comesFrom(comp.getClass())) continue;
-			
-			if (comp instanceof Alphabet && event.getType() == ITEM_REMOVED){
-				this.purgeOfSymbols((Alphabet) comp, (Collection<Symbol>) event.getArg(0));
-				return;
-			}
-			if((comp instanceof Alphabet || comp instanceof SpecialSymbol)
-					&& event.getType() == ITEM_MODIFIED){
-				Symbol from = (Symbol) event.getArg(0);
-				Symbol to = (Symbol) event.getArg(1);
-				JFLAPDebug.print("Apply mod: " + from + "-->" + to);
 
-				applySymbolMod(from.getString(), to.getString());
+			if (comp instanceof Alphabet){
+				switch(event.getType()){
+				case ITEM_REMOVED:
+					this.purgeOfSymbols((Alphabet) comp, (Collection<Symbol>) event.getArg(0));
+					return;
+				case ITEM_MODIFIED:
+					Symbol from = (Symbol) event.getArg(0);
+					Symbol to = (Symbol) event.getArg(1);
+					applySymbolMod(from.getString(), to.getString());
+				}
 			}
-			
+
 			if (comp instanceof UsesSymbols){
 				updateAlphabets(event.getType());
 				return;
 			}
 		}
-		
+
 	}
 
 	private void updateAlphabets(int type) {
@@ -238,11 +237,11 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 
 			if (type == ITEM_ADDED || 
 					type == ITEM_MODIFIED ||
-						type == SPECIAL_CHANGED)
+					type == SPECIAL_CHANGED)
 				a.addAll(used);
 			if (type == ITEM_REMOVED || 
 					type == ITEM_MODIFIED||
-						type == SPECIAL_CHANGED)
+					type == SPECIAL_CHANGED)
 				a.retainAll(used);
 		}
 	}
@@ -259,7 +258,7 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 
 		return users;
 	}
-	
+
 	@Override
 	public boolean applySymbolMod(String from, String to) {
 		boolean changed = false;
@@ -269,5 +268,5 @@ public abstract class FormalDefinition extends ChangingObject implements Describ
 		}
 		return changed;
 	}
-	
+
 }

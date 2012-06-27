@@ -10,10 +10,13 @@ import model.undo.UndoKeeper;
 import util.ISelector;
 import view.EditingPanel;
 import view.action.edit.DeleteAction;
+import view.action.edit.grammar.SortProductionsAction;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
+import view.grammar.ProductionTable;
+import view.grammar.ProductionTableModel;
 import view.undoing.UndoRelatedMenuItem;
 import view.undoing.redo.MenuRedoAction;
 import view.undoing.redo.RedoAction;
@@ -53,8 +56,13 @@ public class EditMenu extends JMenu implements TabChangeListener{
 		this.add(new UndoRelatedMenuItem(new RedoAction(keeper)));
 		this.add(new UndoRelatedMenuItem(new UndoAction(keeper)));		
 		
+		//Grammar Options
 		if (view instanceof GrammarView){
-			this.add(new DeleteAction((ISelector) ((GrammarView) view).getCentralPanel()));
+			GrammarView v = (GrammarView) view;
+			ProductionTable table = (ProductionTable) v.getCentralPanel();
+			this.add(new DeleteAction(table));
+			this.add(new SortProductionsAction(keeper, 
+					(ProductionTableModel) table.getModel()));
 		}
 			
 			

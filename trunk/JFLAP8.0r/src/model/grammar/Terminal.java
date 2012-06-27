@@ -13,5 +13,10 @@ public class Terminal extends Symbol {
 	public boolean equals(Object o) {
 		return !(o instanceof Variable) && super.equals(o);
 	}
+	
+	@Override
+	public String getDescriptionName() {
+		return "Terminal";
+	}
 
 }

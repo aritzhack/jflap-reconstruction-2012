@@ -34,7 +34,7 @@ public class BuildingBlockTesting extends TestHarness implements JFLAPConstants{
 		BlankSymbol blank = new BlankSymbol();
 		alph.add(blank.getSymbol());
 		//
-		Block block = new CopyBlock(alph, blank, 0);
+		Block block = new CopyBlock(alph, 0);
 		SymbolString input = new SymbolString(a,b,c,a,a,a);
 		testBlock(block, input);
 

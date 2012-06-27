@@ -319,18 +319,18 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 
 		int id = 0;
 		
-		Block start = new StartBlock(alph, blank, id++);
+		Block start = new StartBlock(id++);
 		startState.setState(start);
 		blocks.add(start);
 		
-		Block shiftLeft = new ShiftBlock(TuringMachineMove.LEFT, alph, blank, id++);
-		Block rightToBlank = new MoveUntilBlock(TuringMachineMove.RIGHT, square, alph, blank, id++);
-		Block writeONE = new WriteBlock(ONE, alph, blank, id++);
-		Block leftToBlank = new MoveUntilBlock(TuringMachineMove.LEFT, square, alph, blank, id++);
-		Block moveRight1 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
-		Block writeBlank = new WriteBlock(square, alph, blank, id++);
-		Block moveRight2 = new MoveBlock(TuringMachineMove.RIGHT, alph, blank, id++);
-		Block halt = new HaltBlock(alph, blank, id);
+		Block shiftLeft = new ShiftBlock(TuringMachineMove.LEFT, alph, id++);
+		Block rightToBlank = new MoveUntilBlock(TuringMachineMove.RIGHT, square, alph, id++);
+		Block writeONE = new WriteBlock(ONE, alph, id++);
+		Block leftToBlank = new MoveUntilBlock(TuringMachineMove.LEFT, square, alph, id++);
+		Block moveRight1 = new MoveBlock(TuringMachineMove.RIGHT, alph, id++);
+		Block writeBlank = new WriteBlock(square, alph, id++);
+		Block moveRight2 = new MoveBlock(TuringMachineMove.RIGHT, alph, id++);
+		Block halt = new HaltBlock(id);
 		finalStates.add(halt);
 		
 		BlockTransition[] trans = new BlockTransition[9];
