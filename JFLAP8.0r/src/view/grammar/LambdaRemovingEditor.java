@@ -3,6 +3,8 @@ package view.grammar;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import debug.JFLAPDebug;
+
 import universe.preferences.JFLAPPreferences;
 import util.view.SelectingEditor;
 
@@ -28,16 +30,17 @@ public class LambdaRemovingEditor extends SelectingEditor {
 
 		public LambdaRemoveRunnable(JTextComponent jtc){
 			myJTC = jtc;
+			String s = jtc.getText();
+			if (s.equals(JFLAPPreferences.getEmptyStringSymbol())){
+				jtc.setText("");
+			}
 		}
 
 		@Override
 		public void run() {
+			int caret = myJTC.getText().length();
 			myJTC.selectAll();
-			String s = myJTC.getText();
-			
-			if (s.equals(JFLAPPreferences.getEmptyStringSymbol())){
-				myJTC.replaceSelection("");
-			}
+			myJTC.setCaretPosition(caret);
 		}
 
 	}
