@@ -17,6 +17,7 @@ import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
 import model.grammar.typetest.GrammarType;
+import model.grammar.typetest.matchers.ContextFreeChecker;
 
 /**
  * Brute force parser
@@ -39,9 +40,16 @@ public class UnrestrictedBruteParser extends Parser {
 	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
 	protected Set<Symbol> mySmallerSet;
+	
+	public static UnrestrictedBruteParser createNewBruteParser(Grammar g){
+		if(new ContextFreeChecker().matchesGrammar(g)){
+			return new RestrictedBruteParser(g);
+		}
+		return new UnrestrictedBruteParser(optimize(g));
+	}
 
 	public UnrestrictedBruteParser(Grammar g) {
-		super(optimize(g));
+		super(g);
 		mySmallerSet = Collections.unmodifiableSet(smallerSymbols(g));
 		maxLHSsize = g.getProductionSet().getMaxLHSLength();
 		
@@ -102,17 +110,19 @@ public class UnrestrictedBruteParser extends Parser {
 
 	private void initializeQueue() {
 		myDerivationsQueue = new LinkedList<Derivation>();
-
-		SymbolString start = new SymbolString(getGrammar().getStartVariable());
-		Derivation d = new Derivation(new Production(new SymbolString(), start));
+		Grammar g = getGrammar();
+		Variable start = g.getStartVariable();
 		
-		myDerivationsQueue.add(d);
-		myNodesGenerated++;
+		for(Production p : g.getStartProductions()){
+				Derivation d = new Derivation(p);
+				myDerivationsQueue.add(d);
+				myNodesGenerated++;
+			
+		}
 	}
 
 	private boolean makeNextReplacement() {
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
-		
 		Grammar grammar = getGrammar();
 		ProductionSet productions = grammar.getProductionSet();
 
@@ -136,6 +146,7 @@ public class UnrestrictedBruteParser extends Parser {
 						if (isPossibleDerivation(tempResult)) {
 							temp.add(tempDerivation);
 							myNodesGenerated++;
+				
 							if (tempResult.equals(getInput())) {
 								break loop;
 							}
