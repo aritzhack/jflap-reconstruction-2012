@@ -161,7 +161,13 @@ public class JFLAPEnvironment extends JFrame{
 			amDirty = true;
 		distributeTabChangedEvent();
 		myTabbedPane.revalidate();
-		this.repaint();
+		update();
+	}
+	
+	public void addSelectedComponent(Component component){		
+		addView(component);
+		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount()-1);
+		
 	}
 	
 	private void distributeTabChangedEvent() {
@@ -169,7 +175,6 @@ public class JFLAPEnvironment extends JFrame{
 			l.tabChanged(new TabChangedEvent(myTabbedPane.getSelectedComponent(), 
 												myTabbedPane.getTabCount()));
 		}
-		
 	}
 
 	public void closeActiveTab() {
@@ -211,7 +216,7 @@ public class JFLAPEnvironment extends JFrame{
 		
 		@Override
 		public void setSelectedComponent(Component c) {
-			this.setSelectedIndex(this.indexOfTabComponent(c));
+			setSelectedIndex(indexOfTabComponent(c));
 			
 		}
 		
