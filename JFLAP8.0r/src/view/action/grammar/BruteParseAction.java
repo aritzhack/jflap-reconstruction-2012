@@ -1,4 +1,4 @@
-package view.grammar.parsing;
+package view.action.grammar;
 
 import java.awt.event.ActionEvent;
 
@@ -13,6 +13,8 @@ import model.grammar.parsing.ParserException;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
+import view.grammar.ProductionTable;
+import view.grammar.parsing.BruteParsePane;
 
 public class BruteParseAction extends AbstractAction {
 
@@ -29,7 +31,7 @@ public class BruteParseAction extends AbstractAction {
 		if (g == null)
 			return;
 		if(g.getStartVariable()==null) throw new ParserException("The Start Variable must be set before you can continue");
-		BruteParsePane bpp = new BruteParsePane(myView);
+		BruteParsePane bpp = new BruteParsePane(g, (ProductionTable) myView.getCentralPanel());
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
 		environ.addSelectedComponent(bpp);
 	}

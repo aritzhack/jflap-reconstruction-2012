@@ -5,9 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -15,19 +13,15 @@ import javax.swing.JToolBar;
 import javax.swing.Timer;
 
 import model.grammar.Grammar;
-import model.grammar.Production;
-import model.grammar.Variable;
 import model.grammar.parsing.Derivation;
-import model.grammar.parsing.ParseNode;
 import model.grammar.parsing.brute.UnrestrictedBruteParser;
-import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import oldnewstuff.view.tree.InputTableModel;
 import oldnewstuff.view.tree.SelectNodeDrawer;
+import oldnewstuff.view.tree.TreePanel;
 import oldnewstuff.view.tree.UnrestrictedTreePanel;
-import view.grammar.GrammarView;
-import debug.JFLAPDebug;
+import view.grammar.ProductionTable;
 
 /**
  * This is a brute force parse pane.
@@ -50,24 +44,10 @@ public class BruteParsePane extends ParsePane {
 
 	protected InputTableModel myModel = null;
 
-	public BruteParsePane(GrammarView view) {
-		super(view);
+	public BruteParsePane(Grammar grammar, ProductionTable table) {
+		super(grammar, table);
 		this.setName("Brute Parser");
 		initView();
-	}
-
-	/**
-	 * Instantiates a new brute force parse pane.
-	 * 
-	 * @param environment
-	 *            the grammar environment
-	 * @param grammar
-	 *            the augmented grammar
-	 */
-	public BruteParsePane(GrammarView view, InputTableModel model) {
-		super(view);
-		initView();
-		myModel = model;
 	}
 
 	/**
@@ -162,7 +142,7 @@ public class BruteParsePane extends ParsePane {
 			timer.stop();
 			// parser = null;
 
-			if (!parser.isAccept()) {
+			if (parser.isReject()) {
 				progress.setText("String rejected. Try another String.");
 				// Rejected!
 				treePanel.setAnswer(null);
@@ -173,10 +153,9 @@ public class BruteParsePane extends ParsePane {
 			status = "String accepted!";
 			Derivation derivation = parser.getDerivation();
 			
-			
 			getStatusDisplay().setText("Press step to show derivations.");
 //			this needs to be done. JULIAN????
-//			treePanel.setAnswer(derivation);
+//			treePanel.setAnswer(answer);
 			treePanel.repaint();
 		}
 
@@ -225,7 +204,7 @@ public class BruteParsePane extends ParsePane {
 	 * 
 	 * @return a new display for the parse tree
 	 */
-	protected JComponent initTreePanel() {
+	protected TreePanel initTreePanel() {
 		return treePanel;
 	}
 

@@ -40,6 +40,7 @@ public class UnrestrictedBruteParser extends Parser {
 	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
 	protected Set<Symbol> mySmallerSet;
+	private boolean pause;
 	
 	public static UnrestrictedBruteParser createNewBruteParser(Grammar g){
 		if(new ContextFreeChecker().matchesGrammar(g)){
@@ -119,6 +120,10 @@ public class UnrestrictedBruteParser extends Parser {
 				myNodesGenerated++;
 			
 		}
+	}
+	
+	private void pause(){
+		this.pause = true;
 	}
 
 	private boolean makeNextReplacement() {

@@ -26,8 +26,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import debug.JFLAPDebug;
-
 import model.grammar.Grammar;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
@@ -38,7 +36,6 @@ import oldnewstuff.view.tree.TreePanel;
 import universe.JFLAPUniverse;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
-import view.grammar.GrammarView;
 import view.grammar.ProductionTable;
 import view.grammar.TableTextSizeSlider;
 
@@ -46,7 +43,7 @@ import view.grammar.TableTextSizeSlider;
  * The parse pane is an abstract class that defines the interface common between
  * parsing panes.
  * 
- * @author Thomas Finley
+ * @author Thomas Finley, Ian McMahon
  */
 
 public abstract class ParsePane extends EditingPanel {
@@ -54,25 +51,24 @@ public abstract class ParsePane extends EditingPanel {
 	private JLabel statusDisplay;
 	private JTextField inputField;
 	private DefaultTreeDrawer treeDrawer;
-	private JComponent treePanel;
+	private TreePanel treePanel;
 	private CardLayout treeDerivationLayout;
 	private JPanel treeDerivationPane;
-	private JScrollPane derivationPane;
 	private DefaultTableModel derivationModel;
 	private ProductionTable myProductionTable;
 
 	/**
 	 * Instantiates a new parse pane. This will not place components. A call to
 	 * {@link #initView} by a subclass is necessary.
-	 * 
+	 * @param table TODO
 	 * @param grammar
 	 *            the grammar that is being parsed
 	 */
-	public ParsePane(GrammarView view) {
+	public ParsePane(Grammar grammar, ProductionTable table) {
 		super(new UndoKeeper(), false);
 		setLayout(new BorderLayout());
-		myGrammar = view.getDefintion();
-		myProductionTable = (ProductionTable) view.getCentralPanel();
+		myGrammar = grammar;
+		myProductionTable = table;
 	}
 	
 	/**
@@ -88,7 +84,7 @@ public abstract class ParsePane extends EditingPanel {
 		JScrollPane grammarTable = initProductionTable();
 
 		treeDerivationPane.add(initTreePanel(), "0");
-		derivationPane = new JScrollPane(initDerivationTable());
+		JScrollPane derivationPane = new JScrollPane(initDerivationTable());
 		treeDerivationPane.add(derivationPane, "1");
 		JSplitPane bottomSplit = createSplit(true, 0.3, grammarTable,
 				treeDerivationPane);
@@ -110,6 +106,7 @@ public abstract class ParsePane extends EditingPanel {
 				return false;
 			}};
 	}
+	
 
 	private void initTreeDerivationVariables() {
 		treeDrawer = new DefaultTreeDrawer(new DefaultTreeModel(
@@ -137,13 +134,14 @@ public abstract class ParsePane extends EditingPanel {
 	 */
 	protected JScrollPane initProductionTable() {
 
-		ProductionTable g = myProductionTable;
+		ProductionTable table = myProductionTable;
 		
-		TableTextSizeSlider slider = new TableTextSizeSlider(g);
-		slider.addListener(g);
+		TableTextSizeSlider slider = new TableTextSizeSlider(table);
+		slider.addListener(table);
+		//TODO: add other listeners to this magnifier
 		slider.distributeMagnification();
 		add(slider, BorderLayout.NORTH);
-		JScrollPane scroll = new JScrollPane(g);
+		JScrollPane scroll = new JScrollPane(table);
 		return scroll;
 	}
 
@@ -249,6 +247,18 @@ public abstract class ParsePane extends EditingPanel {
 			treeDerivationLayout.last(treeDerivationPane);
 		}
 	}
+	
+	public AbstractAction stepAction = new AbstractAction("Step") {
+		public void actionPerformed(ActionEvent e) {
+			step();
+		}
+	};
+	public AbstractAction startAction = new AbstractAction("Start") {
+		public void actionPerformed(ActionEvent e) {
+			SymbolString newInput = Symbolizers.symbolize(inputField.getText(), myGrammar);
+			input(newInput);
+		}
+	};
 
 	/**
 	 * Inits a parse table.
@@ -262,7 +272,7 @@ public abstract class ParsePane extends EditingPanel {
 	 * 
 	 * @return a new display for a parse tree
 	 */
-	protected JComponent initTreePanel() {
+	protected TreePanel initTreePanel() {
 		treeDrawer.hideAll();
 		treeDrawer.setNodePlacer(new LeafNodePlacer());
 		return treePanel;
@@ -312,21 +322,6 @@ public abstract class ParsePane extends EditingPanel {
 	public void printChildren(Graphics g) {
 
 	}
-
-	/** The action for the stepping control. */
-	public AbstractAction stepAction = new AbstractAction("Step") {
-		public void actionPerformed(ActionEvent e) {
-			step();
-		}
-	};
-
-	/** The action for the start control. */
-	AbstractAction startAction = new AbstractAction("Start") {
-		public void actionPerformed(ActionEvent e) {
-			SymbolString newInput = Symbolizers.symbolize(inputField.getText(), myGrammar);
-			input(newInput);
-		}
-	};
 
 	public JSplitPane createSplit(boolean horizontal, double ratio, Component left, Component right) {
 		JFLAPEnvironment environment = JFLAPUniverse.getActiveEnvironment();
