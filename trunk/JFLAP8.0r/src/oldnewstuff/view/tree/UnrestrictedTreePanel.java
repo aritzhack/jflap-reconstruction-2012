@@ -35,6 +35,8 @@ import java.util.Map;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import debug.JFLAPDebug;
+
 import model.grammar.Production;
 import model.grammar.parsing.ParseNode;
 import universe.preferences.JFLAPPreferences;
@@ -99,7 +101,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 	private void bridgeTo(int level) {
 		UnrestrictedTreeNode[] prev = levelNodes(level - 1);
 		Production[] prods = solutionParseNodes[level].getProductions();
-		Integer[] prodStarts = solutionParseNodes[level].getSubstitutions();
+		int[] prodStarts = solutionParseNodes[level].getSubstitutions();
 		int length = 0, prodNum = 0;
 		List bottomList = new LinkedList();
 		List topList = new LinkedList();
@@ -258,7 +260,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 			top = null;
 			return;
 		}
-
+		JFLAPDebug.print(answer.getLevel());
 		metaWidth = -1.0;
 		solutionParseNodes = new ParseNode[answer.getLevel() + 1];
 		for (; answer != null; answer = (ParseNode) answer.getParent())
@@ -498,7 +500,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 	private String getDerivation(int level, int num) {
 		StringBuffer b = new StringBuffer(solutionParseNodes[level - 1]
 				.getDerivation().toString());
-		Integer[] subs = solutionParseNodes[level].getSubstitutions();
+		int[] subs = solutionParseNodes[level].getSubstitutions();
 		Production[] ps = solutionParseNodes[level].getProductions();
 		do {
 			b.delete(subs[num], subs[num] + ps[num].getLHS().length);

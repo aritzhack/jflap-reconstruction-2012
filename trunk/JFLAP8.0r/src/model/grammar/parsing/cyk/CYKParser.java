@@ -15,6 +15,8 @@ package model.grammar.parsing.cyk;
 
 import java.util.*;
 
+import debug.JFLAPDebug;
+
 import model.grammar.*;
 import model.grammar.parsing.*;
 import model.grammar.typetest.GrammarType;
@@ -274,14 +276,7 @@ public class CYKParser extends Parser {
 	}
 	
 	public Set<Symbol> getNodeAtIndex(int row, int col){
-		int previousRow = myStartIndex-1;
-		int previousCol = previousRow + myIncrement;
-		
-		if(myStartIndex-1==-1){
-			previousRow = getInput().size()-myIncrement;
-			previousCol = previousRow+myIncrement-1;
-		}
-		if(myParseTable[row][col]!= null && row==previousRow && col==previousCol){
+		if(myParseTable[row][col] != null){
 			Set<Symbol> set = new TreeSet<Symbol>();
 			
 			for(CYKParseNode node : myParseTable[row][col]){
