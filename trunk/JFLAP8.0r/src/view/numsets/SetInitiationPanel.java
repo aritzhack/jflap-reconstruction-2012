@@ -1,11 +1,20 @@
 package view.numsets;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import model.numbersets.control.*;
+import universe.JFLAPUniverse;
+import view.numsets.create.UserDefinedSetEditor;
+
+import model.numbersets.control.SetsManager;
+import model.numbersets.defined.PredefinedSet;
 
 /**
  * Panel holds drop-down menu of predefined set option
@@ -21,21 +30,52 @@ public class SetInitiationPanel extends JPanel {
 	private static Object[] OPTIONS;
 	
 	static {
-		Class[] classes = Loader.getLoadedClasses();
-		OPTIONS = new String[classes.length];
-		for (int i = 0; i < classes.length; i++){
-			OPTIONS[i] = classes[i].getSimpleName();
+		Class[] classes = SetsManager.PREDEFINED_SETS_CLASSES;
+		Set<String> uniqueNames = new HashSet<String>();
+		for (Class c : classes) {
+			try {
+				uniqueNames.add((PredefinedSet.class).cast(c.newInstance()).getName());
+			} catch (InstantiationException e) {
+				
+			} catch (IllegalAccessException e) {
+				
+			}
+		}
+		
+		OPTIONS = new String[uniqueNames.size()];
+		Iterator<String> iter = uniqueNames.iterator();
+		int index = 0;
+		while (iter.hasNext()) {
+			OPTIONS[index] = iter.next();
+			index++;
 		}
 		
 	};
 
 	public SetInitiationPanel () {
 	
-		this.setLayout(new BorderLayout());
-		this.add(new PredefinedSetDropdown(OPTIONS), BorderLayout.NORTH);
+		setLayout(new BorderLayout());
+		add(new PredefinedSetDropdown(OPTIONS), BorderLayout.NORTH);
 		
-		this.add(new JButton("Build new set"), BorderLayout.SOUTH);
+		JButton newSetButton = new JButton("Build new");
+		newSetButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				JFLAPUniverse.registerEnvironment(new UserDefinedSetEditor());
+			}
+			
+			
+		});
+		add(newSetButton, BorderLayout.SOUTH);
+		
 		
 		
 	}
+	
+	/**
+	 * Confirms addition of the selected set and adds it to the active sets list
+	 */
+	private JButton myAddButton;
 }

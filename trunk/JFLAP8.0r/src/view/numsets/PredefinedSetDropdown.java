@@ -2,12 +2,16 @@ package view.numsets;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.JComboBox;
 
+import model.numbersets.control.Loader;
+import model.numbersets.control.SetsManager;
 import model.numbersets.controller.PredefinedSetController;
+import model.numbersets.defined.PredefinedSet;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "rawtypes" })
 public class PredefinedSetDropdown extends JComboBox {
 	
 	public PredefinedSetDropdown (Object[] options) {
@@ -20,8 +24,16 @@ public class PredefinedSetDropdown extends JComboBox {
 			public void actionPerformed(ActionEvent arg0) {
 				PredefinedSetDropdown source = (PredefinedSetDropdown) arg0.getSource();
 				
-				PredefinedSetController controller = new PredefinedSetController(null);
-				System.out.println(source.getSelected());
+				String selection = source.getSelected();
+				try {
+					PredefinedSet set = (PredefinedSet) predefinedNameMap.get(selection).newInstance();
+					PredefinedSetController controller = new PredefinedSetController(set);
+					SetsManager.ACTIVE_REGISTRY.add(set);
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}					
 			}
 		});
 	}
@@ -29,6 +41,24 @@ public class PredefinedSetDropdown extends JComboBox {
 	
 	public String getSelected () {
 		return (String) this.getSelectedItem();
+	}
+	
+	
+	private static HashMap<String, Class> predefinedNameMap;
+	
+	static {
+		predefinedNameMap = new HashMap<String, Class>();
+		Class[] classes = Loader.getLoadedClasses();
+		for (Class c : classes) {
+			try {
+				String str = (PredefinedSet.class).cast(c.newInstance()).getName();
+				predefinedNameMap.put(str, c);
+			} catch (InstantiationException e) {
+//				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+//				e.printStackTrace();
+			}
+		}
 	}
 	
 	

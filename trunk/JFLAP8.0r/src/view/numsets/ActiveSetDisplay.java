@@ -23,7 +23,9 @@ import model.numbersets.controller.SetEnvironment;
 public class ActiveSetDisplay extends JPanel {
 
 	private JLabel myTitle;
-	private JList myActiveSets;
+	private static JList myActiveSets;
+	
+	private String[] mySelectedSets;
 
 	public ActiveSetDisplay() {
 
@@ -47,7 +49,7 @@ public class ActiveSetDisplay extends JPanel {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				
+				mySelectedSets = getSelected();
 			}
 
 		});
@@ -62,7 +64,6 @@ public class ActiveSetDisplay extends JPanel {
 	
 
 	public String[] getSelected() {
-		
 		return (String[]) myActiveSets.getSelectedValues();
 	}
 	
