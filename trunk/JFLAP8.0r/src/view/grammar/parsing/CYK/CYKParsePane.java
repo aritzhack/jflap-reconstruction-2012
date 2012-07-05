@@ -51,6 +51,10 @@ public class CYKParsePane extends EditingPanel {
 		super(new UndoKeeper(), false);
 		myGrammar = grammar;
 		myProductionTable = table;
+		
+		//Modification of ProductionTable should only be done in GrammarView
+		//TODO: this should probably copy the table to an unmodifiable one instead
+		table.setEnabled(false);
 
 		setLayout(new BorderLayout());
 		setName("CYK Parser");
