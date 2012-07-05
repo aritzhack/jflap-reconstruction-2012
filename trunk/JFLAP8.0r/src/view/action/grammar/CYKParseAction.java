@@ -15,7 +15,7 @@ import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.ProductionTable;
-import view.grammar.parsing.CYKParsePane;
+import view.grammar.parsing.CYK.CYKParsePane;
 
 public class CYKParseAction extends AbstractAction{
 
@@ -33,8 +33,8 @@ public class CYKParseAction extends AbstractAction{
 			return;
 		if(g.getStartVariable()==null) throw new ParserException("The Start Variable must be set before you can continue");
 		if(!new CNFChecker().matchesGrammar(g)) throw new ParserException("The grammar must be in CNF form to be parsed!");
-		String input = JOptionPane.showInputDialog(myView, "Enter string to parse");
-		CYKParsePane cpp = new CYKParsePane(g, (ProductionTable) myView.getCentralPanel(), Symbolizers.symbolize(input, g));
+		
+		CYKParsePane cpp = new CYKParsePane(g, (ProductionTable) myView.getCentralPanel());
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
 		environ.addSelectedComponent(cpp);
 	}

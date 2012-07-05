@@ -1,4 +1,4 @@
-package view.grammar.parsing;
+package view.grammar.parsing.CYK;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,27 +22,29 @@ import view.grammar.EmptySetCellEditor;
 import view.grammar.HighlightTable;
 import view.grammar.Magnifiable;
 
+public class CYKParseTable extends HighlightTable implements Magnifiable {
+	private final TableCellRenderer RENDERER = new EmptySetCellRenderer();
 
-public class CYKParseTable extends HighlightTable implements Magnifiable{
-	
-	private SymbolString myInput;
-	private CYKParseModel model;
+	public CYKParseTable(Grammar gram) {
+		super(new CYKParseModel(new CYKParser(gram)));
+	}
 
-	public CYKParseTable(SymbolString input, Grammar gram){
-		super(new CYKParseModel(input, new CYKParser(gram)));
-		myInput = input;
-		model = (CYKParseModel) getModel();
+	public void setInput(SymbolString input) {
+		CYKParseModel model = (CYKParseModel) getModel();
 		
-		for(int i=0; i<myInput.size();i++){
+		setModel(new CYKParseModel(model.getParser(), input));
+		model = (CYKParseModel) getModel();
+		model.setEditableCutoff(0);
+
+		for (int i = 0; i < input.size(); i++) {
 			TableColumn col = getColumnModel().getColumn(i);
-			
+
 			col.setCellRenderer(RENDERER);
 			col.setCellEditor(new EmptySetCellEditor());
 			col.setHeaderValue(model.getColumnNames()[i]);
 		}
 		setCellSelectionEnabled(true);
 	}
-
 
 	/** The built in highlight renderer generator. */
 	private static final HighlightTable.TableHighlighterRendererGenerator THRG = new TableHighlighterRendererGenerator() {
@@ -62,10 +64,6 @@ public class CYKParseTable extends HighlightTable implements Magnifiable{
 		highlight(row, column, THRG);
 	}
 
-	/** The sets cell renderer. */
-	private final TableCellRenderer RENDERER = new EmptySetCellRenderer();
-
-	
 	/**
 	 * The modified table cell renderer.
 	 */
@@ -75,9 +73,9 @@ public class CYKParseTable extends HighlightTable implements Magnifiable{
 				int column) {
 			JLabel l = (JLabel) super.getTableCellRendererComponent(table,
 					value, isSelected, hasFocus, row, column);
-			if(value==null)
+			if (value == null)
 				return l;
-			if (hasFocus && table.isCellEditable(row, column)){
+			if (hasFocus && table.isCellEditable(row, column)) {
 				l.setText(l.getText().replaceAll("\\[", ""));
 				l.setText(l.getText().replaceAll("\\]", ""));
 				return l;
@@ -87,14 +85,13 @@ public class CYKParseTable extends HighlightTable implements Magnifiable{
 			l.setText(JFLAPConstants.EMPTY_SET_SYMBOL.getString());
 			return l;
 		}
-		
-		
+
 	}
-	
+
 	@Override
 	public void setMagnification(double mag) {
-		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
-        this.setFont(this.getFont().deriveFont(size));
-        this.setRowHeight((int) (size+10));
+		float size = (float) (mag * JFLAPPreferences.getDefaultTextSize());
+		this.setFont(this.getFont().deriveFont(size));
+		this.setRowHeight((int) (size + 10));
 	}
 }
