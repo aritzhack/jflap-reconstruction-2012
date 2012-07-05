@@ -1,4 +1,4 @@
-package view.grammar.parsing;
+package view.grammar.parsing.CYK;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +18,19 @@ public class CYKParseModel extends AbstractTableModel{
 	private CYKParser myParser;
 	private int editableCutoff;
 	
-	public CYKParseModel(SymbolString input, CYKParser parser){
+	public CYKParseModel(CYKParser parser){
+		myTarget = new Symbol[0];
+		myTable = new Set[0][0];
+		myParser = parser;
+	}
+	
+	public CYKParseModel(CYKParser parser, SymbolString input){
+		myParser = parser;
+		initTargetAndTable(input);
+		myParser.quickParse(input);
+	}
+	
+	private void initTargetAndTable(SymbolString input){
 		myTarget = input.toArray(new Symbol[0]);
 		int length = myTarget.length;
 		myTable = new Set[length][length];
@@ -27,8 +39,6 @@ public class CYKParseModel extends AbstractTableModel{
 				myTable[i][j] = null;
 			}
 		}
-		myParser = parser;
-		myParser.quickParse(input);
 	}
 
 	public CYKParser getParser(){
@@ -59,7 +69,7 @@ public class CYKParseModel extends AbstractTableModel{
 		myTable[row][col] = (Set<Symbol>) value;
 	}
 	
-	public void setValueAt(String value, int row, int col){
+	private void setValueAt(String value, int row, int col){
 		String val = (String) value;
 		SymbolString toSS = Symbolizers.symbolize(val, myParser.getGrammar());
 		myTable[row][col] = new HashSet<Symbol>(toSS);
@@ -80,7 +90,7 @@ public class CYKParseModel extends AbstractTableModel{
 	}
 
 	public boolean isCellEditable(int row, int column) {
-		return column-row == editableCutoff;
+		return column - row == editableCutoff;
 	}
 	
 	public void setEditableCutoff(int cutoff){
