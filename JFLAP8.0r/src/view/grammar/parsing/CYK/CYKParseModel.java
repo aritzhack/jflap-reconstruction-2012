@@ -20,7 +20,7 @@ public class CYKParseModel extends AbstractTableModel{
 	private Symbol[] myTarget;
 	private Set<Symbol>[][] myTable;
 	private CYKParser myParser;
-	private int editableDiagonal;
+	private int editableRow;
 	
 	public CYKParseModel(CYKParser parser){
 		myTarget = new Symbol[0];
@@ -115,21 +115,17 @@ public class CYKParseModel extends AbstractTableModel{
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		return column - row == editableDiagonal;
+		return row == editableRow;
 	}
 	
 	/**
 	 * Based on what "step" in the parsing it is, activates only the
 	 * corresponding table cells to be edited.
 	 */
-	public void setEditableDiagonal(int diagonal){
-		this.editableDiagonal = diagonal;
-		for(int i=0; i<myTable.length;i++){
-			for(int j=0; j<myTable.length;j++){
-				if(j-i == diagonal){
-					setValueAt(new HashSet<Symbol>(), i, j);
-				}
-			}
+	public void setEditableRow(int row){
+		this.editableRow = row;
+		for(int i=row; i<myTable.length;i++){
+			setValueAt(new HashSet<Symbol>(), row, i);
 		}
 	}
 }

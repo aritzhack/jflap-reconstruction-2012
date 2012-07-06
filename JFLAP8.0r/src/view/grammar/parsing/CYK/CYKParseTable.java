@@ -46,7 +46,7 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 
 		setModel(new CYKParseModel(model.getParser(), input));
 		model = (CYKParseModel) getModel();
-		model.setEditableDiagonal(0);
+		model.setEditableRow(0);
 
 		for (int i = 0; i < input.size(); i++) {
 			TableColumn col = getColumnModel().getColumn(i);

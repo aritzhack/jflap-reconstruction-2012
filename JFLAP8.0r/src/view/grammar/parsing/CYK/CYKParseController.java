@@ -14,11 +14,11 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 
 /**
- * Controller for CYK Parsing GUI. Connects what the user interacts with/sees with the
- * actual model code for proper visualization.
+ * Controller for CYK Parsing GUI. Connects what the user interacts with/sees
+ * with the actual model code for proper visualization.
  * 
  * @author Ian McMahon
- *
+ * 
  */
 public class CYKParseController {
 
@@ -48,7 +48,7 @@ public class CYKParseController {
 		for (int i = 0; i <= col; i++) {
 			if (table.isCellSelected(i, col) && table.isCellEditable(i, col)) {
 
-				Set<Symbol> parserSet = parser.getNodeAtIndex(i, col);
+				Set<Symbol> parserSet = parser.getNodeAtIndex(col - i, col);
 				table.setValueAt(parserSet, i, col);
 				stopEditing();
 			}
@@ -62,9 +62,9 @@ public class CYKParseController {
 	 * is on the last step, in which case a small error message is displayed.
 	 */
 	public void completeStep() {
-		for (int row = 0; row + currentLength < maxLength; row++) {
-			int col = row + currentLength;
-			Set<Symbol> parserSet = parser.getNodeAtIndex(row, col);
+		int row = currentLength;
+		for (int col = row; col < maxLength; col++) {
+			Set<Symbol> parserSet = parser.getNodeAtIndex(col - row, col);
 			table.setValueAt(parserSet, row, col);
 		}
 		stopEditing();
@@ -85,36 +85,35 @@ public class CYKParseController {
 
 		if (currentLength >= maxLength) {
 			setActionsFinished();
-			
+
 		} else {
-			((CYKParseModel) table.getModel()).setEditableDiagonal(currentLength);
-			directions.setText("Complete the next diagonal of the table.");
+			((CYKParseModel) table.getModel()).setEditableRow(currentLength);
+			directions.setText("Complete the next row of the table.");
 		}
 		table.repaint();
 		return true;
 	}
 
 	/**
-	 * Disables all actions besides start, and if parser accepted 
-	 * the input, enables the derivationAction. Called when parser
-	 * has finished the final step.
+	 * Disables all actions besides start, and if parser accepted the input,
+	 * enables the derivationAction. Called when parser has finished the final
+	 * step.
 	 */
 	private void setActionsFinished() {
 		stepAction.setEnabled(false);
 		selectedAction.setEnabled(false);
 		allAction.setEnabled(false);
 		nextAction.setEnabled(false);
-		
-		if(parser.isAccept()){
+
+		if (parser.isAccept()) {
 			derivationAction.setEnabled(true);
 			directions
-				.setText("Table is complete, press 'See Derivation' to continue");
+					.setText("Table is complete, input was accepted. Press 'See Derivation' to continue");
 			return;
 		}
 		directions.setText("Input was rejected, try another string");
 	}
 
-	
 	/**
 	 * Returns true if current step is completely done and correct and is not
 	 * past the final step (throws an error in this case). It will highlight any
@@ -128,9 +127,9 @@ public class CYKParseController {
 			return false;
 		}
 		int highlighted = 0;
-		for (int row = 0; row + currentLength < maxLength; row++) {
-			int col = row + currentLength;
-			Set<Symbol> parserSet = parser.getNodeAtIndex(row, col);
+		int row = currentLength;
+		for (int col = row; col < maxLength; col++) {
+			Set<Symbol> parserSet = parser.getNodeAtIndex(col - row, col);
 			if (!parserSet.equals(table.getValueAt(row, col))) {
 				table.highlight(row, col);
 				highlighted++;
@@ -139,7 +138,7 @@ public class CYKParseController {
 		if (highlighted == 0)
 			return true;
 		table.clearSelection();
-		
+
 		JOptionPane.showMessageDialog(pane, "Highlighted sets are incorrect.",
 				"Bad Sets", JOptionPane.ERROR_MESSAGE);
 		table.dehighlight();
@@ -221,23 +220,25 @@ public class CYKParseController {
 		}
 
 	};
-	
+
 	/**
-	 * Creates input from JTextField, switches to parsing view, and resets 
-	 * all aspects needed to display correctly.
+	 * Creates input from JTextField, switches to parsing view, and resets all
+	 * aspects needed to display correctly.
 	 */
-	private void start(){
+	private void start() {
 		String s = pane.getInputText();
 		Grammar g = pane.getGrammar();
 
 		SymbolString input = Symbolizers.symbolize(s, g);
-		
+
 		pane.switchToParseView();
 		table.setInput(input);
 
 		maxLength = input.size();
 		currentLength = 0;
-		directions.setText("Fill in the first diagonal of the table");
+		directions
+				.setText("Fill in the first row with all variables that "+
+						"can derive that column's terminal.");
 
 		setActionsStarted();
 	}
@@ -253,9 +254,9 @@ public class CYKParseController {
 		derivationAction.setEnabled(false);
 
 	}
-	
+
 	/**
-	 * Simple helper try/catch to stop cell editing 
+	 * Simple helper try/catch to stop cell editing
 	 */
 	private void stopEditing() {
 		try {
