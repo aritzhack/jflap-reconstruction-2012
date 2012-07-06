@@ -68,7 +68,9 @@ public abstract class ParsePane extends EditingPanel {
 		super(new UndoKeeper(), false);
 		setLayout(new BorderLayout());
 		myGrammar = grammar;
-		myProductionTable = table;
+		
+		myProductionTable = new ProductionTable(myGrammar, getKeeper(), false);
+		myProductionTable.setModel(table.getModel());
 	}
 	
 	/**
