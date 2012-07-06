@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -40,7 +41,7 @@ import debug.JFLAPDebug;
  * Main pane for CYK Parsing
  * 
  * @author Ian McMahon
- *
+ * 
  */
 public class CYKParsePane extends EditingPanel {
 
@@ -52,14 +53,17 @@ public class CYKParsePane extends EditingPanel {
 	private CYKParseController myController;
 	private JTextField inputField;
 	private JPanel contentPane;
+	private Container treeDerivationPane;
+	private CYKParseTable parseTable;
+	private TableTextSizeSlider slider;
 
 	public CYKParsePane(Grammar grammar, ProductionTable table) {
 		super(new UndoKeeper(), false);
 		myGrammar = grammar;
-		
+
 		myProductionTable = new ProductionTable(myGrammar, getKeeper(), false);
 		myProductionTable.setModel(table.getModel());
-		
+
 		setLayout(new BorderLayout());
 		setName("CYK Parser");
 
@@ -73,12 +77,11 @@ public class CYKParsePane extends EditingPanel {
 		JLabel statusDisplay = new JLabel(
 				"Input a string and press Start to begin");
 
-		JPanel treeDerivationPane = initTreeDerivationPane();
+		initTreeDerivationPane();
 
-		CYKParseTable parseTable = new CYKParseTable(myGrammar);
+		parseTable = new CYKParseTable(myGrammar);
 
-		TableTextSizeSlider slider = new TableTextSizeSlider(myProductionTable,
-				parseTable);
+		slider = new TableTextSizeSlider(myProductionTable, parseTable);
 		slider.distributeMagnification();
 
 		myController = new CYKParseController(parseTable, this, statusDisplay);
@@ -88,7 +91,6 @@ public class CYKParsePane extends EditingPanel {
 
 		contentPane = new JPanel(new CardLayout());
 		contentPane.add(parsePane, "0");
-		contentPane.add(treeDerivationPane, "1");
 
 		JPanel bottomPane = new JPanel(new BorderLayout());
 		bottomPane.add(contentPane, BorderLayout.CENTER);
@@ -109,7 +111,7 @@ public class CYKParsePane extends EditingPanel {
 	/**
 	 * Initializes pane that contains the Tree/Derivation view
 	 */
-	private JPanel initTreeDerivationPane() {
+	private void initTreeDerivationPane() {
 		TDCardPane = new JPanel(new CardLayout());
 
 		treePanel = initTreePanel();
@@ -120,11 +122,9 @@ public class CYKParsePane extends EditingPanel {
 
 		JToolBar treeControls = initTreeControls();
 
-		JPanel treeDerivationPane = new JPanel(new BorderLayout());
+		treeDerivationPane = new JPanel(new BorderLayout());
 		treeDerivationPane.add(treeControls, BorderLayout.NORTH);
 		treeDerivationPane.add(TDCardPane, BorderLayout.CENTER);
-
-		return treeDerivationPane;
 	}
 
 	/**
@@ -146,8 +146,8 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * Initializes table within a JScrollPane that will be used to 
-	 * display the derivation.
+	 * Initializes table within a JScrollPane that will be used to display the
+	 * derivation.
 	 */
 	private JScrollPane initDerivationPane() {
 		DefaultTableModel derivationModel = new DefaultTableModel(new String[] {
@@ -164,9 +164,9 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * Initializes a toolbar with a JComboBox (used to select tree vs 
-	 * inverted tree vs derivation view) and a button used to step
-	 * through the derivation.
+	 * Initializes a toolbar with a JComboBox (used to select tree vs inverted
+	 * tree vs derivation view) and a button used to step through the
+	 * derivation.
 	 */
 	private JToolBar initTreeControls() {
 		JToolBar toolbar = new JToolBar();
@@ -201,8 +201,8 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * Initializes a JPanel with a JTextField used for user input (responds to the 
-	 * enter key)
+	 * Initializes a JPanel with a JTextField used for user input (responds to
+	 * the enter key)
 	 */
 	private JPanel initInputPanel() {
 		inputField = new JTextField();
@@ -259,30 +259,32 @@ public class CYKParsePane extends EditingPanel {
 	 */
 	private void changeView(String name) {
 		CardLayout treeDerivationLayout = (CardLayout) TDCardPane.getLayout();
-		
+
 		if (name.equals("Derivation Table")) {
 			treeDerivationLayout.last(TDCardPane);
 			return;
 		}
-		if (name.equals("Noninverted Tree")) 
+		if (name.equals("Noninverted Tree"))
 			treeDrawer.setInverted(false);
-		else treeDrawer.setInverted(true);
-		
-		treeDerivationLayout.first(TDCardPane);	
+		else
+			treeDrawer.setInverted(true);
+
+		treeDerivationLayout.first(TDCardPane);
 		treePanel.repaint();
 	}
 
 	/**
-	 * Creates a JSplitPane defined by the parameters passed in and the 
-	 * active JFLAPEnvironment
+	 * Creates a JSplitPane defined by the parameters passed in and the active
+	 * JFLAPEnvironment
+	 * 
 	 * @param horizontal
-	 * 		true if split is to be horizontal, vertical otherwise.
+	 *            true if split is to be horizontal, vertical otherwise.
 	 * @param ratio
-	 * 		the ratio for splitting the pane.
+	 *            the ratio for splitting the pane.
 	 * @param left
-	 * 		the left or top Component
+	 *            the left or top Component
 	 * @param right
-	 * 		the right or bottom Component
+	 *            the right or bottom Component
 	 */
 	public JSplitPane createSplit(boolean horizontal, double ratio,
 			Component left, Component right) {
@@ -304,8 +306,17 @@ public class CYKParsePane extends EditingPanel {
 	 * Switches contentPane to tree/derivation view.
 	 */
 	public void switchToDerivationView() {
+		// Copies the parseTable
+		CYKParseTable table = new CYKParseTable(myGrammar);
+		table.setModel(parseTable.getModel());
+		slider.addListener(table);
+		slider.distributeMagnification();
+
+		JSplitPane derivationSplit = createSplit(true, 0.425, table,
+				treeDerivationPane);
+		contentPane.add(derivationSplit, "1");
 		CardLayout card = (CardLayout) contentPane.getLayout();
-		card.last(contentPane);
+		card.show(contentPane, "1");
 	}
 
 	/**
@@ -331,8 +342,8 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * This method steps the tree/derivation to the next level (unless it is already at the final
-	 * step).
+	 * This method steps the tree/derivation to the next level (unless it is
+	 * already at the final step).
 	 */
 	public void stepTreeDerivation() {
 		// TODO: Wait for tree drawing to done

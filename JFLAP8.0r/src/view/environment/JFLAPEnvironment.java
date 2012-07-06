@@ -118,6 +118,7 @@ public class JFLAPEnvironment extends JFrame{
 			myFile = chooser.getSelectedFile();
 		}
 		XMLCodec codec = new XMLCodec();
+		//TODO: why is it encoding the environment?
 		codec.encode(this, myFile, null);
 		amDirty = false;
 		for(EditingPanel ep: getEditingPanels()){
@@ -188,6 +189,7 @@ public class JFLAPEnvironment extends JFrame{
 			amDirty = true;
 		distributeTabChangedEvent();
 		myTabbedPane.revalidate();
+		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount()-1);
 		this.repaint();
 	}
 
