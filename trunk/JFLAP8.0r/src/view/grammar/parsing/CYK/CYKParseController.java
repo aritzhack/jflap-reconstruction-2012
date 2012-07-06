@@ -115,7 +115,7 @@ public class CYKParseController {
 	}
 
 	/**
-	 * Returns true if current step is completely done and correct and is not
+	 * Returns true if current step is completely done, correct, and is not
 	 * past the final step (throws an error in this case). It will highlight any
 	 * cells that are active and incorrect and show a dialog notifying the user.
 	 */

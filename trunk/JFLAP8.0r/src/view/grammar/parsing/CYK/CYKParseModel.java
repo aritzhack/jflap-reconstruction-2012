@@ -44,11 +44,6 @@ public class CYKParseModel extends AbstractTableModel{
 		myTarget = input.toArray(new Symbol[0]);
 		int length = myTarget.length;
 		myTable = new Set[length][length];
-		for (int i = 0; i < length; i++) {
-			for (int j = i; j < length; j++) {
-				myTable[i][j] = null;
-			}
-		}
 	}
 
 	/**
@@ -115,7 +110,7 @@ public class CYKParseModel extends AbstractTableModel{
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		return row == editableRow;
+		return row == editableRow && myTable[row][column] != null;
 	}
 	
 	/**
