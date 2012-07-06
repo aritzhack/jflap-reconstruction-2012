@@ -10,8 +10,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import debug.JFLAPDebug;
-
 import model.grammar.Grammar;
 import model.grammar.parsing.cyk.CYKParser;
 import model.symbols.Symbol;
@@ -22,6 +20,13 @@ import view.grammar.EmptySetCellEditor;
 import view.grammar.HighlightTable;
 import view.grammar.Magnifiable;
 
+/**
+ * Highlighting, magnifying table for the construction and visualization of CYK
+ * Parse Table specific to the current input and grammar
+ * 
+ * @author Ian McMahon
+ * 
+ */
 public class CYKParseTable extends HighlightTable implements Magnifiable {
 	private final TableCellRenderer RENDERER = new EmptySetCellRenderer();
 
@@ -29,12 +34,19 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 		super(new CYKParseModel(new CYKParser(gram)));
 	}
 
+	/**
+	 * Resets the target string to be parsed to input. Reinitializes the table
+	 * with a new, corresponding table model.
+	 * 
+	 * @param input
+	 *            the new target to be parsed.
+	 */
 	public void setInput(SymbolString input) {
 		CYKParseModel model = (CYKParseModel) getModel();
-		
+
 		setModel(new CYKParseModel(model.getParser(), input));
 		model = (CYKParseModel) getModel();
-		model.setEditableCutoff(0);
+		model.setEditableDiagonal(0);
 
 		for (int i = 0; i < input.size(); i++) {
 			TableColumn col = getColumnModel().getColumn(i);
@@ -65,7 +77,8 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 	}
 
 	/**
-	 * The modified table cell renderer.
+	 * The modified table cell renderer. Removes square brackets when selected,
+	 * and renders empty sets as the Empty Set Symbol.
 	 */
 	private class EmptySetCellRenderer extends DefaultTableCellRenderer {
 		public Component getTableCellRendererComponent(JTable table,
@@ -85,7 +98,6 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 			l.setText(JFLAPConstants.EMPTY_SET_SYMBOL.getString());
 			return l;
 		}
-
 	}
 
 	@Override
