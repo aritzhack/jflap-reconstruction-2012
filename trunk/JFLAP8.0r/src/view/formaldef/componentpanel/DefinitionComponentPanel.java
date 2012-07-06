@@ -49,9 +49,11 @@ public abstract class DefinitionComponentPanel<T extends FormalDefinitionCompone
 	public T getComponent(){
 		return myComp;
 	}
+	
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		update(e);
+		revalidate();
 		repaint();
 	}
 	

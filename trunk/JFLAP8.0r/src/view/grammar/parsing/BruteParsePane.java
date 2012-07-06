@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.Timer;
 
+import debug.JFLAPDebug;
+
 import model.grammar.Grammar;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.brute.UnrestrictedBruteParser;
@@ -187,15 +189,18 @@ public class BruteParsePane extends ParsePane {
 	 * This method is called when the step button is pressed.
 	 */
 	public boolean step() {
+		//TODO: Tree/Derviation drawing
+		JFLAPDebug.print("TODO!!");
 		// controller.step();
-		boolean worked = false;
-		if (treePanel.next()) {
-			stepAction.setEnabled(false);
-			worked = true;
-		}
-
-		treePanel.repaint();
-		return worked;
+//		boolean worked = false;
+//		if (treePanel.next()) {
+//			stepAction.setEnabled(false);
+//			worked = true;
+//		}
+//
+//		treePanel.repaint();
+//		return worked;
+		return false;
 	}
 
 	/**

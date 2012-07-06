@@ -56,6 +56,7 @@ public abstract class ParsePane extends EditingPanel {
 	private JPanel treeDerivationPane;
 	private DefaultTableModel derivationModel;
 	private ProductionTable myProductionTable;
+	private TableTextSizeSlider slider;
 
 	/**
 	 * Instantiates a new parse pane. This will not place components. A call to
@@ -94,7 +95,12 @@ public abstract class ParsePane extends EditingPanel {
 				initInputPanel());
 		JSplitPane mainSplit = createSplit(false, 0.3, topSplit,
 				bottomSplit);
-		add(mainSplit, BorderLayout.CENTER);
+		
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(mainSplit, BorderLayout.CENTER);
+		mainPanel.add(slider, BorderLayout.SOUTH);
+		
+		add(mainPanel, BorderLayout.CENTER);
 		add(statusDisplay, BorderLayout.SOUTH);
 	}
 
@@ -138,11 +144,10 @@ public abstract class ParsePane extends EditingPanel {
 
 		ProductionTable table = myProductionTable;
 		
-		TableTextSizeSlider slider = new TableTextSizeSlider(table);
+		slider = new TableTextSizeSlider(table);
 		slider.addListener(table);
 		//TODO: add other listeners to this magnifier
 		slider.distributeMagnification();
-		add(slider, BorderLayout.NORTH);
 		JScrollPane scroll = new JScrollPane(table);
 		return scroll;
 	}
@@ -227,6 +232,8 @@ public abstract class ParsePane extends EditingPanel {
 		};
 		box.addActionListener(listener);
 		toolbar.add(box);
+		
+		toolbar.setFloatable(false);
 		return toolbar;
 	}
 

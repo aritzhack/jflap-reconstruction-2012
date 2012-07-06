@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
+import debug.JFLAPDebug;
+
 import model.grammar.parsing.ParserException;
 import model.grammar.parsing.cyk.CYKParser;
 import model.symbols.Symbol;
@@ -93,6 +95,7 @@ public class CYKParseModel extends AbstractTableModel{
 	
 	@Override
 	public Set<Symbol> getValueAt(int rowIndex, int columnIndex) {
+		JFLAPDebug.print("Get");
 		return myTable[rowIndex][columnIndex];
 	}
 	
@@ -119,6 +122,7 @@ public class CYKParseModel extends AbstractTableModel{
 	 */
 	public void setEditableRow(int row){
 		this.editableRow = row;
+		if(row >= myTarget.length) return;
 		for(int i=row; i<myTable.length;i++){
 			setValueAt(new HashSet<Symbol>(), row, i);
 		}

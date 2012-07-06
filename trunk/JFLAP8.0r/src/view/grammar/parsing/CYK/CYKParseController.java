@@ -87,9 +87,9 @@ public class CYKParseController {
 			setActionsFinished();
 
 		} else {
-			((CYKParseModel) table.getModel()).setEditableRow(currentLength);
 			directions.setText("Complete the next row of the table.");
 		}
+		((CYKParseModel) table.getModel()).setEditableRow(currentLength);
 		table.repaint();
 		return true;
 	}
@@ -205,6 +205,7 @@ public class CYKParseController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			derivationAction.setEnabled(false);
 			pane.switchToDerivationView();
 		}
 	};
