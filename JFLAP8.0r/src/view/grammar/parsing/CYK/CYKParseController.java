@@ -13,6 +13,13 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 
+/**
+ * Controller for CYK Parsing GUI. Connects what the user interacts with/sees with the
+ * actual model code for proper visualization.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class CYKParseController {
 
 	private CYKParseTable table;
@@ -43,10 +50,7 @@ public class CYKParseController {
 
 				Set<Symbol> parserSet = parser.getNodeAtIndex(i, col);
 				table.setValueAt(parserSet, i, col);
-				try {
-					table.getCellEditor().stopCellEditing();
-				} catch (NullPointerException e) {
-				}
+				stopEditing();
 			}
 			table.repaint();
 		}
@@ -63,10 +67,7 @@ public class CYKParseController {
 			Set<Symbol> parserSet = parser.getNodeAtIndex(row, col);
 			table.setValueAt(parserSet, row, col);
 		}
-		try {
-			table.getCellEditor().stopCellEditing();
-		} catch (NullPointerException e) {
-		}
+		stopEditing();
 		table.repaint();
 		nextStep();
 	}
@@ -86,13 +87,18 @@ public class CYKParseController {
 			setActionsFinished();
 			
 		} else {
-			((CYKParseModel) table.getModel()).setEditableCutoff(currentLength);
+			((CYKParseModel) table.getModel()).setEditableDiagonal(currentLength);
 			directions.setText("Complete the next diagonal of the table.");
 		}
 		table.repaint();
 		return true;
 	}
 
+	/**
+	 * Disables all actions besides start, and if parser accepted 
+	 * the input, enables the derivationAction. Called when parser
+	 * has finished the final step.
+	 */
 	private void setActionsFinished() {
 		stepAction.setEnabled(false);
 		selectedAction.setEnabled(false);
@@ -108,6 +114,12 @@ public class CYKParseController {
 		directions.setText("Input was rejected, try another string");
 	}
 
+	
+	/**
+	 * Returns true if current step is completely done and correct and is not
+	 * past the final step (throws an error in this case). It will highlight any
+	 * cells that are active and incorrect and show a dialog notifying the user.
+	 */
 	private boolean done() {
 		if (currentLength > maxLength) {
 			JOptionPane.showMessageDialog(table,
@@ -127,28 +139,34 @@ public class CYKParseController {
 		if (highlighted == 0)
 			return true;
 		table.clearSelection();
-		try {
-			table.getCellEditor().stopCellEditing();
-		} catch (NullPointerException e) {
-		}
+		
 		JOptionPane.showMessageDialog(pane, "Highlighted sets are incorrect.",
 				"Bad Sets", JOptionPane.ERROR_MESSAGE);
 		table.dehighlight();
 		return false;
 	}
 
+	/**
+	 * Steps to completion for displaying the parse table.
+	 */
 	public void completeAll() {
 		while (currentLength < maxLength) {
 			completeStep();
 		}
 	}
 
+	/**
+	 * Completes the current step and moves to the next one.
+	 */
 	public AbstractAction stepAction = new AbstractAction("Do Step") {
 		public void actionPerformed(ActionEvent e) {
 			completeStep();
 		}
 	};
 
+	/**
+	 * Completes the selected cell (if it is part of the current step)
+	 */
 	public AbstractAction selectedAction = new AbstractAction("Do Selected") {
 
 		@Override
@@ -157,6 +175,9 @@ public class CYKParseController {
 		}
 	};
 
+	/**
+	 * Completes all steps
+	 */
 	public AbstractAction allAction = new AbstractAction("Do All") {
 
 		@Override
@@ -165,6 +186,10 @@ public class CYKParseController {
 		}
 	};
 
+	/**
+	 * Moves to the next step if current step is correct and complete, else
+	 * highlights what needs to be done.
+	 */
 	public AbstractAction nextAction = new AbstractAction("Next") {
 
 		@Override
@@ -173,6 +198,9 @@ public class CYKParseController {
 		}
 	};
 
+	/**
+	 * Switches to derivation/tree view
+	 */
 	public AbstractAction derivationAction = new AbstractAction(
 			"See Derivation") {
 
@@ -182,6 +210,9 @@ public class CYKParseController {
 		}
 	};
 
+	/**
+	 * Resets input for parsing, switches to parsing view.
+	 */
 	public AbstractAction startAction = new AbstractAction("Start") {
 
 		@Override
@@ -191,13 +222,17 @@ public class CYKParseController {
 
 	};
 	
+	/**
+	 * Creates input from JTextField, switches to parsing view, and resets 
+	 * all aspects needed to display correctly.
+	 */
 	private void start(){
 		String s = pane.getInputText();
 		Grammar g = pane.getGrammar();
 
 		SymbolString input = Symbolizers.symbolize(s, g);
 		
-		pane.switchToTableView();
+		pane.switchToParseView();
 		table.setInput(input);
 
 		maxLength = input.size();
@@ -207,6 +242,9 @@ public class CYKParseController {
 		setActionsStarted();
 	}
 
+	/**
+	 * Parsing actions enabled, derivation actions disabled
+	 */
 	private void setActionsStarted() {
 		selectedAction.setEnabled(true);
 		stepAction.setEnabled(true);
@@ -214,5 +252,15 @@ public class CYKParseController {
 		nextAction.setEnabled(true);
 		derivationAction.setEnabled(false);
 
+	}
+	
+	/**
+	 * Simple helper try/catch to stop cell editing 
+	 */
+	private void stopEditing() {
+		try {
+			table.getCellEditor().stopCellEditing();
+		} catch (NullPointerException e) {
+		}
 	}
 }

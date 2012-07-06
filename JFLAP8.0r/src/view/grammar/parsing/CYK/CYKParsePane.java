@@ -36,6 +36,12 @@ import view.grammar.ProductionTable;
 import view.grammar.TableTextSizeSlider;
 import debug.JFLAPDebug;
 
+/**
+ * Main pane for CYK Parsing
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class CYKParsePane extends EditingPanel {
 
 	private Grammar myGrammar;
@@ -94,7 +100,7 @@ public class CYKParsePane extends EditingPanel {
 				initInputPanel());
 		JPanel topPane = new JPanel(new BorderLayout());
 		topPane.add(topSplit, BorderLayout.CENTER);
-		topPane.add(initInputToolbar(), BorderLayout.SOUTH);
+		topPane.add(initParseToolbar(), BorderLayout.SOUTH);
 
 		JSplitPane mainSplit = createSplit(false, 0.25, topPane, bottomPane);
 
@@ -102,6 +108,9 @@ public class CYKParsePane extends EditingPanel {
 		add(statusDisplay, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Initializes pane that contains the Tree/Derivation view
+	 */
 	private JPanel initTreeDerivationPane() {
 		TDCardPane = new JPanel(new CardLayout());
 
@@ -120,6 +129,9 @@ public class CYKParsePane extends EditingPanel {
 		return treeDerivationPane;
 	}
 
+	/**
+	 * Initializes the TreePanel to be used for drawing derivation tree
+	 */
 	private TreePanel initTreePanel() {
 		treeDrawer = new DefaultTreeDrawer(new DefaultTreeModel(
 				new DefaultMutableTreeNode())) {
@@ -135,6 +147,10 @@ public class CYKParsePane extends EditingPanel {
 		return new TreePanel(treeDrawer);
 	}
 
+	/**
+	 * Initializes table within a JScrollPane that will be used to 
+	 * display the derivation.
+	 */
 	private JScrollPane initDerivationPane() {
 		DefaultTableModel derivationModel = new DefaultTableModel(new String[] {
 				"Production", "Derivation" }, 0) {
@@ -149,6 +165,11 @@ public class CYKParsePane extends EditingPanel {
 		return derivationPane;
 	}
 
+	/**
+	 * Initializes a toolbar with a JComboBox (used to select tree vs 
+	 * inverted tree vs derivation view) and a button used to step
+	 * through the derivation.
+	 */
 	private JToolBar initTreeControls() {
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);
@@ -173,11 +194,18 @@ public class CYKParsePane extends EditingPanel {
 		return toolbar;
 	}
 
+	/**
+	 * Returns the choices used in the JComboBox for each type of view.
+	 */
 	private String[] getViewChoices() {
 		return new String[] { "Noninverted Tree", "Inverted Tree",
 				"Derivation Table" };
 	}
 
+	/**
+	 * Initializes a JPanel with a JTextField used for user input (responds to the 
+	 * enter key)
+	 */
 	private JPanel initInputPanel() {
 		inputField = new JTextField();
 		JPanel panel = new JPanel();
@@ -199,11 +227,9 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * Returns the tool bar for the main user input panel.
-	 * 
-	 * @return the tool bar for the main user input panel
+	 * Returns the tool bar for the main parse control.
 	 */
-	private JToolBar initInputToolbar() {
+	private JToolBar initParseToolbar() {
 		JToolBar toolbar = new JToolBar();
 
 		toolbar.add(myController.startAction);
@@ -228,26 +254,38 @@ public class CYKParsePane extends EditingPanel {
 	}
 
 	/**
-	 * Changes the view.
+	 * Changes the view of the tree/derivation pane
 	 * 
 	 * @param name
 	 *            the view button name that was pressed
 	 */
 	private void changeView(String name) {
 		CardLayout treeDerivationLayout = (CardLayout) TDCardPane.getLayout();
-		if (name.equals("Noninverted Tree")) {
-			treeDerivationLayout.first(TDCardPane);
-			treeDrawer.setInverted(false);
-			treePanel.repaint();
-		} else if (name.equals("Inverted Tree")) {
-			treeDerivationLayout.first(TDCardPane);
-			treeDrawer.setInverted(true);
-			treePanel.repaint();
-		} else if (name.equals("Derivation Table")) {
+		
+		if (name.equals("Derivation Table")) {
 			treeDerivationLayout.last(TDCardPane);
+			return;
 		}
+		if (name.equals("Noninverted Tree")) 
+			treeDrawer.setInverted(false);
+		else treeDrawer.setInverted(true);
+		
+		treeDerivationLayout.first(TDCardPane);	
+		treePanel.repaint();
 	}
 
+	/**
+	 * Creates a JSplitPane defined by the parameters passed in and the 
+	 * active JFLAPEnvironment
+	 * @param horizontal
+	 * 		true if split is to be horizontal, vertical otherwise.
+	 * @param ratio
+	 * 		the ratio for splitting the pane.
+	 * @param left
+	 * 		the left or top Component
+	 * @param right
+	 * 		the right or bottom Component
+	 */
 	public JSplitPane createSplit(boolean horizontal, double ratio,
 			Component left, Component right) {
 		JFLAPEnvironment environment = JFLAPUniverse.getActiveEnvironment();
@@ -264,26 +302,39 @@ public class CYKParsePane extends EditingPanel {
 		return split;
 	}
 
+	/**
+	 * Switches contentPane to tree/derivation view.
+	 */
 	public void switchToDerivationView() {
 		CardLayout card = (CardLayout) contentPane.getLayout();
 		card.last(contentPane);
 	}
 
-	public void switchToTableView() {
+	/**
+	 * Switches contentPane to parse table view.
+	 */
+	public void switchToParseView() {
 		CardLayout card = (CardLayout) contentPane.getLayout();
 		card.first(contentPane);
 	}
 
+	/**
+	 * Returns the text entered by the user in the input field.
+	 */
 	public String getInputText() {
 		return inputField.getText();
 	}
 
+	/**
+	 * Returns a copy of the grammar for the parser to be initialized.
+	 */
 	public Grammar getGrammar() {
 		return myGrammar.copy();
 	}
 
 	/**
-	 * This method is called when the step button is pressed.
+	 * This method steps the tree/derivation to the next level (unless it is already at the final
+	 * step).
 	 */
 	public void stepTreeDerivation() {
 		// TODO: Wait for tree drawing to done
