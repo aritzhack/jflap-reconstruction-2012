@@ -1,6 +1,8 @@
 package model.numbersets.controller;
 
 import model.numbersets.AbstractNumberSet;
+import model.numbersets.control.SetsManager;
+
 
 public abstract class AbstractSetController {
 	

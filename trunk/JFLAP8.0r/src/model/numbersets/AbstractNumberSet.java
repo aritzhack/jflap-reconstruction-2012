@@ -15,5 +15,15 @@ public abstract class AbstractNumberSet {
 	public abstract boolean isFinite ();
 	
 	
+	@Override
+	public int hashCode() {
+		return getSet().hashCode() + getName().hashCode();		
+	}
 	
+	
+	@Override
+	public boolean equals (Object obj) {
+		AbstractNumberSet other = (AbstractNumberSet) obj;
+		return this.getSet().equals(other.getSet());
+	}
 }

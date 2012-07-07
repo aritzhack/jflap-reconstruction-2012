@@ -13,22 +13,20 @@ import debug.JFLAPDebug;
 
 public class SetsManager {
 
-	public SetsManager () {
-		
-		JFLAPDebug.print("Set Manager created");
-	}
-	
 	public static ActiveSetsRegistry ACTIVE_REGISTRY;
-	
+
 	public static Class[] PREDEFINED_SETS_CLASSES;
-	
+
+	private SetView myView;
+
 	static {
 		ACTIVE_REGISTRY = new ActiveSetsRegistry();
-		
 		PREDEFINED_SETS_CLASSES = Loader.getLoadedClasses();
 	}
-	
-	private SetView myView;
+
+	public SetsManager () {
+		
+	}
 	
 	public void setView (SetView view) {
 		myView = view;

@@ -45,7 +45,7 @@ public class MultiplesOfSet extends PredefinedSet {
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		int buffer = myValues.size();
 		for (int i = buffer; i < n + buffer; i++) {
 			myValues.add(i * myFactor);

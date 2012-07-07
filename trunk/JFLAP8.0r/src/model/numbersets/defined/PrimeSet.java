@@ -15,7 +15,9 @@ public class PrimeSet extends PredefinedSet {
 		myCurrent = 1;
 		myValues = new TreeSet<Integer>();
 		
-		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
+		extend(DEFAULT_NUMBER_TO_ADD);
+		
+		System.out.println("PRIME SET INITIALIZED");
 	}
 
 	@Override
@@ -24,7 +26,7 @@ public class PrimeSet extends PredefinedSet {
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		for (int i = 0; i < n; i++) {
 			myValues.add(getNextPrime());
 		}

@@ -36,11 +36,11 @@ public class FibonacciSet extends PredefinedSet {
 		prevFirst = 1;
 
 		myValues = new TreeSet<Integer>();
-		generateNextNumbers(MAX_SIZE);
+		extend(MAX_SIZE);
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		
 		
 		for (int i = 0; i <= n; i++) {

@@ -3,6 +3,7 @@ package model.numbersets;
 import java.util.Set;
 import java.util.TreeSet;
 
+
 /**
  * Finite set with values input by the user
  * 
@@ -17,21 +18,24 @@ public class CustomSet extends AbstractNumberSet {
 	private String description;
 
 	private Set<Integer> elements;
-	private int position;
 
 	public CustomSet() {
 		elements = new TreeSet<Integer>();
-		position = 0;
+		
 	}
+	
+	public CustomSet (Set<Integer> set) {
+		elements = set;
+	}
+	
 
 	public CustomSet(int... i) {
 		this();
 		addAll(i);
 	}
 
-	public boolean add(int value) {
+	public void add(int value) {
 		elements.add(value);
-		return true;
 	}
 
 	public void addAll(int... values) {

@@ -14,7 +14,7 @@ public class OddSet extends PredefinedSet {
 
 	public OddSet () {
 		myValues = new TreeSet<Integer>();
-		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
+		extend(DEFAULT_NUMBER_TO_ADD);
 	}
 
 
@@ -24,7 +24,7 @@ public class OddSet extends PredefinedSet {
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		int start = myValues.size();
 		for (int i = start; i < n + start; i++) {
 			myValues.add(2*i + 1);

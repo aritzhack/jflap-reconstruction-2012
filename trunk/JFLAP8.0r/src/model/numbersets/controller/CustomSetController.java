@@ -3,7 +3,6 @@ package model.numbersets.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Set;
 import java.util.TimeZone;
 
 import model.numbersets.AbstractNumberSet;
@@ -23,6 +22,18 @@ public class CustomSetController extends AbstractSetController {
 		myCustomSet = new CustomSet();
 		myCustomSet.setName(generateDefaultName());
 	}
+	
+	public void setName (String name) {
+		if (name != null && name.trim().length() > 0)
+			myCustomSet.setName(name.trim());
+	}
+
+	public void setDescription (String description) {
+		if (description != null && description.trim().length() > 0) {
+			myCustomSet.addDescription(description);
+		}
+	}
+	
 
 	/**
 	 * Finds valid integers from user input and adds them to set
@@ -64,7 +75,6 @@ public class CustomSetController extends AbstractSetController {
 
 	@Override
 	public int getNextElement() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
