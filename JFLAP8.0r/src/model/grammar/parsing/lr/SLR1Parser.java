@@ -17,6 +17,7 @@ import model.grammar.Terminal;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
+import model.grammar.parsing.StackUsingParser;
 import model.grammar.parsing.lr.rules.AcceptRule;
 import model.grammar.parsing.lr.rules.EndReduceRule;
 import model.grammar.parsing.lr.rules.ReduceRule;
@@ -28,13 +29,12 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
 
-public class SLR1Parser extends Parser {
+public class SLR1Parser extends StackUsingParser {
 
 	private SLR1ParseTable myTable;
 	private List<Production> myDerivation;
 	private LinkedList<Object> myStack;
 	private SLR1DFA mySLR1DFA;
-	private SymbolString myUnprocessedInput;
 	private TableLocation myNextRule;
 	private TableLocation myCurrentRule;
 
@@ -64,17 +64,15 @@ public class SLR1Parser extends Parser {
 		myDerivation = new ArrayList<Production>();
 		myDerivation.add(this.getGrammar().getStartProductions()[0]);
 		myStack = new LinkedList<Object>();
-		myUnprocessedInput = new SymbolString();
 		myNextRule = null;
 		myCurrentRule = null;
 		
 		if (mySLR1DFA == null) return true;
-		
+		super.resetParserStateOnly();
 		SLR1DFAState start = (SLR1DFAState) mySLR1DFA.getStartState();
 		myStack.addFirst(start.getID());
-		myUnprocessedInput.addAll(this.getInput());
-		myUnprocessedInput.addLast(JFLAPPreferences.getEndOfStringMarker());
-		myNextRule = new TableLocation(start, myUnprocessedInput.getFirst());
+
+		myNextRule = new TableLocation(start, getUnprocessedInput().getFirst());
 		return true;
 	}
 
@@ -110,9 +108,9 @@ public class SLR1Parser extends Parser {
 			nextState = ((StateUsingRule) current).getToState();
 			myStack.addFirst(nextState.getID());
 			if (current instanceof ShiftRule){
-				myUnprocessedInput.pollFirst();
+				getUnprocessedInput().pollFirst();
 			}
-			nextCol = myUnprocessedInput.peekFirst();
+			nextCol = getUnprocessedInput().peekFirst();
 		}
 		else if(current instanceof ReduceRule){
 			int i = ((ReduceRule)current).getProductionIndex();
@@ -156,4 +154,9 @@ public class SLR1Parser extends Parser {
 		}
 	}
 
+	@Override
+	public LinkedList getStack() {
+		return myStack;
+	}
+	
 }

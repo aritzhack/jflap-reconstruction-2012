@@ -10,17 +10,17 @@ import model.grammar.Variable;
 import model.grammar.parsing.Derivation;
 import model.grammar.parsing.Parser;
 import model.grammar.parsing.ParserException;
+import model.grammar.parsing.StackUsingParser;
 import model.grammar.typetest.GrammarType;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
 
-public class LL1Parser extends Parser {
+public class LL1Parser extends StackUsingParser {
 
 	private LL1ParseTable myParseTable;
-	private Derivation myDerivation;
 	private SymbolString myStack;
-	private SymbolString myUnprocessedInput;
+	private Derivation myDerivation;
 	private SymbolString mySymbolsToAdd;
 
 	public LL1Parser(Grammar g) {
@@ -52,11 +52,7 @@ public class LL1Parser extends Parser {
 	
 	@Override
 	public boolean resetParserStateOnly() {
-		
-		if (this.getInput() != null){
-			myUnprocessedInput = new SymbolString(this.getInput());
-			myUnprocessedInput.add(JFLAPPreferences.getEndOfStringMarker());
-		}
+		super.resetParserStateOnly();
 		myDerivation = new Derivation(createEmptyStart());
 		myStack = new SymbolString(getGrammar().getStartVariable());
 		mySymbolsToAdd = new SymbolString();
@@ -73,8 +69,8 @@ public class LL1Parser extends Parser {
 		Symbol eos = JFLAPPreferences.getEndOfStringMarker();
 		return isDone() && 
 				myStack.isEmpty() &&
-				myUnprocessedInput.size() == 1 &&
-				myUnprocessedInput.getFirst().equals(eos) ;
+				getUnprocessedInput().size() == 1 &&
+				getUnprocessedInput().getFirst().equals(eos) ;
 	}
 
 	@Override
@@ -120,20 +116,20 @@ public class LL1Parser extends Parser {
 	}
 
 	public Terminal removeMatchingTerminal() {
-		myUnprocessedInput.removeFirst();
+		getUnprocessedInput().removeFirst();
 		return (Terminal) myStack.pollFirst();
 	}
 
 	public boolean hasMatchingTerminal() {
 		return myStack.size() > 0 && 
-				myUnprocessedInput.getFirst().equals(myStack.peekFirst());
+				getUnprocessedInput().getFirst().equals(myStack.peekFirst());
 	}
 	
 	private SymbolString getCurrentEntry() {
 		Symbol s = myStack.peekFirst();
 		if (s == null || Grammar.isTerminal(s))
 			return null;
-		Terminal t = (Terminal) myUnprocessedInput.getFirst();
+		Terminal t = (Terminal) getUnprocessedInput().getFirst();
 		Variable V = (Variable) s;
 		
 		return myParseTable.get(V,t);
