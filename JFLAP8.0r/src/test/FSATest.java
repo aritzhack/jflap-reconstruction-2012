@@ -95,7 +95,7 @@ public class FSATest extends TestHarness{
 		
 		// CONVERT FSA TO GRAMMAR
 		SteppableAlgorithm converter = new FSAtoRegGrammarConversion(fsa);
-		while (converter.step());
+		while (converter.step() != null);
 		
 		Grammar RG = ((FSAtoRegGrammarConversion) converter).getConvertedGrammar();
 		
