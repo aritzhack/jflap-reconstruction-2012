@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import universe.JFLAPUniverse;
-import view.numsets.create.UserDefinedSetEditor;
+import view.environment.JFLAPEnvironment;
 
 import model.numbersets.control.SetsManager;
 import model.numbersets.defined.PredefinedSet;
@@ -63,7 +63,9 @@ public class SetInitiationPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				JFLAPUniverse.registerEnvironment(new UserDefinedSetEditor());
+				SetEditor editor = new SetEditor();
+				JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
+				environ.addSelectedComponent(editor);
 			}
 			
 			

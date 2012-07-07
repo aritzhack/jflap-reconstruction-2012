@@ -1,4 +1,4 @@
-package view.numsets.actions;
+package view.numsets;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -12,7 +12,6 @@ import java.util.HashSet;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import view.numsets.SetOperationHelper;
 
 import model.numbersets.AbstractNumberSet;
 import model.numbersets.operations.Intersection;
@@ -21,23 +20,22 @@ import model.numbersets.operations.Union;
 
 
 @SuppressWarnings("serial")
-public class ActionButton extends JButton {
+public class SetOperationButton extends JButton {
 
 
-	public ActionButton (String name, Image icon) {
+	public SetOperationButton (String name, Image icon) {
 		super(new ImageIcon(icon));
 
 		this.setToolTipText(name);
 	}
 
 
-	public ActionButton (String name) {
+	public SetOperationButton (String name) {
 		super(name);
 
 		this.setToolTipText(name);
 		this.setPreferredSize(new Dimension(40, 40));
 		this.setSize(getPreferredSize());
-
 
 	}
 
