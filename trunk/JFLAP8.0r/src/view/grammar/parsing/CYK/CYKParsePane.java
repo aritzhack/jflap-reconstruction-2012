@@ -34,7 +34,7 @@ import universe.JFLAPUniverse;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
 import view.grammar.ProductionTable;
-import view.grammar.TableTextSizeSlider;
+import view.grammar.SizeSlider;
 import debug.JFLAPDebug;
 
 /**
@@ -55,7 +55,7 @@ public class CYKParsePane extends EditingPanel {
 	private JPanel contentPane;
 	private Container treeDerivationPane;
 	private CYKParseTable parseTable;
-	private TableTextSizeSlider slider;
+	private SizeSlider slider;
 
 	public CYKParsePane(Grammar grammar, ProductionTable table) {
 		super(new UndoKeeper(), false);
@@ -81,7 +81,7 @@ public class CYKParsePane extends EditingPanel {
 
 		parseTable = new CYKParseTable(myGrammar);
 
-		slider = new TableTextSizeSlider(myProductionTable, parseTable);
+		slider = new SizeSlider(myProductionTable, parseTable);
 		slider.distributeMagnification();
 
 		myController = new CYKParseController(parseTable, this, statusDisplay);
