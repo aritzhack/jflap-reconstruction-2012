@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 import view.EditingPanel;
 import view.grammar.Magnifiable;
-import view.grammar.TableTextSizeSlider;
+import view.grammar.SizeSlider;
 import view.undoing.UndoPanel;
 
 import model.formaldef.FormalDefinition;
@@ -36,7 +36,7 @@ public abstract class FormalDefinitionView<T extends FormalDefinition> extends E
 		myCentralPanel = createCentralPanel(definition, keeper, editable);
 		
 		JScrollPane scroller = new JScrollPane(myCentralPanel);
-		TableTextSizeSlider slider = new TableTextSizeSlider(myDefinitionPanel);
+		SizeSlider slider = new SizeSlider(myDefinitionPanel);
 		if (myCentralPanel instanceof Magnifiable)
 			slider.addListener((Magnifiable) myCentralPanel);
 		slider.distributeMagnification();

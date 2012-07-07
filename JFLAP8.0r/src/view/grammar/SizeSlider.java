@@ -41,7 +41,7 @@ import javax.swing.event.ChangeListener;
 * @author Jonathan Su
 */
 
-public class TableTextSizeSlider extends JSlider{
+public class SizeSlider extends JSlider{
 
     static final int MIN = 1;
     static final int MAX = 100;
@@ -50,7 +50,7 @@ public class TableTextSizeSlider extends JSlider{
     
     private Set<Magnifiable> myTargets;
 	
-	public TableTextSizeSlider(Magnifiable ... targets) {
+	public SizeSlider(Magnifiable ... targets) {
 		super(MIN, MAX, INIT); 
 	    this.addChangeListener(new SliderListener());
 	    setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), TABLE_SIZE_TITLE));

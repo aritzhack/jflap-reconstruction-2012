@@ -37,7 +37,7 @@ import universe.JFLAPUniverse;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
 import view.grammar.ProductionTable;
-import view.grammar.TableTextSizeSlider;
+import view.grammar.SizeSlider;
 
 /**
  * The parse pane is an abstract class that defines the interface common between
@@ -56,7 +56,7 @@ public abstract class ParsePane extends EditingPanel {
 	private JPanel treeDerivationPane;
 	private DefaultTableModel derivationModel;
 	private ProductionTable myProductionTable;
-	private TableTextSizeSlider slider;
+	private SizeSlider slider;
 
 	/**
 	 * Instantiates a new parse pane. This will not place components. A call to
@@ -144,7 +144,7 @@ public abstract class ParsePane extends EditingPanel {
 
 		ProductionTable table = myProductionTable;
 		
-		slider = new TableTextSizeSlider(table);
+		slider = new SizeSlider(table);
 		slider.addListener(table);
 		//TODO: add other listeners to this magnifier
 		slider.distributeMagnification();
