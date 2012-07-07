@@ -117,7 +117,7 @@ public class PDATest extends TestHarness{
 		
 		//Conversion to PDA - LL
 		converter = new CFGtoPDAConverterLL(CFG);
-		while (converter.step()){
+		while (converter.step() != null){
 		}
 		pda = ((CFGtoPDAConverterLL) converter).getConvertedAutomaton();
 		
@@ -130,7 +130,7 @@ public class PDATest extends TestHarness{
 		
 		//Conversion to PDA - LR
 		converter = new CFGtoPDAConverterLR(CFG);
-		while (converter.step()){
+		while (converter.step() != null){
 		}
 		pda = ((CFGtoPDAConverterLR) converter).getConvertedAutomaton();
 		
