@@ -19,6 +19,7 @@ import model.grammar.Production;
 import model.grammar.Terminal;
 import model.grammar.Variable;
 import model.grammar.parsing.FirstFollowTable;
+import model.grammar.parsing.ParseTable;
 import model.grammar.parsing.lr.rules.AcceptRule;
 import model.grammar.parsing.lr.rules.EndReduceRule;
 import model.grammar.parsing.lr.rules.ReduceRule;
@@ -27,7 +28,7 @@ import model.grammar.parsing.lr.rules.ShiftRule;
 import model.grammar.parsing.lr.rules.StateUsingRule;
 import model.symbols.Symbol;
 
-public class SLR1ParseTable {
+public class SLR1ParseTable extends ParseTable{
 
 
 	private FirstFollowTable myFirstFollow;
@@ -167,10 +168,7 @@ public class SLR1ParseTable {
 	public SLR1rule getRule(State state, Symbol s) {
 		int r = state.getID();
 		int c = getColumnForSymbol(s);
-		Set<SLR1rule> rules = myTable[r][c];
-		if (rules.isEmpty())
-			return null;
-		return (SLR1rule) rules.toArray()[0];
+		return getValueAt(r, c);
 	}
 	
 	@Override
@@ -180,5 +178,23 @@ public class SLR1ParseTable {
 		str += r + "\t" + UtilFunctions.toDelimitedString(myTable[r],"\t") +"\n";
 		}
 		return str;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return myColumns.length;
+	}
+
+	@Override
+	public int getRowCount() {
+		return myNumRows;
+	}
+
+	@Override
+	public SLR1rule getValueAt(int r, int c) {
+		Set<SLR1rule> rules = myTable[r][c];
+		if (rules.isEmpty())
+			return null;
+		return (SLR1rule) rules.toArray()[0];
 	}
 }
