@@ -37,11 +37,12 @@ public abstract class SteppableAlgorithm implements Describable,
 	 * @return
 	 */
 	@Override
-	public Boolean step() throws AlgorithmException{
+	public AlgorithmStep step() throws AlgorithmException{
 
 		AlgorithmStep current = getCurrentStep();
-		if (current == null) return false;
-		return current.execute();
+		if (current != null)
+			current.execute();
+		return current;
 	}
 
 
@@ -54,7 +55,7 @@ public abstract class SteppableAlgorithm implements Describable,
 	}
 	
 	public boolean stepToCompletion(){
-		while (this.step());
+		while (this.step() != null);
 		return !this.isRunning();
 		
 	}
