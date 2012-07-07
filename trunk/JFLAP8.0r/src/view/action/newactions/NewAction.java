@@ -34,7 +34,7 @@ public abstract class NewAction<T> extends AbstractAction{
 	public static NewAction[] getAllNewActions(){
 		return new NewAction[]
 				{new NewGrammarAction(),
-				new NewNumberSetAction()};
+				new NewSetsAction()};
 	}
 	
 	
