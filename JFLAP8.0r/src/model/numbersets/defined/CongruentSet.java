@@ -35,7 +35,7 @@ public class CongruentSet extends PredefinedSet {
 		myInitial = startValue;
 
 		myValues = new TreeSet<Integer>();
-		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
+		extend(DEFAULT_NUMBER_TO_ADD);
 	}
 
 	private int wrapStart(int start) {
@@ -69,7 +69,7 @@ public class CongruentSet extends PredefinedSet {
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		int buffer = myValues.size();
 		for (int i = buffer; i < n + buffer; i++) {
 			myValues.add(myInitial + myModulus * i);

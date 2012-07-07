@@ -1,22 +1,28 @@
 package model.numbersets.gui;
 
-import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import model.numbersets.AbstractNumberSet;
+import model.numbersets.controller.OperationsController;
+import model.numbersets.operations.SetOperation;
+import model.numbersets.operations.Union;
+
 @SuppressWarnings("serial")
 public class SetOperationsPanel extends JPanel {
 
 	public SetOperationsPanel () {
-		this.setPreferredSize(new Dimension(100, 50));
-		
-		init();
+
+		initButtons();
 	}
 	
 	
-	private void init () {
+	private void initButtons () {
 		JButton button;
 		
 		button = new JButton("Union");
@@ -31,6 +37,25 @@ public class SetOperationsPanel extends JPanel {
 		
 		button = new JButton("Difference");
 		this.add(button);
+		
+	}
+	
+	
+
+	private class SetOpsActionListener implements ActionListener {
+
+		private SetOperation myOperation;
+		
+		public SetOpsActionListener (SetOperation op) {
+			myOperation = op;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			Set<AbstractNumberSet> operands = null;
+			OperationsController controller = new OperationsController(myOperation, operands);
+		}
 		
 	}
 	

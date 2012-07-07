@@ -24,7 +24,7 @@ public class FunctionSet extends PredefinedSet {
 		myCurrent = initial;
 		
 		myValues = new TreeSet<Integer>();
-		generateNextNumbers(DEFAULT_NUMBER_TO_ADD);
+		extend(DEFAULT_NUMBER_TO_ADD);
 	}
 	
 	public FunctionSet(Function func) {
@@ -37,7 +37,7 @@ public class FunctionSet extends PredefinedSet {
 	}
 
 	@Override
-	public Set<Integer> generateNextNumbers(int n) {
+	public Set<Integer> extend(int n) {
 		for (int i = 0; i < n; i++) {
 			myValues.add(myFunction.evaluate(myCurrent));
 			myCurrent++;

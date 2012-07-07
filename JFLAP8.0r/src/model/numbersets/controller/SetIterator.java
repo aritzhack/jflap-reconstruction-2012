@@ -3,7 +3,6 @@ package model.numbersets.controller;
 import java.util.Iterator;
 
 import model.numbersets.AbstractNumberSet;
-import model.numbersets.CustomSet;
 import model.numbersets.defined.PredefinedSet;
 
 public class SetIterator {
@@ -29,7 +28,7 @@ public class SetIterator {
 			if (setObj.isFinite()) {
 				throw new Exception("Reached end of finite set; no more elements");
 			}
-			((PredefinedSet) setObj).generateNextNumbers(PredefinedSet.DEFAULT_NUMBER_TO_ADD);
+			((PredefinedSet) setObj).extend(PredefinedSet.DEFAULT_NUMBER_TO_ADD);
 		
 		}
 		return iter.next();

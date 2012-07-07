@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 import model.numbersets.AbstractNumberSet;
 
-public abstract class PredefinedSet extends AbstractNumberSet{
+public abstract class PredefinedSet extends AbstractNumberSet {
 	
 	public static final int DEFAULT_NUMBER_TO_ADD = 50;
 	
@@ -46,7 +46,9 @@ public abstract class PredefinedSet extends AbstractNumberSet{
 	 *            number of elements to add
 	 * @return set with n elements added
 	 */
-	public abstract Set<Integer> generateNextNumbers(int n);
+	public abstract Set<Integer> extend(int n);
+	
+	
 
 	/**
 	 * Returns the nth element of an ordered set with a defined initial value
@@ -110,13 +112,6 @@ public abstract class PredefinedSet extends AbstractNumberSet{
 		return copy;
 	}
 	
-	
-	/**
-	 * 
-	 */
-	public Set<Integer> getSubset () {
-		return null;
-	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder(getName() + "\n");

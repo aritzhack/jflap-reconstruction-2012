@@ -1,5 +1,8 @@
 package model.numbersets.controller;
 
+import model.numbersets.control.ActiveSetsRegistry;
+import model.numbersets.gui.SetWindow;
+
 public class SetEnvironment {
 	
 	/**
@@ -7,7 +10,7 @@ public class SetEnvironment {
 	 */
 	private static SetEnvironment enviro;;
 	
-	public static SetEnvironment getSetEnvironment () {
+	public static SetEnvironment getInstance () {
 		if (enviro == null) {
 			enviro = new SetEnvironment();
 		}
@@ -15,15 +18,25 @@ public class SetEnvironment {
 	}
 	
 	
-	ActiveSetsRegistry active;
+	private SetWindow window;
 	
-	public SetEnvironment() {
+	private ActiveSetsRegistry active;
+	
+	private SetEnvironment() {
 		active = new ActiveSetsRegistry();
+		
+		window = SetWindow.getInstance();
+		
 	}
 	
 	
 	public ActiveSetsRegistry getActiveRegistry () {
 		return active;
+	}
+	
+	
+	public SetWindow getWindow () {
+		return window;
 	}
 
 }
