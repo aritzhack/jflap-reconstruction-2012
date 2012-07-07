@@ -1,6 +1,8 @@
 package model.algorithms;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import util.JFLAPConstants;
 
@@ -14,10 +16,12 @@ public abstract class SteppableAlgorithm implements Describable,
 
 	
 	private AlgorithmStep[] mySteps;
+	private List<SteppableAlgorithmListener> myListeners;
 
 	
 	public SteppableAlgorithm() {
 		mySteps = initializeAllSteps();
+		myListeners = new ArrayList<SteppableAlgorithmListener>();
 	}
 	
 	
@@ -40,9 +44,29 @@ public abstract class SteppableAlgorithm implements Describable,
 	public AlgorithmStep step() throws AlgorithmException{
 
 		AlgorithmStep current = getCurrentStep();
-		if (current != null)
+		if (current != null){
 			current.execute();
+			distributeStep(current);
+		}
 		return current;
+	}
+
+	public boolean addListener(SteppableAlgorithmListener l){
+		return myListeners.add(l);
+	}
+	
+	public boolean removeListener(SteppableAlgorithmListener l){
+		return myListeners.remove(l);
+	}
+	
+	public void clearListeners(){
+		myListeners.clear();
+	}
+
+	private void distributeStep(AlgorithmStep current) {
+		for (SteppableAlgorithmListener l: myListeners){
+			l.stepOccurred(current);
+		}
 	}
 
 
