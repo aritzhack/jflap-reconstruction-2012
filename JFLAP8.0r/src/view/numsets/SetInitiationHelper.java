@@ -1,5 +1,9 @@
 package view.numsets;
 
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
+
 import model.numbersets.CustomSet;
 
 
@@ -10,6 +14,8 @@ import model.numbersets.CustomSet;
  */
 
 public class SetInitiationHelper {
+	
+	private static final String DELIMITERS = "[\\s|,]+";
 
 	private CustomSet mySet;
 	
@@ -18,5 +24,16 @@ public class SetInitiationHelper {
 	}
 	
 	
+	
+	public Set<Integer> parse (String input) {
+		String[] elements = input.split(DELIMITERS);
+		Set<Integer> set = new TreeSet<Integer>();
+		for (String s : elements) {
+			set.add(Integer.parseInt(s));
+		}
+		return set;
+	}
+	
+
 	
 }
