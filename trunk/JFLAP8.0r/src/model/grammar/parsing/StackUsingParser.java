@@ -30,9 +30,11 @@ public abstract class StackUsingParser extends Parser {
 	}
 
 	private SymbolString initUnprocessedInput() {
-		SymbolString s = getInput().copy();
-		s.add(JFLAPPreferences.getEndOfStringMarker());
-		return s;
+		SymbolString input = getInput();
+		if (input == null) return null;
+		SymbolString unp = input.copy();
+		unp.add(JFLAPPreferences.getEndOfStringMarker());
+		return unp;
 	}
 	
 
