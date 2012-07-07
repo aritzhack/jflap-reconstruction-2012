@@ -45,8 +45,8 @@ public abstract class SteppableAlgorithm implements Describable,
 
 		AlgorithmStep current = getCurrentStep();
 		if (current != null){
-			current.execute();
-			distributeStep(current);
+			boolean occurred = current.execute();
+			if (occurred) distributeStep(current);
 		}
 		return current;
 	}
