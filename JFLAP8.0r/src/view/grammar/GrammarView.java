@@ -12,6 +12,7 @@ import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import universe.preferences.PreferenceChangeListener;
 import view.formaldef.FormalDefinitionView;
+import view.grammar.productions.ProductionTable;
 
 public class GrammarView extends FormalDefinitionView<Grammar>{
 

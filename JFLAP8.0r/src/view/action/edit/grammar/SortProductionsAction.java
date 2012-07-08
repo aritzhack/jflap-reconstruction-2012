@@ -12,8 +12,8 @@ import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 
 import view.action.UndoingAction;
-import view.grammar.ProductionDataHelper;
-import view.grammar.ProductionTableModel;
+import view.grammar.productions.ProductionDataHelper;
+import view.grammar.productions.ProductionTableModel;
 
 public class SortProductionsAction extends UndoingAction implements IUndoRedo{
 
