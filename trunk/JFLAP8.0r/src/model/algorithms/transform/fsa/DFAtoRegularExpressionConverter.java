@@ -89,7 +89,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	public RegularExpression getResultingRegEx(){
-		if (this.isRunning())
+		if (this.canStep())
 			throw new AlgorithmException("You may not retrieve the regular expression " +
 					"until the GTG is fully simplified");
 		

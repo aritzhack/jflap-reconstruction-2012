@@ -68,7 +68,7 @@ public abstract class Parser extends InputUsingAlgorithm<Grammar>{
 	 * @return
 	 * 		true if everything went ok in the reset.
 	 */
-	public abstract boolean resetParserStateOnly();
+	public abstract boolean resetInternalStateOnly();
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
@@ -78,13 +78,6 @@ public abstract class Parser extends InputUsingAlgorithm<Grammar>{
 
 	public Grammar getGrammar(){
 		return super.getOriginalDefinition();
-	}
-	
-	@Override
-	public void setInput(SymbolString string) {
-		super.setInput(string);
-		resetParserStateOnly();
-
 	}
 	
 	@Override

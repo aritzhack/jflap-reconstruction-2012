@@ -51,8 +51,8 @@ public class LL1Parser extends StackUsingParser {
 	}
 	
 	@Override
-	public boolean resetParserStateOnly() {
-		super.resetParserStateOnly();
+	public boolean resetInternalStateOnly() {
+		super.resetInternalStateOnly();
 		myDerivation = new Derivation(createEmptyStart());
 		myStack = new SymbolString(getGrammar().getStartVariable());
 		mySymbolsToAdd = new SymbolString();

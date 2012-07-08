@@ -17,23 +17,22 @@ import view.undoing.UndoPanel;
 import model.formaldef.FormalDefinition;
 import model.undo.UndoKeeper;
 
-public abstract class FormalDefinitionView<T extends FormalDefinition> extends EditingPanel{
+public abstract class FormalDefinitionView<T, S extends FormalDefinition> extends EditingPanel{
 
 	
-	private T myDefinition;
 	private FormalDefinitionPanel myDefinitionPanel;
 	private JComponent myCentralPanel;
 	private UndoKeeper myKeeper;
+	private T myModel;
 
-	public FormalDefinitionView(T definition, UndoKeeper keeper, boolean editable){
+	public FormalDefinitionView(T model, UndoKeeper keeper, boolean editable){
 		super(keeper, editable);
 		
 		this.setLayout(new BorderLayout());
-		
-		myDefinition = definition;
+		myModel = model;
 		myKeeper = keeper;
-		myDefinitionPanel = new FormalDefinitionPanel(definition, keeper, editable);
-		myCentralPanel = createCentralPanel(definition, keeper, editable);
+		myDefinitionPanel = new FormalDefinitionPanel(getDefinition(), keeper, editable);
+		myCentralPanel = createCentralPanel(myModel, keeper, editable);
 		
 		JScrollPane scroller = new JScrollPane(myCentralPanel);
 		SizeSlider slider = new SizeSlider(myDefinitionPanel);
@@ -50,22 +49,24 @@ public abstract class FormalDefinitionView<T extends FormalDefinition> extends E
 		this.add(panel, BorderLayout.SOUTH);
 		
 		if (editable)
-			this.add(createToolbar(definition, keeper), BorderLayout.NORTH);
+			this.add(createToolbar(getDefinition(), keeper), BorderLayout.NORTH);
 	}
 
-	public Component createToolbar(T definition, UndoKeeper keeper) {
+	public Component createToolbar(S definition, UndoKeeper keeper) {
 		return new UndoPanel(keeper);
 	}
 
-	public abstract JComponent createCentralPanel(T definition, UndoKeeper keeper, boolean editable);
+	public abstract JComponent createCentralPanel(T model, UndoKeeper keeper, boolean editable);
 	
 	public Component getCentralPanel(){
 		return myCentralPanel;
 	}
 	
-	public T getDefintion(){
-		return myDefinition;
+	public T getModel(){
+		return myModel;
 	}
+	
+	public abstract S getDefinition();
 	
 	@Override
 	public abstract String getName();

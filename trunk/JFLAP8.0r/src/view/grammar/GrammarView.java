@@ -11,10 +11,11 @@ import model.grammar.Grammar;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import universe.preferences.PreferenceChangeListener;
+import view.formaldef.BasicFormalDefinitionView;
 import view.formaldef.FormalDefinitionView;
 import view.grammar.productions.ProductionTable;
 
-public class GrammarView extends FormalDefinitionView<Grammar>{
+public class GrammarView extends BasicFormalDefinitionView<Grammar>{
 
 	private ProductionTable myTable;
 

@@ -60,7 +60,7 @@ public class SLR1Parser extends StackUsingParser {
 	}
 
 	@Override
-	public boolean resetParserStateOnly() {
+	public boolean resetInternalStateOnly() {
 		myDerivation = new ArrayList<Production>();
 		myDerivation.add(this.getGrammar().getStartProductions()[0]);
 		myStack = new LinkedList<Object>();
@@ -68,7 +68,7 @@ public class SLR1Parser extends StackUsingParser {
 		myCurrentRule = null;
 		
 		if (mySLR1DFA == null) return true;
-		super.resetParserStateOnly();
+		super.resetInternalStateOnly();
 		SLR1DFAState start = (SLR1DFAState) mySLR1DFA.getStartState();
 		myStack.addFirst(start.getID());
 

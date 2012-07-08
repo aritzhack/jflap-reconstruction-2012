@@ -64,7 +64,7 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	@Override
-	public boolean resetParserStateOnly() {
+	public boolean resetInternalStateOnly() {
 		myNodesGenerated = 0;
 		initializeQueue();
 		return true;

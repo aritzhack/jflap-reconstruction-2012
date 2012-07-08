@@ -99,12 +99,12 @@ public class MinimizeDFAAlgorithm extends FormalDefinitionAlgorithm<FiniteStateA
 	}
 
 	@Override
-	public boolean isRunning() {
-		return super.isRunning() || amBuilding();
+	public boolean canStep() {
+		return super.canStep() || amBuilding();
 	}
 	
 	public FiniteStateAcceptor getMinimizedDFA(){
-		if (isRunning())
+		if (canStep())
 			throw new AlgorithmException("You must first finish the minimization " +
 					"algorithm before exporting the minimal DFA.");
 		return myBuildMinimalDFAStep.getAlgorithm().getMinimalDFA();
