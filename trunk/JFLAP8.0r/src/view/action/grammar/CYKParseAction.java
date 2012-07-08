@@ -6,8 +6,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
-import model.grammar.parsing.ParserException;
 import model.grammar.typetest.matchers.CNFChecker;
 import model.symbols.symbolizer.Symbolizers;
 

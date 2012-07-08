@@ -1,5 +1,6 @@
 package test;
 
+import model.algorithms.testinput.parse.brute.RestrictedBruteParser;
 import model.automata.InputAlphabet;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -9,7 +10,6 @@ import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
-import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpressionGrammar;
 import model.symbols.Symbol;

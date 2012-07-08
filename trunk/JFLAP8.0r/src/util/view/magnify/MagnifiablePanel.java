@@ -1,11 +1,12 @@
 package util.view.magnify;
 
+import java.awt.Component;
 import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
 
-public abstract class MagnifiablePanel extends JPanel implements Magnifiable {
+public class MagnifiablePanel extends JPanel implements Magnifiable {
 
 	public MagnifiablePanel() {
 		super();
@@ -21,6 +22,15 @@ public abstract class MagnifiablePanel extends JPanel implements Magnifiable {
 
 	public MagnifiablePanel(LayoutManager lm) {
 		super(lm);
+	}
+
+	@Override
+	public void setMagnification(double mag) {
+		for (Component c: this.getComponents()){
+			if (c instanceof Magnifiable)
+				((Magnifiable) c).setMagnification(mag);
+		}
+		this.repaint();
 	}
 
 	

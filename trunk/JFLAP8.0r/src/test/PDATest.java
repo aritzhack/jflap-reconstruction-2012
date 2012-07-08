@@ -6,10 +6,13 @@ import util.UtilFunctions;
 
 import debug.JFLAPDebug;
 
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLR;
+import model.algorithms.steppable.SteppableAlgorithm;
+import model.algorithms.testinput.parse.brute.RestrictedBruteParser;
+import model.algorithms.testinput.simulate.AutoSimulator;
+import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.algorithms.transform.grammar.GrammarTransformAlgorithm;
 import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.automata.InputAlphabet;
@@ -22,10 +25,7 @@ import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.acceptors.pda.StackAlphabet;
-import model.automata.simulate.AutoSimulator;
-import model.automata.simulate.SingleInputSimulator;
 import model.grammar.Grammar;
-import model.grammar.parsing.brute.RestrictedBruteParser;
 import model.grammar.typetest.GrammarType;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;

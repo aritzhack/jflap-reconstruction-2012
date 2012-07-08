@@ -26,6 +26,7 @@ import util.JFLAPConstants;
 
 import errors.BooleanWrapper;
 
+import model.algorithms.testinput.parse.FirstFollowTable;
 import model.change.events.AddEvent;
 import model.change.events.AdvancedUndoableEvent;
 import model.change.events.RemoveEvent;
@@ -33,7 +34,6 @@ import model.change.events.SetToEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
-import model.grammar.parsing.FirstFollowTable;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizer;

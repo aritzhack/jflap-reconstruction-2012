@@ -3,13 +3,13 @@ package test;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.algorithms.testinput.simulate.AutoSimulator;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.simulate.AutoSimulator;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;

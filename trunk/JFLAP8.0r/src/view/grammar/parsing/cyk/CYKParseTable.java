@@ -10,8 +10,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.grammar.Grammar;
-import model.grammar.parsing.cyk.CYKParser;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import universe.preferences.JFLAPPreferences;

@@ -12,17 +12,17 @@ import util.UtilFunctions;
 
 import debug.JFLAPDebug;
 
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.AutomatonToGrammarConversion;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.gramtoauto.GrammarToAutomatonConverter;
 import model.algorithms.conversion.gramtoauto.RGtoFSAConverter;
-import model.algorithms.fsa.AddTrapStateAlgorithm;
-import model.algorithms.fsa.DFAtoRegularExpressionConverter;
-import model.algorithms.fsa.InacessibleStateRemover;
-import model.algorithms.fsa.NFAtoDFAConverter;
-import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
+import model.algorithms.steppable.SteppableAlgorithm;
+import model.algorithms.transform.fsa.AddTrapStateAlgorithm;
+import model.algorithms.transform.fsa.DFAtoRegularExpressionConverter;
+import model.algorithms.transform.fsa.InacessibleStateRemover;
+import model.algorithms.transform.fsa.NFAtoDFAConverter;
+import model.algorithms.transform.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;

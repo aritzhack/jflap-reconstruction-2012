@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import model.algorithms.conversion.gramtoauto.CFGtoPDAConverterLL;
+import model.algorithms.testinput.simulate.AutoSimulator;
+import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.automata.simulate.AutoSimulator;
-import model.automata.simulate.SingleInputSimulator;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.Grammar;
 import model.grammar.Production;

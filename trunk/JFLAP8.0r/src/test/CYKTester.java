@@ -21,6 +21,7 @@ package test;
 
 import java.util.Arrays;
 
+import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.algorithms.transform.grammar.CNFConverter;
 import model.automata.InputAlphabet;
 import model.grammar.Grammar;
@@ -31,7 +32,6 @@ import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
-import model.grammar.parsing.cyk.CYKParser;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;
