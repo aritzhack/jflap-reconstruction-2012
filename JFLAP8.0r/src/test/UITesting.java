@@ -1,14 +1,19 @@
 package test;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
+import view.algorithms.InputtingPanel;
 import view.grammar.GrammarView;
+import model.algorithms.testinput.parse.brute.RestrictedBruteParser;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
@@ -33,9 +38,17 @@ public class UITesting {
 		
 		Grammar gram = (Grammar) new XMLCodec().decode(f);
 		UndoKeeper keeper = new UndoKeeper();
-		frame.add(new GrammarView(gram, keeper, true));
+		JPanel base = new JPanel();
+		base.setLayout(new BorderLayout());
+		base.add(new GrammarView(gram,keeper, true), BorderLayout.CENTER);
+		
+		frame.add(base);
 		frame.pack();
 		frame.setVisible(true);
 		JFLAPUniverse.showMainMenu();
+		
+		
+		
+		
 	}
 }

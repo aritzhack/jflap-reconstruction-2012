@@ -23,7 +23,7 @@ import oldnewstuff.view.tree.InputTableModel;
 import oldnewstuff.view.tree.SelectNodeDrawer;
 import oldnewstuff.view.tree.TreePanel;
 import oldnewstuff.view.tree.UnrestrictedTreePanel;
-import view.grammar.parsing.ParsePane;
+import view.grammar.parsing.old.OldParsePane;
 import view.grammar.productions.ProductionTable;
 
 /**
@@ -31,7 +31,7 @@ import view.grammar.productions.ProductionTable;
  * 
  * @author Thomas Finley
  */
-public class BruteParsePane extends ParsePane {
+public class BruteParsePane extends OldParsePane {
 	public int row = -1;
 	/** The tree pane. */
 	protected UnrestrictedTreePanel treePanel = new UnrestrictedTreePanel(this);

@@ -28,7 +28,7 @@ public class CYKParseAction extends AbstractAction{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Grammar g = myView.getDefintion();
+		Grammar g = myView.getDefinition();
 		if (g == null)
 			return;
 		if(g.getStartVariable()==null) throw new ParserException("The Start Variable must be set before you can continue");

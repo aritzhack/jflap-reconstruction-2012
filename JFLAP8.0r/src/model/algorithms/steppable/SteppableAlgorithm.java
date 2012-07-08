@@ -9,13 +9,16 @@ import util.JFLAPConstants;
 import debug.JFLAPDebug;
 
 import model.algorithms.AlgorithmException;
+import model.change.ChangingObject;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.Describable;
 
-public abstract class SteppableAlgorithm implements Describable,
+public abstract class SteppableAlgorithm extends ChangingObject implements Describable,
 													Steppable,
 													JFLAPConstants {
 
 	
+	private static final int ALG_STEP = 0;
 	private AlgorithmStep[] mySteps;
 	private List<SteppableAlgorithmListener> myListeners;
 
@@ -47,29 +50,10 @@ public abstract class SteppableAlgorithm implements Describable,
 		AlgorithmStep current = getCurrentStep();
 		if (current != null){
 			boolean occurred = current.execute();
-			if (occurred) distributeStep(current);
+			if (occurred) distributeChange(new AdvancedChangeEvent(this, ALG_STEP, current));
 		}
 		return current;
 	}
-
-	public boolean addListener(SteppableAlgorithmListener l){
-		return myListeners.add(l);
-	}
-	
-	public boolean removeListener(SteppableAlgorithmListener l){
-		return myListeners.remove(l);
-	}
-	
-	public void clearListeners(){
-		myListeners.clear();
-	}
-
-	private void distributeStep(AlgorithmStep current) {
-		for (SteppableAlgorithmListener l: myListeners){
-			l.stepOccurred(current);
-		}
-	}
-
 
 	public AlgorithmStep getCurrentStep() {
 		for (AlgorithmStep step : mySteps){
@@ -81,12 +65,16 @@ public abstract class SteppableAlgorithm implements Describable,
 	
 	public boolean stepToCompletion(){
 		while (this.step() != null);
-		return !this.isRunning();
+		return !this.canStep();
 		
 	}
 	
-	public boolean isRunning(){
+	public boolean canStep(){
 		return this.getCurrentStep() != null;
+	}
+	
+	public boolean isRunning(){
+		return this.canStep();
 	}
 	
 	/**

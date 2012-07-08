@@ -301,4 +301,10 @@ public class RegularExpression extends FormalDefinition {
 									myExpression.copy());
 	}
 
+
+	@Override
+	public InputAlphabet getLanguageAlphabet() {
+		return getInputAlphabet();
+	}
+
 }

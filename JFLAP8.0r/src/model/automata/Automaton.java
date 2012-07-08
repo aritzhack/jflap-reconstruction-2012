@@ -10,6 +10,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.FormalDefinitionException;
 import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 
 public abstract class Automaton<T extends Transition<T>> extends FormalDefinition{
@@ -68,6 +69,9 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 	}
 
 
-
+	@Override
+	public InputAlphabet getLanguageAlphabet() {
+		return getInputAlphabet();
+	}
 
 }

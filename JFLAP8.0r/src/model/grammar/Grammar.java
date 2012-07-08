@@ -235,6 +235,11 @@ public class Grammar extends FormalDefinition{
 				&& p.containsSymbolOnLHS(g.getStartVariable());
 	}
 
+	@Override
+	public TerminalAlphabet getLanguageAlphabet() {
+		return getTerminals();
+	}
+
 
 	
 

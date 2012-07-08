@@ -24,7 +24,7 @@ public abstract class StackUsingParser extends Parser {
 
 	
 	@Override
-	public boolean resetParserStateOnly() {
+	public boolean resetInternalStateOnly() {
 		myUnprocessedInput = initUnprocessedInput();
 		return true;
 	}

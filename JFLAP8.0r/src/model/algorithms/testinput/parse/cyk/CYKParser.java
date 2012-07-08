@@ -38,7 +38,7 @@ public class CYKParser extends Parser {
 	 */
 	public CYKParser(Grammar g) {
 		super(g);
-		this.resetParserStateOnly();
+		this.resetInternalStateOnly();
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class CYKParser extends Parser {
 	}
 
 	@Override
-	public boolean resetParserStateOnly() {
+	public boolean resetInternalStateOnly() {
 		Grammar gram = getGrammar();
 		
 		myProductions = gram.getProductionSet();
@@ -267,12 +267,12 @@ public class CYKParser extends Parser {
 	}
 
 	@Override
-	public void setInput(SymbolString string) {
+	public boolean setInput(SymbolString string) {
 		if (string!= null && string.size() == 0) {
 			throw new ParserException(
 					"CNF Grammars cannot produce empty strings!");
 		}
-		super.setInput(string);
+		return super.setInput(string);
 	}
 	
 	public Set<Symbol> getNodeAtIndex(int row, int col){

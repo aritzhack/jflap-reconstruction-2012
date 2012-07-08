@@ -27,7 +27,7 @@ public class BruteParseAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		Grammar g = myView.getDefintion();
+		Grammar g = myView.getDefinition();
 		if (g == null)
 			return;
 		if(g.getStartVariable()==null) throw new ParserException("The Start Variable must be set before you can continue");

@@ -143,6 +143,8 @@ Copyable{
 
 		return alphs.toArray(new Alphabet[0]);
 	}
+	
+	public abstract Alphabet getLanguageAlphabet();
 
 	/**
 	 * Retrieves all of the {@link FormalDefinitionComponent}s in order

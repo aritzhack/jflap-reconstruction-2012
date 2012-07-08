@@ -1,4 +1,4 @@
-package view.grammar.parsing;
+package view.grammar.parsing.old;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -46,7 +46,7 @@ import view.grammar.productions.ProductionTable;
  * @author Thomas Finley, Ian McMahon
  */
 
-public abstract class ParsePane extends EditingPanel {
+public abstract class OldParsePane extends EditingPanel {
 	private Grammar myGrammar;
 	private JLabel statusDisplay;
 	private JTextField inputField;
@@ -65,7 +65,7 @@ public abstract class ParsePane extends EditingPanel {
 	 * @param grammar
 	 *            the grammar that is being parsed
 	 */
-	public ParsePane(Grammar grammar, ProductionTable table) {
+	public OldParsePane(Grammar grammar, ProductionTable table) {
 		super(new UndoKeeper(), false);
 		setLayout(new BorderLayout());
 		myGrammar = grammar;
