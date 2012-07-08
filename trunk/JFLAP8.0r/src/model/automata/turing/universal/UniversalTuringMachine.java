@@ -2,12 +2,12 @@ package model.automata.turing.universal;
 
 import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
+import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
+import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
-import model.automata.simulate.configurations.tm.TMConfiguration;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;

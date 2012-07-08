@@ -12,8 +12,8 @@ import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmExecutingStep;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmExecutingStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.formaldef.components.SetComponent;
 import model.grammar.Grammar;
 import model.grammar.Production;

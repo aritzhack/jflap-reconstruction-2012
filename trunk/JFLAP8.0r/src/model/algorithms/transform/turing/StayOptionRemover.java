@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.algorithms.transform.FormalDefinitionTransformAlgorithm;
 import model.automata.State;
 import model.automata.StateSet;

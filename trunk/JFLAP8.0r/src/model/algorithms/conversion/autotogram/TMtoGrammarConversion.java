@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.automata.InputAlphabet;
 import model.automata.State;
 import model.automata.TransitionSet;

@@ -20,8 +20,8 @@
 
 package model.graph;
 
-import model.algorithms.fsa.NFAtoDFAConverter;
-import model.algorithms.fsa.minimizer.MinimizeDFAAlgorithm;
+import model.algorithms.transform.fsa.NFAtoDFAConverter;
+import model.algorithms.transform.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 
 /**

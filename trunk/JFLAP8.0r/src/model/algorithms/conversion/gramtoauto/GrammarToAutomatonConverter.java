@@ -16,10 +16,10 @@ import util.UtilFunctions;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.ConversionAlgorithm;
+import model.algorithms.steppable.AlgorithmStep;
+import model.algorithms.steppable.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.State;
