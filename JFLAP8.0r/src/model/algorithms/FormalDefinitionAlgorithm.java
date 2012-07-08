@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
+import model.algorithms.steppable.SteppableAlgorithm;
 import model.formaldef.FormalDefinition;
 
 

@@ -3,8 +3,8 @@ package model.algorithms.transform;
 import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
+import model.algorithms.steppable.AlgorithmStep;
 import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
 

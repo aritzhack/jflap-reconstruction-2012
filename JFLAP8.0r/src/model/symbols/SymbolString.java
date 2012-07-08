@@ -24,6 +24,7 @@ import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 import util.UtilFunctions;
 
+import model.algorithms.testinput.parse.ParserException;
 import model.formaldef.FormalDefinition;
 import model.formaldef.UsesSymbols;
 import model.formaldef.components.Settable;
@@ -31,7 +32,6 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.Terminal;
 import model.grammar.Variable;
-import model.grammar.parsing.ParserException;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.operators.UnionOperator;

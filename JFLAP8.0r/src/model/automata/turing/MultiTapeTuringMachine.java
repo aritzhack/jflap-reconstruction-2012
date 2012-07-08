@@ -1,12 +1,12 @@
 package model.automata.turing;
 
+import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
+import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
-import model.automata.simulate.configurations.tm.TMConfiguration;
 import model.symbols.SymbolString;
 
 public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>{

@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
 import model.algorithms.conversion.ConversionAlgorithm;
+import model.algorithms.steppable.AlgorithmStep;
 import model.automata.Automaton;
 import model.automata.SingleInputTransition;
 import model.automata.Transition;

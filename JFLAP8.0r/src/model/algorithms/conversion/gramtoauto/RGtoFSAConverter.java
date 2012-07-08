@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;

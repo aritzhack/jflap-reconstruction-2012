@@ -6,14 +6,14 @@ import java.util.TreeSet;
 import universe.preferences.JFLAPPreferences;
 
 
+import model.algorithms.testinput.parse.FirstFollowTable;
+import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
 import model.grammar.GrammarException;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.Terminal;
 import model.grammar.Variable;
-import model.grammar.parsing.FirstFollowTable;
-import model.grammar.parsing.ParserException;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 

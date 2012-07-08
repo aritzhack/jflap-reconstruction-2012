@@ -5,13 +5,13 @@ import java.util.TreeSet;
 
 import util.JFLAPConstants;
 
+import model.algorithms.testinput.parse.lr.SLR1Production;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
 import model.automata.TransitionSet;
 import model.grammar.Grammar;
 import model.grammar.Production;
-import model.grammar.parsing.lr.SLR1Production;
 import model.symbols.Symbol;
 
 public class ClosureHelper implements JFLAPConstants{

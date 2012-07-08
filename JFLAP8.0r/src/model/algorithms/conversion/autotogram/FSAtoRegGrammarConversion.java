@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;

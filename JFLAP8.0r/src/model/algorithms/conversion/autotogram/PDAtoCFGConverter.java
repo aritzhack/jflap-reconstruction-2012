@@ -10,8 +10,8 @@ import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmExecutingStep;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmExecutingStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.automata.StartState;
 import model.automata.State;

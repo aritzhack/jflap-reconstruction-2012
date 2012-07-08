@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
+import model.algorithms.steppable.AlgorithmStep;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;

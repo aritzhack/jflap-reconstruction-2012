@@ -9,14 +9,14 @@ import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
 import model.algorithms.FormalDefinitionAlgorithm;
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.ConversionAlgorithm;
 import model.algorithms.conversion.regextofa.deexpressionifying.ConcatDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.GroupingDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.KleeneStarDeX;
 import model.algorithms.conversion.regextofa.deexpressionifying.UnionDeX;
+import model.algorithms.steppable.AlgorithmStep;
+import model.algorithms.steppable.SteppableAlgorithm;
 import model.automata.Automaton;
 import model.automata.InputAlphabet;
 import model.automata.StartState;

@@ -13,7 +13,7 @@ import debug.JFLAPDebug;
 import errors.BooleanWrapper;
 
 import model.algorithms.AlgorithmException;
-import model.algorithms.AlgorithmStep;
+import model.algorithms.steppable.AlgorithmStep;
 import model.grammar.Grammar;
 import model.grammar.GrammarUtil;
 import model.grammar.Production;
