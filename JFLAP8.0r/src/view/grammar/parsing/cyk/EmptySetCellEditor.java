@@ -10,7 +10,7 @@ import javax.swing.text.JTextComponent;
 import debug.JFLAPDebug;
 
 import universe.preferences.JFLAPPreferences;
-import util.view.SelectingEditor;
+import util.view.tables.SelectingEditor;
 
 public class EmptySetCellEditor extends SelectingEditor {
 

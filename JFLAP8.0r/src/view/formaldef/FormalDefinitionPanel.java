@@ -6,9 +6,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import util.JFLAPConstants;
+import util.view.magnify.Magnifiable;
 import view.formaldef.componentpanel.ComponentPanelFactory;
 import view.formaldef.componentpanel.DefinitionComponentPanel;
-import view.grammar.Magnifiable;
 
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;

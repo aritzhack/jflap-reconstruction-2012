@@ -31,10 +31,10 @@ import oldnewstuff.view.tree.DefaultTreeDrawer;
 import oldnewstuff.view.tree.LeafNodePlacer;
 import oldnewstuff.view.tree.TreePanel;
 import universe.JFLAPUniverse;
+import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
 import view.grammar.ProductionTable;
-import view.grammar.SizeSlider;
 import debug.JFLAPDebug;
 
 /**

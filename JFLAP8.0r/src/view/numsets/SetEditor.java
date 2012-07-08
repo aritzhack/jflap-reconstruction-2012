@@ -1,8 +1,8 @@
 package view.numsets;
 
 import model.undo.UndoKeeper;
+import util.view.magnify.SizeSlider;
 import view.EditingPanel;
-import view.grammar.SizeSlider;
 
 @SuppressWarnings("serial")
 public class SetEditor extends EditingPanel {

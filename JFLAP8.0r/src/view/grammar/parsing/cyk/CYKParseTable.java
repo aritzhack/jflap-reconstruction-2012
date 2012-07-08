@@ -17,7 +17,7 @@ import model.symbols.SymbolString;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.magnify.Magnifiable;
-import view.grammar.HighlightTable;
+import util.view.tables.HighlightTable;
 
 /**
  * Highlighting, magnifying table for the construction and visualization of CYK

@@ -15,8 +15,8 @@ import debug.JFLAPDebug;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.SuperMouseAdapter;
+import util.view.magnify.Magnifiable;
 import view.EditingPanel;
-import view.grammar.Magnifiable;
 
 
 import model.formaldef.components.FormalDefinitionComponent;

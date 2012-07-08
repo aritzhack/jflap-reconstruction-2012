@@ -15,7 +15,7 @@ import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.ProductionTable;
-import view.grammar.parsing.CYK.CYKParsePane;
+import view.grammar.parsing.cyk.CYKParsePane;
 
 public class CYKParseAction extends AbstractAction{
 
