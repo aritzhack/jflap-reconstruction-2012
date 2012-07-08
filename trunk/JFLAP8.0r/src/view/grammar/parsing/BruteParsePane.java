@@ -23,7 +23,7 @@ import oldnewstuff.view.tree.InputTableModel;
 import oldnewstuff.view.tree.SelectNodeDrawer;
 import oldnewstuff.view.tree.TreePanel;
 import oldnewstuff.view.tree.UnrestrictedTreePanel;
-import view.grammar.ProductionTable;
+import view.grammar.productions.ProductionTable;
 
 /**
  * This is a brute force parse pane.

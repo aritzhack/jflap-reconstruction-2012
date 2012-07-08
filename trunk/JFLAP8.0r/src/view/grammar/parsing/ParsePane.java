@@ -37,7 +37,7 @@ import universe.JFLAPUniverse;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
-import view.grammar.ProductionTable;
+import view.grammar.productions.ProductionTable;
 
 /**
  * The parse pane is an abstract class that defines the interface common between

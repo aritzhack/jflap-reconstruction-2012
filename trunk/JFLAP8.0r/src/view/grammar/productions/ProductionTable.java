@@ -1,4 +1,4 @@
-package view.grammar;
+package view.grammar.productions;
 
 import java.awt.Color;
 import java.awt.Container;

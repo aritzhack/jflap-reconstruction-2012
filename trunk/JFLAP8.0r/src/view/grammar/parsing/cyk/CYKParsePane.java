@@ -34,7 +34,7 @@ import universe.JFLAPUniverse;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
-import view.grammar.ProductionTable;
+import view.grammar.productions.ProductionTable;
 import debug.JFLAPDebug;
 
 /**

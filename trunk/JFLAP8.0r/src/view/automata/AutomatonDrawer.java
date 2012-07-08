@@ -47,23 +47,6 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 	}
 	
 
-	private static Point calculateEndPoint(Transition t) {
-		int shift = t.isLoop() ? 10 : 0;
-		return pointOnState(
-				t.getToState(),
-				CurvedArrowHelper.calculateAngle(t.getFromState().getPoint(), t
-						.getToState().getPoint())
-						+ Math.PI - shift);
-	}
-
-	private static Point calculateStartPoint(Transition t) {
-		int shift = t.isLoop() ? 10 : 0;
-		return pointOnState(
-				t.getFromState(),
-				CurvedArrowHelper.calculateAngle(t.getFromState().getPoint(), t
-						.getToState().getPoint())
-						+ shift);
-	}
 
 	/**
 	 * Given a state and an angle, if we treat the state as a circle, what point

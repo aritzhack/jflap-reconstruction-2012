@@ -13,8 +13,8 @@ import model.grammar.parsing.ParserException;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
-import view.grammar.ProductionTable;
 import view.grammar.parsing.BruteParsePane;
+import view.grammar.productions.ProductionTable;
 
 public class BruteParseAction extends AbstractAction {
 

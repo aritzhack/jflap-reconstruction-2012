@@ -1,4 +1,4 @@
-package view.grammar;
+package view.grammar.productions;
 
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
