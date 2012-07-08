@@ -17,7 +17,7 @@
 
 
 
-package view.grammar;
+package util.view.magnify;
 
 import java.awt.Font;
 import java.util.Arrays;
@@ -31,6 +31,7 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 
 
 

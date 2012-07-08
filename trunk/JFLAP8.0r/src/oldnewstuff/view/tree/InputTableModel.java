@@ -27,7 +27,7 @@ import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.automata.simulate.configurations.tm.TMConfiguration;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.grammar.Grammar;
-import view.grammar.GrowableTableModel;
+import util.view.tables.GrowableTableModel;
 
 /**
  * The <CODE>InputTableModel</CODE> is a table specifically used for the input

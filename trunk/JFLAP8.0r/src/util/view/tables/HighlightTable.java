@@ -18,7 +18,7 @@
 
 
 
-package view.grammar;
+package util.view.tables;
 
 import java.awt.Color;
 import java.util.HashMap;

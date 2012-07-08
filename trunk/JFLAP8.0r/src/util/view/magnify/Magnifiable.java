@@ -1,4 +1,4 @@
-package view.grammar;
+package util.view.magnify;
 
 import java.awt.Font;
 

@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import model.undo.UndoKeeper;
-import view.grammar.Magnifiable;
+import util.view.magnify.Magnifiable;
 
 public class SetDefinitionPanel extends JPanel implements Magnifiable {
 

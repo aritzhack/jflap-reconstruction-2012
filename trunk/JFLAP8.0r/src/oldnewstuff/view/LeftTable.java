@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import view.grammar.HighlightTable;
+import util.view.tables.HighlightTable;
 
 /**
  * This table is specifically for those tables where the leftmost column is an

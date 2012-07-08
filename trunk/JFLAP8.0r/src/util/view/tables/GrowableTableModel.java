@@ -18,7 +18,7 @@
 
 
 
-package view.grammar;
+package util.view.tables;
 
 import javax.swing.table.AbstractTableModel;
 

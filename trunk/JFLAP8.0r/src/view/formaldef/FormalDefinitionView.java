@@ -9,9 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 
+import util.view.magnify.Magnifiable;
+import util.view.magnify.SizeSlider;
 import view.EditingPanel;
-import view.grammar.Magnifiable;
-import view.grammar.SizeSlider;
 import view.undoing.UndoPanel;
 
 import model.formaldef.FormalDefinition;

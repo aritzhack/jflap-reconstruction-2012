@@ -35,6 +35,7 @@ import javax.swing.event.TableModelListener;
 
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
+import util.view.tables.GrowableTableModel;
 
 import model.grammar.Grammar;
 import model.grammar.Production;

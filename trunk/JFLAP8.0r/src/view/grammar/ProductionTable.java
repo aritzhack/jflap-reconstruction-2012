@@ -28,7 +28,9 @@ import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.ISelector;
 import util.JFLAPConstants;
-import util.view.SelectingEditor;
+import util.view.magnify.Magnifiable;
+import util.view.tables.HighlightTable;
+import util.view.tables.SelectingEditor;
 
 public class ProductionTable extends HighlightTable 
 						implements JFLAPConstants, Magnifiable, ChangeListener, ISelector{

@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 import model.numbersets.control.SetsManager;
 import model.undo.UndoKeeper;
+import util.view.magnify.Magnifiable;
 import view.EditingPanel;
-import view.grammar.Magnifiable;
 
 @SuppressWarnings("serial")
 public class SetView extends EditingPanel implements Magnifiable {
