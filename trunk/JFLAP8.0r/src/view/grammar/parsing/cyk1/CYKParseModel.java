@@ -1,4 +1,4 @@
-package view.grammar.parsing.CYK;
+package view.grammar.parsing.cyk1;
 
 import java.util.HashSet;
 import java.util.Set;

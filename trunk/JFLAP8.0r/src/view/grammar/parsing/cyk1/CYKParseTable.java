@@ -1,4 +1,4 @@
-package view.grammar.parsing.CYK;
+package view.grammar.parsing.cyk1;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,9 +16,8 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import view.grammar.EmptySetCellEditor;
+import util.view.magnify.Magnifiable;
 import view.grammar.HighlightTable;
-import view.grammar.Magnifiable;
 
 /**
  * Highlighting, magnifying table for the construction and visualization of CYK
