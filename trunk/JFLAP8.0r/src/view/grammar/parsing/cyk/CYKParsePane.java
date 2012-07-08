@@ -1,4 +1,4 @@
-package view.grammar.parsing.cyk1;
+package view.grammar.parsing.cyk;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
