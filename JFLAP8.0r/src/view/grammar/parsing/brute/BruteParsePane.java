@@ -1,4 +1,4 @@
-package view.grammar.parsing;
+package view.grammar.parsing.brute;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -14,15 +14,16 @@ import javax.swing.Timer;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.testinput.parse.Derivation;
+import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.grammar.Grammar;
-import model.grammar.parsing.Derivation;
-import model.grammar.parsing.brute.UnrestrictedBruteParser;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import oldnewstuff.view.tree.InputTableModel;
 import oldnewstuff.view.tree.SelectNodeDrawer;
 import oldnewstuff.view.tree.TreePanel;
 import oldnewstuff.view.tree.UnrestrictedTreePanel;
+import view.grammar.parsing.ParsePane;
 import view.grammar.productions.ProductionTable;
 
 /**

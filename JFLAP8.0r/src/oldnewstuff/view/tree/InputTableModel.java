@@ -21,10 +21,10 @@ import java.util.Map;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import model.algorithms.testinput.simulate.Configuration;
+import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
+import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.Automaton;
-import model.automata.simulate.Configuration;
-import model.automata.simulate.configurations.tm.MultiTapeTMConfiguration;
-import model.automata.simulate.configurations.tm.TMConfiguration;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.grammar.Grammar;
 import util.view.tables.GrowableTableModel;

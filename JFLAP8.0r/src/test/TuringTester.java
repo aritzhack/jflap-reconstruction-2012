@@ -2,10 +2,10 @@ package test;
 
 import java.io.File;
 
+import model.algorithms.testinput.simulate.AutoSimulator;
+import model.algorithms.testinput.simulate.MultiSimulator;
 import model.automata.State;
 import model.automata.TransitionSet;
-import model.automata.simulate.AutoSimulator;
-import model.automata.simulate.MultiSimulator;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;

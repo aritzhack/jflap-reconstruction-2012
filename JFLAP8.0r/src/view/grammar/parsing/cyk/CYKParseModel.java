@@ -7,8 +7,8 @@ import javax.swing.table.AbstractTableModel;
 
 import debug.JFLAPDebug;
 
-import model.grammar.parsing.ParserException;
-import model.grammar.parsing.cyk.CYKParser;
+import model.algorithms.testinput.parse.ParserException;
+import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;

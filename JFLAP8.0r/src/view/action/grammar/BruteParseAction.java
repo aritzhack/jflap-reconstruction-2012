@@ -7,13 +7,13 @@ import javax.swing.JOptionPane;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
 import model.grammar.StartVariable;
-import model.grammar.parsing.ParserException;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
-import view.grammar.parsing.BruteParsePane;
+import view.grammar.parsing.brute.BruteParsePane;
 import view.grammar.productions.ProductionTable;
 
 public class BruteParseAction extends AbstractAction {

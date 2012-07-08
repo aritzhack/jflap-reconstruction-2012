@@ -9,13 +9,13 @@ import debug.JFLAPDebug;
 
 import file.xml.XMLCodec;
 import file.xml.formaldef.components.functions.output.MooreOutputFuncTransducer;
+import model.algorithms.testinput.simulate.AutoSimulator;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
-import model.automata.simulate.AutoSimulator;
 import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.mealy.MealyMachine;

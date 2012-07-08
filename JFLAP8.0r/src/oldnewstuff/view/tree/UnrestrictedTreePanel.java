@@ -37,10 +37,10 @@ import javax.swing.tree.DefaultTreeModel;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.testinput.parse.ParseNode;
 import model.grammar.Production;
-import model.grammar.parsing.ParseNode;
 import universe.preferences.JFLAPPreferences;
-import view.grammar.parsing.BruteParsePane;
+import view.grammar.parsing.brute.BruteParsePane;
 
 /**
  * This is the special drawer for an unrestricted parse tree. Woe betide any

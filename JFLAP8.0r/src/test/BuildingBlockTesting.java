@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.automata.simulate.AutoSimulator;
-import model.automata.simulate.ConfigurationChain;
-import model.automata.simulate.SingleInputSimulator;
+import model.algorithms.testinput.simulate.AutoSimulator;
+import model.algorithms.testinput.simulate.ConfigurationChain;
+import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;

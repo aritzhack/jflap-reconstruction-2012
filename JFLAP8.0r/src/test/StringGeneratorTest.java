@@ -8,8 +8,8 @@ import util.UtilFunctions;
 
 import file.xml.XMLCodec;
 
-import model.algorithms.SteppableAlgorithm;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
+import model.algorithms.steppable.SteppableAlgorithm;
 import model.algorithms.transform.grammar.CNFConverter;
 import model.algorithms.transform.grammar.LambdaProductionRemover;
 import model.algorithms.transform.grammar.UnitProductionRemover;

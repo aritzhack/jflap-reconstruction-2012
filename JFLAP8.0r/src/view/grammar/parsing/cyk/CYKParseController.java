@@ -7,8 +7,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.grammar.Grammar;
-import model.grammar.parsing.cyk.CYKParser;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
