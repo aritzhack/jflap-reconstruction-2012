@@ -14,6 +14,7 @@ import debug.JFLAPDebug;
 
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.Variable;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
@@ -21,11 +22,27 @@ public class Derivation implements Copyable{
 
 	private LinkedList<Production> myProductions;
 	private LinkedList<Integer> mySubstitutions;
+	private SymbolString myInitial;
 	
-	public Derivation(Production start) {
+	public Derivation(Production start){
+		this(new SymbolString(start.getLHS()));
+		addStep(start, 0);
+
+	}
+	
+	/**
+	 * Creates a derivation which starts with the {@link SymbolString}
+	 * startLHS
+	 * @param startLHS
+	 */
+	public Derivation(Variable startVar){
+		this(new SymbolString(startVar));
+	}
+	
+	private Derivation(SymbolString initial){
+		myInitial = initial;
 		myProductions = new LinkedList<Production>();
 		mySubstitutions = new LinkedList<Integer>();
-		myProductions.add(start);
 	}
 	
 	public void addAll(Production[] productions, Integer[] subs) {
@@ -83,13 +100,13 @@ public class Derivation implements Copyable{
 		}
 		
 		if (n == 0) 
-			return new SymbolString(myProductions.getFirst().getLHS());
+			return myInitial;
 		
-		result.addAll(myProductions.getFirst().getRHS());
+		result.addAll(myInitial);
 		
-		for (int i = 1; i < n; i++){
+		for (int i =0; i < n; i++){
 			Symbol[] sub = myProductions.get(i).getRHS();
-			int start = mySubstitutions.get(i-1);
+			int start = mySubstitutions.get(i);
 			int end = start + myProductions.get(i).getLHS().length;
 			result = result.replace(start, end, sub);
 		}
@@ -122,6 +139,21 @@ public class Derivation implements Copyable{
 		return copy;
 	}
 	
+	public Derivation[] toStepArray(){
+		Derivation[] steps = new Derivation[this.length()+1];
+		for(int i = 0; i< steps.length;i++){
+			steps[i] = getSubDerivation(i);
+		}
+		return steps;
+	}
+	
+	public Derivation getSubDerivation(int n) {
+		Derivation d = new Derivation(myInitial);
+		for (int i = 0;i<n;i++ )
+			d.addStep(getProduction(i), mySubstitutions.get(i));
+		return d;
+	}
+
 	/**
 	 * Helper method to create a Rightmost Derivation from the trace.
 	 * @return
