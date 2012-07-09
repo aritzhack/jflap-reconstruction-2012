@@ -7,6 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+import debug.JFLAPDebug;
+
 import universe.preferences.JFLAPPreferences;
 
 import model.algorithms.testinput.parse.Derivation;
@@ -21,12 +23,12 @@ public class DerivationTable extends DerivationPanel {
 	public DerivationTable(Derivation d) {
 		super("Derivation Table");
 		this.setLayout(new BorderLayout());
-		setDerivation(d);
 		myTable = new JTable(new DerivationTableModel());
+		setDerivation(d);
+		
 		JScrollPane pane = new JScrollPane(myTable);
 		this.add(pane, BorderLayout.CENTER);
 	}
-
 
 	@Override
 	public void setMagnification(double mag) {
@@ -36,6 +38,11 @@ public class DerivationTable extends DerivationPanel {
 		myTable.setRowHeight((int) (size+10));
 	}
 	
+	@Override
+	public void setDerivation(Derivation d) {
+		super.setDerivation(d);
+		((AbstractTableModel) myTable.getModel()).fireTableDataChanged();
+	}
 	
 	private class DerivationTableModel extends AbstractTableModel{
 
@@ -51,7 +58,6 @@ public class DerivationTable extends DerivationPanel {
 
 		@Override
 		public String getValueAt(int r, int c) {
-			
 			if (c == 0){
 				if (r == 0) return "";
 				return getDerivation().getProduction(r-1).toString();
