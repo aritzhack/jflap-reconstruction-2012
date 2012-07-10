@@ -217,7 +217,6 @@ public class CYKParser extends Parser {
 	 */
 	private Set<Variable> getLHSVariableSet(int start, int end) {
 		Set<Variable> LHSVars = new HashSet<Variable>();
-		
 		for (CYKParseNode node : myParseTable[start][end]) {
 			LHSVars.add(node.getLHS());
 		}
@@ -249,6 +248,15 @@ public class CYKParser extends Parser {
 			myIncrement++;
 		}
 		return nextTableCell;
+	}
+	
+	public boolean stepToNextRow() {
+		int currentIncrement = myIncrement;
+		boolean row = true;
+		while(currentIncrement == myIncrement){
+			if(!stepParser()) row = false;
+		}
+		return row;
 	}
 
 	@Override

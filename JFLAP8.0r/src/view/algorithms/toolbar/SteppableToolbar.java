@@ -6,7 +6,8 @@ import javax.swing.event.ChangeListener;
 
 import model.algorithms.steppable.SteppableAlgorithm;
 import model.change.events.AdvancedChangeEvent;
-
+import universe.preferences.JFLAPPreferences;
+import util.view.magnify.MagnifiableButton;
 import util.view.magnify.MagnifiableToolbar;
 import view.action.StepAction;
 import view.action.algorithm.AlgorithmCompleteAction;
@@ -14,15 +15,16 @@ import view.action.algorithm.AlgorithmResetAction;
 
 public class SteppableToolbar extends MagnifiableToolbar implements ChangeListener{
 
-	private JButton myStepButton;
-	private JButton myCompleteButton;
-	private JButton myResetButton;
+	private MagnifiableButton myStepButton;
+	private MagnifiableButton myCompleteButton;
+	private MagnifiableButton myResetButton;
 
 	public SteppableToolbar(SteppableAlgorithm alg, boolean floatable){
 		setFloatable(floatable);
-		myStepButton = new JButton(new StepAction(alg));
-		myCompleteButton = new JButton(new AlgorithmCompleteAction(alg));
-		myResetButton = new JButton(new AlgorithmResetAction(alg));
+		int size = JFLAPPreferences.getDefaultTextSize();
+		myStepButton = new MagnifiableButton(new StepAction(alg), size);
+		myCompleteButton = new MagnifiableButton(new AlgorithmCompleteAction(alg), size);
+		myResetButton = new MagnifiableButton(new AlgorithmResetAction(alg), size);
 		alg.addListener(this);
 		this.add(myStepButton);
 		this.add(myCompleteButton);

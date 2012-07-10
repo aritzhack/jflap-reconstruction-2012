@@ -1,4 +1,4 @@
-package view.grammar.parsing.cyk;
+package view.grammar.parsing.old;
 
 import java.awt.event.ActionEvent;
 import java.util.Set;
@@ -6,6 +6,9 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
+import view.grammar.parsing.cyk.CYKParseModel;
+import view.grammar.parsing.cyk.CYKParseTablePanel;
 
 import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.grammar.Grammar;
@@ -22,13 +25,13 @@ import model.symbols.symbolizer.Symbolizers;
  */
 public class CYKParseController {
 
-	private CYKParseTable table;
+	private CYKParseTablePanel table;
 	private CYKParsePane pane;
 	private JLabel directions;
 	private CYKParser parser;
 	private int maxLength, currentLength;
 
-	public CYKParseController(CYKParseTable table, CYKParsePane pane,
+	public CYKParseController(CYKParseTablePanel table, CYKParsePane pane,
 			JLabel directions) {
 		this.table = table;
 		this.pane = pane;

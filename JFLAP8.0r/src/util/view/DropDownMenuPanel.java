@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import debug.JFLAPDebug;
+
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiablePanel;
 
