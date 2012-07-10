@@ -8,6 +8,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import debug.JFLAPDebug;
+
 
 import util.view.magnify.Magnifiable;
 import util.view.magnify.SizeSlider;

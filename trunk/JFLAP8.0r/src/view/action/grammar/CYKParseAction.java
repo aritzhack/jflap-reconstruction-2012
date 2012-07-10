@@ -14,7 +14,7 @@ import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
-import view.grammar.parsing.cyk.CYKParsePane;
+import view.grammar.parsing.old.CYKParsePane;
 import view.grammar.productions.ProductionTable;
 
 public class CYKParseAction extends AbstractAction{

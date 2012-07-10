@@ -2,19 +2,13 @@ package view.grammar.parsing.derivation;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import debug.JFLAPDebug;
-
 import universe.preferences.JFLAPPreferences;
 
 import model.algorithms.testinput.parse.Derivation;
-import model.grammar.Production;
-import model.grammar.Terminal;
-import model.grammar.Variable;
 
 public class DerivationTable extends DerivationPanel {
 

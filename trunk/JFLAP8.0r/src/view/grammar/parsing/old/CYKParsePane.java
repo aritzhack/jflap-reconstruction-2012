@@ -1,4 +1,4 @@
-package view.grammar.parsing.cyk;
+package view.grammar.parsing.old;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -31,9 +31,11 @@ import oldnewstuff.view.tree.DefaultTreeDrawer;
 import oldnewstuff.view.tree.LeafNodePlacer;
 import oldnewstuff.view.tree.TreePanel;
 import universe.JFLAPUniverse;
+import util.view.SplitFactory;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
+import view.grammar.parsing.cyk.CYKParseTablePanel;
 import view.grammar.productions.ProductionTable;
 import debug.JFLAPDebug;
 
@@ -54,7 +56,7 @@ public class CYKParsePane extends EditingPanel {
 	private JTextField inputField;
 	private JPanel contentPane;
 	private Container treeDerivationPane;
-	private CYKParseTable parseTable;
+	private CYKParseTablePanel parseTable;
 	private SizeSlider slider;
 
 	public CYKParsePane(Grammar grammar, ProductionTable table) {
@@ -74,12 +76,13 @@ public class CYKParsePane extends EditingPanel {
 	 * Initializes the GUI.
 	 */
 	private void initView() {
+		JFLAPEnvironment environment = JFLAPUniverse.getActiveEnvironment();
 		JLabel statusDisplay = new JLabel(
 				"Input a string and press Start to begin");
 
 		initTreeDerivationPane();
 
-		parseTable = new CYKParseTable(myGrammar);
+		parseTable = new CYKParseTablePanel(myGrammar);
 
 		slider = new SizeSlider(myProductionTable, parseTable);
 		slider.distributeMagnification();
@@ -96,13 +99,13 @@ public class CYKParsePane extends EditingPanel {
 		bottomPane.add(contentPane, BorderLayout.CENTER);
 		bottomPane.add(slider, BorderLayout.SOUTH);
 
-		JSplitPane topSplit = createSplit(true, 0.3, grammarTable,
+		JSplitPane topSplit = SplitFactory.createSplit(environment, true, 0.3, grammarTable,
 				initInputPanel());
 		JPanel topPane = new JPanel(new BorderLayout());
 		topPane.add(topSplit, BorderLayout.CENTER);
 		topPane.add(initParseToolbar(), BorderLayout.SOUTH);
 
-		JSplitPane mainSplit = createSplit(false, 0.25, topPane, bottomPane);
+		JSplitPane mainSplit = SplitFactory.createSplit(environment, false, 0.25, topPane, bottomPane);
 
 		add(mainSplit, BorderLayout.CENTER);
 		add(statusDisplay, BorderLayout.SOUTH);
@@ -273,47 +276,20 @@ public class CYKParsePane extends EditingPanel {
 		treePanel.repaint();
 	}
 
-	/**
-	 * Creates a JSplitPane defined by the parameters passed in and the active
-	 * JFLAPEnvironment
-	 * 
-	 * @param horizontal
-	 *            true if split is to be horizontal, vertical otherwise.
-	 * @param ratio
-	 *            the ratio for splitting the pane.
-	 * @param left
-	 *            the left or top Component
-	 * @param right
-	 *            the right or bottom Component
-	 */
-	public JSplitPane createSplit(boolean horizontal, double ratio,
-			Component left, Component right) {
-		JFLAPEnvironment environment = JFLAPUniverse.getActiveEnvironment();
-		JSplitPane split = new JSplitPane(
-				horizontal ? JSplitPane.HORIZONTAL_SPLIT
-						: JSplitPane.VERTICAL_SPLIT, true, left, right);
-		Dimension dim = environment.getSize();
-		Component[] comps = environment.getComponents();
-		if (comps.length != 0)
-			dim = comps[0].getSize();
-		int size = horizontal ? dim.width : dim.height;
-		split.setDividerLocation((int) ((double) size * ratio));
-		split.setResizeWeight(ratio);
-		return split;
-	}
 
 	/**
 	 * Switches contentPane to tree/derivation view.
 	 */
-	public void switchToDerivationView() {
+	public void switchToDerivationView() {	
+		JFLAPEnvironment environment = JFLAPUniverse.getActiveEnvironment();
+		
 		// Copies the parseTable
-		CYKParseTable table = new CYKParseTable(myGrammar);
-		table.setModel(parseTable.getModel());
+		CYKParseTablePanel table = new CYKParseTablePanel(parseTable.getModel());
 		slider.addListener(table);
 		slider.distributeMagnification();
 
-		JSplitPane derivationSplit = createSplit(true, 0.425, table,
-				treeDerivationPane);
+		JSplitPane derivationSplit = SplitFactory.createSplit(environment,
+				true, 0.425, table, treeDerivationPane);
 		contentPane.add(derivationSplit, "1");
 		CardLayout card = (CardLayout) contentPane.getLayout();
 		card.show(contentPane, "1");

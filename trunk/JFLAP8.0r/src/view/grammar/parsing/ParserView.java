@@ -52,7 +52,7 @@ public abstract class ParserView<S extends Parser>
 		myStatusLabel = new MagnifiableLabel(JFLAPPreferences.getDefaultTextSize());
 		
 		MagnifiableSplitPane split = 
-				new MagnifiableSplitPane(JSplitPane.VERTICAL_SPLIT,
+				new MagnifiableSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 											prodView, 
 											parseView);
 		
@@ -91,6 +91,10 @@ public abstract class ParserView<S extends Parser>
 	public void updateStatus(AdvancedChangeEvent e) {
 		if (!myAlgorithm.isRunning())
 			myStatusLabel.setText(SET_INPUT);
+	}
+	
+	public S getAlgorithm(){
+		return myAlgorithm;
 	}
 	
 	@Override

@@ -2,8 +2,8 @@ package util.view.magnify;
 
 import java.awt.Font;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 
 
 public class MagnifiableButton extends JButton implements Magnifiable {
@@ -12,6 +12,11 @@ public class MagnifiableButton extends JButton implements Magnifiable {
 
 	public MagnifiableButton(int defaultSize){
 		this("", defaultSize);
+	}
+	
+	public MagnifiableButton(AbstractAction action, int defaultSize){
+		super(action);
+		myDefaultSize = defaultSize;
 	}
 
 	public MagnifiableButton(String string, int defaultSize) {

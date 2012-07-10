@@ -33,7 +33,7 @@ public class CYKParseModel extends AbstractTableModel{
 	public CYKParseModel(CYKParser parser, SymbolString input){
 		myParser = parser;
 		initTargetAndTable(input);
-		myParser.quickParse(input);
+//		myParser.stepToCompletion();
 	}
 	
 	/**
@@ -95,7 +95,6 @@ public class CYKParseModel extends AbstractTableModel{
 	
 	@Override
 	public Set<Symbol> getValueAt(int rowIndex, int columnIndex) {
-		JFLAPDebug.print("Get");
 		return myTable[rowIndex][columnIndex];
 	}
 	

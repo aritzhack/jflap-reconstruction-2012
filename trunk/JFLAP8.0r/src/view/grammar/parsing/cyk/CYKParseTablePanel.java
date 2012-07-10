@@ -1,38 +1,45 @@
 package view.grammar.parsing.cyk;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.HashSet;
 
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.cyk.CYKParser;
-import model.grammar.Grammar;
+import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import util.view.magnify.Magnifiable;
 import util.view.tables.HighlightTable;
+import view.grammar.parsing.RunningView;
 
-/**
- * Highlighting, magnifying table for the construction and visualization of CYK
- * Parse Table specific to the current input and grammar
- * 
- * @author Ian McMahon
- * 
- */
-public class CYKParseTable extends HighlightTable implements Magnifiable {
+public class CYKParseTablePanel extends RunningView{
+
+	private HighlightTable myTable;
 	private final TableCellRenderer RENDERER = new EmptySetCellRenderer();
 
-	public CYKParseTable(Grammar gram) {
-		super(new CYKParseModel(new CYKParser(gram)));
+	public CYKParseTablePanel(CYKParser parser){
+		this(new CYKParseModel(parser));
 	}
-
+	
+	public CYKParseTablePanel(CYKParseModel model) {
+		super("CYK Parse Table", model.getParser());
+		this.setLayout(new BorderLayout());
+		myTable = new HighlightTable(model);
+		
+		JScrollPane scroll = new JScrollPane(myTable);
+		add(scroll, BorderLayout.CENTER);
+		
+	}
+	
 	/**
 	 * Resets the target string to be parsed to input. Reinitializes the table
 	 * with a new, corresponding table model.
@@ -41,40 +48,40 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 	 *            the new target to be parsed.
 	 */
 	public void setInput(SymbolString input) {
-		CYKParseModel model = (CYKParseModel) getModel();
-
-		setModel(new CYKParseModel(model.getParser(), input));
-		model = (CYKParseModel) getModel();
+		CYKParser parser = getModel().getParser();
+		if(input == null){
+			myTable.setModel(new CYKParseModel(parser));
+			return;
+		}
+		
+		CYKParseModel model = new CYKParseModel(parser, input);
+		myTable.setModel(model);
+		
 		model.setEditableRow(0);
 
 		for (int i = 0; i < input.size(); i++) {
-			TableColumn col = getColumnModel().getColumn(i);
+			TableColumn col = myTable.getColumnModel().getColumn(i);
 
 			col.setCellRenderer(RENDERER);
 			col.setCellEditor(new EmptySetCellEditor());
 			col.setHeaderValue(model.getColumnNames()[i]);
 		}
-		setCellSelectionEnabled(true);
+		myTable.setCellSelectionEnabled(true);
 	}
-
-	/** The built in highlight renderer generator. */
-	private static final HighlightTable.TableHighlighterRendererGenerator THRG = new TableHighlighterRendererGenerator() {
-		public TableCellRenderer getRenderer(int row, int column) {
-			if (renderer == null) {
-				renderer = new DefaultTableCellRenderer();
-				renderer.setBackground(new Color(255, 150, 150));
-			}
-			return renderer;
-		}
-
-		private DefaultTableCellRenderer renderer = null;
-	};
-
-	/** Modified to use the set renderer highlighter. */
-	public void highlight(int row, int column) {
-		highlight(row, column, THRG);
+	
+	public CYKParseModel getModel(){
+		return (CYKParseModel) myTable.getModel();
 	}
-
+	
+	@Override
+	public void setMagnification(double mag) {
+		super.setMagnification(mag);
+		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
+		myTable.setFont(this.getFont().deriveFont(size));
+		myTable.setRowHeight((int) (size+10));
+	}
+	
+	
 	/**
 	 * The modified table cell renderer. Removes square brackets when selected,
 	 * and renders empty sets as the Empty Set Symbol.
@@ -99,10 +106,12 @@ public class CYKParseTable extends HighlightTable implements Magnifiable {
 		}
 	}
 
+
 	@Override
-	public void setMagnification(double mag) {
-		float size = (float) (mag * JFLAPPreferences.getDefaultTextSize());
-		this.setFont(this.getFont().deriveFont(size));
-		this.setRowHeight((int) (size + 10));
+	public void updateStatus(AdvancedChangeEvent e) {
+		if(e.comesFrom(getModel().getParser())){
+			if(e.getType() == InputUsingAlgorithm.INPUT_SET)
+				setInput((SymbolString) e.getArg(0));
+		}
 	}
 }

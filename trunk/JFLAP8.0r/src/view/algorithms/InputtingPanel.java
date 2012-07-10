@@ -14,14 +14,14 @@ import model.symbols.symbolizer.Symbolizers;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableButton;
 import util.view.magnify.MagnifiableLabel;
-import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.MagnifiableTextField;
 import util.view.magnify.MagnifiableToolbar;
 
 public class InputtingPanel extends MagnifiableToolbar {
 
 	private InputUsingAlgorithm myAlgorithm;
 	private MagnifiableLabel myLabel;
-	private JTextField myTextField;
+	private MagnifiableTextField myTextField;
 	private MagnifiableButton mySetButton;
 	private MagnifiableButton myChangeButton;
 
@@ -29,7 +29,7 @@ public class InputtingPanel extends MagnifiableToolbar {
 		this.setFloatable(floatable);
 		myAlgorithm = alg;
 		myLabel = new MagnifiableLabel("Input: ", JFLAPPreferences.getDefaultTextSize());
-		myTextField = new JTextField();
+		myTextField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
 		mySetButton = new MagnifiableButton("Set", JFLAPPreferences.getDefaultTextSize());
 		myChangeButton = new MagnifiableButton("Change", JFLAPPreferences.getDefaultTextSize());
 		this.add(myLabel);
