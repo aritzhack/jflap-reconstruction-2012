@@ -23,6 +23,7 @@ import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableSplitPane;
+import util.view.magnify.MagnifiableToolbar;
 import view.algorithms.InputtingPanel;
 import view.algorithms.toolbar.SteppableToolbar;
 import view.formaldef.FormalDefinitionView;
@@ -48,7 +49,7 @@ public abstract class ParserView<S extends Parser>
 		Component parseView = createParseView(alg);
 		Component prodView = createProductionView(alg);
 		InputtingPanel input = new InputtingPanel(alg, false);
-		SteppableToolbar toolbar = new SteppableToolbar(alg, false);
+		MagnifiableToolbar toolbar = createToolbar(alg);
 		myStatusLabel = new MagnifiableLabel(JFLAPPreferences.getDefaultTextSize());
 		
 		MagnifiableSplitPane split = 
@@ -68,6 +69,8 @@ public abstract class ParserView<S extends Parser>
 		p2.add(split, BorderLayout.CENTER);
 		return p2;
 	}
+
+	public abstract MagnifiableToolbar createToolbar(S alg);
 
 	public abstract Component createParseView(S alg);
 

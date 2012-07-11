@@ -37,27 +37,5 @@ public class DerivationView extends MagnifiableTabbedPane{
 				((DerivationPanel)c).setDerivation(d);
 		}
 	}
-	
-	
-//	public static void main(String[] args) {
-//		Variable S = new Variable("S");
-//		Variable A = new Variable("A");
-//		Terminal b = new Terminal("b");
-//		
-//		Production p1 = new Production(S, A,A);
-//		Production p2 = new Production(S, A,A,S);
-//		Production p3 = new Production(A,b);
-//		
-//		//derive bbbb
-//		
-//		Derivation d = new Derivation(p2);
-//		d.addStep(p1, 2);
-//		d.addAll(new Production[]{p3,p3,p3,p3}, new Integer[]{3,0,2,1});
-//		
-//		JFrame fram = new JFrame();
-//		fram.add(new DerivationView(d));
-//		fram.pack();
-//		fram.setVisible(true);
-//	}
 
 }
