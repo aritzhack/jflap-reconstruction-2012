@@ -1,21 +1,15 @@
 package view.grammar.parsing;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import debug.JFLAPDebug;
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
 import model.change.events.AdvancedChangeEvent;
-import universe.preferences.JFLAPPreferences;
+import model.grammar.Grammar;
 import util.view.DropDownMenuPanel;
-import util.view.magnify.MagnifiablePanel;
 import view.grammar.parsing.derivation.InteractiveDerivationView;
 
 public abstract class FindFirstParserView<T extends RunningView> extends ParserView {
-
-	private DropDownMenuPanel mainPanel;
+	private InteractiveDerivationView derivationView;
 
 	public FindFirstParserView(Parser alg) {
 		super(alg);
@@ -24,8 +18,11 @@ public abstract class FindFirstParserView<T extends RunningView> extends ParserV
 
 	@Override
 	public DropDownMenuPanel createParseView(Parser alg) {
+		Grammar g = alg.getGrammar();
 		T runningView = createRunningView(alg);
-		mainPanel = new DropDownMenuPanel(runningView);
+		derivationView = new InteractiveDerivationView(new Derivation(g.getStartVariable()));
+		
+		DropDownMenuPanel mainPanel = new DropDownMenuPanel(runningView, derivationView);
 		
 		return mainPanel;
 	}
@@ -39,8 +36,7 @@ public abstract class FindFirstParserView<T extends RunningView> extends ParserV
 		if(alg.isDone() && alg.isAccept()){
 			Derivation d = alg.getDerivation();
 			
-			InteractiveDerivationView derivationView = new InteractiveDerivationView(d);
-			mainPanel.addOption(derivationView);
+			derivationView.setDerivation(d);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package view.grammar.parsing.cyk;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import model.algorithms.testinput.parse.Parser;
@@ -8,6 +9,8 @@ import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.Terminal;
 import model.grammar.Variable;
+import model.undo.UndoKeeper;
+import util.view.magnify.MagnifiableToolbar;
 import view.grammar.parsing.FindFirstParserView;
 
 public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
@@ -45,6 +48,12 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 		fram.add(new CYKParseView(parser));
 		fram.pack();
 		fram.setVisible(true);
+	}
+
+	@Override
+	public MagnifiableToolbar createToolbar(Parser alg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

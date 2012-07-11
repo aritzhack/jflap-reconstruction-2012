@@ -38,7 +38,7 @@ public class SteppableToolbar extends MagnifiableToolbar implements ChangeListen
 			updateButtons((SteppableAlgorithm) e.getSource());
 	}
 
-	private void updateButtons(SteppableAlgorithm alg) {
+	public void updateButtons(SteppableAlgorithm alg) {
 		myStepButton.setEnabled(alg.canStep());
 		myCompleteButton.setEnabled(alg.canStep());
 		myResetButton.setEnabled(alg.isRunning());
