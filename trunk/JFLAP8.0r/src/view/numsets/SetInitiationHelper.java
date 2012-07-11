@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import model.numbersets.CustomSet;
+import model.sets.CustomSet;
 
 
 /**

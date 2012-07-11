@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import errors.BooleanWrapper;
 
-import model.numbersets.AbstractNumberSet;
 import model.numbersets.operations.SetOperation;
+import model.sets.AbstractNumberSet;
 
 public class SetOperationHelper {
 

@@ -13,10 +13,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 
-import model.numbersets.AbstractNumberSet;
 import model.numbersets.operations.Intersection;
 import model.numbersets.operations.SetOperation;
 import model.numbersets.operations.Union;
+import model.sets.AbstractNumberSet;
 
 
 @SuppressWarnings("serial")
