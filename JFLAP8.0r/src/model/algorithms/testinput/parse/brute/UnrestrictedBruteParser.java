@@ -1,14 +1,10 @@
 package model.algorithms.testinput.parse.brute;
 
 import java.util.*;
-
-import oldnewstuff.main.JFLAP;
-
-import debug.JFLAPDebug;
-
 import model.grammar.*;
 import model.algorithms.testinput.parse.*;
 import model.algorithms.transform.grammar.UselessProductionRemover;
+import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.grammar.Grammar;
@@ -29,9 +25,8 @@ import model.grammar.typetest.matchers.ContextFreeChecker;
  */
 
 public class UnrestrictedBruteParser extends Parser {
-
-	private static final int INCREMENT_CAPACITY_BY = 5000;
-	private int NODES_TO_GENERATE = 1000000;
+	private final int MAX_REACHED = 2;
+	private int NODES_TO_GENERATE = 10000;
 
 	private Queue<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
@@ -66,6 +61,7 @@ public class UnrestrictedBruteParser extends Parser {
 	@Override
 	public boolean resetInternalStateOnly() {
 		myNodesGenerated = 0;
+		pause = false;
 		initializeQueue();
 		return true;
 	}
@@ -83,7 +79,7 @@ public class UnrestrictedBruteParser extends Parser {
 
 	@Override
 	public boolean isDone() {
-		return capacityReached() || isAccept() || myDerivationsQueue.isEmpty();
+		return isAccept() || myDerivationsQueue.isEmpty();
 	}
 
 	@Override
@@ -103,6 +99,10 @@ public class UnrestrictedBruteParser extends Parser {
 	@Override
 	public boolean stepParser() {
 		makeNextReplacement();
+		if(capacityReached()){
+			setPaused(true);
+			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED, NODES_TO_GENERATE));
+		}
 		return true;
 	}
 
@@ -119,10 +119,14 @@ public class UnrestrictedBruteParser extends Parser {
 		}
 	}
 	
-	private void pause(){
-		this.pause = true;
+	public void setPaused(boolean pause){
+		this.pause = pause;
 	}
 
+	/**
+	 * Does the next level of parsing, adding all possible steps
+	 * to each current possible derivation.
+	 */
 	private boolean makeNextReplacement() {
 		ArrayList<Derivation> temp = new ArrayList<Derivation>();
 		Grammar grammar = getGrammar();
@@ -141,14 +145,12 @@ public class UnrestrictedBruteParser extends Parser {
 					for (Production p : productionsWithLHS) {
 						Derivation tempDerivation = d.copy();
 						int replacementIndex = result.indexOf(LHS, i);
-						
 						tempDerivation.addStep(p, replacementIndex);
 						SymbolString tempResult = tempDerivation.createResult();
-						
 						if (isPossibleDerivation(tempResult)) {
 							temp.add(tempDerivation);
 							myNodesGenerated++;
-				
+							
 							if (tempResult.equals(getInput())) {
 								break loop;
 							}
@@ -156,16 +158,13 @@ public class UnrestrictedBruteParser extends Parser {
 					}
 				}
 			}
-			if (myNodesGenerated >= NODES_TO_GENERATE) {
-				break;
-			}
 		}
 		myDerivationsQueue.addAll(temp);
 		return true;
 	}
 
-	private boolean raiseCapacity() {
-		NODES_TO_GENERATE += INCREMENT_CAPACITY_BY;
+	public boolean raiseCapacity() {
+		NODES_TO_GENERATE *= 5;
 		return true;
 	}
 
@@ -254,9 +253,18 @@ public class UnrestrictedBruteParser extends Parser {
 		return smaller;
 	}
 	
+	@Override
+	public boolean canStep() {
+		return !isPaused() && super.canStep();
+	}
+	
 	private static Grammar optimize(Grammar g){
 		UselessProductionRemover remover = new UselessProductionRemover(g);
 		remover.stepToCompletion();
 		return remover.getTransformedDefinition();
+	}
+
+	public boolean isPaused() {
+		return pause;
 	}
 }

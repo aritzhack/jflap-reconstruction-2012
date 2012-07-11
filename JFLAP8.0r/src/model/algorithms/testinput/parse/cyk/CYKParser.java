@@ -283,7 +283,7 @@ public class CYKParser extends Parser {
 		return super.setInput(string);
 	}
 	
-	public Set<Symbol> getNodeAtIndex(int row, int col){
+	public Set<Symbol> getSetAtIndex(int row, int col){
 		if(myParseTable[row][col] != null){
 			Set<Symbol> set = new TreeSet<Symbol>();
 			
