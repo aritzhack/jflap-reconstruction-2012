@@ -88,6 +88,10 @@ public class ElementParser {
 			
 			System.out.println();
 		}
+		if (!isBalanced) {
+			throw new Exception("Invalid formatting!");
+		}
+		
 		return myElements;
 	}
 	
@@ -128,7 +132,6 @@ public class ElementParser {
 		String input = "{{{3}}}";
 		ElementParser parser = new ElementParser(input);
 		ArrayList<String> ans = parser.parse();
-		System.out.println("\n\n");
 		for (String s : ans) {
 			System.out.println(s);
 		}
