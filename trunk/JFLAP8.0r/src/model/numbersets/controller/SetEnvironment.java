@@ -1,7 +1,7 @@
 package model.numbersets.controller;
 
-import model.numbersets.control.ActiveSetsRegistry;
 import model.numbersets.gui.SetWindow;
+import model.sets.ActiveSetsRegistry;
 
 public class SetEnvironment {
 	
