@@ -1,7 +1,7 @@
 package view.numsets.actions;
 
-import model.numbersets.AbstractNumberSet;
-import model.numbersets.control.SetsManager;
+import model.sets.AbstractNumberSet;
+import model.sets.SetsManager;
 import model.undo.IUndoRedo;
 
 public class RemoveSetEvent implements IUndoRedo {

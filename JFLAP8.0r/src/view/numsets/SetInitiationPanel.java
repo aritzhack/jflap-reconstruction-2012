@@ -12,9 +12,10 @@ import javax.swing.JPanel;
 
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
+import view.sets.SetEditor;
 
-import model.numbersets.control.SetsManager;
 import model.numbersets.defined.PredefinedSet;
+import model.sets.SetsManager;
 
 /**
  * Panel holds drop-down menu of predefined set option

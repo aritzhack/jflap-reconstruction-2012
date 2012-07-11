@@ -6,10 +6,10 @@ import java.util.HashMap;
 
 import javax.swing.JComboBox;
 
-import model.numbersets.control.Loader;
-import model.numbersets.control.SetsManager;
 import model.numbersets.controller.PredefinedSetController;
 import model.numbersets.defined.PredefinedSet;
+import model.sets.Loader;
+import model.sets.SetsManager;
 
 @SuppressWarnings({ "serial", "rawtypes" })
 public class PredefinedSetDropdown extends JComboBox {
