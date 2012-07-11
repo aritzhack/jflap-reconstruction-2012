@@ -104,7 +104,6 @@ public class Derivation implements Copyable {
 			return myInitial;
 
 		result.addAll(myInitial);
-
 		for (int i = 0; i < n; i++) {
 			Symbol[] sub = myProductions.get(i).getRHS();
 			int start = mySubstitutions.get(i);
@@ -135,7 +134,7 @@ public class Derivation implements Copyable {
 	public Derivation copy() {
 		Derivation copy = new Derivation(myProductions.get(0));
 		for (int i = 1; i < this.length(); i++) {
-			copy.addStep(myProductions.get(i), mySubstitutions.get(i - 1));
+			copy.addStep(myProductions.get(i), mySubstitutions.get(i));
 		}
 		return copy;
 	}
