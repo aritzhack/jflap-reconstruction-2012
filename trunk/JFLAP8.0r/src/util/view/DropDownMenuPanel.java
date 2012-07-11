@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import debug.JFLAPDebug;
 
+import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiablePanel;
 
@@ -45,6 +46,7 @@ public class DropDownMenuPanel extends MagnifiablePanel implements ItemListener 
 	public void addOption(Component c){
 		myComboBox.addItem(c.getName());
 		myPanel.add(c, c.getName());
+		
 	}
 
 	private void setSelectedComponent(String item) {

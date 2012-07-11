@@ -51,7 +51,7 @@ public class CYKParseController {
 		for (int i = 0; i <= col; i++) {
 			if (table.isCellSelected(i, col) && table.isCellEditable(i, col)) {
 
-				Set<Symbol> parserSet = parser.getNodeAtIndex(col - i, col);
+				Set<Symbol> parserSet = parser.getSetAtIndex(col - i, col);
 				table.setValueAt(parserSet, i, col);
 				stopEditing();
 			}
@@ -67,7 +67,7 @@ public class CYKParseController {
 	public void completeStep() {
 		int row = currentLength;
 		for (int col = row; col < maxLength; col++) {
-			Set<Symbol> parserSet = parser.getNodeAtIndex(col - row, col);
+			Set<Symbol> parserSet = parser.getSetAtIndex(col - row, col);
 			table.setValueAt(parserSet, row, col);
 		}
 		stopEditing();
@@ -132,7 +132,7 @@ public class CYKParseController {
 		int highlighted = 0;
 		int row = currentLength;
 		for (int col = row; col < maxLength; col++) {
-			Set<Symbol> parserSet = parser.getNodeAtIndex(col - row, col);
+			Set<Symbol> parserSet = parser.getSetAtIndex(col - row, col);
 			if (!parserSet.equals(table.getValueAt(row, col))) {
 				table.highlight(row, col);
 				highlighted++;

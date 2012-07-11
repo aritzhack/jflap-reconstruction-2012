@@ -110,7 +110,7 @@ public class CYKParseTablePanel extends RunningView{
 	@Override
 	public void updateStatus(AdvancedChangeEvent e) {
 		if(e.comesFrom(getModel().getParser())){
-			if(e.getType() == InputUsingAlgorithm.INPUT_SET)
+			if(e.getType() == 1)
 				setInput((SymbolString) e.getArg(0));
 		}
 	}

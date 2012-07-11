@@ -14,10 +14,10 @@ import view.grammar.parsing.FindFirstParserView;
  * 
  * @author Thomas Finley
  */
-public class NewBruteParseView extends FindFirstParserView<BruteRunningView> {
+public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 	private static final int MAX_REACHED = 2;
 
-	public NewBruteParseView(UnrestrictedBruteParser alg) {
+	public BruteParserView(UnrestrictedBruteParser alg) {
 		super(alg);
 		
 	}

@@ -5,21 +5,26 @@ import model.algorithms.AlgorithmException;
 import model.algorithms.steppable.AlgorithmStep;
 import model.algorithms.steppable.SteppableAlgorithm;
 import model.algorithms.testinput.parse.Derivation;
+import model.change.events.AdvancedChangeEvent;
 import model.grammar.Production;
 import model.symbols.SymbolString;
 
 public class DerivationController extends SteppableAlgorithm {
+	private final int RESET = 0;
+	
 	private Derivation myDerivation;
 	private DerivationView myView;
 	int step;
 	
 	public DerivationController (DerivationView view, Derivation finalDerivation){
 		myView = view;
-		myDerivation = finalDerivation;
-		
-		step = 0;
+		setDerivation(finalDerivation);
 	}
 	
+	public void setDerivation(Derivation finalDerivation){
+		myDerivation = finalDerivation;
+		reset();
+	}
 
 	@Override
 	public String getDescriptionName() {
@@ -40,7 +45,7 @@ public class DerivationController extends SteppableAlgorithm {
 	public boolean reset() throws AlgorithmException {
 		step = 0;
 		myView.setDerivation(myDerivation.getSubDerivation(step));
-
+		distributeChange(new AdvancedChangeEvent(this, RESET, myDerivation));
 		return true;
 	}
 	
