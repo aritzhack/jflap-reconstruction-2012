@@ -40,7 +40,7 @@ import debug.JFLAPDebug;
 import model.algorithms.testinput.parse.ParseNode;
 import model.grammar.Production;
 import universe.preferences.JFLAPPreferences;
-import view.grammar.parsing.brute.BruteParsePane;
+import view.grammar.parsing.brute.BruteParserView;
 
 /**
  * This is the special drawer for an unrestricted parse tree. Woe betide any
@@ -58,12 +58,12 @@ public class UnrestrictedTreePanel extends TreePanel {
 	 * @param pane
 	 *            the brute parse pane
 	 */
-	public UnrestrictedTreePanel(BruteParsePane pane) {
+	public UnrestrictedTreePanel(BruteParserView pane) {
 		super(new DefaultTreeModel(new DefaultMutableTreeNode("")));
 		this.brutePane = pane;
 	}
 	
-	public UnrestrictedTreePanel(BruteParsePane pane, HashMap <String, String> map) {
+	public UnrestrictedTreePanel(BruteParserView pane, HashMap <String, String> map) {
 		super(new DefaultTreeModel(new DefaultMutableTreeNode("")));
 		this.brutePane = pane;
 		this.myVariableMap=map;
@@ -606,7 +606,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 
 
 	/** The brute parse pane. */
-	protected BruteParsePane brutePane;
+	protected BruteParserView brutePane;
 
 	/** The parse nodes. */
 	protected ParseNode[] solutionParseNodes;

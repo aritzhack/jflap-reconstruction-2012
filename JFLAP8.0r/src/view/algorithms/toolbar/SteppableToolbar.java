@@ -29,7 +29,6 @@ public class SteppableToolbar extends MagnifiableToolbar implements ChangeListen
 		this.add(myStepButton);
 		this.add(myCompleteButton);
 		this.add(myResetButton);
-		updateButtons(alg);
 	}
 
 	@Override

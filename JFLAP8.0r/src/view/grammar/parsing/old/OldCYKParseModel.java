@@ -1,4 +1,4 @@
-package view.grammar.parsing.cyk;
+package view.grammar.parsing.old;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.ParserException;
-import model.algorithms.testinput.parse.cyk.CYKParser;
+import model.algorithms.testinput.parse.cyk.OldCYKParser;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
@@ -18,19 +18,19 @@ import model.symbols.symbolizer.Symbolizers;
  * @author Ian McMahon
  *
  */
-public class CYKParseModel extends AbstractTableModel{
+public class OldCYKParseModel extends AbstractTableModel{
 	private Symbol[] myTarget;
 	private Set<Symbol>[][] myTable;
-	private CYKParser myParser;
+	private OldCYKParser myParser;
 	private int editableRow;
 	
-	public CYKParseModel(CYKParser parser){
+	public OldCYKParseModel(OldCYKParser parser){
 		myTarget = new Symbol[0];
 		myTable = new Set[0][0];
 		myParser = parser;
 	}
 	
-	public CYKParseModel(CYKParser parser, SymbolString input){
+	public OldCYKParseModel(OldCYKParser parser, SymbolString input){
 		myParser = parser;
 		initTargetAndTable(input);
 //		myParser.stepToCompletion();
@@ -51,7 +51,7 @@ public class CYKParseModel extends AbstractTableModel{
 	/**
 	 * Returns internal parser.
 	 */
-	public CYKParser getParser(){
+	public OldCYKParser getParser(){
 		return myParser;
 	}
 	

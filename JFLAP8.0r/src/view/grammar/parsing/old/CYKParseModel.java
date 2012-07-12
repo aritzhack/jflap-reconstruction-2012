@@ -1,4 +1,4 @@
-package view.grammar.parsing.cyk;
+package view.grammar.parsing.old;
 
 import java.awt.GridLayout;
 import java.util.HashSet;
@@ -7,22 +7,22 @@ import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.algorithms.testinput.parse.cyk.CYKParser;
+import model.algorithms.testinput.parse.cyk.OldCYKParser;
 import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import util.view.magnify.MagnifiablePanel;
 
-public class NewCYKParseModel extends MagnifiablePanel implements
+public class CYKParseModel extends MagnifiablePanel implements
 		ChangeListener {
 	private static final int ALG_STEP = 0, INPUT_SET = 1;
 	
 	private Symbol[] myTarget;
 	private Set<Symbol>[][] myTable;
-	private CYKParser myParser;
+	private OldCYKParser myParser;
 	private int editableRow;
 
-	public NewCYKParseModel(CYKParser parser) {
+	public CYKParseModel(OldCYKParser parser) {
 		super(new GridLayout());
 		setName("CYK Parse Model");
 		

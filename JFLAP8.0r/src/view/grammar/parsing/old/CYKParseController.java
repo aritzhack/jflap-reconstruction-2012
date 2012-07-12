@@ -7,10 +7,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import view.grammar.parsing.cyk.CYKParseModel;
-import view.grammar.parsing.cyk.CYKParseTablePanel;
 
-import model.algorithms.testinput.parse.cyk.CYKParser;
+import model.algorithms.testinput.parse.cyk.OldCYKParser;
 import model.grammar.Grammar;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
@@ -28,7 +26,7 @@ public class CYKParseController {
 	private CYKParseTablePanel table;
 	private CYKParsePane pane;
 	private JLabel directions;
-	private CYKParser parser;
+	private OldCYKParser parser;
 	private int maxLength, currentLength;
 
 	public CYKParseController(CYKParseTablePanel table, CYKParsePane pane,
@@ -37,7 +35,7 @@ public class CYKParseController {
 		this.pane = pane;
 		this.directions = directions;
 
-		CYKParseModel model = (CYKParseModel) table.getModel();
+		OldCYKParseModel model = (OldCYKParseModel) table.getModel();
 		this.parser = model.getParser();
 
 	}
@@ -92,7 +90,7 @@ public class CYKParseController {
 		} else {
 			directions.setText("Complete the next row of the table.");
 		}
-		((CYKParseModel) table.getModel()).setEditableRow(currentLength);
+		((OldCYKParseModel) table.getModel()).setEditableRow(currentLength);
 		table.repaint();
 		return true;
 	}

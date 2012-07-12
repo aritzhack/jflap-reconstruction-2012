@@ -35,7 +35,6 @@ import util.view.SplitFactory;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.environment.JFLAPEnvironment;
-import view.grammar.parsing.cyk.CYKParseTablePanel;
 import view.grammar.productions.ProductionTable;
 import debug.JFLAPDebug;
 

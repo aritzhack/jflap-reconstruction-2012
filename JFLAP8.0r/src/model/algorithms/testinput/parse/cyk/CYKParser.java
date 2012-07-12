@@ -18,17 +18,18 @@ import java.util.*;
 import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.*;
+import model.change.events.AdvancedChangeEvent;
 import model.grammar.*;
 import model.grammar.typetest.GrammarType;
 import model.symbols.*;
 
 public class CYKParser extends Parser {
 
-	private ProductionSet myProductions;
 	private List<Production> myAnswerTrace;
-	private Variable myStartVariable;
-	private Set<CYKParseNode> myParseTable[][];
-	private int myStartIndex, myIncrement;
+	private Set<CYKParseNode> myNodeTable[][];
+	private Set<Symbol> mySetTable[][];
+	private int myIncrement;
+	public static final int CELL_CHANGED = 4;
 
 	/**
 	 * Constructor for the CYKParser
@@ -38,7 +39,6 @@ public class CYKParser extends Parser {
 	 */
 	public CYKParser(Grammar g) {
 		super(g);
-		this.resetInternalStateOnly();
 	}
 
 	/**
@@ -48,13 +48,14 @@ public class CYKParser extends Parser {
 	 * @param length
 	 *            the size of the string being processed by the table.
 	 */
-	@SuppressWarnings("unchecked")
 	private void initializeTable(int length) {
-		myParseTable = new Set[length][length];
-		
+		myNodeTable = new Set[length][length];
+		mySetTable = new Set[length][length];
+
 		for (int i = 0; i < length; i++) {
 			for (int j = i; j < length; j++) {
-				myParseTable[i][j] = new HashSet<CYKParseNode>();
+				myNodeTable[i][j] = new HashSet<CYKParseNode>();
+				mySetTable[i][j] = new HashSet<Symbol>();
 			}
 		}
 	}
@@ -76,18 +77,22 @@ public class CYKParser extends Parser {
 	 * @param length
 	 *            - the length of the input string
 	 */
-	private boolean addTerminalProduction() {
-		int i = myStartIndex;
-		SymbolString current = getInput().subList(i, i + 1);
+	private boolean addTerminalProductions() {
+		ProductionSet productions = getGrammar().getProductionSet();
 		
-		for (Production p : myProductions) {
-			if (p.equalsRHS(current)) {
-				CYKParseNode node = new CYKParseNode(p, i);
-				
-				myParseTable[i][i].add(node);
+		for (int i = 0; i < getInput().size(); i++) {
+			SymbolString current = getInput().subList(i, i + 1);
+
+			for (Production p : productions) {
+				if (p.equalsRHS(current)) {
+					CYKParseNode node = new CYKParseNode(p, i);
+					myNodeTable[i][i].add(node);
+				}
 			}
+			if (myNodeTable[i][i].size() == 0)
+				throw new ParserException("There aren't valid terminal productions!");
 		}
-		return myParseTable[i][i].size()>0;
+		return true;
 	}
 
 	/**
@@ -106,39 +111,54 @@ public class CYKParser extends Parser {
 	 * @param end
 	 *            - end index of the substring in the input
 	 */
-	private boolean findProductions() {
-		for (int k = myStartIndex; k < myStartIndex+myIncrement; k++) {
-			for (Variable A : getLHSVariableSet(myStartIndex, k)) {
-				for (Variable B : getLHSVariableSet(k + 1, myStartIndex+myIncrement)) {
-					SymbolString concat = new SymbolString(A, B);
-					
-					for (Production p : myProductions) {
-						if (p.equalsRHS(concat)) {
-							CYKParseNode node = new CYKParseNode(p, k);
-							
-							myParseTable[myStartIndex][myStartIndex+myIncrement].add(node);
-						}
-					}
-				}
+	private boolean addNonterminalProductions() {
+		int size = getInput().size();
+		if (myIncrement >= size)
+			return false;
+
+		for (int i = 0; i < size; i++) {
+			for (int j = i + myIncrement; j < size; j++) {
+				//already filled out this cell
+				if(myNodeTable[i][j].size() > 0) continue;
+				
+				findAllProductions(i, j);
 			}
 		}
 		return true;
 	}
 
+	private void findAllProductions(int i, int j) {
+		for (int k = i; k < j; k++) {
+			for (Symbol A : getLHSVariablesForNode(i, k)) {
+				for (Symbol B : getLHSVariablesForNode(k + 1, j)) {
+					SymbolString concat = new SymbolString(A, B);
+
+					for (Production p : getGrammar().getProductionSet()) {
+						if (p.equalsRHS(concat)) {
+							CYKParseNode node = new CYKParseNode(p, k);
+
+							myNodeTable[i][j].add(node);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/**
-	 * Returns a LeftmostDerivation that can
-	 * derive the specified string. For example, if the derivation of string
-	 * aabaa is: S -> BA -> aA -> aAA -> aBCA -> aaCA -> aabA -> aabBC -> aabaC
-	 * -> aabaa, then the Derivation returned would be: [S->B A, B->a, A->A A, A->B C,
-	 * B->a, C->b, A->B C, B->a, C->b]
+	 * Returns a LeftmostDerivation that can derive the specified string. For
+	 * example, if the derivation of string aabaa is: S -> BA -> aA -> aAA ->
+	 * aBCA -> aaCA -> aabA -> aabBC -> aabaC -> aabaa, then the Derivation
+	 * returned would be: [S->B A, B->a, A->A A, A->B C, B->a, C->b, A->B C,
+	 * B->a, C->b]
 	 * 
 	 */
 	public Derivation getDerivation() {
 		myAnswerTrace = new ArrayList<Production>();
 		Variable start = getGrammar().getStartVariable();
-		
+
 		getTrace(start, 0, getInput().size() - 1);
-		
+
 		Derivation answer = Derivation.createLeftmostDerivation(myAnswerTrace);
 		return answer;
 	}
@@ -158,11 +178,12 @@ public class CYKParser extends Parser {
 	 *            the index of final symbol in the string.
 	 */
 	private boolean getTrace(Variable LHS, int start, int end) {
+		ProductionSet productions = getGrammar().getProductionSet();
 		if (start == end) {
 			Terminal character = (Terminal) getInput().get(start);
 			Production terminalProduction = new Production(LHS, character);
-			
-			for (Production p : myProductions) {
+
+			for (Production p : productions) {
 				if (p.equals(terminalProduction)) {
 					myAnswerTrace.add(terminalProduction);
 					return true;
@@ -170,14 +191,15 @@ public class CYKParser extends Parser {
 			}
 			return false;
 		}
-		for (CYKParseNode node : myParseTable[start][end]) {
+		for (CYKParseNode node : myNodeTable[start][end]) {
 			Production nodeProduction = new Production(LHS, node.getRHS());
-			
-			for (Production p : myProductions) {
+
+			for (Production p : productions) {
 				if (p.equals(nodeProduction)) {
 					myAnswerTrace.add(nodeProduction);
-					if (getTrace(node.getFirstRHSVariable(), start, node.getK()) && 
-						getTrace(node.getSecondRHSVariable(), node.getK() + 1, end)) {
+					if (getTrace(node.getFirstRHSVariable(), start, node.getK())
+							&& getTrace(node.getSecondRHSVariable(),
+									node.getK() + 1, end)) {
 						return true;
 					}
 					myAnswerTrace.remove(nodeProduction);
@@ -206,88 +228,57 @@ public class CYKParser extends Parser {
 		return GrammarType.CHOMSKY_NORMAL_FORM;
 	}
 
-	/**
-	 * Returns all variables that can derive the symbols specified by start and
-	 * end
-	 * 
-	 * @param start
-	 *            the index of the first symbol.
-	 * @param end
-	 *            the index of the final symbol.
-	 */
-	private Set<Variable> getLHSVariableSet(int start, int end) {
-		Set<Variable> LHSVars = new HashSet<Variable>();
-		for (CYKParseNode node : myParseTable[start][end]) {
-			LHSVars.add(node.getLHS());
-		}
-		return LHSVars;
-	}
 
 	@Override
 	public boolean isAccept() {
-		return getLHSVariableSet(0, getInput().size() - 1).contains(
-				myStartVariable);
+		//TODO
+		return mySetTable[0][getInput().size()-1].contains(getGrammar().getStartVariable());
 	}
 
 	@Override
 	public boolean isDone() {
-		return myIncrement >= getInput().size();
+		
+		return getInput()!=null && myIncrement > getInput().size();
 	}
 
-	@Override
-	public boolean stepParser() {
-		boolean nextTableCell;
-		if (myIncrement == 0) {
-			nextTableCell = addTerminalProduction();
-		}else{
-			nextTableCell = findProductions();
-		}
-		myStartIndex++;
-		if(myIncrement+myStartIndex >= getInput().size()){
-			myStartIndex = 0;
-			myIncrement++;
-		}
-		return nextTableCell;
-	}
-	
-	public boolean stepToNextRow() {
-		int currentIncrement = myIncrement;
-		boolean row = true;
-		while(currentIncrement == myIncrement){
-			if(!stepParser()) row = false;
-		}
+	public boolean calculateNextRow() {
+		boolean row;
+		if (myIncrement == 0)
+			row = addTerminalProductions();
+		else
+			row = addNonterminalProductions();
+		myIncrement++;
 		return row;
 	}
 
 	@Override
 	public boolean resetInternalStateOnly() {
-		Grammar gram = getGrammar();
-		
-		myProductions = gram.getProductionSet();
-		myStartVariable = gram.getStartVariable();
+
 		myAnswerTrace = new ArrayList<Production>();
-		myStartIndex = myIncrement = 0;
-		
+		myIncrement = 0;
+
 		if (getInput() != null) {
-			this.initializeTable(getInput().size());
+			initializeTable(getInput().size());
+			return calculateNextRow();
 		}
+		
 		return true;
 	}
 
 	@Override
 	public boolean setInput(SymbolString string) {
-		if (string!= null && string.size() == 0) {
+		if (string != null && string.size() == 0) {
 			throw new ParserException(
 					"CNF Grammars cannot produce empty strings!");
 		}
 		return super.setInput(string);
 	}
-	
-	public Set<Symbol> getSetAtIndex(int row, int col){
-		if(myParseTable[row][col] != null){
+
+	private Set<Symbol> getLHSVariablesForNode(int row, int col) {
+		if (myNodeTable[row][col] != null) {
 			Set<Symbol> set = new TreeSet<Symbol>();
-			
-			for(CYKParseNode node : myParseTable[row][col]){
+
+			for (CYKParseNode node : myNodeTable[row][col]) {
 				set.add(node.getLHS());
 			}
 			return set;
@@ -295,9 +286,53 @@ public class CYKParser extends Parser {
 		return null;
 	}
 
-	
-	public Set<CYKParseNode>[][] getParseTable() {
-		return myParseTable;
+	@Override
+	public boolean stepParser() {
+		int previousIncrement = myIncrement-1;
+		for (int i=0; i +previousIncrement < getInput().size(); i++) {
+			Set<Symbol> enteredSet = getLHSVariablesForNode(i, i+previousIncrement);
+			validate(i, i+previousIncrement, enteredSet);
+		}
+		calculateNextRow();
+		return true;
 	}
 	
+	public void doSelected(int row, int col){
+		if(!isCellEditable(row, col)) return;
+		Set<Symbol> selectedSet = getLHSVariablesForNode(row, col);
+		insertSet(row, col, selectedSet);
+	}
+
+	public boolean validate(int row, int col, Set<Symbol> set) {
+		Set<Symbol> valid = getLHSVariablesForNode(row, col);
+		if(set.equals(valid)){
+			mySetTable[row][col] = set;
+			distributeChange(new AdvancedChangeEvent(this, CELL_CHANGED , mySetTable[row][col]));
+		}
+		return set.equals(valid);
+	}
+	
+	public boolean insertSet(int row, int col, Set<Symbol> set){
+		boolean valid = validate(row, col, set);
+		if(valid && rowIsComplete()) calculateNextRow();
+		return valid;
+	}
+
+	private boolean rowIsComplete() {
+		int previousIncrement = myIncrement - 1;
+		for(int i=0; i+previousIncrement < getInput().size(); i++){
+			if(!getLHSVariablesForNode(i, i+previousIncrement).equals(mySetTable[i][i+previousIncrement]))
+				return false;
+		}
+		return true;
+	}
+	
+	public Set<Symbol> getValueAt(int row, int col){
+		if(col-row >= myIncrement) return null;
+		return mySetTable[row][col];
+	}
+
+	public boolean isCellEditable(int row, int col) {
+		return col - row == myIncrement-1 && !getLHSVariablesForNode(row, col).equals(mySetTable[row][col]);
+	}
 }
