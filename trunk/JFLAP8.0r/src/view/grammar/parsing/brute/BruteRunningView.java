@@ -12,10 +12,4 @@ public class BruteRunningView extends RunningView {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void updateStatus(AdvancedChangeEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

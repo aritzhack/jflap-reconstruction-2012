@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 
 import model.algorithms.testinput.parse.Derivation;
 import util.view.magnify.MagnifiablePanel;
-import view.action.StepAction;
-import view.action.algorithm.AlgorithmCompleteAction;
-import view.action.algorithm.AlgorithmResetAction;
 import view.algorithms.toolbar.SteppableToolbar;
 
 public class InteractiveDerivationView extends MagnifiablePanel {
@@ -17,7 +14,7 @@ public class InteractiveDerivationView extends MagnifiablePanel {
 
 	public InteractiveDerivationView(Derivation d) {
 		super(new BorderLayout());
-		setName("Tree Derivation View");
+		setName("Derivation View");
 		view = new DerivationView(d.getSubDerivation(0));
 
 		alg = new DerivationController(view, d);

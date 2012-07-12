@@ -47,6 +47,12 @@ public class DropDownMenuPanel extends MagnifiablePanel implements ItemListener 
 		myComboBox.addItem(c.getName());
 		myPanel.add(c, c.getName());
 		
+		myComboBox.setSelectedItem(c.getName());
+	}
+	
+	public void removeOption(Component c){
+		myComboBox.removeItem(c.getName());
+		myPanel.remove(c);
 	}
 
 	private void setSelectedComponent(String item) {
