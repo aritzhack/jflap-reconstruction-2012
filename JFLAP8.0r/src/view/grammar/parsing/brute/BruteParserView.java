@@ -19,45 +19,53 @@ public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 
 	public BruteParserView(UnrestrictedBruteParser alg) {
 		super(alg);
-		
+
 	}
-	
+
 	@Override
 	public void updateStatus(AdvancedChangeEvent e) {
-		if(e.comesFrom(getAlgorithm()) && e.getType() == MAX_REACHED){
-			createNodeWarning(e);
+		UnrestrictedBruteParser parser = (UnrestrictedBruteParser) getAlgorithm();
+		if (e.comesFrom(parser)) {
+			if (e.getType() == MAX_REACHED) {
+				createNodeWarning(e);
+				return;
+			}
+			setStatus("Nodes Generated: " + parser.getNumberOfNodes());
 		}
 		super.updateStatus(e);
 	}
 
 	private void createNodeWarning(AdvancedChangeEvent e) {
 		UnrestrictedBruteParser parser = (UnrestrictedBruteParser) getAlgorithm();
-		
+
 		int max = (Integer) e.getArg(0);
-		String[] options = {"Increase limit to "+max*5, "Stop"};
-		int n = JOptionPane.showOptionDialog(this, "The number of nodes generated is at "+
-				parser.getNumberOfNodes()+" ." + " Would you like to continue?", "Node Warning", 
-				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, 
-				null, options, options[0]);
-		if(n==JOptionPane.YES_OPTION){
+		String[] options = { "Increase limit to " + max * 2, "Stop" };
+		int n = JOptionPane.showOptionDialog(
+				this,
+				"The number of nodes generated is at "
+						+ parser.getNumberOfNodes() + " ."
+						+ " Would you like to continue?", "Node Warning",
+				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+				options, options[0]);
+		if (n == JOptionPane.YES_OPTION) {
 			parser.raiseCapacity();
 			parser.setPaused(false);
-		} else{
+		} else {
 			parser.reset();
 		}
 	}
-	
 
 	@Override
 	public BruteRunningView createRunningView(Parser alg) {
-		BruteRunningView running = new BruteRunningView((UnrestrictedBruteParser) alg);
+		BruteRunningView running = new BruteRunningView(
+				(UnrestrictedBruteParser) alg);
 		return running;
 	}
 
-
 	@Override
 	public SteppableToolbar createToolbar(Parser alg) {
-		BruteToolbar toolbar = new BruteToolbar((UnrestrictedBruteParser) alg, false);
+		BruteToolbar toolbar = new BruteToolbar((UnrestrictedBruteParser) alg,
+				false);
 		return toolbar;
 	}
 }
