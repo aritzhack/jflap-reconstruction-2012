@@ -1,10 +1,9 @@
 package view;
 
-import javax.swing.JPanel;
-
 import model.undo.UndoKeeper;
+import util.view.magnify.MagnifiablePanel;
 
-public abstract class EditingPanel extends JPanel{
+public abstract class EditingPanel extends MagnifiablePanel {
 
 	private UndoKeeper myKeeper;
 	private boolean amEditable;
