@@ -15,6 +15,7 @@ import model.undo.UndoKeeper;
 import util.view.magnify.Magnifiable;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
+import view.sets.mainpanels.DefaultSetPanel;
 
 @SuppressWarnings("serial")
 public class SetsView extends EditingPanel implements Magnifiable {
@@ -30,21 +31,28 @@ public class SetsView extends EditingPanel implements Magnifiable {
 	public SetsView (SetsManager manager) {
 		super(new UndoKeeper(), true);
 		myKeeper = super.getKeeper();
+		
 		myActiveSetDisplay = new ActiveSetDisplay();
+		
 		myCentralPane = createCentralPane();
-		
-		setLayout(new BorderLayout());	
-		
-		JScrollPane scroller = new JScrollPane(myCentralPane);
-		SizeSlider slider = new SizeSlider();
-		slider.distributeMagnification();
-		
-		add(scroller, BorderLayout.CENTER);
-		add(slider, BorderLayout.SOUTH);
+//		
+//		setLayout(new BorderLayout());	
+//		
+//		JScrollPane scroller = new JScrollPane(myCentralPane);
+//		SizeSlider slider = new SizeSlider();
+//		slider.distributeMagnification();
+//		
+//		add(scroller, BorderLayout.CENTER);
+//		add(slider, BorderLayout.SOUTH);
 	
 		assignObserver(manager);
 	}
 	
+	
+	private JComponent createView () {
+		
+		return null;
+	}
 	
 	private JComponent createCentralPane () {
 		myCentralPane = new JPanel();
@@ -54,6 +62,8 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		
 		return myCentralPane;
 	}
+	
+	
 	
 	
 	
@@ -67,6 +77,7 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		return "Sets View";
 	}
 
+	
 	@Override
 	public void setMagnification(double mag) {
 		for (Component c : this.getComponents()) {
