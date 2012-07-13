@@ -1,9 +1,11 @@
 package view.grammar.parsing.cyk;
 
 import model.algorithms.testinput.parse.Parser;
+import model.change.events.AdvancedChangeEvent;
 import util.view.magnify.MagnifiableToolbar;
 import view.algorithms.toolbar.CYKToolbar;
 import view.grammar.parsing.FindFirstParserView;
+import view.grammar.parsing.ParserView;
 
 public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
@@ -19,8 +21,21 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 	
 	@Override
 	public MagnifiableToolbar createToolbar(Parser alg) {
-		
 		return new CYKToolbar(getRunningView(), alg, false);
+	}
+	
+	@Override
+	public void updateStatus(AdvancedChangeEvent e) {
+		super.updateStatus(e);
+		
+		Parser alg = getAlgorithm();
+		if(!alg.isDone()){
+			if(alg.getInput() == null){
+				setStatus(ParserView.SET_INPUT);
+				return;
+			}
+			setStatus("Fill in the next row of the parse table!");
+		}
 	}
 
 }

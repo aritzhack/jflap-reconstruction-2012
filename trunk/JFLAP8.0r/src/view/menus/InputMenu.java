@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.JMenu;
 
 import model.undo.UndoKeeper;
-import view.action.grammar.BruteParseAction;
-import view.action.grammar.CYKParseAction;
+import view.action.grammar.parse.BruteParseAction;
+import view.action.grammar.parse.CYKParseAction;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;

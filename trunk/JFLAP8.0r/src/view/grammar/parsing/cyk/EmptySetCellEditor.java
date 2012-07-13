@@ -36,6 +36,7 @@ public class EmptySetCellEditor extends SelectingEditor {
 			String s = jtc.getText();
 			s = s.replaceAll("\\[", "");
 			s = s.replaceAll("\\]", "");
+			s = s.replaceAll(", ", "");
 			jtc.setText(s);
 		}
 

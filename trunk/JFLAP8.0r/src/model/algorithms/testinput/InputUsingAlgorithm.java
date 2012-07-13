@@ -10,7 +10,7 @@ import errors.BooleanWrapper;
 
 public abstract class InputUsingAlgorithm<T extends FormalDefinition> extends FormalDefinitionAlgorithm<T> {
 
-	private static final int INPUT_SET = 1;
+	public static final int INPUT_SET = 1;
 	private SymbolString myInput;
 	
 	public InputUsingAlgorithm(T fd) {

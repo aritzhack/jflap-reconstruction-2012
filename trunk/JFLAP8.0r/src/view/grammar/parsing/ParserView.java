@@ -33,7 +33,7 @@ public abstract class ParserView<S extends Parser>
 							extends FormalDefinitionView<S, Grammar> 
 							implements ChangeListener{
 
-	private static final String SET_INPUT = "Input a string and click \"Set Input\".";
+	public static final String SET_INPUT = "Input a string and click \"Set\" or press Enter.";
 	private S myAlgorithm;
 	private MagnifiableLabel myStatusLabel;
 
@@ -62,6 +62,7 @@ public abstract class ParserView<S extends Parser>
 		p1.add(input);
 		p1.add(toolbar);
 		p1.add(myStatusLabel);
+		setStatus(SET_INPUT);
 		
 		MagnifiablePanel p2 = new MagnifiablePanel();
 		p2.setLayout(new BorderLayout());
@@ -88,13 +89,11 @@ public abstract class ParserView<S extends Parser>
 		if (e instanceof AdvancedChangeEvent &&
 				((AdvancedChangeEvent)e).comesFrom(myAlgorithm))
 			updateStatus((AdvancedChangeEvent)e);
+		distributeMagnifiation();
 		this.repaint();
 	}
 
-	public void updateStatus(AdvancedChangeEvent e) {
-		if (!myAlgorithm.isRunning())
-			myStatusLabel.setText(SET_INPUT);
-	}
+	public abstract void updateStatus(AdvancedChangeEvent e);
 	
 	public S getAlgorithm(){
 		return myAlgorithm;
@@ -103,6 +102,10 @@ public abstract class ParserView<S extends Parser>
 	@Override
 	public Grammar getDefinition() {
 		return getModel().getGrammar();
+	}
+	
+	public void setStatus(String statusText){
+		myStatusLabel.setText(statusText);
 	}
 	
 }

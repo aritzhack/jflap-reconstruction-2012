@@ -40,12 +40,15 @@ public class InputtingPanel extends MagnifiableToolbar {
 	}
 
 	private void setupInteractions() {
-		mySetButton.addActionListener(new ActionListener() {
+		ActionListener set = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				doSetAction();
 			}
-		});
+		};
+		mySetButton.addActionListener(set);
+		myTextField.addActionListener(set);
+		
 		myChangeButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -53,7 +56,6 @@ public class InputtingPanel extends MagnifiableToolbar {
 				doChangeAction();
 			}
 		});
-		
 	}
 
 	private void doChangeAction() {

@@ -8,12 +8,12 @@ import view.grammar.parsing.cyk.CYKParseTablePanel;
 
 import model.algorithms.testinput.parse.cyk.CYKParser;
 
-public class DoSelectedAction extends AbstractAction {
+public class CYKDoSelectedAction extends AbstractAction {
 
 	private CYKParser myParser;
 	private CYKParseTablePanel myPanel;
 
-	public DoSelectedAction(CYKParser parser, CYKParseTablePanel panel){
+	public CYKDoSelectedAction(CYKParser parser, CYKParseTablePanel panel){
 		super("Do Selected");
 		myParser = parser;
 		myPanel = panel;

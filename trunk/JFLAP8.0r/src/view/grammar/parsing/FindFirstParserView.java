@@ -1,6 +1,7 @@
 package view.grammar.parsing;
 
 import debug.JFLAPDebug;
+import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
 import model.change.events.AdvancedChangeEvent;
@@ -29,22 +30,31 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 
 	public abstract T createRunningView(Parser alg);
 
-	public T getRunningView(){
+	public T getRunningView() {
 		return runningView;
 	}
-	
+
 	@Override
 	public void updateStatus(AdvancedChangeEvent e) {
 		Parser alg = getAlgorithm();
-
-		if (alg.isDone() && alg.isAccept()) {
-			Derivation d = alg.getDerivation();
-
-			InteractiveDerivationView derivationView = new InteractiveDerivationView(
-					d);
-			mainPanel.addOption(derivationView);
+		
+		if (e.getType() == InputUsingAlgorithm.INPUT_SET) {
+			mainPanel.removeAllOptions();
+			mainPanel.addOption(runningView);
 		}
+		
+		if (alg.isDone()) {
+			if (alg.isReject())
+				setStatus("Input rejected! Try another string!");
+			else {
+				Derivation d = alg.getDerivation();
 
-		super.updateStatus(e);
+				InteractiveDerivationView derivationView = new InteractiveDerivationView(
+						d);
+				mainPanel.addOption(derivationView);
+				setStatus("Input accepted! Change view to see derivation!");
+			}
+		}
+		
 	}
 }

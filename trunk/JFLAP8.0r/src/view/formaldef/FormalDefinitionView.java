@@ -26,6 +26,7 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 	private JComponent myCentralPanel;
 	private UndoKeeper myKeeper;
 	private T myModel;
+	private SizeSlider slider;
 
 	public FormalDefinitionView(T model, UndoKeeper keeper, boolean editable){
 		super(keeper, editable);
@@ -37,7 +38,7 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 		myCentralPanel = createCentralPanel(myModel, keeper, editable);
 		
 		JScrollPane scroller = new JScrollPane(myCentralPanel);
-		SizeSlider slider = new SizeSlider(myDefinitionPanel);
+		slider = new SizeSlider(myDefinitionPanel);
 		if (myCentralPanel instanceof Magnifiable)
 			slider.addListener((Magnifiable) myCentralPanel);
 		slider.distributeMagnification();
@@ -66,6 +67,10 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 	
 	public T getModel(){
 		return myModel;
+	}
+	
+	public void distributeMagnifiation() {
+		slider.distributeMagnification();
 	}
 	
 	public abstract S getDefinition();
