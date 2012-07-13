@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.grammar.Grammar;
-import model.numbersets.control.SetsManager;
+//import model.numbersets.control.SetsManager;
 import view.grammar.GrammarView;
-import view.numsets.SetView;
+//import view.numsets.SetView;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
 
@@ -20,7 +20,7 @@ public class ViewFactory {
 		myClassToComponent = new HashMap<Class, Class<? extends Component>>();
 		myClassToComponent.put(Grammar.class, GrammarView.class);
 		
-		myClassToComponent.put(SetsManager.class, SetView.class);
+//		myClassToComponent.put(SetsManager.class, SetView.class);
 	}
 	
 	public static Component createView(File f) {

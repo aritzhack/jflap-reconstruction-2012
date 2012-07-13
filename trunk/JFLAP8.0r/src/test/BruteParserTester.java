@@ -1,57 +1,37 @@
 package test;
 
 import model.algorithms.testinput.parse.brute.RestrictedBruteParser;
-import model.automata.InputAlphabet;
+import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
-import model.grammar.StartVariable;
 import model.grammar.Terminal;
-import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
-import model.grammar.VariableAlphabet;
-import model.regex.OperatorAlphabet;
-import model.regex.RegularExpressionGrammar;
-import model.symbols.Symbol;
-import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 
 public class BruteParserTester {
 	
 	public static void main (String[] args) {
 		
-//		Variable S = new Variable("S"), A = new Variable("A"), B = new Variable("B");
-//		Terminal a = new Terminal("a"), b = new Terminal("b"), c = new Terminal("c");
+		Variable S = new Variable("S"), A = new Variable("A");
+		Terminal a = new Terminal("a");
 //		
 //		VariableAlphabet v = new VariableAlphabet();
 //		v.addAll(S, A, B);
 //		
 //		TerminalAlphabet t = new TerminalAlphabet();
 //		t.addAll(a, b, c);
-//		
-//		
-//		ProductionSet p = new ProductionSet();
-//		p.add(new Production(S, A, B));
-//		p.add(new Production(A, a));
-//		p.add(new Production(A, A, a));
-//		p.add(new Production(B, b, b));
-//		p.add(new Production(B, c));
-//		p.add(new Production(S, A, B));
-//		p.add(new Production(A, a));
-//		p.add(new Production(B, b));
-		InputAlphabet input = new InputAlphabet();
-//		for (char i = 'a'; i <= 'z'; i++){
-//			input.add(new Symbol(Character.toString(i)));
-//		}
-		input.add(new Symbol(Character.toString('a')));
-		input.add(new Symbol(Character.toString('b')));
-		RegularExpressionGrammar gram = new RegularExpressionGrammar(input, new OperatorAlphabet());
-		gram.trimAlphabets();
+		Grammar gram = new Grammar();
+		ProductionSet prods = gram.getProductionSet();
 		
-		StartVariable s = new StartVariable("S");
+		prods.add(new Production(S, A,A));
+		prods.add(new Production(A, A,A ));
+		prods.add(new Production(A, a));
+		
+		gram.setStartVariable(S);
 		
 		
-		RestrictedBruteParser parser = new RestrictedBruteParser(gram);
+		UnrestrictedBruteParser parser = UnrestrictedBruteParser.createNewBruteParser(gram);
 		
 		
 		//parser.stepParser();
@@ -61,7 +41,7 @@ public class BruteParserTester {
 //		parser.stepParser();
 //		parser.stepParser();
 //		System.out.println(parser.isAccept());
-		System.out.println(parser.quickParse(Symbolizers.symbolize("aaaaaa", gram)));
+		System.out.println(parser.quickParse(Symbolizers.symbolize("aaaaaaaaaaaaaaa", gram)));
 		System.out.println(parser.getNumberOfNodes());
 	}
 
