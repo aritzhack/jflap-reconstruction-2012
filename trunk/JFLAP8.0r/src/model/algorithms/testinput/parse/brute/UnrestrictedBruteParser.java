@@ -27,8 +27,8 @@ import model.grammar.typetest.matchers.ContextFreeChecker;
  */
 
 public class UnrestrictedBruteParser extends Parser {
-	private final int MAX_REACHED = 2;
-	private int NODES_TO_GENERATE = 10000;
+	public static final int MAX_REACHED = 2;
+	private int numberToGenerate = 10000;
 
 	private Queue<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
@@ -97,7 +97,7 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	private boolean capacityReached() {
-		return myNodesGenerated >= NODES_TO_GENERATE;
+		return myNodesGenerated >= numberToGenerate;
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class UnrestrictedBruteParser extends Parser {
 		makeNextReplacement();
 		if(capacityReached()){
 			setPaused(true);
-			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED, NODES_TO_GENERATE));
+			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED, numberToGenerate));
 		}
 		return true;
 	}
@@ -170,7 +170,7 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	public boolean raiseCapacity() {
-		NODES_TO_GENERATE *= 5;
+		numberToGenerate *= 5;
 		return true;
 	}
 
