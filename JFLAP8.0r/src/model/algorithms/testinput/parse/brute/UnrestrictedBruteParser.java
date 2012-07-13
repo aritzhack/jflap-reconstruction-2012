@@ -1,6 +1,8 @@
 package model.algorithms.testinput.parse.brute;
 
 import java.util.*;
+
+import debug.JFLAPDebug;
 import model.grammar.*;
 import model.algorithms.testinput.parse.*;
 import model.algorithms.transform.grammar.UselessProductionRemover;
@@ -31,7 +33,8 @@ public class UnrestrictedBruteParser extends Parser {
 	private Queue<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
 	private Derivation myAnswerDerivation;
-	protected Set<Symbol> mySmallerSet;
+	private Set<SymbolString> myPrederivedResults;
+	private Set<Symbol> mySmallerSet;
 	private boolean pause;
 	
 	public static UnrestrictedBruteParser createNewBruteParser(Grammar g){
@@ -62,6 +65,7 @@ public class UnrestrictedBruteParser extends Parser {
 	public boolean resetInternalStateOnly() {
 		myNodesGenerated = 0;
 		pause = false;
+		myPrederivedResults = new HashSet<SymbolString>();
 		initializeQueue();
 		return true;
 	}
@@ -145,8 +149,10 @@ public class UnrestrictedBruteParser extends Parser {
 					for (Production p : productionsWithLHS) {
 						Derivation tempDerivation = d.copy();
 						int replacementIndex = result.indexOf(LHS, i);
+						
 						tempDerivation.addStep(p, replacementIndex);
 						SymbolString tempResult = tempDerivation.createResult();
+						
 						if (isPossibleDerivation(tempResult)) {
 							temp.add(tempDerivation);
 							myNodesGenerated++;
@@ -173,6 +179,8 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	public boolean isPossibleDerivation(SymbolString derivation) {
+		if(myPrederivedResults.contains(derivation)) return false;
+		myPrederivedResults.add(derivation);
 		Symbol[] derivationArray = derivation.toArray(new Symbol[0]);
 		int min = minimumLength(derivationArray, mySmallerSet) ;
 		return min <= getInput().size();

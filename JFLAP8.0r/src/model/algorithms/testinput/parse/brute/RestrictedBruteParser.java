@@ -1,12 +1,12 @@
 package model.algorithms.testinput.parse.brute;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import debug.JFLAPDebug;
-import model.symbols.Symbol;
-import model.symbols.SymbolString;
 import model.algorithms.testinput.parse.Derivation;
 import model.grammar.Grammar;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 public class RestrictedBruteParser extends UnrestrictedBruteParser {
 
@@ -26,7 +26,7 @@ public class RestrictedBruteParser extends UnrestrictedBruteParser {
 	}
 
 
-	public boolean isPossibleDerivation(SymbolString derivation) {
+	public boolean isPossibleDerivation(List<Derivation> derivationList, SymbolString derivation) {
 		if (!super.isPossibleDerivation(derivation))
 			return false;
 		
