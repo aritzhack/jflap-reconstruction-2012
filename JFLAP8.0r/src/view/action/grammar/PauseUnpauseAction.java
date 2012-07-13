@@ -6,18 +6,20 @@ import javax.swing.AbstractAction;
 
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 
-public class PauseAction extends AbstractAction {
+public class PauseUnpauseAction extends AbstractAction {
 
 	private UnrestrictedBruteParser myParser;
+	private boolean pause;
 
-	public PauseAction(UnrestrictedBruteParser parser){
-		super("Pause");
+	public PauseUnpauseAction(UnrestrictedBruteParser parser, boolean pause){
+		super(pause ? "Pause" : "Unpause");
 		myParser = parser;
+		this.pause = pause;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		myParser.setPaused(true);
+		myParser.setPaused(pause);
 	}
 
 }

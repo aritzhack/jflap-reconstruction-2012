@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
@@ -14,8 +13,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-
-import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.cyk.CYKParser;
@@ -26,11 +23,15 @@ import model.symbols.symbolizer.Symbolizers;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.tables.HighlightTable;
+import util.view.tables.SelectingEditor;
 import view.grammar.parsing.RunningView;
 
+@SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView {
 
 	private HighlightTable myTable;
+	private DefaultTableCellRenderer myRenderer;
+	private SelectingEditor myEditor;
 
 	public CYKParseTablePanel(Parser parser) {
 		super("CYK Parse Table", parser);
@@ -38,8 +39,12 @@ public class CYKParseTablePanel extends RunningView {
 
 		CYKParseModel myModel = new CYKParseModel((CYKParser) parser);
 		myTable = new HighlightTable(myModel);
-
-		add(myTable, BorderLayout.CENTER);
+		JScrollPane panel = new JScrollPane(myTable);
+		
+		myRenderer = new EmptySetCellRenderer();
+		myEditor = new EmptySetCellEditor();
+		
+		add(panel, BorderLayout.CENTER);
 	}
 
 	private class CYKParseModel extends AbstractTableModel implements
@@ -72,6 +77,7 @@ public class CYKParseTablePanel extends RunningView {
 			return myParser.getValueAt(rowIndex, columnIndex);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			Set<Symbol> attemptSet;
@@ -80,10 +86,12 @@ public class CYKParseTablePanel extends RunningView {
 						(String) aValue, myParser.getGrammar()));
 			} else
 				attemptSet = (Set<Symbol>) aValue;
-			if (!myParser.insertSet(rowIndex, columnIndex, attemptSet)) {
+			if (!myParser.insertSet(rowIndex, columnIndex, attemptSet)){
 				myTable.highlight(rowIndex, columnIndex);
-
+				myTable.clearSelection();
 			}
+			else
+				myTable.dehighlight(rowIndex, columnIndex);
 		}
 
 		private Symbol[] getColumnNames() {
@@ -98,15 +106,17 @@ public class CYKParseTablePanel extends RunningView {
 			if (e instanceof AdvancedChangeEvent
 					&& ((AdvancedChangeEvent) e).comesFrom(myParser)) {
 				fireTableDataChanged();
-				myTable.dehighlight();
 				myTable.createDefaultColumnsFromModel();
 
 				for (int i = 0; i < getColumnCount(); i++) {
 					TableColumn col = myTable.getColumnModel().getColumn(i);
 
-					col.setCellRenderer(new EmptySetCellRenderer());
-					col.setCellEditor(new EmptySetCellEditor());
+					col.setCellRenderer(myRenderer);
+					col.setCellEditor(myEditor);
 					col.setHeaderValue(getColumnNames()[i]);
+					for(int j = 0; j < getColumnCount(); j++){
+						if(!isCellEditable(i, j)) myTable.dehighlight(i, j);
+					}
 				}
 			}
 		}
@@ -122,11 +132,12 @@ public class CYKParseTablePanel extends RunningView {
 				int column) {
 			JLabel l = (JLabel) super.getTableCellRendererComponent(table,
 					value, isSelected, hasFocus, row, column);
-			if (value == null)
+			if (value == null){
+				if(table.isCellEditable(row, column)) l.setText("[]");
 				return l;
+			}
 			if (hasFocus && table.isCellEditable(row, column)) {
-				l.setText(l.getText().replaceAll("\\[", ""));
-				l.setText(l.getText().replaceAll("\\]", ""));
+				l.setText(replaceSetCharacters(l.getText()));
 				return l;
 			}
 			if (!value.equals(new HashSet<Symbol>()))
@@ -142,6 +153,12 @@ public class CYKParseTablePanel extends RunningView {
 	
 	public int getSelectedColumn(){
 		return myTable.getSelectedColumn();
+	}
+	
+	private String replaceSetCharacters(String labelText){
+		String replacement = labelText.replaceAll("\\[", "");
+		replacement = replacement.replaceAll("\\]", "");
+		return replacement;
 	}
 	
 	
