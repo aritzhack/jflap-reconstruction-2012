@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import model.algorithms.steppable.SteppableAlgorithm;
+import model.algorithms.steppable.SteppableAlgorithm;
 
 public abstract class AlgorithmAction<T extends SteppableAlgorithm> extends AbstractAction {
 

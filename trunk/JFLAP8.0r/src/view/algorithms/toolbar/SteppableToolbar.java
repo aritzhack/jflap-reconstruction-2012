@@ -5,6 +5,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import model.algorithms.steppable.SteppableAlgorithm;
+import model.algorithms.steppable.SteppableAlgorithm;
 import model.change.events.AdvancedChangeEvent;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableButton;

@@ -15,7 +15,6 @@ import view.grammar.parsing.FindFirstParserView;
  * @author Thomas Finley
  */
 public class BruteParserView extends FindFirstParserView<BruteRunningView> {
-	private static final int MAX_REACHED = 2;
 
 	public BruteParserView(UnrestrictedBruteParser alg) {
 		super(alg);
@@ -26,33 +25,26 @@ public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 	public void updateStatus(AdvancedChangeEvent e) {
 		UnrestrictedBruteParser parser = (UnrestrictedBruteParser) getAlgorithm();
 		if (e.comesFrom(parser)) {
-			if (e.getType() == MAX_REACHED) {
-				createNodeWarning(e);
-				return;
+			if (e.getType() == UnrestrictedBruteParser.MAX_REACHED) {
+				boolean shouldInc = promptForIncreaseCapacity(parser.getNumberOfNodes(), e);
+				if (shouldInc) parser.raiseCapacity();
 			}
 			setStatus("Nodes Generated: " + parser.getNumberOfNodes());
 		}
 		super.updateStatus(e);
 	}
 
-	private void createNodeWarning(AdvancedChangeEvent e) {
-		UnrestrictedBruteParser parser = (UnrestrictedBruteParser) getAlgorithm();
+	private boolean promptForIncreaseCapacity(int nodeNum, AdvancedChangeEvent e) {
 
-		int max = (Integer) e.getArg(0);
-		String[] options = { "Increase limit to " + max * 2, "Stop" };
-		int n = JOptionPane.showOptionDialog(
+		int n = JOptionPane.showConfirmDialog(
 				this,
-				"The number of nodes generated is at "
-						+ parser.getNumberOfNodes() + " ."
-						+ " Would you like to continue?", "Node Warning",
-				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-				options, options[0]);
-		if (n == JOptionPane.YES_OPTION) {
-			parser.raiseCapacity();
-			parser.setPaused(false);
-		} else {
-			parser.reset();
-		}
+				"The number of nodes generated is at " + 
+						nodeNum + " .Would you like to continue?", 
+				"Node Warning",
+				JOptionPane.YES_NO_OPTION, 
+				JOptionPane.WARNING_MESSAGE);
+		
+		return n == JOptionPane.YES_OPTION;
 	}
 
 	@Override

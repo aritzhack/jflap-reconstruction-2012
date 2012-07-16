@@ -27,7 +27,7 @@ public class RestrictedBruteParser extends UnrestrictedBruteParser {
 
 
 	public boolean isPossibleDerivation(List<Derivation> derivationList, SymbolString derivation) {
-		if (!super.isPossibleDerivation(derivation))
+		if (!super.isPossibleSententialForm(derivation))
 			return false;
 		
 		boolean startBookend = false, endBookend = false;
