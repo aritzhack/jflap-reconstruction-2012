@@ -14,7 +14,7 @@ public class CYKToolbar extends SteppableToolbar {
 	public CYKToolbar(CYKParseTablePanel panel, SteppableAlgorithm alg, boolean floatable) {
 		super(alg, floatable);
 		int size = JFLAPPreferences.getDefaultTextSize();
-		mySelectedButton = new MagnifiableButton(new CYKDoSelectedAction((CYKParser) alg, panel), size);
+		mySelectedButton = new MagnifiableButton(new CYKDoSelectedAction(panel), size);
 		add(mySelectedButton);
 		updateButtons(alg);
 	}

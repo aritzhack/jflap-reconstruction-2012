@@ -12,7 +12,7 @@ import view.grammar.parsing.FindFirstParserView;
 /**
  * This is a brute force parse pane.
  * 
- * @author Thomas Finley
+ * @author Ian McMahon
  */
 public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 
@@ -27,7 +27,7 @@ public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 		if (e.comesFrom(parser)) {
 			if (e.getType() == UnrestrictedBruteParser.MAX_REACHED) {
 				boolean shouldInc = promptForIncreaseCapacity(parser.getNumberOfNodes(), e);
-				if (shouldInc) parser.raiseCapacity();
+				if (shouldInc) parser.raiseCapacity(5);
 			}
 			setStatus("Nodes Generated: " + parser.getNumberOfNodes());
 		}

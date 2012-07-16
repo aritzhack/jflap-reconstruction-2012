@@ -38,7 +38,7 @@ public abstract class ParserView<S extends Parser>
 	private MagnifiableLabel myStatusLabel;
 
 	public ParserView(S alg) {
-		super(alg, null, false);
+		super(alg, new UndoKeeper(), false);
 		myAlgorithm = alg;
 		alg.addListener(this);
 	}

@@ -39,14 +39,14 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 		Parser alg = getAlgorithm();
 		
 		if (e.getType() == InputUsingAlgorithm.INPUT_SET) {
-			mainPanel.removeAllOptions();
-			mainPanel.addOption(runningView);
+			resetMainPanel();
 		}
 		
 		if (alg.isDone()) {
 			if (alg.isReject())
 				setStatus("Input rejected! Try another string!");
 			else {
+				resetMainPanel();
 				Derivation d = alg.getDerivation();
 
 				InteractiveDerivationView derivationView = new InteractiveDerivationView(
@@ -56,5 +56,10 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 			}
 		}
 		
+	}
+	
+	public void resetMainPanel(){
+		mainPanel.removeAllOptions();
+		mainPanel.addOption(runningView);
 	}
 }

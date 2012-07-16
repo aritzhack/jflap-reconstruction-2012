@@ -22,6 +22,8 @@ package util.view.tables;
 
 import javax.swing.table.AbstractTableModel;
 
+import debug.JFLAPDebug;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,12 +195,11 @@ public abstract class GrowableTableModel extends AbstractTableModel implements
 			fireTableRowsDeleted(row, row);
 			row--;
 		}
-		else 
-			fireTableCellUpdated(row, column);
-		if (row == getRowCount()) {
-			getData().add(createEmptyRow());
-			fireTableRowsInserted(row, row);
-		}
+			if (row == getRowCount()) {
+				getData().add(createEmptyRow());
+				fireTableRowsInserted(row, row);
+			}
+				fireTableRowsUpdated(row, row);
 //        if (row  >= getRowCount()) {
 //            getData().add(createEmptyRow());
 //            fireTableRowsInserted(row, row);

@@ -1,24 +1,23 @@
 package view.grammar.parsing.cyk;
 
-import java.awt.Component;
-import java.util.HashSet;
-
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import debug.JFLAPDebug;
-
-import universe.preferences.JFLAPPreferences;
 import util.view.tables.SelectingEditor;
 
-public class EmptySetCellEditor extends SelectingEditor {
+/**
+ * Editor used in CYK ParseTablePanel to remove brackets and commas, so that
+ * user input can be parsed and displayed easier and correctly.
+ * @author Ian McMahon
+ *
+ */
+public class SetCellEditor extends SelectingEditor {
 
-	public EmptySetCellEditor() {
+	public SetCellEditor() {
 		super();
 	}
 
-	public EmptySetCellEditor(JTextField textField) {
+	public SetCellEditor(JTextField textField) {
 		super(textField);
 	}
 

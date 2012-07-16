@@ -27,11 +27,14 @@ public class InputtingPanel extends MagnifiableToolbar {
 
 	public InputtingPanel(InputUsingAlgorithm alg, boolean floatable){
 		this.setFloatable(floatable);
+		int size = JFLAPPreferences.getDefaultTextSize();
+		
 		myAlgorithm = alg;
-		myLabel = new MagnifiableLabel("Input: ", JFLAPPreferences.getDefaultTextSize());
-		myTextField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
-		mySetButton = new MagnifiableButton("Set", JFLAPPreferences.getDefaultTextSize());
-		myChangeButton = new MagnifiableButton("Change", JFLAPPreferences.getDefaultTextSize());
+		myLabel = new MagnifiableLabel("Input: ", size);
+		myTextField = new MagnifiableTextField(size);
+		mySetButton = new MagnifiableButton("Set", size);
+		myChangeButton = new MagnifiableButton("Change", size);
+		
 		this.add(myLabel);
 		this.add(myTextField);
 		this.add(mySetButton);
