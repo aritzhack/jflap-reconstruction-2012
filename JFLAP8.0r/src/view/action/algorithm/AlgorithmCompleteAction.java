@@ -1,6 +1,7 @@
 package view.action.algorithm;
 
 import model.algorithms.steppable.SteppableAlgorithm;
+import model.algorithms.steppable.SteppableAlgorithm;
 
 public class AlgorithmCompleteAction extends AlgorithmAction {
 

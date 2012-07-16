@@ -14,8 +14,8 @@ import model.change.events.AdvancedChangeEvent;
 import model.formaldef.Describable;
 
 public abstract class SteppableAlgorithm extends ChangingObject implements Describable,
-													Steppable,
-													JFLAPConstants {
+																				JFLAPConstants, 
+																				Steppable {
 
 	
 	private static final int ALG_STEP = 0;
@@ -77,11 +77,6 @@ public abstract class SteppableAlgorithm extends ChangingObject implements Descr
 		return this.canStep();
 	}
 	
-	/**
-	 * Resets this algorithm to its original state.
-	 * 
-	 * @return true if the reset is successful
-	 */
 	public abstract boolean reset() throws AlgorithmException;
 	
 	
