@@ -165,8 +165,12 @@ public class UnrestrictedBruteParser extends Parser {
 		return true;
 	}
 
-	public boolean raiseCapacity() {
-		myCapacity *= 5;
+	public boolean raiseCapacity(int numberOfSteps) {
+		int levelSize = myDerivationsQueue.size();
+		int numProductions = getGrammar().getProductionSet().size();
+		int increment = (int) Math.pow(numProductions, numberOfSteps);
+	
+		myCapacity = myNodesGenerated + levelSize*increment;
 		return true;
 	}
 

@@ -14,8 +14,6 @@ package model.algorithms.testinput.parse.cyk;
 
 import java.util.*;
 
-import debug.JFLAPDebug;
-
 import model.algorithms.testinput.parse.*;
 import model.change.events.AdvancedChangeEvent;
 import model.grammar.*;
@@ -79,7 +77,7 @@ public class CYKParser extends Parser {
 					myNodeTable[i][i].add(node);
 				}
 			}
-			if (myNodeTable[i][i].size() == 0)
+			if (myNodeTable[i][i].isEmpty())
 				throw new ParserException(
 						"There aren't valid terminal productions!");
 		}
@@ -98,7 +96,7 @@ public class CYKParser extends Parser {
 		for (int i = 0; i < size; i++) {
 			for (int j = i + myIncrement; j < size; j++) {
 				// already filled out this cell
-				if (myNodeTable[i][j].size() > 0)
+				if (!myNodeTable[i][j].isEmpty())
 					continue;
 
 				findAllProductions(i, j);
@@ -109,7 +107,7 @@ public class CYKParser extends Parser {
 
 	/**
 	 * Adds all production that can derive the substring from i to j (inclusive)
-	 * of the original input, by calculating all possible k, i <=k < j.
+	 * of the original input, by calculating all possible k: i <= k < j.
 	 */
 	private void findAllProductions(int i, int j) {
 		for (int k = i; k < j; k++) {
@@ -224,7 +222,12 @@ public class CYKParser extends Parser {
 		return getInput() != null && myIncrement > getInput().size();
 	}
 
-	public boolean calculateNextRow() {
+	/**
+	 * Precalculates the next row/diagonal, returns true unless there are no
+	 * Variables that can derive a terminal in the first step or it is trying
+	 * to calculate a row that doesn't exist (myIncrement >= input.size()).
+	 */
+	private boolean calculateNextRow() {
 		boolean row;
 		if (myIncrement == 0)
 			row = addTerminalProductions();
@@ -257,9 +260,10 @@ public class CYKParser extends Parser {
 		return super.setInput(string);
 	}
 
+	/**
+	 * Returns the set of Variables on the LHS of each Node at myNodeTable[row][col]
+	 */
 	private Set<Symbol> getLHSVariablesForNode(int row, int col) {
-		if (myNodeTable[row][col] == null)
-			return null;
 		Set<Symbol> set = new TreeSet<Symbol>();
 
 		for (CYKParseNode node : myNodeTable[row][col]) {
@@ -272,25 +276,36 @@ public class CYKParser extends Parser {
 	public boolean stepParser() {
 		int previousIncrement = myIncrement - 1;
 		for (int i = 0; i + previousIncrement < getInput().size(); i++) {
-			Set<Symbol> enteredSet = getLHSVariablesForNode(i, i
-					+ previousIncrement);
-			insertSet(i, i + previousIncrement, enteredSet);
+			autofillCell(i, i+previousIncrement);
 		}
 		return true;
 	}
 
-	public void doSelected(int row, int col) {
+	/**
+	 * Completes the cell specified by row and col, inserting the correct set
+	 * of Symbols at that location.
+	 */
+	public void autofillCell(int row, int col) {
 		if (!isCellEditable(row, col))
 			return;
 		Set<Symbol> selectedSet = getLHSVariablesForNode(row, col);
 		insertSet(row, col, selectedSet);
 	}
 
-	public boolean validate(int row, int col, Set<Symbol> set) {
+	/**
+	 * Returns true if the set is equal to the LHS Variables at 
+	 * myNodeTable[row][col]
+	 */
+	private boolean validate(int row, int col, Set<Symbol> set) {
 		Set<Symbol> valid = getLHSVariablesForNode(row, col);
 		return set.equals(valid);
 	}
 
+	/**
+	 * Changes the value of mySetTable[row][col] to <i>set</i>, 
+	 * increments the row/diagonal if the current row is complete,
+	 * and returns whether or not the entered set is the correct one.
+	 */
 	public boolean insertSet(int row, int col, Set<Symbol> set) {
 		boolean valid = validate(row, col, set);
 		mySetTable[row][col] = set;
@@ -302,6 +317,10 @@ public class CYKParser extends Parser {
 		return valid;
 	}
 
+	/**
+	 * Returns true if all values in the current row/diagonal of mySetTable are
+	 * the correct sets.
+	 */
 	private boolean rowIsComplete() {
 		int previousIncrement = myIncrement - 1;
 		for (int i = 0; i + previousIncrement < getInput().size(); i++) {
@@ -312,10 +331,16 @@ public class CYKParser extends Parser {
 		return true;
 	}
 
+	/**
+	 * Returns the set stored at mySetTable[row][col]
+	 */
 	public Set<Symbol> getValueAt(int row, int col) {
 		return mySetTable[row][col];
 	}
 
+	/**
+	 * Returns true if the cell is a member of the current diagonal.
+	 */
 	public boolean isCellEditable(int row, int col) {
 		return col - row == myIncrement - 1;
 	}

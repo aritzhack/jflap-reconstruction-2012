@@ -7,6 +7,11 @@ import view.algorithms.toolbar.CYKToolbar;
 import view.grammar.parsing.FindFirstParserView;
 import view.grammar.parsing.ParserView;
 
+/**
+ * CYK Parser GUI
+ * @author Ian McMahon
+ *
+ */
 public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
 	public CYKParseView(Parser alg) {
