@@ -20,7 +20,7 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
 	@Override
 	public CYKParseTablePanel createRunningView(Parser alg) {
-		CYKParseTablePanel table = new CYKParseTablePanel(alg);
+		CYKParseTablePanel table = new CYKParseTablePanel(alg, true);
 		return table;
 	}
 	
