@@ -23,7 +23,6 @@ public abstract class NewAction<T> extends AbstractAction{
 	public void actionPerformed(ActionEvent arg0) {
 		Object model = createNewModel();
 		Component c = ViewFactory.createView(model);
-		JFLAPDebug.print(model);
 		JFLAPUniverse.registerEnvironment(c);
 		
 	}

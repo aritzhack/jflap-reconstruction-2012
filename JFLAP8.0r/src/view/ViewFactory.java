@@ -28,7 +28,6 @@ public class ViewFactory {
 	}
 
 	public static Component createView(Object decode) {
-		JFLAPDebug.print("Creating View");
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
 		try {
