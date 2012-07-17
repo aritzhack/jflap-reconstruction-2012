@@ -27,6 +27,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
+import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.tables.SelectingEditor;
@@ -43,16 +44,19 @@ import view.grammar.parsing.RunningView;
 @SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView {
 
+	public static final Color TRANSPARENT = JFLAPUniverse.getActiveEnvironment().getBackground();
 	private JTable myTable;
 	private SelectingEditor myEditor;
 	private CYKParser myParser;
 	private Map<Integer, Boolean> myHighlightData;
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
+	private boolean diagonal;
 
-	public CYKParseTablePanel(Parser parser) {
+	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
 		myParser = (CYKParser) parser;
+		this.diagonal = diagonal;
 		setLayout(new BorderLayout());
 
 		CYKParseModel myModel = new CYKParseModel(myParser);
@@ -92,12 +96,12 @@ public class CYKParseTablePanel extends RunningView {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return myParser.isCellEditable(rowIndex, columnIndex);
+			return myParser.isCellEditable(getRowFromMapping(rowIndex, columnIndex), columnIndex);
 		}
 
 		@Override
 		public Set<Symbol> getValueAt(int rowIndex, int columnIndex) {
-			return myParser.getValueAt(rowIndex, columnIndex);
+			return myParser.getValueAt(getRowFromMapping(rowIndex, columnIndex), columnIndex);
 		}
 
 		/**
@@ -106,13 +110,13 @@ public class CYKParseTablePanel extends RunningView {
 		 * value, and highlights the cell if incorrect (and clears highlighting
 		 * if correct)
 		 */
-		@SuppressWarnings("unchecked")
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			Set<Symbol> attemptSet = new HashSet<Symbol>(Symbolizers.symbolize(
 					(String) aValue, myParser.getGrammar()));
-
-			if (!myParser.insertSet(rowIndex, columnIndex, attemptSet)) {
+			int row = getRowFromMapping(rowIndex, columnIndex);
+			
+			if (!myParser.insertSet(row, columnIndex, attemptSet)) {
 				myHighlightData.put(singleIndex(rowIndex, columnIndex), true);
 				myTable.clearSelection();
 			} else
@@ -129,6 +133,7 @@ public class CYKParseTablePanel extends RunningView {
 			HighlightHeader[] columns = new HighlightHeader[input.size()];
 			for (int i = 0; i < columns.length; i++) {
 				columns[i] = new HighlightHeader(input.get(i));
+				columns[i].setHightlight(TRANSPARENT);
 			}
 			return columns;
 		}
@@ -173,7 +178,7 @@ public class CYKParseTablePanel extends RunningView {
 	public void doSelected() {
 		int row = myTable.getSelectedRow();
 		int col = myTable.getSelectedColumn();
-		myParser.autofillCell(row, col);
+		myParser.autofillCell(getRowFromMapping(row, col), col);
 		myHighlightData.put(singleIndex(row, col), false);
 	}
 
@@ -190,13 +195,15 @@ public class CYKParseTablePanel extends RunningView {
 			if (hasFocus) {
 				dehighlightHeaders();
 				if (table.isCellEditable(row, column))
-					highlightHeader(row, column);
+					highlightHeader(getRowFromMapping(row, column), column);
 			}
-			if (myHighlightData.get(singleIndex(row, column))){
+			if (myHighlightData.get(singleIndex(row, column)))
 				l.setBackground(new Color(255, 150, 150));
-			} else{
+			else if( row > column)
+				l.setBackground(TRANSPARENT);
+			else
 				l.setBackground(Color.white);
-			}
+			
 			if (value == null) {
 				if (table.isCellEditable(row, column))
 					l.setText("[]");
@@ -224,11 +231,10 @@ public class CYKParseTablePanel extends RunningView {
 			if (value instanceof HighlightHeader) {
 				HighlightHeader headerValue = (HighlightHeader) value;
 				if (headerValue.getHighlight() != null) {
-					this.setForeground(headerValue.getHighlight());
+					this.setBackground(headerValue.getHighlight());
 				}
 			}
 			head.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-			head.setOpaque(false);
 			head.setHorizontalAlignment(SwingConstants.CENTER);
 			return head;
 		}
@@ -248,7 +254,7 @@ public class CYKParseTablePanel extends RunningView {
 		for (int i = 0; i < myTable.getColumnCount(); i++) {
 			HighlightHeader header = (HighlightHeader) myTable.getColumnModel()
 					.getColumn(i).getHeaderValue();
-			header.setHightlight(Color.black);
+			header.setHightlight(TRANSPARENT);
 		}
 		repaint();
 	}
@@ -268,6 +274,10 @@ public class CYKParseTablePanel extends RunningView {
 	 */
 	private static int singleIndex(int row, int column) {
 		return row + (column << 22);
+	}
+	
+	private int getRowFromMapping(int row, int column){
+		return (diagonal || row > column) ? row : column - row;
 	}
 
 	@Override
