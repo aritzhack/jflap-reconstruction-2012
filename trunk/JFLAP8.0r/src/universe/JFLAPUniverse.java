@@ -68,22 +68,17 @@ public class JFLAPUniverse{
 	}
 
 	public static JFLAPEnvironment registerEnvironment(Component comp){
-		JFLAPDebug.print("REGISTERING");
 		JFLAPEnvironment env = new JFLAPEnvironment(comp, getNextUnusedID());
-		JFLAPDebug.print(env);
 		registerEnvironment(env);
 		return env;
 	}
 
 	public static void registerEnvironment(JFLAPEnvironment env) {
-		JFLAPDebug.print("New ID: " + env.getID());
-
 		setUpWindowListener(env);
 		setActiveEnvironment(env);
 	}
 
 	public static boolean registerEnvironment(File f) {
-		JFLAPDebug.print("Registry size: " + REGISTRY.size());
 		JFLAPEnvironment e = getEnvironment(f);
 		if (e != null){
 			e.requestFocus();
@@ -123,8 +118,6 @@ public class JFLAPUniverse{
 		env.addWindowFocusListener(new WindowAdapter() {
 			@Override
 			public void windowGainedFocus(WindowEvent e) {
-				JFLAPDebug.print("GainedFocus: " + e.getComponent());
-				JFLAPDebug.print("Registry State: " + REGISTRY);
 				setActiveEnvironment((JFLAPEnvironment) e.getComponent());
 			}
 		});
@@ -140,7 +133,6 @@ public class JFLAPUniverse{
 
 	public static void deregisterEnvironment(JFLAPEnvironment env) {
 		REGISTRY.remove(env);
-		JFLAPDebug.print(REGISTRY);
 		if (REGISTRY.isEmpty())
 			showMainMenu();
 	}

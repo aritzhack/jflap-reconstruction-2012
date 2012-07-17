@@ -1,7 +1,6 @@
 package view.algorithms.toolbar;
 
 import model.algorithms.steppable.SteppableAlgorithm;
-import model.algorithms.testinput.parse.cyk.CYKParser;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableButton;
 import view.action.grammar.CYKDoSelectedAction;
