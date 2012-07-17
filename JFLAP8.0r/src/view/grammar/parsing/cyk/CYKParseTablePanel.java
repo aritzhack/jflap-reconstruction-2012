@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +47,8 @@ public class CYKParseTablePanel extends RunningView {
 	private SelectingEditor myEditor;
 	private CYKParser myParser;
 	private Map<Integer, Boolean> myHighlightData;
+	private EmptySetCellRenderer myRenderer;
+	private HighlightTableHeaderRenderer myHeadRenderer;
 
 	public CYKParseTablePanel(Parser parser) {
 		super("CYK Parse Table", parser);
@@ -57,6 +60,8 @@ public class CYKParseTablePanel extends RunningView {
 		JScrollPane panel = new JScrollPane(myTable);
 
 		myEditor = new SetCellEditor();
+		myRenderer = new EmptySetCellRenderer();
+		myHeadRenderer = new HighlightTableHeaderRenderer();
 		
 		myHighlightData = new HashMap<Integer, Boolean>();
 
@@ -137,8 +142,8 @@ public class CYKParseTablePanel extends RunningView {
 				for (int i = 0; i < getColumnCount(); i++) {
 					TableColumn col = myTable.getColumnModel().getColumn(i);
 
-					col.setCellRenderer(new EmptySetCellRenderer());
-					col.setHeaderRenderer(new HighlightTableHeaderRenderer());
+					col.setCellRenderer(myRenderer);
+					col.setHeaderRenderer(myHeadRenderer);
 					col.setCellEditor(myEditor);
 					col.setHeaderValue(getColumnNames()[i]);
 
@@ -224,6 +229,7 @@ public class CYKParseTablePanel extends RunningView {
 			}
 			head.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 			head.setOpaque(false);
+			head.setHorizontalAlignment(SwingConstants.CENTER);
 			return head;
 		}
 	}

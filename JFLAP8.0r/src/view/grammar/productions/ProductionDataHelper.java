@@ -2,23 +2,8 @@ package view.grammar.productions;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-
-import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-
-
-
-import debug.JFLAPDebug;
 
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
@@ -26,17 +11,13 @@ import util.JFLAPConstants;
 
 import errors.BooleanWrapper;
 
-import model.algorithms.testinput.parse.FirstFollowTable;
 import model.change.events.AddEvent;
-import model.change.events.AdvancedUndoableEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
-import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.Symbolizer;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
@@ -125,8 +106,6 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	public Object[] remove(int index) {
 		if (index >= myOrderedProductions.size()) return EMPTY;
 		Production remove = myOrderedProductions.get(index);
-		JFLAPDebug.print(myOrderedProductions);
-		JFLAPDebug.print(remove + " | "+index);
 		RemoveOrderedProdEvent event =
 				new RemoveOrderedProdEvent(remove, index);
 		myKeeper.applyAndListen(event);
