@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,6 +24,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+
+import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.cyk.CYKParser;
@@ -53,7 +58,7 @@ public class CYKParseTablePanel extends RunningView {
 	private JTable myTable;
 	private SelectingEditor myEditor;
 	private CYKParser myParser;
-	private Map<Integer, Boolean> myHighlightData;
+	private Map<Integer, Color> myHighlightData;
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
 	private boolean diagonal;
@@ -77,7 +82,7 @@ public class CYKParseTablePanel extends RunningView {
 		myRenderer = new EmptySetCellRenderer();
 		myHeadRenderer = new HighlightTableHeaderRenderer();
 
-		myHighlightData = new HashMap<Integer, Boolean>();
+		myHighlightData = new HashMap<Integer, Color>();
 
 		add(panel, BorderLayout.CENTER);
 	}
@@ -129,9 +134,9 @@ public class CYKParseTablePanel extends RunningView {
 			int row = getRowFromMapping(rowIndex, columnIndex);
 
 			if (!myParser.insertSet(row, columnIndex, attemptSet))
-				highlightCell(rowIndex, columnIndex, true);
+				highlightCell(rowIndex, columnIndex, TABLE_HIGHLIGHT);
 			else
-				highlightCell(rowIndex, columnIndex, false);
+				highlightCell(rowIndex, columnIndex, Color.WHITE);
 		}
 
 		/**
@@ -159,10 +164,10 @@ public class CYKParseTablePanel extends RunningView {
 				for (int i = 0; i < getColumnCount(); i++) {
 					setTableColumnInfo(i);
 
-					for (int j = 0; j < getColumnCount(); j++) {
+					for (int j = i; j < getColumnCount(); j++) {
 						if (!myHighlightData.containsKey(singleIndex(i, j))
 								|| !isCellEditable(i, j))
-							highlightCell(i, j, false);
+							highlightCell(i, j, Color.WHITE);
 					}
 				}
 			}
@@ -197,13 +202,13 @@ public class CYKParseTablePanel extends RunningView {
 		int row = myTable.getSelectedRow();
 		int col = myTable.getSelectedColumn();
 		myParser.autofillCell(getRowFromMapping(row, col), col);
-		highlightCell(row, col, false);
+		highlightCell(row, col, Color.WHITE);
 	}
 
 	/**
 	 * Sets the highlighting of the cell specified by (row, col)
 	 */
-	private void highlightCell(int row, int col, boolean highlight) {
+	private void highlightCell(int row, int col, Color highlight) {
 		myHighlightData.put(singleIndex(row, col), highlight);
 	}
 
@@ -220,7 +225,7 @@ public class CYKParseTablePanel extends RunningView {
 					value, isSelected, hasFocus, row, column);
 			if (hasFocus) {
 				dehighlightHeaders();
-				if (table.isCellEditable(row, column))
+				if (table.isCellEditable(row, column) && isSelected)
 					highlightHeader(row, column);
 				CYKParseTablePanel.this.repaint();
 			}
@@ -252,10 +257,73 @@ public class CYKParseTablePanel extends RunningView {
 			l.setBorder(BorderFactory.createEmptyBorder());
 			return;
 		}
-		if (myHighlightData.get(singleIndex(row, column)))
-			l.setBackground(TABLE_HIGHLIGHT);
-		else
-			l.setBackground(Color.white);
+		l.setBackground(myHighlightData.get(singleIndex(row, column)));
+	}
+
+	/**
+	 * Highlights the cells that must be paired for creating the set of
+	 * variables that belong in the selected cell.
+	 */
+	public void animate() {
+		int row = myTable.getSelectedRow();
+		int column = myTable.getSelectedColumn();
+
+		row = getRowFromMapping(row, column);
+		if (row < column) {
+			HighlightAction animate = new HighlightAction(row, column);
+		}
+		myTable.clearSelection();
+		dehighlightHeaders();
+		repaint();
+	}
+
+	private class HighlightAction implements ActionListener {
+
+		private int row;
+		private int col;
+		private int k;
+		private Timer timer;
+
+		public HighlightAction(int row, int column) {
+			this.row = row;
+			this.k = row;
+			this.col = column;
+
+			this.timer = new Timer(500, this);
+			timer.start();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dehighlightHeaders();
+			
+			int mappedRow = getRowFromMapping(row, k);
+			int mappedK = getRowFromMapping(k + 1, col);
+			int oldRow = getRowFromMapping(row, k - 1);
+			int oldK = getRowFromMapping(k, col);
+
+			if (k != row) {
+				highlightCell(oldRow, k - 1, Color.WHITE);
+				highlightCell(oldK, col, Color.WHITE);
+				CYKParseTablePanel.this.repaint();
+				if (k >= col) {
+					timer.stop();
+					
+					// Get rid of this listener, no longer needed.
+					try {
+						this.finalize();
+					} catch (Throwable thrown) {
+						thrown.printStackTrace();
+					}
+					return;
+				}
+			}
+			highlightCell(mappedRow, k, HEADER_HIGHLIGHT);
+			highlightCell(mappedK, col, HEADER_HIGHLIGHT);
+			CYKParseTablePanel.this.repaint();
+			k++;
+		}
+
 	}
 
 	/**
@@ -310,7 +378,7 @@ public class CYKParseTablePanel extends RunningView {
 	 * brackets are not counted as input.
 	 */
 	private void replaceSetCharacters(JLabel label) {
-		
+
 		String replacement = label.getText().replaceAll("\\[", "");
 		replacement = replacement.replaceAll("\\]", "");
 		label.setText(replacement);
