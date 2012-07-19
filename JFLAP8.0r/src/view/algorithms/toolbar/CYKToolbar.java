@@ -3,8 +3,8 @@ package view.algorithms.toolbar;
 import model.algorithms.steppable.SteppableAlgorithm;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableButton;
-import view.action.grammar.CYKDoSelectedAction;
 import view.action.grammar.parse.CYKAnimateAction;
+import view.action.grammar.parse.CYKDoSelectedAction;
 import view.grammar.parsing.cyk.CYKParseTablePanel;
 
 public class CYKToolbar extends SteppableToolbar {
