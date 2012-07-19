@@ -1,7 +1,6 @@
 package model.sets;
 
-import view.sets.SetView;
-import debug.JFLAPDebug;
+import view.sets.ActiveSetDisplay;
 
 /**
  * Contains all information for the current set environment
@@ -15,14 +14,11 @@ public class SetsManager {
 
 	public static ActiveSetsRegistry ACTIVE_REGISTRY;
 
-	private SetView myView;
-
 	public SetsManager () {
 		ACTIVE_REGISTRY = new ActiveSetsRegistry();
 	}
 	
-	public void setView (SetView view) {
-		myView = view;
-		ACTIVE_REGISTRY.setObserver(view.getActiveSetDisplay());
+	public void setActiveDisplayObserver (ActiveSetDisplay disp) {
+		ACTIVE_REGISTRY.setObserver(disp);
 	}
 }
