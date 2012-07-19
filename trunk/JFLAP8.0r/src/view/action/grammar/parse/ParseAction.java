@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import errors.JFLAPError;
+
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
@@ -26,9 +28,6 @@ public abstract class ParseAction<S extends Parser> extends AbstractAction {
 		Grammar g = myView.getDefinition();
 		if (g == null)
 			return;
-		if (g.getStartVariable() == null)
-			throw new ParserException(
-					"The Start Variable must be set before you can continue");
 		ParserView<S> parserView = createParseView(g);
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
 		environ.addSelectedComponent(parserView);

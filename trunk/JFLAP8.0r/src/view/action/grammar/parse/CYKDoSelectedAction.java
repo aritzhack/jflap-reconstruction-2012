@@ -1,4 +1,4 @@
-package view.action.grammar;
+package view.action.grammar.parse;
 
 import java.awt.event.ActionEvent;
 
