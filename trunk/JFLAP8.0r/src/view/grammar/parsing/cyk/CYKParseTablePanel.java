@@ -130,8 +130,10 @@ public class CYKParseTablePanel extends RunningView {
 		 */
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			String value = (String) aValue;
+			value = value.replaceAll(" ", "");
 			Set<Symbol> attemptSet = new HashSet<Symbol>(Symbolizers.symbolize(
-					(String) aValue, myParser.getGrammar()));
+					value, myParser.getGrammar()));
 			int row = getRowFromMapping(rowIndex, columnIndex);
 
 			if (!myParser.insertSet(row, columnIndex, attemptSet))
@@ -299,7 +301,8 @@ public class CYKParseTablePanel extends RunningView {
 			this.k = row;
 			this.column = column;
 
-			this.timer = new Timer(500, this);
+			this.timer = new Timer(1000, this);
+			timer.setInitialDelay(500);
 			timer.start();
 		}
 

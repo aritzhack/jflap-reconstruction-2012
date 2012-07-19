@@ -33,7 +33,7 @@ public abstract class ParseAction<S extends Parser> extends AbstractAction {
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
 		environ.addSelectedComponent(parserView);
 	}
-	
+
 	public abstract ParserView<S> createParseView(Grammar g);
 
 }
