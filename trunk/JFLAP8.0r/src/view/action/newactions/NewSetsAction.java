@@ -1,6 +1,6 @@
 package view.action.newactions;
 
-import model.numbersets.control.*;
+import model.sets.SetsManager;
 
 @SuppressWarnings("serial")
 public class NewSetsAction extends NewAction<SetsManager> {
