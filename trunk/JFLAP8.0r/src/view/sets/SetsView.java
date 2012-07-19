@@ -3,19 +3,15 @@ package view.sets;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import debug.JFLAPDebug;
 
 import model.sets.SetsManager;
 import model.undo.UndoKeeper;
 import util.view.magnify.Magnifiable;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
-import view.sets.mainpanels.DefaultSetPanel;
+import view.sets.edit.SetsEditingPanel;
 
 @SuppressWarnings("serial")
 public class SetsView extends EditingPanel implements Magnifiable {
@@ -23,8 +19,8 @@ public class SetsView extends EditingPanel implements Magnifiable {
 	private UndoKeeper myKeeper;
 	private JComponent myCentralPane;
 	
-	private JComponent myDefaultPanel;
-	private JComponent myEditingPanel;
+	private DefaultSetPanel myDefaultPanel;
+	private SetsEditingPanel myEditingPanel;
 	
 	private ActiveSetDisplay myActiveSetDisplay;
 
@@ -32,39 +28,34 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		super(new UndoKeeper(), true);
 		myKeeper = super.getKeeper();
 		
-		myActiveSetDisplay = new ActiveSetDisplay();
+		myActiveSetDisplay = new ActiveSetDisplay(myKeeper);
 		
 		myCentralPane = createCentralPane();
-//		
-//		setLayout(new BorderLayout());	
-//		
-//		JScrollPane scroller = new JScrollPane(myCentralPane);
-//		SizeSlider slider = new SizeSlider();
-//		slider.distributeMagnification();
-//		
-//		add(scroller, BorderLayout.CENTER);
-//		add(slider, BorderLayout.SOUTH);
+		
+		setLayout(new BorderLayout());	
+		
+		JScrollPane scroller = new JScrollPane(myCentralPane);
+		SizeSlider slider = new SizeSlider(myDefaultPanel);
+		slider.distributeMagnification();
+		
+		add(scroller, BorderLayout.CENTER);
+		add(slider, BorderLayout.SOUTH);
 	
 		assignObserver(manager);
 	}
 	
-	
-	private JComponent createView () {
-		
-		return null;
-	}
+
 	
 	private JComponent createCentralPane () {
-		myCentralPane = new JPanel();
+		myDefaultPanel = new DefaultSetPanel(myKeeper, this);
 		
-		myCentralPane.setLayout(new BoxLayout(myCentralPane, BoxLayout.X_AXIS));
-		myCentralPane.add(new DefaultSetPanel(myKeeper, this));
-		
-		return myCentralPane;
+		return myDefaultPanel;
 	}
 	
 	
-	
+	public ActiveSetDisplay getActiveSetDisplay () {
+		return myActiveSetDisplay;
+	}
 	
 	
 	private void assignObserver(SetsManager manager) {
