@@ -14,7 +14,12 @@ public class MagnifiableTextArea extends JTextArea implements Magnifiable {
 	}
 	
 	
-	
+	public MagnifiableTextArea(String string, int defaultSize) {
+		super(string);
+		myDefaultSize = defaultSize;
+	}
+
+
 	@Override
 	public void setMagnification(double mag) {
 		float size = (float) (mag*myDefaultSize);
