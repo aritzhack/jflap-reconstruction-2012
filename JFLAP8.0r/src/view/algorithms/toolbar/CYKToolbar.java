@@ -11,12 +11,15 @@ public class CYKToolbar extends SteppableToolbar {
 
 	private MagnifiableButton mySelectedButton;
 	private MagnifiableButton myAnimateButton;
+	private CYKParseTablePanel myPanel;
 
 	public CYKToolbar(CYKParseTablePanel panel, SteppableAlgorithm alg, boolean floatable) {
 		super(alg, floatable);
 		int size = JFLAPPreferences.getDefaultTextSize();
 		mySelectedButton = new MagnifiableButton(new CYKDoSelectedAction(panel), size);
 		myAnimateButton = new MagnifiableButton(new CYKAnimateAction(panel), size);
+		myPanel = panel;
+		
 		add(mySelectedButton);
 		add(myAnimateButton);
 		updateButtons(alg);
