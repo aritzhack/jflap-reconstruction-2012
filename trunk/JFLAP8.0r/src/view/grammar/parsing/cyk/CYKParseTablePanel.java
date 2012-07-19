@@ -62,6 +62,7 @@ public class CYKParseTablePanel extends RunningView {
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
 	private boolean diagonal;
+	private boolean animated;
 
 	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
@@ -134,9 +135,9 @@ public class CYKParseTablePanel extends RunningView {
 			int row = getRowFromMapping(rowIndex, columnIndex);
 
 			if (!myParser.insertSet(row, columnIndex, attemptSet))
-				highlightCell(rowIndex, columnIndex, TABLE_HIGHLIGHT);
+				setCellColor(rowIndex, columnIndex, TABLE_HIGHLIGHT);
 			else
-				highlightCell(rowIndex, columnIndex, Color.WHITE);
+				setCellColor(rowIndex, columnIndex, Color.WHITE);
 		}
 
 		/**
@@ -167,7 +168,7 @@ public class CYKParseTablePanel extends RunningView {
 					for (int j = i; j < getColumnCount(); j++) {
 						if (!myHighlightData.containsKey(singleIndex(i, j))
 								|| !isCellEditable(i, j))
-							highlightCell(i, j, Color.WHITE);
+							setCellColor(i, j, Color.WHITE);
 					}
 				}
 			}
@@ -178,12 +179,12 @@ public class CYKParseTablePanel extends RunningView {
 		 * headerValue.
 		 */
 		private void setTableColumnInfo(int i) {
-			TableColumn col = myTable.getColumnModel().getColumn(i);
+			TableColumn column = myTable.getColumnModel().getColumn(i);
 
-			col.setCellRenderer(myRenderer);
-			col.setHeaderRenderer(myHeadRenderer);
-			col.setCellEditor(myEditor);
-			col.setHeaderValue(getColumnNames()[i]);
+			column.setCellRenderer(myRenderer);
+			column.setHeaderRenderer(myHeadRenderer);
+			column.setCellEditor(myEditor);
+			column.setHeaderValue(getColumnNames()[i]);
 		}
 
 		/**
@@ -200,16 +201,23 @@ public class CYKParseTablePanel extends RunningView {
 	 */
 	public void doSelected() {
 		int row = myTable.getSelectedRow();
-		int col = myTable.getSelectedColumn();
-		myParser.autofillCell(getRowFromMapping(row, col), col);
-		highlightCell(row, col, Color.WHITE);
+		int column = myTable.getSelectedColumn();
+		myParser.autofillCell(getRowFromMapping(row, column), column);
+		setCellColor(row, column, Color.WHITE);
 	}
 
 	/**
-	 * Sets the highlighting of the cell specified by (row, col)
+	 * Sets the background of the cell specified by (row, column)
 	 */
-	private void highlightCell(int row, int col, Color highlight) {
-		myHighlightData.put(singleIndex(row, col), highlight);
+	private void setCellColor(int row, int column, Color color) {
+		myHighlightData.put(singleIndex(row, column), color);
+	}
+
+	/**
+	 * Returns the background of the cell at (row, column)
+	 */
+	private Color getCellColor(int row, int column) {
+		return myHighlightData.get(singleIndex(row, column));
 	}
 
 	/**
@@ -257,7 +265,7 @@ public class CYKParseTablePanel extends RunningView {
 			l.setBorder(BorderFactory.createEmptyBorder());
 			return;
 		}
-		l.setBackground(myHighlightData.get(singleIndex(row, column)));
+		l.setBackground(getCellColor(row, column));
 	}
 
 	/**
@@ -267,63 +275,62 @@ public class CYKParseTablePanel extends RunningView {
 	public void animate() {
 		int row = myTable.getSelectedRow();
 		int column = myTable.getSelectedColumn();
+		
+		if (animated || !myTable.isCellEditable(row, column))
+			return;
 
 		row = getRowFromMapping(row, column);
 		if (row < column) {
+			animated = true;
 			HighlightAction animate = new HighlightAction(row, column);
 		}
-		myTable.clearSelection();
-		dehighlightHeaders();
 		repaint();
 	}
 
 	private class HighlightAction implements ActionListener {
 
 		private int row;
-		private int col;
+		private int column;
 		private int k;
 		private Timer timer;
 
 		public HighlightAction(int row, int column) {
 			this.row = row;
 			this.k = row;
-			this.col = column;
+			this.column = column;
 
 			this.timer = new Timer(500, this);
 			timer.start();
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			dehighlightHeaders();
-			
+		public void actionPerformed(ActionEvent event) {
 			int mappedRow = getRowFromMapping(row, k);
-			int mappedK = getRowFromMapping(k + 1, col);
+			int mappedK = getRowFromMapping(k + 1, column);
 			int oldRow = getRowFromMapping(row, k - 1);
-			int oldK = getRowFromMapping(k, col);
+			int oldK = getRowFromMapping(k, column);
 
 			if (k != row) {
-				highlightCell(oldRow, k - 1, Color.WHITE);
-				highlightCell(oldK, col, Color.WHITE);
+				setCellColor(oldRow, k - 1, Color.white);
+				setCellColor(oldK, column, Color.white);
 				CYKParseTablePanel.this.repaint();
-				if (k >= col) {
+				if (k >= column) {
 					timer.stop();
-					
+					animated = false;
 					// Get rid of this listener, no longer needed.
 					try {
 						this.finalize();
-					} catch (Throwable thrown) {
-						thrown.printStackTrace();
+					} catch (Throwable e) {
+						e.printStackTrace();
 					}
 					return;
 				}
 			}
-			highlightCell(mappedRow, k, HEADER_HIGHLIGHT);
-			highlightCell(mappedK, col, HEADER_HIGHLIGHT);
+			setCellColor(mappedRow, k, HEADER_HIGHLIGHT);
+			setCellColor(mappedK, column, HEADER_HIGHLIGHT);
 			CYKParseTablePanel.this.repaint();
 			k++;
 		}
-
 	}
 
 	/**
@@ -353,9 +360,9 @@ public class CYKParseTablePanel extends RunningView {
 	 * Sets the headers that correspond to the selected cell to be highlighted
 	 * on the next repaint.
 	 */
-	private void highlightHeader(int row, int col) {
-		row = getRowFromMapping(row, col);
-		for (int i = row; i <= col; i++) {
+	private void highlightHeader(int row, int column) {
+		row = getRowFromMapping(row, column);
+		for (int i = row; i <= column; i++) {
 			HighlightHeader header = (HighlightHeader) myTable.getColumnModel()
 					.getColumn(i).getHeaderValue();
 			header.setHightlight(HEADER_HIGHLIGHT);
