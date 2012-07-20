@@ -60,6 +60,9 @@ public class ProductionTableModel extends GrowableTableModel
 implements JFLAPConstants{
 
 
+	private Grammar myGrammar;
+
+
 	/**
 	 * Instantiates a <CODE>GrammarTableModel</CODE>.
 	 * @param model 
@@ -70,12 +73,17 @@ implements JFLAPConstants{
 	 */
 	public ProductionTableModel(Grammar g, UndoKeeper keeper) {
 		super(3, new ProductionDataHelper(g, keeper));
+		myGrammar = g;
 		//		this.addTableModelListener(new TableModelListener() {
 		//			@Override
 		//			public void tableChanged(TableModelEvent e) {
 		//				ProductionDataHelper data = (ProductionDataHelper) ProductionTableModel.this.getData();
 		//			}
 		//		});
+	}
+	
+	public Grammar getGrammar(){
+		return myGrammar;
 	}
 
 	/**

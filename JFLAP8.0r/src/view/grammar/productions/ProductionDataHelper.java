@@ -2,8 +2,11 @@ package view.grammar.productions;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import debug.JFLAPDebug;
 
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
