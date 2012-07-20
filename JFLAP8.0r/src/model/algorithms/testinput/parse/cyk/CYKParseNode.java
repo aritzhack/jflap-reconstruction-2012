@@ -8,6 +8,7 @@ import model.symbols.SymbolString;
  * The <CODE>CYKParseNode</CODE> is a class that keeps track of a single 
  * production that can derive a specific string and at what index in the 
  * string the two RHS variables are separated.
+ * 
  * @author Ian McMahon
  *
  */
