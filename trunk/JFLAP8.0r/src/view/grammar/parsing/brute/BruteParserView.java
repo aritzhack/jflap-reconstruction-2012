@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.change.events.AdvancedChangeEvent;
-import view.algorithms.toolbar.BruteToolbar;
 import view.algorithms.toolbar.SteppableToolbar;
 import view.grammar.parsing.FindFirstParserView;
 
@@ -56,8 +55,6 @@ public class BruteParserView extends FindFirstParserView<BruteRunningView> {
 
 	@Override
 	public SteppableToolbar createToolbar(Parser alg) {
-		BruteToolbar toolbar = new BruteToolbar((UnrestrictedBruteParser) alg,
-				false);
-		return toolbar;
+		return new SteppableToolbar(alg, false);
 	}
 }

@@ -5,12 +5,13 @@ import java.awt.Component;
 import javax.swing.Action;
 import javax.swing.JMenu;
 
+import model.grammar.StartVariable;
 import model.undo.UndoKeeper;
 
 import util.ISelector;
 import view.EditingPanel;
 import view.action.edit.DeleteAction;
-import view.action.edit.grammar.SortProductionsAction;
+import view.action.grammar.SortProductionsAction;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;

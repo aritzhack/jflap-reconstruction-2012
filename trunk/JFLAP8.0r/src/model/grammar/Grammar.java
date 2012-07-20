@@ -3,12 +3,16 @@ package model.grammar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.TreeSet;
+
+import javax.swing.event.ChangeEvent;
 
 import universe.preferences.JFLAPPreferences;
 
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
+import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -240,7 +244,13 @@ public class Grammar extends FormalDefinition{
 		return getTerminals();
 	}
 
-
-	
+	@Override
+	public void componentChanged(AdvancedChangeEvent event) {
+		if (event.comesFrom(VariableAlphabet.class) && 
+				this.getStartVariable()==null &&
+				event.getType() == ITEM_ADDED)
+			this.setStartVariable(((TreeSet<Variable>) event.getArg(0)).first());
+		super.componentChanged(event);
+	}	
 
 }

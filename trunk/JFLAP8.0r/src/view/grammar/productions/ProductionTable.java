@@ -5,9 +5,12 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.EventObject;
 
+import javax.swing.CellEditor;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -147,7 +150,8 @@ public class ProductionTable extends HighlightTable
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		this.updateUI();
+		this.revalidate();
+		this.repaint();
 	}
 
 

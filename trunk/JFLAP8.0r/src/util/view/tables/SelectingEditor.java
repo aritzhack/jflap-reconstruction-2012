@@ -8,6 +8,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
+import debug.JFLAPDebug;
+
 
 public class SelectingEditor extends DefaultCellEditor {
 

@@ -1,4 +1,4 @@
-package view.action.edit.grammar;
+package view.action.grammar;
 
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import javax.swing.AbstractAction;
 
 import model.change.events.UndoableEvent;
 import model.grammar.Production;
+import model.grammar.Variable;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 
@@ -30,8 +31,22 @@ public class SortProductionsAction extends UndoingAction implements IUndoRedo{
 	public IUndoRedo createEvent(ActionEvent e) {
 		oldOrdering = myModel.getOrderedProductions();
 		newOrdering = Arrays.copyOf(oldOrdering, oldOrdering.length);
-		Arrays.sort(newOrdering);
+		Arrays.sort(newOrdering, createComparator());
 		return this;
+	}
+
+	private Comparator<? super Production> createComparator() {
+		return new Comparator<Production>() {
+			@Override
+			public int compare(Production o1, Production o2) {
+				Variable start = myModel.getGrammar().getStartVariable();
+				if (o1.isStartProduction(start) && !o2.isStartProduction(start))
+					return -1;
+				if (!o1.isStartProduction(start) && o2.isStartProduction(start))
+					return 1;
+				return o1.compareTo(o2);
+			}
+		};
 	}
 
 	@Override
