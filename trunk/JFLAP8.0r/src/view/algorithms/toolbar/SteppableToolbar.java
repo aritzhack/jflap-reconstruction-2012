@@ -1,10 +1,8 @@
 package view.algorithms.toolbar;
 
-import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.algorithms.steppable.SteppableAlgorithm;
 import model.algorithms.steppable.SteppableAlgorithm;
 import model.change.events.AdvancedChangeEvent;
 import universe.preferences.JFLAPPreferences;
@@ -30,6 +28,7 @@ public class SteppableToolbar extends MagnifiableToolbar implements ChangeListen
 		this.add(myStepButton);
 		this.add(myCompleteButton);
 		this.add(myResetButton);
+		updateDefaultButtons(alg);
 	}
 
 	@Override
@@ -37,11 +36,16 @@ public class SteppableToolbar extends MagnifiableToolbar implements ChangeListen
 		if (e instanceof AdvancedChangeEvent)
 			updateButtons((SteppableAlgorithm) e.getSource());
 	}
-
-	public void updateButtons(SteppableAlgorithm alg) {
+	
+	
+	private void updateDefaultButtons(SteppableAlgorithm alg){
 		myStepButton.setEnabled(alg.canStep());
 		myCompleteButton.setEnabled(alg.canStep());
 		myResetButton.setEnabled(alg.isRunning());
+	}
+
+	public void updateButtons(SteppableAlgorithm alg) {
+		updateDefaultButtons(alg);
 	}
 	
 }

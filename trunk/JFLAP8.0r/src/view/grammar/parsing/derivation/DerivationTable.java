@@ -18,6 +18,8 @@ public class DerivationTable extends DerivationPanel {
 		super("Derivation Table");
 		this.setLayout(new BorderLayout());
 		myTable = new JTable(new DerivationTableModel());
+		myTable.setDragEnabled(false);
+		
 		setDerivation(d);
 		
 		JScrollPane pane = new JScrollPane(myTable);
