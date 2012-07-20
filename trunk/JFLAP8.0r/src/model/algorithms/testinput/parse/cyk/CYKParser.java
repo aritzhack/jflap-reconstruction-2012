@@ -1,17 +1,5 @@
 package model.algorithms.testinput.parse.cyk;
 
-/**
- * Implementation of the CYK (Cocke-Younger-Kasami) parsing algorithm
- * to determine whether a string is in the language of a given grammar 
- * and the trace (set of productions) followed to derive the string
- * 
- * Note: CYKParser was redone in Summer 2012 with improved efficiency
- * and significant code redesign/refactoring. The grammar passed in
- * must be in Chomsky Normal Form (CNF) for the parser to work correctly.
- * 
- * @author Ian McMahon
- */
-
 import java.util.*;
 
 import model.algorithms.testinput.parse.*;
@@ -19,6 +7,18 @@ import model.change.events.AdvancedChangeEvent;
 import model.grammar.*;
 import model.grammar.typetest.GrammarType;
 import model.symbols.*;
+
+/**
+ * Implementation of the CYK (Cocke-Younger-Kasami) parsing algorithm to
+ * determine whether a string is in the language of a given grammar and the
+ * trace (set of productions) followed to derive the string
+ * 
+ * Note: CYKParser was redone in Summer 2012 with improved efficiency and
+ * significant code redesign/refactoring. The grammar passed in must be in
+ * Chomsky Normal Form (CNF) for the parser to work correctly.
+ * 
+ * @author Ian McMahon
+ */
 
 public class CYKParser extends Parser {
 
@@ -28,22 +28,13 @@ public class CYKParser extends Parser {
 	private int myIncrement;
 	public static final int CELL_CHANGED = 4;
 
-	/**
-	 * Constructor for the CYKParser
-	 * 
-	 * @param g
-	 *            - grammar must be in Chomsky Normal Form (CNF)
-	 */
 	public CYKParser(Grammar g) {
 		super(g);
 	}
 
 	/**
-	 * Sets <CODE>myParseTable</CODE> to a new Set[][] of size
-	 * length*(length+1)/2
-	 * 
-	 * @param length
-	 *            the size of the string being processed by the table.
+	 * Resets the parser's tables to the length of the target input. Unused
+	 * cells are left as null in myNodeTable.
 	 */
 	@SuppressWarnings("unchecked")
 	private void initializeTable(int length) {
@@ -53,17 +44,16 @@ public class CYKParser extends Parser {
 		for (int i = 0; i < length; i++) {
 			for (int j = i; j < length; j++) {
 				myNodeTable[i][j] = new HashSet<CYKParseNode>();
-				mySetTable[i][j] = null ;
+				mySetTable[i][j] = null;
 			}
 		}
 	}
 
 	/**
-	 * Adds the terminal productions for each terminal in the input string to
-	 * the CYK parse table. For the terminal <code>r</code> at index
-	 * <code>i</code> of the input, for each production L -> r where L is the
-	 * LHS variable deriving r, a node representing L is added to row i, column
-	 * i in the parse table.
+	 * Adds the terminal productions for each terminal (index i) in the input
+	 * string to the CYK parse table at cell [i][i]. Throws an exception if a
+	 * terminal cannot be derived (should never happen, but should check just in
+	 * case).
 	 */
 	private boolean addTerminalProductions() {
 		ProductionSet productions = getGrammar().getProductionSet();
@@ -128,11 +118,7 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns a LeftmostDerivation that can derive the specified string. For
-	 * example, if the derivation of string aabaa is: S -> BA -> aA -> aAA ->
-	 * aBCA -> aaCA -> aabA -> aabBC -> aabaC -> aabaa, then the Derivation
-	 * returned would be: [S->B A, B->a, A->A A, A->B C, B->a, C->b, A->B C,
-	 * B->a, C->b]
+	 * Returns a LeftmostDerivation that can derive the target string.
 	 * 
 	 */
 	public Derivation getDerivation() {
@@ -146,10 +132,9 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Recursive backtracking helper function that modifies
-	 * <CODE>myAnswerTrace</CODE> and will return true if and only if it finds a
-	 * possible derivation of the string specified by the LHS variable and start
-	 * and end indexes.
+	 * Helper function that modifies <CODE>myAnswerTrace</CODE> and will return
+	 * true if and only if it finds a possible derivation of the string
+	 * specified by the LHS variable and start and end indexes.
 	 * 
 	 * @param LHS
 	 *            the variable to be checked for possibly being able to derive
@@ -161,6 +146,7 @@ public class CYKParser extends Parser {
 	 */
 	private boolean getTrace(Variable LHS, int start, int end) {
 		ProductionSet productions = getGrammar().getProductionSet();
+		
 		if (start == end) {
 			Terminal character = (Terminal) getInput().get(start);
 			Production terminalProduction = new Production(LHS, character);
@@ -224,8 +210,8 @@ public class CYKParser extends Parser {
 
 	/**
 	 * Precalculates the next row/diagonal, returns true unless there are no
-	 * Variables that can derive a terminal in the first step or it is trying
-	 * to calculate a row that doesn't exist (myIncrement >= input.size()).
+	 * Variables that can derive a terminal in the first step or it is trying to
+	 * calculate a row that doesn't exist (myIncrement >= input.size()).
 	 */
 	private boolean calculateNextRow() {
 		boolean row;
@@ -261,7 +247,8 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns the set of Variables on the LHS of each Node at myNodeTable[row][col]
+	 * Returns the set of Variables on the LHS of each cykParseNode at
+	 * myNodeTable[row][col]
 	 */
 	private Set<Symbol> getLHSVariablesForNode(int row, int col) {
 		Set<Symbol> set = new TreeSet<Symbol>();
@@ -276,14 +263,14 @@ public class CYKParser extends Parser {
 	public boolean stepParser() {
 		int previousIncrement = myIncrement - 1;
 		for (int i = 0; i + previousIncrement < getInput().size(); i++) {
-			autofillCell(i, i+previousIncrement);
+			autofillCell(i, i + previousIncrement);
 		}
 		return true;
 	}
 
 	/**
-	 * Completes the cell specified by row and col, inserting the correct set
-	 * of Symbols at that location.
+	 * Completes the cell specified by row and col, inserting the correct set of
+	 * Symbols at that location.
 	 */
 	public void autofillCell(int row, int col) {
 		if (!isCellEditable(row, col))
@@ -293,7 +280,7 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns true if the set is equal to the LHS Variables at 
+	 * Returns true if the set is equal to the LHS Variables at
 	 * myNodeTable[row][col]
 	 */
 	private boolean validate(int row, int col, Set<Symbol> set) {
@@ -302,9 +289,9 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Changes the value of mySetTable[row][col] to <i>set</i>, 
-	 * increments the row/diagonal if the current row is complete,
-	 * and returns whether or not the entered set is the correct one.
+	 * Changes the value of mySetTable[row][col] to <i>set</i>, increments the
+	 * row/diagonal if the current row is complete, and returns whether or not
+	 * the entered set is the correct one.
 	 */
 	public boolean insertSet(int row, int col, Set<Symbol> set) {
 		boolean valid = validate(row, col, set);
@@ -332,14 +319,14 @@ public class CYKParser extends Parser {
 	}
 
 	/**
-	 * Returns the set stored at mySetTable[row][col]
+	 * Returns the set of Symbols stored at mySetTable[row][col]
 	 */
 	public Set<Symbol> getValueAt(int row, int col) {
 		return mySetTable[row][col];
 	}
 
 	/**
-	 * Returns true if the cell is a member of the current diagonal.
+	 * Returns true if the cell is a member of the current diagonal/row.
 	 */
 	public boolean isCellEditable(int row, int col) {
 		return col - row == myIncrement - 1;

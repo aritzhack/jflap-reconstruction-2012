@@ -1,31 +1,34 @@
 package model.algorithms.testinput.parse.brute;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import debug.JFLAPDebug;
-
-import util.JFLAPConstants;
-
-import model.grammar.*;
-import model.algorithms.testinput.parse.*;
+import model.algorithms.testinput.parse.Derivation;
+import model.algorithms.testinput.parse.Parser;
+import model.algorithms.testinput.parse.ParserException;
 import model.algorithms.transform.grammar.UselessProductionRemover;
 import model.change.events.AdvancedChangeEvent;
-import model.symbols.Symbol;
-import model.symbols.SymbolString;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.ProductionSet;
 import model.grammar.typetest.GrammarType;
 import model.grammar.typetest.matchers.ContextFreeChecker;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 
 /**
- * Brute force parser
+ * Brute force parser used for unrestricted grammars.
  * 
  * Note: Brute force parser was re-implemented in Summer 2012 to conform with
  * the new parser hierarchy and new classes.
  * 
+ * @author Ian McMahon
  * @author Peggy Li
  * @author Julian Genkins
- * @author Ian McMahon
  * 
  */
 
@@ -38,6 +41,10 @@ public class UnrestrictedBruteParser extends Parser {
 	private Set<SymbolString> mySententialsSeen;
 	private Set<Symbol> mySmallerSet;
 
+	/**
+	 * Static constructor used to create the best matching brute force parser
+	 * based on grammar type.
+	 */
 	public static UnrestrictedBruteParser createNewBruteParser(Grammar g) {
 		if (new ContextFreeChecker().matchesGrammar(g)) {
 			return new RestrictedBruteParser(g);
@@ -107,25 +114,34 @@ public class UnrestrictedBruteParser extends Parser {
 			initializeQueue();
 		else
 			makeNextReplacement();
-		
+
 		notifyNextLevel();
 		if (capacityReached()) {
 			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED,
 					myCapacity));
 			return false;
-		}	
+		}
 		return true;
 	}
 
+	/**
+	 * Updates listeners (most importantly BruteParseTablePanel's model) that
+	 * the current step has been completed, passes on the level, number of
+	 * nodes, and current sentential-form derivations.
+	 */
 	private void notifyNextLevel() {
 		List<SymbolString> currentDerivs = new ArrayList<SymbolString>();
-		for(Derivation d : myDerivationsQueue){
+		for (Derivation d : myDerivationsQueue) {
 			currentDerivs.add(d.createResult());
 		}
 		distributeChange(new AdvancedChangeEvent(this, LEVEL_CHANGED,
 				getLevel(), getNumberOfNodes(), currentDerivs));
 	}
 
+	/**
+	 * First step in the algorithm, puts each start production in the derivation queue
+	 * and sets the minimum number of steps that the parser can do.
+	 */
 	private void initializeQueue() {
 		Grammar g = getGrammar();
 
@@ -135,13 +151,14 @@ public class UnrestrictedBruteParser extends Parser {
 			myNodesGenerated++;
 
 		}
-		// Allow for at least 7 steps of the parser
-		raiseCapacity(7);
+		// Allow for at least 8 steps of the parser
+		raiseCapacity(8);
 	}
 
 	/**
 	 * Does the next level of parsing, adding all possible steps to each current
-	 * possible derivation.
+	 * possible derivation, unless actual derivation is found, in which case
+	 * it immediately stops.
 	 */
 	private boolean makeNextReplacement() {
 		ArrayList<Derivation> nextLevel = new ArrayList<Derivation>();
@@ -176,9 +193,11 @@ public class UnrestrictedBruteParser extends Parser {
 							nextLevel.add(tempDerivation);
 
 							if (sentential.equals(getInput())) {
-								//Not sure if this is good, but ensures that only nodes on
-								//the current level up to the first matching derivation
-								//are returned (for display purposes)
+								// Not sure if this is good, but ensures that
+								// only nodes on
+								// the current level up to the first matching
+								// derivation
+								// are returned (for display purposes)
 								myDerivationsQueue.clear();
 								break loop;
 							}
@@ -191,6 +210,11 @@ public class UnrestrictedBruteParser extends Parser {
 		return true;
 	}
 
+	/**
+	 * Increases the capacity of nodes the parser can generate, specified by 
+	 * numberOfSteps, the minimum number of steps it will be able to be run
+	 * after the capacity is set.
+	 */
 	public boolean raiseCapacity(int numberOfSteps) {
 		int levelSize = myDerivationsQueue.size();
 		int numProductions = getGrammar().getProductionSet().size();
@@ -200,10 +224,17 @@ public class UnrestrictedBruteParser extends Parser {
 		return true;
 	}
 
+	/**
+	 * Total number of nodes created.
+	 */
 	public int getNumberOfNodes() {
 		return this.myNodesGenerated;
 	}
 
+	/**
+	 * Returns false if the derivation has already been encountered, or
+	 * if the derivation can only derive strings larger than the input's size.
+	 */
 	public boolean isPossibleSententialForm(SymbolString sent) {
 		if (mySententialsSeen.contains(sent))
 			return false;
@@ -287,12 +318,19 @@ public class UnrestrictedBruteParser extends Parser {
 		return smaller;
 	}
 
+	/**
+	 * Returns the "level" of the parser, how many steps have been taken so far.
+	 */
 	public int getLevel() {
 		if (myDerivationsQueue.isEmpty())
 			return 0;
 		return myDerivationsQueue.getLast().length();
 	}
 
+	/**
+	 * Removes useless productions for Unrestricted grammars, as a way to optimize
+	 * the grammar as much as possible.
+	 */
 	private static Grammar optimize(Grammar g) {
 		UselessProductionRemover remover = new UselessProductionRemover(g);
 		remover.stepToCompletion();

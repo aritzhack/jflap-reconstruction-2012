@@ -16,14 +16,15 @@ import model.symbols.Symbol;
 import errors.BooleanWrapper;
 
 /**
- * Transformation algorithm from Linz book on removing Stay transitions from a single-tape Turing machine
+ * Transformation algorithm from Linz book on removing Stay transitions from a
+ * single-tape Turing machine
  * 
  * @author Ian McMahon
- *
+ * 
  */
 public class StayOptionRemover extends
 		FormalDefinitionTransformAlgorithm<MultiTapeTuringMachine> {
-	
+
 	private List<MultiTapeTMTransition> stayTransitions;
 
 	public StayOptionRemover(MultiTapeTuringMachine tm) {
@@ -44,7 +45,7 @@ public class StayOptionRemover extends
 	private void initializeStayTransitions() {
 		stayTransitions = new ArrayList<MultiTapeTMTransition>();
 		MultiTapeTuringMachine tm = getOriginalDefinition();
-		
+
 		for (MultiTapeTMTransition transition : tm.getTransitions()) {
 			if (transition.getMove(0).equals(TuringMachineMove.STAY)) {
 				stayTransitions.add(transition);
@@ -64,8 +65,9 @@ public class StayOptionRemover extends
 
 	@Override
 	public BooleanWrapper[] checkOfProperForm(MultiTapeTuringMachine tm) {
-		if(tm.getNumTapes()!=1)
-			return new BooleanWrapper[]{new BooleanWrapper(false, "The Turing machine has multiple tapes")};
+		if (tm.getNumTapes() != 1)
+			return new BooleanWrapper[] { new BooleanWrapper(false,
+					"The Turing machine has multiple tapes") };
 		return new BooleanWrapper[0];
 	}
 
@@ -78,14 +80,12 @@ public class StayOptionRemover extends
 
 		@Override
 		public String getDescriptionName() {
-			// TODO Auto-generated method stub
-			return null;
+			return "Production Replacement";
 		}
 
 		@Override
 		public String getDescription() {
-			// TODO Auto-generated method stub
-			return null;
+			return "Replaces a Stay Transition";
 		}
 
 		@Override
@@ -101,51 +101,55 @@ public class StayOptionRemover extends
 	}
 
 	/**
-	 * Removes a single Stay transition (one step in the algorithm) and replaces it with one right move
-	 * on the previous read and write terminals, and a left transition for each terminal in the tape alphabet.
+	 * Removes a single Stay transition (one step in the algorithm) and replaces
+	 * it with one right move on the previous read and write terminals, and a
+	 * left transition for each terminal in the tape alphabet.
 	 */
-	public boolean replaceStayTransitions(){
+	public boolean replaceStayTransitions() {
 		MultiTapeTuringMachine tm = getTransformedDefinition();
-		TransitionSet<MultiTapeTMTransition> transitionSet = tm.getTransitions();
+		TransitionSet<MultiTapeTMTransition> transitionSet = tm
+				.getTransitions();
 		StateSet states = tm.getStates();
-		
+
 		MultiTapeTMTransition transition = stayTransitions.remove(0);
-		
+
 		transitionSet.remove(transition);
-		
+
 		State newState = states.createAndAddState();
-		MultiTapeTMTransition rightReplacement = createRightReplacement(transition, newState);
-		
+		MultiTapeTMTransition rightReplacement = createRightReplacement(
+				transition, newState);
+
 		transitionSet.add(rightReplacement);
-		
-		for(Symbol c : getOriginalDefinition().getTapeAlphabet()){
-			MultiTapeTMTransition leftReplacement = createLeftReplacement(transition, newState, c);
-			
+
+		for (Symbol c : getOriginalDefinition().getTapeAlphabet()) {
+			MultiTapeTMTransition leftReplacement = createLeftReplacement(
+					transition, newState, c);
+
 			transitionSet.add(leftReplacement);
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Helper method to create the single right replacement needed
 	 */
-	private MultiTapeTMTransition createRightReplacement(MultiTapeTMTransition transition, State newState){
+	private MultiTapeTMTransition createRightReplacement(
+			MultiTapeTMTransition transition, State newState) {
 		State from = transition.getFromState();
 		Symbol read = transition.getRead(0), write = transition.getWrite(0);
 		TuringMachineMove move = TuringMachineMove.RIGHT;
-		
+
 		return new MultiTapeTMTransition(from, newState, read, write, move);
 	}
-	
+
 	/**
 	 * Helper method to create a left replacement on the given Symbol
 	 */
-	private MultiTapeTMTransition createLeftReplacement(MultiTapeTMTransition transition, State newState, Symbol c){
+	private MultiTapeTMTransition createLeftReplacement(
+			MultiTapeTMTransition transition, State newState, Symbol c) {
 		State to = transition.getToState();
 		TuringMachineMove move = TuringMachineMove.LEFT;
-		
+
 		return new MultiTapeTMTransition(newState, to, c, c, move);
 	}
 }
-
-
