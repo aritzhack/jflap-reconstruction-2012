@@ -31,16 +31,12 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 	
 	@Override
 	public void updateStatus(AdvancedChangeEvent e) {
-		super.updateStatus(e);
-		
 		Parser alg = getAlgorithm();
 		if(!alg.isDone()){
-			if(alg.getInput() == null){
-				setStatus(ParserView.SET_INPUT);
-				return;
-			}
 			setStatus("Fill in the next row of the parse table! Enter a space for empty sets.");
 		}
+		super.updateStatus(e);
+		
 	}
 
 }

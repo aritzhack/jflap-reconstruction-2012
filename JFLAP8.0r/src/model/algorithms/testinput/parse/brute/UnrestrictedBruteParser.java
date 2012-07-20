@@ -3,6 +3,9 @@ package model.algorithms.testinput.parse.brute;
 import java.util.*;
 
 import debug.JFLAPDebug;
+
+import util.JFLAPConstants;
+
 import model.grammar.*;
 import model.algorithms.testinput.parse.*;
 import model.algorithms.transform.grammar.UselessProductionRemover;
@@ -27,16 +30,16 @@ import model.grammar.typetest.matchers.ContextFreeChecker;
  */
 
 public class UnrestrictedBruteParser extends Parser {
-	public static final int MAX_REACHED = 2;
-	private int myCapacity = 10000;
+	public static final int MAX_REACHED = 2, LEVEL_CHANGED = 5;
+	private int myCapacity;
 
 	private LinkedList<Derivation> myDerivationsQueue;
 	private int myNodesGenerated, maxLHSsize;
 	private Set<SymbolString> mySententialsSeen;
 	private Set<Symbol> mySmallerSet;
 
-	public static UnrestrictedBruteParser createNewBruteParser(Grammar g){
-		if(new ContextFreeChecker().matchesGrammar(g)){
+	public static UnrestrictedBruteParser createNewBruteParser(Grammar g) {
+		if (new ContextFreeChecker().matchesGrammar(g)) {
 			return new RestrictedBruteParser(g);
 		}
 		return new UnrestrictedBruteParser(optimize(g));
@@ -63,7 +66,7 @@ public class UnrestrictedBruteParser extends Parser {
 	public boolean resetInternalStateOnly() {
 		myNodesGenerated = 0;
 		mySententialsSeen = new HashSet<SymbolString>();
-		initializeQueue();
+		myDerivationsQueue = new LinkedList<Derivation>();
 		return true;
 	}
 
@@ -74,8 +77,8 @@ public class UnrestrictedBruteParser extends Parser {
 
 	@Override
 	public boolean isDone() {
-		return capacityReached() || 
-				isAccept() || myDerivationsQueue.isEmpty();
+		return myNodesGenerated > 0
+				&& (capacityReached() || myDerivationsQueue.isEmpty() || isAccept());
 	}
 
 	@Override
@@ -85,9 +88,11 @@ public class UnrestrictedBruteParser extends Parser {
 
 	@Override
 	public Derivation getDerivation() {
-		Derivation d = myDerivationsQueue.getLast();
-		if (d.createResult().equals(getInput())) {
-			return d;
+		if (!myDerivationsQueue.isEmpty()) {
+			Derivation d = myDerivationsQueue.getLast();
+			if (d.createResult().equals(getInput())) {
+				return d;
+			}
 		}
 		return null;
 	}
@@ -98,30 +103,45 @@ public class UnrestrictedBruteParser extends Parser {
 
 	@Override
 	public boolean stepParser() {
-		makeNextReplacement();
-		if(capacityReached()){
-			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED, myCapacity));
+		if (myNodesGenerated == 0)
+			initializeQueue();
+		else
+			makeNextReplacement();
+		
+		notifyNextLevel();
+		if (capacityReached()) {
+			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED,
+					myCapacity));
 			return false;
-		}
+		}	
 		return true;
 	}
 
+	private void notifyNextLevel() {
+		List<SymbolString> currentDerivs = new ArrayList<SymbolString>();
+		for(Derivation d : myDerivationsQueue){
+			currentDerivs.add(d.createResult());
+		}
+		distributeChange(new AdvancedChangeEvent(this, LEVEL_CHANGED,
+				getLevel(), getNumberOfNodes(), currentDerivs));
+	}
+
 	private void initializeQueue() {
-		myDerivationsQueue = new LinkedList<Derivation>();
 		Grammar g = getGrammar();
 
-		for(Production p : g.getStartProductions()){
+		for (Production p : g.getStartProductions()) {
 			Derivation d = new Derivation(p);
 			myDerivationsQueue.add(d);
 			myNodesGenerated++;
 
 		}
+		// Allow for at least 7 steps of the parser
+		raiseCapacity(7);
 	}
 
-
 	/**
-	 * Does the next level of parsing, adding all possible steps
-	 * to each current possible derivation.
+	 * Does the next level of parsing, adding all possible steps to each current
+	 * possible derivation.
 	 */
 	private boolean makeNextReplacement() {
 		ArrayList<Derivation> nextLevel = new ArrayList<Derivation>();
@@ -133,10 +153,11 @@ public class UnrestrictedBruteParser extends Parser {
 			SymbolString result = d.createResult();
 
 			for (int i = 0; i < result.size(); i++) {
-				for (int j = i; j < Math.min(maxLHSsize+i, result.size()); j++) {
-					SymbolString LHS = result.subList(i, j+1);
+				for (int j = i; j < Math.min(maxLHSsize + i, result.size()); j++) {
+					SymbolString LHS = result.subList(i, j + 1);
 
-					Production[] productionsWithLHS = productions.getProductionsWithLHS(LHS);
+					Production[] productionsWithLHS = productions
+							.getProductionsWithLHS(LHS);
 
 					for (Production p : productionsWithLHS) {
 						Derivation tempDerivation = d.copy();
@@ -144,8 +165,9 @@ public class UnrestrictedBruteParser extends Parser {
 
 						tempDerivation.addStep(p, replacementIndex);
 
-						//increment nodes generated.
-							//Even if node=derivation is invalid, it is still generated.
+						// increment nodes generated.
+						// Even if node=derivation is invalid, it is still
+						// generated.
 						myNodesGenerated++;
 
 						SymbolString sentential = tempDerivation.createResult();
@@ -154,6 +176,10 @@ public class UnrestrictedBruteParser extends Parser {
 							nextLevel.add(tempDerivation);
 
 							if (sentential.equals(getInput())) {
+								//Not sure if this is good, but ensures that only nodes on
+								//the current level up to the first matching derivation
+								//are returned (for display purposes)
+								myDerivationsQueue.clear();
 								break loop;
 							}
 						}
@@ -169,8 +195,8 @@ public class UnrestrictedBruteParser extends Parser {
 		int levelSize = myDerivationsQueue.size();
 		int numProductions = getGrammar().getProductionSet().size();
 		int increment = (int) Math.pow(numProductions, numberOfSteps);
-	
-		myCapacity = myNodesGenerated + levelSize*increment;
+
+		myCapacity = myNodesGenerated + levelSize * increment;
 		return true;
 	}
 
@@ -179,8 +205,9 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	public boolean isPossibleSententialForm(SymbolString sent) {
-		if(mySententialsSeen.contains(sent)) return false;
-		int min = minimumLength(sent.toArray(new Symbol[0]), mySmallerSet) ;
+		if (mySententialsSeen.contains(sent))
+			return false;
+		int min = minimumLength(sent.toArray(new Symbol[0]), mySmallerSet);
 		return min <= getInput().size();
 	}
 
@@ -195,7 +222,7 @@ public class UnrestrictedBruteParser extends Parser {
 	 */
 	public int minimumLength(Symbol[] right, Set<Symbol> smaller) {
 		int length = 0;
-		for (Symbol s: right)
+		for (Symbol s : right)
 			if (!smaller.contains(s))
 				length++;
 		return length;
@@ -247,7 +274,8 @@ public class UnrestrictedBruteParser extends Parser {
 					for (int j = 0; j < left.length; j++) {
 						Symbol symbol = left[j];
 
-						if (smaller.contains(symbol)||(count(left, symbol) <= count(right, symbol)))
+						if (smaller.contains(symbol)
+								|| (count(left, symbol) <= count(right, symbol)))
 							continue;
 
 						smaller.add(symbol);
@@ -259,9 +287,13 @@ public class UnrestrictedBruteParser extends Parser {
 		return smaller;
 	}
 
+	public int getLevel() {
+		if (myDerivationsQueue.isEmpty())
+			return 0;
+		return myDerivationsQueue.getLast().length();
+	}
 
-
-	private static Grammar optimize(Grammar g){
+	private static Grammar optimize(Grammar g) {
 		UselessProductionRemover remover = new UselessProductionRemover(g);
 		remover.stepToCompletion();
 		return remover.getTransformedDefinition();
