@@ -115,6 +115,9 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		MooreMachine moore = createMooreMachine();
 		doSaveAndImport(moore, toSave + "/mooreTest.jff");
 		
+		// SAVE AND LOAD MEALY
+		fsa = createFSA2();
+		doSaveAndImport(fsa, toSave + "/fsa2.jff");
 
 	}
 	
@@ -178,6 +181,45 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 						t6, t7, t8, t9 })));
 
 		fsa.trimAlphabets();
+		return fsa;
+
+	}
+	
+	private FiniteStateAcceptor createFSA2() {
+		StateSet states = new StateSet();
+		InputAlphabet input = new InputAlphabet();
+		TransitionSet transitions = new TransitionSet();
+		StartState start = new StartState();
+		FinalStateSet finalStates = new FinalStateSet();
+
+		FiniteStateAcceptor fsa = new FiniteStateAcceptor(states, input,
+				transitions, start, finalStates);
+		outPrintln("Testing error/definition completion printouts:");
+		errPrintln(UtilFunctions.createDelimitedString(
+				Arrays.asList(fsa.isComplete()), "\n")
+				+ "\n");
+
+		// for (char i = '0'; i <= '9'; i++){
+		// fsa.getInputAlphabet().add(new Symbol(Character.toString(i)));
+		// }
+
+		// figure 2.18 from the linz book with minor adjustments for
+		// non-determinism
+		State q0 = new State("q0", 0);
+		State q1 = new State("q1", 1);
+
+		fsa.getFinalStateSet().addAll(Arrays.asList(new State[] {q1 }));
+
+		Symbol ONE = new Terminal("1");
+		Symbol ZERO = new Terminal("0");
+
+		FSATransition t0 = new FSATransition(q0, q1, new SymbolString(ZERO));
+		FSATransition t1 = new FSATransition(q0, q1, new SymbolString(ONE));
+		FSATransition t2 = new FSATransition(q0, q1, new SymbolString(ONE,ZERO));
+		FSATransition t3 = new FSATransition(q0, q1, new SymbolString(ONE,ONE));
+		fsa.getTransitions().addAll(
+				(Arrays.asList(new FSATransition[] { t0, t1,t2,t3})));
+
 		return fsa;
 
 	}

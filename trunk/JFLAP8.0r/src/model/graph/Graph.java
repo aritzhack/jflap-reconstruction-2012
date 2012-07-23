@@ -28,6 +28,10 @@ import java.util.Set;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.event.ChangeEvent;
+
+import model.change.ChangingObject;
+
 /**
  * A graph data structure. The idea behind the graph data structure is that a
  * vertex is just some sort of data structure whose type is not important, and
@@ -36,7 +40,7 @@ import java.awt.geom.Rectangle2D;
  * @author Thomas Finley
  */
 
-public class Graph<T> {
+public class Graph<T> extends ChangingObject{
 	/** Creates a new empty graph structure. */
 	public Graph() {
 
@@ -67,14 +71,18 @@ public class Graph<T> {
 
 	/** Adds an edge between two vertices. */
 	public boolean addEdge(T vertex1, T vertex2) {
-		return adjacent(vertex1).add(vertex2) &&
+		boolean changed = adjacent(vertex1).add(vertex2) &&
 					adjacent(vertex2).add(vertex1);
+		if (changed) distributeChanged();
+		return changed;
 	}
 
 	/** Removes an edge between two vertices. */
 	public boolean removeEdge(T vertex1, T vertex2) {
-		return adjacent(vertex1).remove(vertex2) &&
-					adjacent(vertex2).remove(vertex1);
+		boolean changed = adjacent(vertex1).remove(vertex2) &&
+				adjacent(vertex2).remove(vertex1);
+		if (changed) distributeChanged();
+		return changed;
 	}
 
 	/** Returns if an edge exists between two vertices. */
@@ -82,9 +90,15 @@ public class Graph<T> {
 		return adjacent(vertex1).contains(vertex2);
 	}
 
+	public boolean hasVertex(T v){
+		return vertices().contains(v);
+	}
+	
 	/** Adds a vertex. */
 	public boolean addVertex(T vertex, Point2D point) {
-		return verticesToPoints.put(vertex, (Point2D) point.clone()) != null;
+		boolean changed = verticesToPoints.put(vertex, (Point2D) point.clone()) != null;
+		if (changed) distributeChanged();
+		return changed;
 	}
 
 	/** Removes a vertex. */
@@ -93,13 +107,16 @@ public class Graph<T> {
 		Iterator<T> it = others.iterator();
 		while (it.hasNext())
 			adjacent(it.next()).remove(vertex);
-		return verticesToNeighbors.remove(vertex) != null &&
-						verticesToPoints.remove(vertex) != null;
+		boolean changed = verticesToNeighbors.remove(vertex) != null &&
+				verticesToPoints.remove(vertex) != null;
+		if (changed) distributeChanged();
+		return changed; 
 	}
 
 	/** Moves a vertex to a new point. */
 	public void moveVertex(T vertex, Point2D point) {
 		addVertex(vertex, point);
+		distributeChanged();
 	}
 
 	public int totalDegree(){

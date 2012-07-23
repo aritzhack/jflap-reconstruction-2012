@@ -48,4 +48,8 @@ public class GraphDrawer<T> {
 
 	}
 	
+	public VertexDrawer<T> getVertexDrawer(){
+		return myVertexDrawer;
+	}
+	
 }

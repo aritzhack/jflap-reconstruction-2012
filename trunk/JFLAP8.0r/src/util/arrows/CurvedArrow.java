@@ -29,6 +29,8 @@ import java.awt.Stroke;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 
+import debug.JFLAPDebug;
+
 
 
 /**
@@ -53,7 +55,7 @@ public class CurvedArrow extends QuadCurve2D.Double {
 	}
 
 	private double calculateHeadAngle() {
-		return CurvedArrowHelper.calculateAngle(this.getP2(), this.getCtrlPt()) - Math.PI/2;
+		return GeometryHelper.calculateAngle(this.getP2(), this.getCtrlPt()) - Math.PI/2;
 	}
 
 	public ArrowHead getHead(){
@@ -81,15 +83,15 @@ public class CurvedArrow extends QuadCurve2D.Double {
 	}
 	
 	public Point2D getCenterPoint(){
-		return CurvedArrowHelper.getCenterPoint(this);
+		return GeometryHelper.getCenterPoint(this);
 	}
 	
 	public double getYDisplacement() {
-		return CurvedArrowHelper.getYDisplacement(this);
+		return GeometryHelper.getYDisplacement(this);
 	}
 
 	public double getXDisplacement() {
-		return CurvedArrowHelper.getXDisplacement(this);
+		return GeometryHelper.getXDisplacement(this);
 	}
 
 
