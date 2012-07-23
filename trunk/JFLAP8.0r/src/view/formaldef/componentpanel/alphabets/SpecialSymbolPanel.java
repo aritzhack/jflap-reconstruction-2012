@@ -11,6 +11,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 
+import debug.JFLAPDebug;
+
 
 
 import model.formaldef.components.FormalDefinitionComponent;
@@ -64,7 +66,7 @@ public class SpecialSymbolPanel extends DefinitionComponentPanel<SpecialSymbol>{
 	public void setMagnification(double mag) {
 		super.setMagnification(mag);
 		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
-		Font f = myButton.getFont().deriveFont(size);
+		Font f = this.getFont().deriveFont(size);
 		myButton.setFont(f);
 	}
 }
