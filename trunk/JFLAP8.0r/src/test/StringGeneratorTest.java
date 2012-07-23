@@ -31,7 +31,7 @@ import model.languages.Language;
 import model.languages.samplelanguages.EvenLetterLanguage;
 import model.languages.samplelanguages.OddLetterLanguage;
 import model.grammar.*;
-import model.languages.StringGenerator;
+import model.languages.LanguageGenerator;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;

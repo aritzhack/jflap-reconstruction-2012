@@ -10,6 +10,9 @@ package model.languages;
 
 import java.util.*;
 
+import debug.JFLAPDebug;
+
+import model.algorithms.AlgorithmException;
 import model.algorithms.conversion.autotogram.*;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.testinput.parse.*;
@@ -23,7 +26,7 @@ import model.grammar.typetest.matchers.*;
 import model.regex.RegularExpression;
 import model.symbols.*;
 
-public class StringGenerator {
+public class LanguageGenerator {
 
 	private Grammar myGrammar;
 	private int LARGE_NUMBER = 100000;
@@ -34,19 +37,19 @@ public class StringGenerator {
 
 	private int myNumberToGenerate, currentStringLength, maxLHSsize;
 
-	public StringGenerator(FiniteStateAcceptor fsa) {
+	public LanguageGenerator(FiniteStateAcceptor fsa) {
 		FSAtoRegGrammarConversion converter = new FSAtoRegGrammarConversion(fsa);
 		converter.stepToCompletion();
 		initialize(converter.getConvertedGrammar());
 	}
 
-	public StringGenerator(PushdownAutomaton pda) {
+	public LanguageGenerator(PushdownAutomaton pda) {
 		PDAtoCFGConverter converter = new PDAtoCFGConverter(pda);
 		converter.stepToCompletion();
 		initialize(converter.getConvertedGrammar());
 	}
 
-	public StringGenerator(RegularExpression regex) {
+	public LanguageGenerator(RegularExpression regex) {
 		RegularExpressionToNFAConversion nfa = new RegularExpressionToNFAConversion(
 				regex);
 		nfa.stepToCompletion();
@@ -56,7 +59,7 @@ public class StringGenerator {
 		initialize(converter.getConvertedGrammar());
 	}
 
-	public StringGenerator(Grammar g) {
+	public LanguageGenerator(Grammar g) {
 		initialize(g);
 	}
 
@@ -79,22 +82,13 @@ public class StringGenerator {
 		myPossibleStrings.clear();
 		myStringsInLanguage.clear();
 	}
-
-	/**
-	 * Generates the default number of strings (the number of terminals in the
-	 * TerminalAlphabet) using a brute force method.
-	 */
-	public List<SymbolString> generateStringsBrute() {
-		return generateStringsBrute(DEFAULT_NUMBER);
+	
+	public List<SymbolString> generateStrings(int numberToGenerate){
+		if(! new ContextFreeChecker().matchesGrammar(myGrammar))
+			return generateStringsBrute(numberToGenerate);
+		return generateContextFreeStrings(numberToGenerate);
 	}
 
-	/**
-	 * Generates the default number of strings (the number of terminals in the
-	 * TerminalAlphabet) using either CYK or LL parsing.
-	 */
-	public List<SymbolString> generateContextFreeStrings() {
-		return generateContextFreeStrings(DEFAULT_NUMBER);
-	}
 
 	/**
 	 * Generates the specified number of sentences using a brute force
@@ -103,7 +97,7 @@ public class StringGenerator {
 	 * @param numberToGenerate
 	 *            the number of sentences/strings this method will return
 	 */
-	public List<SymbolString> generateStringsBrute(int numberToGenerate) {
+	private List<SymbolString> generateStringsBrute(int numberToGenerate) {
 		clear();
 		myNumberToGenerate = numberToGenerate;
 		myDerivationsQueue.add(new Derivation(new Production(
@@ -123,7 +117,7 @@ public class StringGenerator {
 	 * @param numberToGenerate
 	 *            the number of sentences/strings this method will return.
 	 */
-	public List<SymbolString> generateContextFreeStrings(int numberToGenerate) {
+	private List<SymbolString> generateContextFreeStrings(int numberToGenerate) {
 		clear();
 		myNumberToGenerate = numberToGenerate;
 		checkForCorrectParser();
@@ -267,9 +261,9 @@ public class StringGenerator {
 	 * Converts a context free grammar to CNF if it is not in LL(1) form.
 	 */
 	private void checkForCorrectParser() {
-		if (!new ContextFreeChecker().matchesGrammar(myGrammar))
-			throw new ParserException("The grammar is not Context-Free."
-					+ " Try the brute generation instead.");
+		if (! new ContextFreeChecker().matchesGrammar(myGrammar)){
+			throw new AlgorithmException("The grammar must be context free to specify a length");
+		}
 		if (!new LL1Checker().matchesGrammar(myGrammar)) {
 			CNFConverter converter = new CNFConverter(myGrammar);
 			converter.stepToCompletion();

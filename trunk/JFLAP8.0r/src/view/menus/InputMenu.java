@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.JMenu;
 
 import model.undo.UndoKeeper;
+import view.action.grammar.LanguageGeneratorAction;
 import view.action.grammar.parse.BruteParseAction;
 import view.action.grammar.parse.CYKParseAction;
 import view.environment.JFLAPEnvironment;
@@ -32,6 +33,7 @@ public class InputMenu extends JMenu implements TabChangeListener {
 			GrammarView v = (GrammarView) view;
 			this.add(new BruteParseAction(v));
 			this.add(new CYKParseAction(v));
+			this.add(new LanguageGeneratorAction(v.getDefinition()));
 		}
 	}
 
