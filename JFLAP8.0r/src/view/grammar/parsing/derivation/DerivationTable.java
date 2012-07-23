@@ -46,6 +46,11 @@ public class DerivationTable extends DerivationPanel {
 		public int getColumnCount() {
 			return 2;
 		}
+		
+		@Override
+		public String getColumnName(int column) {
+			return new String[]{"Production", "Derivation"}[column];
+		}
 
 		@Override
 		public int getRowCount() {
