@@ -18,6 +18,13 @@ import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.change.events.AdvancedChangeEvent;
 import view.grammar.parsing.RunningView;
 
+/**
+ * Running View for Brute Parser, updates each step, the number of nodes, and
+ * current sentential form.
+ * 
+ * @author Ian McMahon
+ * 
+ */
 public class BruteParseTablePanel extends RunningView {
 
 	public BruteParseTablePanel(UnrestrictedBruteParser parser) {

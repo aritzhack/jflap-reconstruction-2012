@@ -5,7 +5,6 @@ import model.change.events.AdvancedChangeEvent;
 import util.view.magnify.MagnifiableToolbar;
 import view.algorithms.toolbar.CYKToolbar;
 import view.grammar.parsing.FindFirstParserView;
-import view.grammar.parsing.ParserView;
 
 /**
  * CYK Parser GUI

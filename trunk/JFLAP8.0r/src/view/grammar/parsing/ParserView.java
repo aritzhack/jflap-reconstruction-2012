@@ -5,18 +5,12 @@ import java.awt.Component;
 import java.awt.GridLayout;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import debug.JFLAPDebug;
-
-import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
 import model.change.events.AdvancedChangeEvent;
-import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
@@ -25,7 +19,6 @@ import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableSplitPane;
 import util.view.magnify.MagnifiableToolbar;
 import view.algorithms.InputtingPanel;
-import view.algorithms.toolbar.SteppableToolbar;
 import view.formaldef.FormalDefinitionView;
 import view.grammar.productions.ProductionTable;
 
@@ -104,6 +97,9 @@ public abstract class ParserView<S extends Parser>
 		return getModel().getGrammar();
 	}
 	
+	/**
+	 * Updates the status label to the specified text.
+	 */
 	public void setStatus(String statusText){
 		myStatusLabel.setText(statusText);
 	}

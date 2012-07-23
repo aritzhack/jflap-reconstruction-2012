@@ -4,6 +4,13 @@ import java.awt.Color;
 
 import model.symbols.Symbol;
 
+/**
+ * Helper class used in the rendering of headers (as the current framework
+ * has issues with negative numbers, which headers contain as their row).
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class HighlightHeader {
 	private Color highlight;
 	private Symbol name;

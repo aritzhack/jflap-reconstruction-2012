@@ -9,7 +9,7 @@ import view.algorithms.toolbar.SteppableToolbar;
 import view.grammar.parsing.FindFirstParserView;
 
 /**
- * This is a brute force parse pane.
+ * Brute force parse pane.
  * 
  * @author Ian McMahon
  */
@@ -36,6 +36,11 @@ public class BruteParserView extends FindFirstParserView<BruteParseTablePanel> {
 		super.updateStatus(e);
 	}
 
+	/**
+	 * Opens up a dialog asking the user if they would like to increase the
+	 * capacity of generated nodes for the Brute Parser, warning
+	 * them of JFLAP freezing.
+	 */
 	private boolean promptForIncreaseCapacity(int nodeNum, AdvancedChangeEvent e) {
 
 		int n = JOptionPane
