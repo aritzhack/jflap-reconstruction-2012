@@ -4,6 +4,7 @@ import java.util.Set;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.transform.turing.TMtoEncodingConversion;
 import model.automata.TransitionSet;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;

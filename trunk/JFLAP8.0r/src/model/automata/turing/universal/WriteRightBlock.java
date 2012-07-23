@@ -13,8 +13,9 @@ import model.automata.turing.buildingblock.library.WriteBlock;
 import model.symbols.Symbol;
 
 /**
- * Subblock used by RetrieveOutputBlock which writes a blank over the current Symbol
+ * Sub-block used by RetrieveOutputBlock which writes a blank over the current Symbol
  * and moves once to the right.
+ * 
  * @author Ian McMahon
  *
  */

@@ -2,8 +2,6 @@ package model.algorithms.testinput.parse.brute;
 
 import java.util.ArrayList;
 
-import debug.JFLAPDebug;
-
 import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
 import model.grammar.typetest.GrammarType;
@@ -60,11 +58,9 @@ public class RestrictedBruteParser extends UnrestrictedBruteParser {
 				discrete.add(new SymbolString());
 			if (Grammar.isTerminal(s))
 				discrete.get(discrete.size() - 1).add(s);
-			JFLAPDebug.print(discrete);
 		}
 		if (!endBookend)
 			discrete.remove(discrete.size() - 1);
-		JFLAPDebug.print(discrete);
 
 		int cp = 0;
 		for (int i = 0; i < discrete.size(); i++) {
