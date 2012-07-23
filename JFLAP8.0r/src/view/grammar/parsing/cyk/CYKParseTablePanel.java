@@ -37,6 +37,7 @@ import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
+import util.view.DoSelectable;
 import util.view.tables.SelectingEditor;
 import view.grammar.parsing.RunningView;
 
@@ -52,7 +53,7 @@ import view.grammar.parsing.RunningView;
  * 
  */
 @SuppressWarnings("serial")
-public class CYKParseTablePanel extends RunningView {
+public class CYKParseTablePanel extends RunningView implements DoSelectable{
 
 	private static final Color YELLOW_HIGHLIGHT = new Color(255, 255, 66);
 	private static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
@@ -207,6 +208,7 @@ public class CYKParseTablePanel extends RunningView {
 	/**
 	 * Autofills the selected cell, if it is editable.
 	 */
+	@Override
 	public void doSelected() {
 		JTable table = getTable();
 		CYKParser parser = ((CYKParseModel) table.getModel()).getParser();

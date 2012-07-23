@@ -4,16 +4,21 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import errors.JFLAPError;
-
 import model.algorithms.testinput.parse.Parser;
-import model.algorithms.testinput.parse.ParserException;
 import model.grammar.Grammar;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.parsing.ParserView;
 
+/**
+ * Superclass for initializing ParserViews and making them the selected
+ * tab of the open JFLAP environment.
+ * 
+ * @author Ian McMahon
+ * 
+ * @param <S>
+ */
 public abstract class ParseAction<S extends Parser> extends AbstractAction {
 
 	private GrammarView myView;
@@ -26,8 +31,10 @@ public abstract class ParseAction<S extends Parser> extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Grammar g = myView.getDefinition();
+		
 		if (g == null)
 			return;
+		
 		ParserView<S> parserView = createParseView(g);
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();
 		environ.addSelectedComponent(parserView);

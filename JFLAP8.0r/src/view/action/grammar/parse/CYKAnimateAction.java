@@ -6,6 +6,13 @@ import javax.swing.AbstractAction;
 
 import view.grammar.parsing.cyk.CYKParseTablePanel;
 
+/**
+ * Action used on the CYK Toolbar which will cause the parse table
+ * to animate for the selected cell.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class CYKAnimateAction extends AbstractAction {
 
 	private CYKParseTablePanel myPanel;

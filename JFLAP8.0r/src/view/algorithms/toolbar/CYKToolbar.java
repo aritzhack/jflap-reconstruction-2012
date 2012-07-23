@@ -4,7 +4,7 @@ import model.algorithms.steppable.SteppableAlgorithm;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableButton;
 import view.action.grammar.parse.CYKAnimateAction;
-import view.action.grammar.parse.CYKDoSelectedAction;
+import view.action.grammar.parse.DoSelectedAction;
 import view.grammar.parsing.cyk.CYKParseTablePanel;
 
 public class CYKToolbar extends SteppableToolbar {
@@ -16,7 +16,7 @@ public class CYKToolbar extends SteppableToolbar {
 	public CYKToolbar(CYKParseTablePanel panel, SteppableAlgorithm alg, boolean floatable) {
 		super(alg, floatable);
 		int size = JFLAPPreferences.getDefaultTextSize();
-		mySelectedButton = new MagnifiableButton(new CYKDoSelectedAction(panel), size);
+		mySelectedButton = new MagnifiableButton(new DoSelectedAction(panel), size);
 		myAnimateButton = new MagnifiableButton(new CYKAnimateAction(panel), size);
 		myPanel = panel;
 		
