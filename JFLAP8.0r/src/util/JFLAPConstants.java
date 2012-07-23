@@ -83,7 +83,7 @@ public interface JFLAPConstants {
 		public static final Color STATE_SELECTED_COLOR = new Color(100, 200, 200);
 		public static final int EDITOR_CELL_WIDTH = 60;
 //		public static final Note BASE_NOTE = new Note("Edit me");
-		public static final int EDITOR_CELL_HEIGHT = 17;
+		public static final int EDITOR_CELL_HEIGHT = 13;
 		public static final String TAB_CHANGED = "TAB_CHANGED";
 		public static final int CONFIGURATION_PADDING = 5;
 		public static final int INITAL_LOOP_HEIGHT = 40;

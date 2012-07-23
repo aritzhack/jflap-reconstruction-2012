@@ -1,10 +1,15 @@
 package view.automata;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Set;
+
 
 import debug.JFLAPDebug;
 
@@ -18,6 +23,7 @@ import model.graph.TransitionGraph;
 import util.JFLAPConstants;
 import util.Point2DAdv;
 import util.arrows.CurvedArrow;
+import util.arrows.GeometryHelper;
 import view.graph.GraphDrawer;
 import view.graph.VertexDrawer;
 
@@ -36,35 +42,59 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 	@Override
 	public void drawEdge(State from, State to, Graph<State> obj, Graphics g) {
 		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
-		List<T> transitions = graph.getOrderedTransitions(from, to);
 		Point2D ctrl = graph.getControlPt(from, to);
 		Point2D pFrom = graph.pointForVertex(from);
 		Point2D pTo = graph.pointForVertex(to);
-		CurvedArrow arrow = new CurvedArrow(pFrom, ctrl, pTo, ARROW_LENGTH, ARROW_ANGLE);
+		
+		drawArrow(g, ctrl, pFrom, pTo);
+		
+		//draw Labels
+		List<T> transitions = graph.getOrderedTransitions(from, to);
+		Graphics2D g2d = (Graphics2D) g.create();
+		AffineTransform oldTX = g2d.getTransform();
+		for(int i=0; i<transitions.size();i++){
+			T t = transitions.get(i);
+			//set up transform
+			Point2D center = graph.getLabelCenter(t);
+			AffineTransform tx = createLabelTransform(center,pFrom,pTo);
+			g2d.setTransform(oldTX);
+			g2d.transform(tx);
+			
+			//drawLabel
+			drawLabel(g2d, t, center);
+		}
+	}
+
+	private void drawArrow(Graphics g, Point2D ctrl, Point2D pFrom, Point2D pTo) {
+		double rad = getVertexDrawer().getVertexRadius();
+		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,ctrl);
+		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,ctrl);
+		CurvedArrow arrow = new CurvedArrow(edgeFrom, ctrl, edgeTo, ARROW_LENGTH, ARROW_ANGLE);
 		arrow.draw(g);
-		JFLAPDebug.print("Drawn");
+	}
 
+	public void drawLabel(Graphics2D g2d, T t, Point2D center) {
+		String label = t.getLabelText();
+		FontMetrics metrics = g2d.getFontMetrics();
+		int w = metrics.stringWidth(label);
+		int h = metrics.getMaxAscent();
+		int x = (int) (center.getX()-w/2);
+		int y = (int) (center.getY()-h/2);
+		g2d.drawString(label, x, y);
+		g2d.drawRect(x-1, y-h+1, w, h);
 	}
 	
+		
+	private AffineTransform createLabelTransform(Point2D center, Point2D from, Point2D to) {
+		AffineTransform at = new AffineTransform();
+		double angle =  GeometryHelper.calculateAngle(from,to) % (2*Math.PI);
 
-
-	/**
-	 * Given a state and an angle, if we treat the state as a circle, what point
-	 * does that angle represent?
-	 * 
-	 * @param state
-	 *            the state
-	 * @param angle
-	 *            the angle on the state
-	 * @return the point on the outside of the state with this angle
-	 */
-	private static Point2DAdv pointOnVertex(Point2D center, double rad, double angle) {
-		Point2DAdv point = new Point2DAdv(center);
-		double x = Math.cos(angle) * rad;
-		double y = Math.sin(angle) * rad;
-		point.translate((int) x, (int) y);
-		return point;
+		at.rotate(angle % Math.PI, center.getX(), center.getY());
+		if (angle > Math.PI/2 && angle <= Math.PI*1.5){
+			at.translate(0, 2*JFLAPConstants.EDITOR_CELL_HEIGHT);
+		}
+		return at;
 	}
-	
+
 
 }

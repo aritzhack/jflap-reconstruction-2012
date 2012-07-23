@@ -64,4 +64,8 @@ public class VertexDrawer<T>{
 				2 * radius);
 	}
 
+	public double getVertexRadius() {
+		return myRadius;
+	}
+
 }

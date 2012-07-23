@@ -15,9 +15,9 @@ public class RunTests {
 //		PDATest.class,
 //		RegExTest.class, 
 //		FSATest.class, 
-		GrammarTest.class,
-		ParserTest.class,
-//		FileTester.class,
+//		GrammarTest.class,
+//		ParserTest.class,
+		FileTester.class,
 //		BuildingBlockTesting.class,
 //		MooreAndMealyTest.class
 	};
