@@ -9,6 +9,15 @@ import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 
+/**
+ * The replacement for states in a Block Turing Machine. Each
+ * Block acts as a state, but also contains an internal
+ * Turing Machine. 
+ * 
+ * @author Julian
+ * @author Ian McMahon
+ *
+ */
 public class Block extends State implements UsesSymbols{
 	private TuringMachine myMachine;
 

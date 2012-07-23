@@ -11,6 +11,13 @@ import model.formaldef.UsesSymbols;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 
+/**
+ * StateSet replacement for Block TMs, using Blocks instead of 
+ * States.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class BlockSet extends StateSet implements UsesSymbols{
 	
 	@Override

@@ -1,4 +1,4 @@
-package model.automata.turing.universal;
+package model.algorithms.transform.turing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachineMove;
+import model.automata.turing.universal.MappingBlock;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import errors.BooleanWrapper;

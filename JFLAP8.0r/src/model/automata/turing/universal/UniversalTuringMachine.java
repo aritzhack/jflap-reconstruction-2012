@@ -1,6 +1,5 @@
 package model.automata.turing.universal;
 
-import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
 import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
@@ -18,7 +17,7 @@ import model.symbols.SymbolString;
  * Three tape Universal TM, either assumes that input tapes are as follows: 
  * T1 = Input Encoding T2 = Transition Encoding T3 = State Encoding
  * (if flipForBlock is false) or single input encoded as 
- * TRANS00INPUT (if true).
+ * TRANS00INPUT (if true). Taken from JFLAP guide.
  * 
  * @author Julian, Ian McMahon
  * 
