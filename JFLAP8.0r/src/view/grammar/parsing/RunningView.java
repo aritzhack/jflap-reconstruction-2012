@@ -12,29 +12,37 @@ import model.algorithms.testinput.parse.Parser;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiablePanel;
 
-public abstract class RunningView extends MagnifiablePanel{
+/**
+ * Main panel for FindFirstParsers (Brute force and CYK) that consists of a
+ * table used for display/interaction.
+ * 
+ * @author Ian McMahon
+ * 
+ */
+public abstract class RunningView extends MagnifiablePanel {
+
 	private JTable myTable;
 
-	public RunningView(String name, Parser parser){
+	public RunningView(String name, Parser parser) {
 		setName(name);
 		setLayout(new BorderLayout());
-		
+
 		myTable = new JTable(createModel(parser));
 		JTableHeader header = myTable.getTableHeader();
-		
+
 		header.setReorderingAllowed(false);
 		header.setResizingAllowed(false);
-		
+
 		JScrollPane panel = new JScrollPane(myTable);
 		add(panel, BorderLayout.CENTER);
 	}
-	
+
 	public abstract AbstractTableModel createModel(Parser parser);
-	
-	public JTable getTable(){
+
+	public JTable getTable() {
 		return myTable;
 	}
-	
+
 	@Override
 	public void setMagnification(double mag) {
 		super.setMagnification(mag);
@@ -44,5 +52,5 @@ public abstract class RunningView extends MagnifiablePanel{
 		myTable.getTableHeader().setFont(font);
 		myTable.setRowHeight((int) (size + 10));
 	}
-	
+
 }

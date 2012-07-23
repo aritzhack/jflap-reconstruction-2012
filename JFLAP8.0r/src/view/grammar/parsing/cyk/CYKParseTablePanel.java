@@ -1,9 +1,7 @@
 package view.grammar.parsing.cyk;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -13,7 +11,6 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -22,7 +19,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -35,25 +31,23 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
-import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.DoSelectable;
 import util.view.tables.SelectingEditor;
 import view.grammar.parsing.RunningView;
 
 /**
- * Running View/interactive table used to
- * represent the CYK algorithm. Allows for user input, which is compared to 
- * the true values, which are precalculated one step ahead. Also allows for
- * autofilling of single cells, rows, or entire table as well as animation
- * as to which pairs of cells need to be considered to fill in selected cell
- * with correct variables.
+ * Running View/interactive table used to represent the CYK algorithm. Allows
+ * for user input, which is compared to the true values, which are precalculated
+ * one step ahead. Also allows for autofilling of single cells, rows, or entire
+ * table as well as animation as to which pairs of cells need to be considered
+ * to fill in selected cell with correct variables.
  * 
  * @author Ian McMahon
  * 
  */
 @SuppressWarnings("serial")
-public class CYKParseTablePanel extends RunningView implements DoSelectable{
+public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
 	private static final Color YELLOW_HIGHLIGHT = new Color(255, 255, 66);
 	private static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
@@ -64,13 +58,12 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 	private Map<Integer, Color> myHighlightData;
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
-	private boolean diagonal;
-	private boolean animated;
+	private boolean diagonal, animated;
 
 	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
 		this.diagonal = diagonal;
-		
+
 		JTable table = getTable();
 		table.setGridColor(TRANSPARENT);
 
@@ -164,9 +157,9 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 			if (e instanceof AdvancedChangeEvent
 					&& ((AdvancedChangeEvent) e).comesFrom(myParser)) {
 				notifyTable();
-				
+
 				TableColumnModel columnModel = getTable().getColumnModel();
-				
+
 				for (int i = 0; i < getColumnCount(); i++) {
 					setTableColumnInfo(columnModel, i);
 
@@ -199,23 +192,27 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 			fireTableDataChanged();
 			getTable().createDefaultColumnsFromModel();
 		}
-		
-		private CYKParser getParser(){
+
+		private CYKParser getParser() {
 			return (CYKParser) myParser;
 		}
 	}
 
 	/**
-	 * Autofills the selected cell, if it is editable.
+	 * Autofills the selected cell, if it is editable, making sure there
+	 * is a selected cell.
 	 */
 	@Override
 	public void doSelected() {
 		JTable table = getTable();
 		CYKParser parser = ((CYKParseModel) table.getModel()).getParser();
-		
+
 		int row = table.getSelectedRow();
 		int column = table.getSelectedColumn();
-		parser.autofillCell(getRowFromMapping(row, column), column);
+		row = getRowFromMapping(row, column);
+		
+		if(row < 0 || column < 0) return;
+		parser.autofillCell(row, column);
 		setCellColor(row, column, Color.WHITE);
 	}
 
@@ -234,7 +231,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 	}
 
 	/**
-	 * The modified table cell renderer. Removes square brackets when selected,
+	 * The modified table cell renderer. Replaces square brackets with {},
 	 * renders empty sets as the Empty Set Symbol, and deals with highlighting
 	 * of table cells (notifying the header renderer when necessary).
 	 */
@@ -257,7 +254,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 					l.setText("{}");
 				return l;
 			}
-			if (!value.equals(new HashSet<Symbol>())){
+			if (!value.equals(new HashSet<Symbol>())) {
 				replaceSetCharacters(l);
 				return l;
 			}
@@ -268,7 +265,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 
 	/**
 	 * Highlights and dehighlights valid cells, while rendering any unusable
-	 * cells as completely transparent.
+	 * cells as transparent.
 	 */
 	private void setCellBackground(int row, int column, JLabel l) {
 		if (row > column) {
@@ -285,10 +282,10 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 	 */
 	public void animate() {
 		JTable table = getTable();
-		
+
 		int row = table.getSelectedRow();
 		int column = table.getSelectedColumn();
-		
+
 		if (animated || !table.isCellEditable(row, column))
 			return;
 
@@ -297,6 +294,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 			animated = true;
 			HighlightAction animate = new HighlightAction(row, column);
 		}
+		table.clearSelection();
 		repaint();
 	}
 
@@ -377,10 +375,10 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 	private void highlightHeader(int row, int column) {
 		row = getRowFromMapping(row, column);
 		TableColumnModel columnModel = getTable().getColumnModel();
-		
+
 		for (int i = row; i <= column; i++) {
-			HighlightHeader header = (HighlightHeader) columnModel
-					.getColumn(i).getHeaderValue();
+			HighlightHeader header = (HighlightHeader) columnModel.getColumn(i)
+					.getHeaderValue();
 			header.setHightlight(YELLOW_HIGHLIGHT);
 		}
 	}
@@ -391,17 +389,17 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable{
 	private void dehighlightHeaders() {
 		JTable table = getTable();
 		TableColumnModel columnModel = table.getColumnModel();
-		
+
 		for (int i = 0; i < table.getColumnCount(); i++) {
-			HighlightHeader header = (HighlightHeader) columnModel
-					.getColumn(i).getHeaderValue();
+			HighlightHeader header = (HighlightHeader) columnModel.getColumn(i)
+					.getHeaderValue();
 			header.setHightlight(TRANSPARENT);
 		}
 	}
 
 	/**
-	 * Helper method to aid in the display of set cells so that square
-	 * brackets are rendered as {} to fit set notation.
+	 * Helper method to aid in the display of set cells so that square brackets
+	 * are rendered as {} to fit set notation.
 	 */
 	private void replaceSetCharacters(JLabel label) {
 

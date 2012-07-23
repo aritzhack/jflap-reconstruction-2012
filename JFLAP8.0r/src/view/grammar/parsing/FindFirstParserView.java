@@ -1,6 +1,5 @@
 package view.grammar.parsing;
 
-import debug.JFLAPDebug;
 import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
@@ -37,15 +36,15 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 	@Override
 	public void updateStatus(AdvancedChangeEvent e) {
 		Parser alg = getAlgorithm();
-		
+
 		if (e.getType() == InputUsingAlgorithm.INPUT_SET) {
 			resetDropDownPanel();
 		}
-		if(alg.getInput() == null){
+		if (alg.getInput() == null) {
 			setStatus(ParserView.SET_INPUT);
 			return;
 		}
-		
+
 		if (alg.isDone()) {
 			if (alg.isReject())
 				setStatus("Input rejected! Try another string!");
@@ -60,8 +59,12 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 			}
 		}
 	}
-	
-	public void resetDropDownPanel(){
+
+	/**
+	 * Resets the drop down menu and corresponding view to have the runningView
+	 * as the only option.
+	 */
+	public void resetDropDownPanel() {
 		dropDownPanel.removeAllOptions();
 		dropDownPanel.addOption(runningView);
 	}
