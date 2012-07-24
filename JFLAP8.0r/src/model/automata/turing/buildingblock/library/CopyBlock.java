@@ -100,13 +100,14 @@ public class CopyBlock extends BlockTMUpdatingBlock {
 		b2 = myPivot = new MoveBlock(TuringMachineMove.RIGHT, tapeAlph, id++);
 		addTransition(b1, b2, tilde);
 		
-		b1=b2;
-		b2 = new ShiftBlock(TuringMachineMove.LEFT, tapeAlph, id++);
-		addTransition(b1, b2, marker);
+//		commented out as Prof. Rodger wants to leave a marker.
+//		b1=b2;
+//		b2 = new ShiftBlock(TuringMachineMove.LEFT, tapeAlph, id++);
+//		addTransition(b1, b2, marker);
 		
 		b1=b2;
 		b2 = new MoveUntilBlock(TuringMachineMove.LEFT, blank, tapeAlph, id++);
-		addTransition(b1, b2, tilde);
+		addTransition(b1, b2, marker);
 		
 		b1=b2;
 		b2 = new MoveBlock(TuringMachineMove.RIGHT, tapeAlph, id++);

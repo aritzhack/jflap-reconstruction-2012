@@ -3,6 +3,7 @@ package util.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -52,7 +53,7 @@ public class DropDownMenuPanel extends MagnifiablePanel implements ItemListener 
 	@Override
 	public void setMagnification(double mag) {
 		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
-		myComboBox.setFont(myComboBox.getFont().deriveFont(size));
+		myComboBox.setFont(myComboBox.getFont().deriveFont(Font.PLAIN, size));
 		myPanel.setMagnification(mag);
 	}
 

@@ -23,7 +23,7 @@ public class MagnifiableTextArea extends JTextArea implements Magnifiable {
 	@Override
 	public void setMagnification(double mag) {
 		float size = (float) (mag*myDefaultSize);
-		Font f = this.getFont().deriveFont(size);
+		Font f = this.getFont().deriveFont(Font.PLAIN, size);
 		this.setFont(f);
 		
 	}

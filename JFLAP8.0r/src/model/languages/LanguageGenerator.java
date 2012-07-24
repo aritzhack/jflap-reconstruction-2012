@@ -17,8 +17,9 @@ import model.algorithms.conversion.autotogram.*;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.testinput.parse.*;
 import model.algorithms.testinput.parse.cyk.CYKParser;
-import model.algorithms.testinput.parse.ll.LL1Parser;
 import model.algorithms.transform.grammar.CNFConverter;
+import model.algorithms.transform.grammar.ConstructDependencyGraph;
+import model.algorithms.transform.grammar.DependencyGraph;
 import model.automata.acceptors.fsa.*;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.grammar.*;
@@ -82,13 +83,13 @@ public class LanguageGenerator {
 		myPossibleStrings.clear();
 		myStringsInLanguage.clear();
 	}
-	
-	public List<SymbolString> generateStrings(int numberToGenerate){
-		if(! new ContextFreeChecker().matchesGrammar(myGrammar))
-			return generateStringsBrute(numberToGenerate);
-		return generateContextFreeStrings(numberToGenerate);
-	}
 
+	public List<SymbolString> generateStrings(int numberToGenerate) {
+		if (new ContextFreeChecker().matchesGrammar(myGrammar))
+			if (!isGrammarFinite())
+				return generateContextFreeStrings(numberToGenerate);
+		return generateStringsBrute(numberToGenerate);
+	}
 
 	/**
 	 * Generates the specified number of sentences using a brute force
@@ -100,19 +101,18 @@ public class LanguageGenerator {
 	private List<SymbolString> generateStringsBrute(int numberToGenerate) {
 		clear();
 		myNumberToGenerate = numberToGenerate;
-		myDerivationsQueue.add(new Derivation(new Production(
-				new SymbolString(), new SymbolString(myGrammar
-						.getStartVariable()))));
-		while (myStringsInLanguage.size() < myNumberToGenerate) {
+		for (Production p : myGrammar.getStartProductions())
+			myDerivationsQueue.add(new Derivation(p));
+		while (myStringsInLanguage.size() < myNumberToGenerate
+				&& !myDerivationsQueue.isEmpty()) {
 			makeNextReplacement();
 		}
-
 		return generate();
 	}
 
 	/**
 	 * Generates the first <CODE>numberToGenerate</CODE> sentences/strings that
-	 * this language can produce, using LL or CYK parsing.
+	 * this language can produce, using CYK parsing.
 	 * 
 	 * @param numberToGenerate
 	 *            the number of sentences/strings this method will return.
@@ -183,16 +183,18 @@ public class LanguageGenerator {
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
+			JFLAPDebug.print(result);
+			
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = i; j < maxLHSsize + i; j++) {
 					SymbolString LHS = result.subList(i, j + 1);
 					for (Production p : myGrammar.getProductionSet()
 							.getProductionsWithLHS(LHS)) {
-						if (myStringsInLanguage.size() >= myNumberToGenerate)
-							break loop;
+
 						Derivation tempDerivation = d.copy();
 						tempDerivation.addStep(p, result.indexOf(LHS, i));
 						temp.add(tempDerivation);
+						JFLAPDebug.print(temp);
 						if (tempDerivation.createResult()
 								.getSymbolsOfClass(Variable.class).size() == 0) {
 							myStringsInLanguage.add(tempDerivation
@@ -243,9 +245,8 @@ public class LanguageGenerator {
 	}
 
 	/**
-	 * Using LL or CKY parsing (based on grammar type) checks every possible
-	 * string and adds any strings that the language can produce to
-	 * <CODE>myStringsInLanguage</CODE>.
+	 * Using CYK parsing, checks every possible string and adds any strings that
+	 * the language can produce to <CODE>myStringsInLanguage</CODE>.
 	 */
 	private void parsePossibleStrings() {
 		for (SymbolString string : myPossibleStrings) {
@@ -258,20 +259,54 @@ public class LanguageGenerator {
 	}
 
 	/**
-	 * Converts a context free grammar to CNF if it is not in LL(1) form.
+	 * Converts a context free grammar to CNF.
 	 */
 	private void checkForCorrectParser() {
-		if (! new ContextFreeChecker().matchesGrammar(myGrammar)){
-			throw new AlgorithmException("The grammar must be context free to specify a length");
+		if (!new ContextFreeChecker().matchesGrammar(myGrammar)) {
+			throw new AlgorithmException(
+					"The grammar must be context free to specify a length");
 		}
-		if (!new LL1Checker().matchesGrammar(myGrammar)) {
-			CNFConverter converter = new CNFConverter(myGrammar);
-			converter.stepToCompletion();
-			myGrammar = converter.getTransformedGrammar();
-			myParser = new CYKParser(myGrammar);
-		} else {
-			myParser = new LL1Parser(myGrammar);
+		for (Production p : myGrammar.getStartProductions()) {
+			SymbolString lambda = new SymbolString();
+			if (p.isLambdaProduction() && !myStringsInLanguage.contains(lambda))
+				myStringsInLanguage.add(lambda);
 		}
+		CNFConverter converter = new CNFConverter(myGrammar);
+		converter.stepToCompletion();
+		myGrammar = converter.getTransformedGrammar();
+		myParser = new CYKParser(myGrammar);
+
+	}
+
+	private boolean isGrammarFinite() {
+		// checks loops from each variable to itself
+		for (Production p : myGrammar.getProductionSet())
+			if (p.getVariablesOnRHS().contains(p.getLHS()[0]))
+				return false;
+		ConstructDependencyGraph construct = new ConstructDependencyGraph(
+				myGrammar);
+		construct.stepToCompletion();
+		DependencyGraph graph = construct.getDependencyGraph();
+
+		for (Symbol v : myGrammar.getVariables()) {
+			if (loopExists(graph, v, new ArrayList<Symbol>()))
+				return false;
+		}
+		return true;
+	}
+
+	private boolean loopExists(DependencyGraph graph, Symbol v,
+			List<Symbol> history) {
+		if (history.contains(v))
+			return true;
+		history.add(v);
+		Variable[] dependents = graph.getAllDependencies((Variable) v);
+		for (Variable depend : dependents) {
+			if (loopExists(graph, depend, history))
+				return true;
+		}
+		history.remove(v);
+		return false;
 	}
 
 	/**

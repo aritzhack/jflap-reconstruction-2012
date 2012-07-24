@@ -204,5 +204,8 @@ public class JFLAPPreferences {
 		LISTENERS.add(l);
 	}
 
+	public static boolean isCYKtableDiagonal(){
+		return true;
+	}
 	
 }

@@ -19,7 +19,7 @@ public class MagnifiableList extends JList implements Magnifiable {
 	@Override
 	public void setMagnification(double mag) {
 		float size = (float) (mag*JFLAPPreferences.getDefaultTextSize());
-		Font f = this.getFont().deriveFont(size);
+		Font f = this.getFont().deriveFont(Font.PLAIN, size);
 		this.setFont(f);
 	}
 
