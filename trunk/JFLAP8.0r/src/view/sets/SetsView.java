@@ -1,20 +1,20 @@
 package view.sets;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import model.sets.SetsManager;
 import model.undo.UndoKeeper;
-import util.view.magnify.Magnifiable;
+import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.sets.edit.SetsEditingPanel;
+import view.undoing.UndoPanel;
 
 @SuppressWarnings("serial")
-public class SetsView extends EditingPanel implements Magnifiable {
+public class SetsView extends EditingPanel {
 	
 	private UndoKeeper myKeeper;
 	private JComponent myCentralPane;
@@ -29,7 +29,6 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		myKeeper = super.getKeeper();
 		
 		myActiveSetDisplay = new ActiveSetDisplay(myKeeper);
-		
 		myCentralPane = createCentralPane();
 		
 		setLayout(new BorderLayout());	
@@ -38,6 +37,7 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		SizeSlider slider = new SizeSlider(myDefaultPanel);
 		slider.distributeMagnification();
 		
+		add(new UndoPanel(myKeeper), BorderLayout.NORTH);
 		add(scroller, BorderLayout.CENTER);
 		add(slider, BorderLayout.SOUTH);
 	
@@ -47,9 +47,14 @@ public class SetsView extends EditingPanel implements Magnifiable {
 
 	
 	private JComponent createCentralPane () {
+		MagnifiablePanel main = new MagnifiablePanel();
 		myDefaultPanel = new DefaultSetPanel(myKeeper, this);
+		myEditingPanel = new SetsEditingPanel(myKeeper);
+		myEditingPanel.setVisible(false);
 		
-		return myDefaultPanel;
+		main.add(myDefaultPanel);
+		main.add(myEditingPanel);
+		return main;
 	}
 	
 	
@@ -68,13 +73,5 @@ public class SetsView extends EditingPanel implements Magnifiable {
 		return "Sets View";
 	}
 
-	
-	@Override
-	public void setMagnification(double mag) {
-		for (Component c : this.getComponents()) {
-			if (c instanceof Magnifiable)
-				((Magnifiable) c).setMagnification(mag);
-		}
-	}
 	
 }
