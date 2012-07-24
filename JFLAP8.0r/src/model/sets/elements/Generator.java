@@ -1,13 +1,14 @@
 package model.sets.elements;
 
 /**
- * Generates the next element in an infinite set
- * that follows some implementable pattern
+ * Used to generate "finite" elements for numerical sets
+ * Note: generating individual or small subsets of values
+ * is left to the PredefinedNumberSet subclass
  *
  */
 public abstract class Generator {
 
-	public abstract int generateNextValue();
+	public abstract int generateNextValue() throws Exception;
 	
 	public abstract String getName();
 	

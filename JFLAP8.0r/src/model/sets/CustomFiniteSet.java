@@ -11,20 +11,29 @@ public class CustomFiniteSet extends FiniteSet implements Customizable {
 	private String myName;
 	private String myDescription;
 	private Set<Element> myElements;
-
-	public CustomFiniteSet () {
-		myElements = new TreeSet<Element>();
-	}
-
 	
+	/**
+	 * Creates a new finite set with the specified name, description, and elements
+	 * @param name
+	 * @param description
+	 * @param elements
+	 */
 	public CustomFiniteSet(String name, String description, Set<Element> elements) {
 		myName = name;
 		myDescription = description;
 		myElements = elements;
 	}
 	
-	public CustomFiniteSet (Set<Element> elements) {
-		myElements = elements;
+	/**
+	 * Creates a new finite set with the specified name and elements
+	 * 
+	 * If no description is provided, the description field will be initialized
+	 * to an empty string by default
+	 * @param name
+	 * @param elements
+	 */
+	public CustomFiniteSet (String name, Set<Element> elements) {
+		this(name, "", elements);
 	}
 	
 	@Override

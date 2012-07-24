@@ -56,6 +56,12 @@ public class FactorSet extends PredefinedNumberSet {
 		return false;
 	}
 
+	@Override
+	public String getSetAsString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	
 }

@@ -26,8 +26,6 @@ public class Intersection extends SetOperation {
 			for (Element e : myOperands.get(0).getSet()) {
 				if (myOperands.get(1).getSet().contains(e)) {
 					((CustomFiniteSet) answer).add(e);
-				
-					JFLAPDebug.print("Adding " + e + " to intersection");
 				}
 			}
 			
