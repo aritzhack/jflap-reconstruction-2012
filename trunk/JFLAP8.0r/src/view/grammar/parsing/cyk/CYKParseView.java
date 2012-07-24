@@ -2,6 +2,7 @@ package view.grammar.parsing.cyk;
 
 import model.algorithms.testinput.parse.Parser;
 import model.change.events.AdvancedChangeEvent;
+import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableToolbar;
 import view.algorithms.toolbar.CYKToolbar;
 import view.grammar.parsing.FindFirstParserView;
@@ -19,7 +20,7 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
 	@Override
 	public CYKParseTablePanel createRunningView(Parser alg) {
-		CYKParseTablePanel table = new CYKParseTablePanel(alg, true);
+		CYKParseTablePanel table = new CYKParseTablePanel(alg, JFLAPPreferences.isCYKtableDiagonal());
 		return table;
 	}
 	
