@@ -15,9 +15,9 @@ public class DoSetOperationAction extends AbstractAction {
 	private SetOperation myOperation;
 
 	public DoSetOperationAction(SetOperation operation) {
+		super(operation.getName());
 		myOperation = operation;
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -30,9 +30,6 @@ public class DoSetOperationAction extends AbstractAction {
 		} catch (SetOperationException e1) {
 			e1.printStackTrace();
 		}
-
-
-
 	}
-
+	
 }
