@@ -1,8 +1,22 @@
 package model.sets.operations;
 
-public class SetOperationException extends RuntimeException {
+import errors.JFLAPException;
 
-	public SetOperationException (String message) {
-		super(message);
+public class SetOperationException extends JFLAPException {
+	
+	public SetOperationException() {
+		super();
+	}
+
+	public SetOperationException(String arg0) {
+		super(arg0);
+	}
+	
+	public SetOperationException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+	
+	public SetOperationException(Throwable arg1) {
+		super(arg1);
 	}
 }

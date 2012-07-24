@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 import model.sets.AbstractSet;
 import model.sets.CustomFiniteSet;
-import model.sets.PredefinedNumberSet;
 import model.sets.elements.Element;
 
 public class EvensSet extends PredefinedNumberSet {
@@ -25,8 +24,9 @@ public class EvensSet extends PredefinedNumberSet {
 			values.add(new Element(i * 2));
 		}
 		
-		String name = "Even numbers between " + min + " and " + max;
-		return new CustomFiniteSet(values);
+		CustomFiniteSet answer = new CustomFiniteSet(values);
+		answer.setName("Even numbers between " + min + " and " + max);
+		return answer;
 	}
 
 	@Override
@@ -42,8 +42,7 @@ public class EvensSet extends PredefinedNumberSet {
 
 	@Override
 	public Set<Element> getSet() {
-		// TODO Auto-generated method stub
-		return null;
+		return myElements;
 	}
 
 	@Override
@@ -59,6 +58,11 @@ public class EvensSet extends PredefinedNumberSet {
 	@Override
 	public boolean contains(Element e) {
 		return ((Integer.parseInt(e.getValue()))%2 == 0);
+	}
+
+	@Override
+	public String getSetAsString() {
+		return super.getSetAsString();
 	}
 
 }

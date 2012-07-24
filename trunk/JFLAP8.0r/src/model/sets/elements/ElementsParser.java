@@ -4,6 +4,8 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import model.sets.operations.SetOperationException;
+
 public class ElementsParser {
 
 	private String myInput;
@@ -52,7 +54,7 @@ public class ElementsParser {
 				try {
 					myStack.pop();
 				} catch (EmptyStackException e) {
-					throw new Exception("Invalid formatting; not enough {'s");
+					throw new SetOperationException("Invalid formatting: not enough }'s");
 				}
 			}
 
@@ -67,7 +69,7 @@ public class ElementsParser {
 		}
 
 		if (!isBalanced) {
-			throw new Exception("Invalid formatting: unequal # of { and }");
+			throw new SetOperationException("Invalid formatting: unequal # of { and }");
 		}
 
 //		JFLAPDebug.print("Parsed elements: "  + myElements.toString());

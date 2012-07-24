@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 import model.sets.AbstractSet;
 import model.sets.CustomFiniteSet;
-import model.sets.PredefinedNumberSet;
 import model.sets.elements.Element;
 import model.sets.elements.FibonacciGenerator;
 import model.sets.elements.Generator;

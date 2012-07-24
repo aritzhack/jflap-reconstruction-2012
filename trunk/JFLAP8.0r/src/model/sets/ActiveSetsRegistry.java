@@ -1,14 +1,9 @@
 package model.sets;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 
-import debug.JFLAPDebug;
-
-import model.numbersets.AbstractNumberSet;
 import view.sets.ActiveSetDisplay;
 
 
@@ -21,15 +16,11 @@ import view.sets.ActiveSetDisplay;
  */
 
 public class ActiveSetsRegistry {
-	
-//	private LinkedHashSet<AbstractSet> myRegistry;
-	
+		
 	private HashMap<String, AbstractSet> myRegistryMap;
 	
 
 	public ActiveSetsRegistry () {
-//		myRegistry = new LinkedHashSet<AbstractSet>();
-		
 		myRegistryMap = new HashMap<String, AbstractSet>();
 	}
 	
@@ -38,7 +29,6 @@ public class ActiveSetsRegistry {
 	 * @param set
 	 */
 	public void add (AbstractSet set) {
-//		myRegistry.add(set);
 		myRegistryMap.put(set.getName(), set);
 		
 		notifyObserver();
@@ -46,7 +36,6 @@ public class ActiveSetsRegistry {
 	}
 	
 	public void remove (AbstractSet set) {
-//		myRegistry.remove(set);
 		myRegistryMap.remove(set.getName());
 		notifyObserver();
 	}
@@ -78,14 +67,6 @@ public class ActiveSetsRegistry {
 	 * @return
 	 */
 	private String[] getNameArray () {
-//		String[] names = new String[myRegistry.size()];
-//		int index = 0;
-//		Iterator<AbstractSet> iter = myRegistry.iterator();
-//		while (iter.hasNext()) {
-//			names[index] = iter.next().getName();
-//			index++;
-//		}
-		
 		String[] names = new String[myRegistryMap.size()];
 		int index = 0;
 		Iterator<String> iter = myRegistryMap.keySet().iterator();
@@ -96,5 +77,11 @@ public class ActiveSetsRegistry {
 		return names;
 	}
 	
+	
+	
+	public void updateName(String oldname, String newname) {
+		myRegistryMap.put(newname, myRegistryMap.get(oldname));
+		myRegistryMap.remove(oldname);
+	}
 
 }

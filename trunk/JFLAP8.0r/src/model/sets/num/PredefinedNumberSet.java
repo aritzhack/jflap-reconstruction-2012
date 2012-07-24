@@ -1,5 +1,9 @@
-package model.sets;
+package model.sets.num;
 
+import java.util.ArrayList;
+
+import model.sets.AbstractSet;
+import model.sets.InfiniteSet;
 import model.sets.elements.Element;
 
 /*
@@ -13,6 +17,11 @@ public abstract class PredefinedNumberSet extends InfiniteSet {
 	
 	public abstract AbstractSet getNumbersInRange(int min, int max);
 
-	
 	public abstract Element getNthElement(int n);
+	
+	@Override
+	public String getSetAsString() {
+		return "...";
+		
+	}
 }
