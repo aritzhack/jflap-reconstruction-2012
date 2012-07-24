@@ -1,0 +1,26 @@
+TODO
+
+model
+- generate infinite numbers
+- fix powerset	DONE
+
+
+view
+- expanding editing views (states?)		done
+- finish button options (states?)		done
+
+- creating new set vs updating existing set		done
+
+- instantiating predef sets -> hard code	DONE
+
+- refactor!!
+
+
+- GUI aesthetics
+- modify state - don't hard code cast
+- 
+
+
+editing panel
+- options: select existing, create new by input	DONE
+- SHOW FINISH BUTTON NOW		DONE
