@@ -205,7 +205,7 @@ public class JFLAPPreferences {
 	}
 
 	public static boolean isCYKtableDiagonal(){
-		return true;
+		return false;
 	}
 	
 }
