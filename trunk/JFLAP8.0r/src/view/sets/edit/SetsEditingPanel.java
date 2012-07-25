@@ -33,6 +33,7 @@ public class SetsEditingPanel extends EditingPanel {
 		add(myOptionsMenu, BorderLayout.NORTH);
 		
 		myCentralPanel = new MagnifiablePanel();
+		myCentralPanel.setLayout(new BoxLayout(myCentralPanel, BoxLayout.Y_AXIS));
 		add(myCentralPanel, BorderLayout.CENTER);
 		
 		SizeSlider slider = new SizeSlider();

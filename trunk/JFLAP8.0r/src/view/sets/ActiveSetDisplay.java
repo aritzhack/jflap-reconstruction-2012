@@ -20,16 +20,11 @@ import model.sets.SetsManager;
 import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
-import util.view.magnify.MagnifiableButton;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiableList;
 import util.view.magnify.MagnifiablePanel;
-import view.action.sets.FinishConstructionAction;
 import view.action.sets.RemoveSetAction;
 import view.sets.edit.EditingPanelFactory;
-import view.sets.edit.SetDefinitionPanel;
-import view.sets.state.CreateState;
-import view.sets.state.ModifyState;
 
 @SuppressWarnings("serial")
 public class ActiveSetDisplay extends MagnifiablePanel {

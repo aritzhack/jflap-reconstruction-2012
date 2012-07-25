@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import model.sets.AbstractSet;
 import model.sets.num.CongruenceSet;
 import model.sets.num.EvensSet;
-import model.sets.num.FactorSet;
+import model.sets.num.MultiplesSet;
 import model.sets.num.FibonacciSet;
 import model.sets.num.OddsSet;
 import model.sets.num.PrimesSet;
@@ -27,8 +27,8 @@ public class SetsDropdownMenu extends JComboBox {
 		myClassNamesMap.put("Prime Numbers", PrimesSet.class);
 		myClassNamesMap.put("Even Numbers", EvensSet.class);
 		myClassNamesMap.put("Odd Numbers", OddsSet.class);
-		myClassNamesMap.put("Factors ofSet", FactorSet.class);
-		myClassNamesMap.put("CongruenceSet", CongruenceSet.class);
+		myClassNamesMap.put("Factors of Set", MultiplesSet.class);
+		myClassNamesMap.put("Congruence Set", CongruenceSet.class);
 	}
 
 	public SetsDropdownMenu() {
@@ -50,7 +50,7 @@ public class SetsDropdownMenu extends JComboBox {
 	public AbstractSet getSelectedSet() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException {
 		Class cl = myClassNamesMap.get((String) getSelectedItem());
 		
-		if (cl.equals(FactorSet.class)) {
+		if (cl.equals(MultiplesSet.class)) {
 			int[] params = getParameters(new String[] {"factor"});
 			return (AbstractSet) cl.getDeclaredConstructor(int.class).newInstance(params[0]);
 		}
