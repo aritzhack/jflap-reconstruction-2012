@@ -69,10 +69,10 @@ public abstract class Language {
 			myGrammar = createGrammar();
 		}
 		if (myStrings == null) {
-			LanguageGenerator generator = new LanguageGenerator(myGrammar);
+			LanguageGenerator generator = LanguageGenerator.createGenerator(myGrammar);
 
 			myStrings = new TreeSet<SymbolString>(
-					generator.generateStrings(numberOfStrings));
+					generator.getStrings(numberOfStrings));
 
 		}
 		Set<SymbolString> stringCopy = new TreeSet<SymbolString>(
