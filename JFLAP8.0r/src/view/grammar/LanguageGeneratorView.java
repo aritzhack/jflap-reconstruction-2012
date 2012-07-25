@@ -13,6 +13,7 @@ import javax.swing.ListSelectionModel;
 
 import model.algorithms.AlgorithmException;
 import model.grammar.Grammar;
+import model.languages.ContextFreeLanguageGenerator;
 import model.languages.LanguageGenerator;
 import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
@@ -36,7 +37,7 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar>{
 	
 	public LanguageGeneratorView(Grammar g) {
 		super(g, new UndoKeeper(), false);
-		myGenerator = new LanguageGenerator(g);
+		myGenerator = LanguageGenerator.createGenerator(g);
 	}
 
 	@Override
@@ -94,7 +95,7 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar>{
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					setList(myGenerator.generateStrings(getNumberToGenerate()));
+					setList(myGenerator.getStrings((getNumberToGenerate())));
 				}
 				
 			});
@@ -103,7 +104,7 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar>{
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					setList(myGenerator.generateStringsOfLength(getNumberToGenerate()));
+					setList(myGenerator.getStringsOfLength((getNumberToGenerate())));
 				}
 			});
 			

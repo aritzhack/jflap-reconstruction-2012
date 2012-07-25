@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.ParserException;
@@ -96,10 +98,10 @@ public class UnrestrictedBruteParser extends Parser {
 	@Override
 	public Derivation getDerivation() {
 		if (!myDerivationsQueue.isEmpty()) {
-			Derivation d = myDerivationsQueue.getLast();
-			if (d.createResult().equals(getInput())) {
-				return d;
-			}
+			for (Derivation d : myDerivationsQueue)
+				if (d.createResult().equals(getInput())) {
+					return d;
+				}
 		}
 		return null;
 	}
@@ -139,8 +141,8 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	/**
-	 * First step in the algorithm, puts each start production in the derivation queue
-	 * and sets the minimum number of steps that the parser can do.
+	 * First step in the algorithm, puts each start production in the derivation
+	 * queue and sets the minimum number of steps that the parser can do.
 	 */
 	private void initializeQueue() {
 		Grammar g = getGrammar();
@@ -157,8 +159,8 @@ public class UnrestrictedBruteParser extends Parser {
 
 	/**
 	 * Does the next level of parsing, adding all possible steps to each current
-	 * possible derivation, unless actual derivation is found, in which case
-	 * it immediately stops.
+	 * possible derivation, unless actual derivation is found, in which case it
+	 * immediately stops.
 	 */
 	private boolean makeNextReplacement() {
 		ArrayList<Derivation> nextLevel = new ArrayList<Derivation>();
@@ -168,7 +170,7 @@ public class UnrestrictedBruteParser extends Parser {
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
-
+			JFLAPDebug.print(d);
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = i; j < Math.min(maxLHSsize + i, result.size()); j++) {
 					SymbolString LHS = result.subList(i, j + 1);
@@ -191,7 +193,7 @@ public class UnrestrictedBruteParser extends Parser {
 						if (isPossibleSententialForm(sentential)) {
 							mySententialsSeen.add(sentential);
 							nextLevel.add(tempDerivation);
-
+							JFLAPDebug.print(tempDerivation);
 							if (sentential.equals(getInput())) {
 								// Not sure if this is good, but ensures that
 								// only nodes on
@@ -211,7 +213,7 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	/**
-	 * Increases the capacity of nodes the parser can generate, specified by 
+	 * Increases the capacity of nodes the parser can generate, specified by
 	 * numberOfSteps, the minimum number of steps it will be able to be run
 	 * after the capacity is set.
 	 */
@@ -232,8 +234,8 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	/**
-	 * Returns false if the derivation has already been encountered, or
-	 * if the derivation can only derive strings larger than the input's size.
+	 * Returns false if the derivation has already been encountered, or if the
+	 * derivation can only derive strings larger than the input's size.
 	 */
 	public boolean isPossibleSententialForm(SymbolString sent) {
 		if (mySententialsSeen.contains(sent))
@@ -328,8 +330,8 @@ public class UnrestrictedBruteParser extends Parser {
 	}
 
 	/**
-	 * Removes useless productions for Unrestricted grammars, as a way to optimize
-	 * the grammar as much as possible.
+	 * Removes useless productions for Unrestricted grammars, as a way to
+	 * optimize the grammar as much as possible.
 	 */
 	private static Grammar optimize(Grammar g) {
 		UselessProductionRemover remover = new UselessProductionRemover(g);
