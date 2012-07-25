@@ -16,4 +16,9 @@ public abstract class State {
 	 * @throws Exception 
 	 */
 	public abstract AbstractSet finish(UndoKeeper keeper) throws Exception;
+	
+	
+	public abstract boolean undo();
+	
+	public abstract boolean redo();
 }

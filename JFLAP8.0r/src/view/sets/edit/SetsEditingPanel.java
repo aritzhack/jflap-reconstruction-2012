@@ -1,11 +1,14 @@
 package view.sets.edit;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.BoxLayout;
 
 import model.sets.AbstractSet;
 import model.undo.UndoKeeper;
+import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.sets.state.State;
 import debug.JFLAPDebug;
@@ -17,17 +20,24 @@ public class SetsEditingPanel extends EditingPanel {
 	private State myState;
 	
 	private OptionsMenu myOptionsMenu;
+	private MagnifiablePanel myCentralPanel;
 	private SetDefinitionPanel mySetDefinition;
 	
 	public SetsEditingPanel (UndoKeeper keeper) {
 		super(keeper, true);
 		myKeeper = keeper;
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout());
 		setSize(getPreferredSize().width, getPreferredSize().height);
 		myOptionsMenu = new OptionsMenu(this, myKeeper);
+		add(myOptionsMenu, BorderLayout.NORTH);
 		
-		add(myOptionsMenu);
+		myCentralPanel = new MagnifiablePanel();
+		add(myCentralPanel, BorderLayout.CENTER);
+		
+		SizeSlider slider = new SizeSlider();
+		slider.distributeMagnification();
+		add(slider, BorderLayout.SOUTH);
 		
 	}
 	
@@ -64,8 +74,9 @@ public class SetsEditingPanel extends EditingPanel {
 	
 	
 	public void expandView (Component comp) {
-		myOptionsMenu.setVisible(false);
-		this.add(comp);
+		if (myOptionsMenu.isVisible())
+			myOptionsMenu.setVisible(false);
+		myCentralPanel.add(comp);
 		this.repaint();
 		
 		JFLAPDebug.print("Painted new component");

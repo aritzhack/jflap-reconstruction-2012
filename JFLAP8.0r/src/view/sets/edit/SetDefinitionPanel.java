@@ -37,7 +37,7 @@ public class SetDefinitionPanel extends EditingPanel {
 	}
 	
 	private JComponent createComponents() {
-		myNameField = new MagnifiableTextField(this.getWidth(), JFLAPPreferences.getDefaultTextSize());
+		myNameField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
 		myDescriptionField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
 		myElements = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
 		

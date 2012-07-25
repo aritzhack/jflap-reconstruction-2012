@@ -1,17 +1,14 @@
 package view.sets;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
-import model.numbersets.defined.PrimeSet;
 import model.sets.AbstractSet;
-import model.sets.num.PredefinedNumberSet;
 import model.sets.num.CongruenceSet;
 import model.sets.num.EvensSet;
 import model.sets.num.FactorSet;
@@ -27,7 +24,7 @@ public class SetsDropdownMenu extends JComboBox {
 	static {
 		myClassNamesMap = new HashMap<String, Class>();
 		myClassNamesMap.put("Fibonacci", FibonacciSet.class);
-		myClassNamesMap.put("Prime Numbers", PrimeSet.class);
+		myClassNamesMap.put("Prime Numbers", PrimesSet.class);
 		myClassNamesMap.put("Even Numbers", EvensSet.class);
 		myClassNamesMap.put("Odd Numbers", OddsSet.class);
 		myClassNamesMap.put("Factors ofSet", FactorSet.class);
@@ -50,26 +47,41 @@ public class SetsDropdownMenu extends JComboBox {
 	}
 	
 	
-	public AbstractSet getSelectedSet() {
+	public AbstractSet getSelectedSet() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException {
 		Class cl = myClassNamesMap.get((String) getSelectedItem());
-		getParameters(cl);
-	
 		
-		return null;
+		if (cl.equals(FactorSet.class)) {
+			int[] params = getParameters(new String[] {"factor"});
+			return (AbstractSet) cl.getDeclaredConstructor(int.class).newInstance(params[0]);
+		}
+		if (cl.equals(CongruenceSet.class)) {
+			int[] params = getParameters(new String[] {"dividend", "modulus"});
+			return (AbstractSet) cl.getDeclaredConstructor(int.class, int.class).newInstance(params[0], params[1]);
+		}
+		return (AbstractSet) cl.newInstance();
 	}
 	
 	
-	private void getParameters(Class c) {
-		if (c.equals(FactorSet.class)) {
-			promptForParameters();
+	
+	
+	private int[] getParameters(String[] names) {
+		int[] values = new int[names.length];
+		for (int i = 0; i < names.length; i++) {
+			values[i] = promptForParameter(names[i]);
 		}
-		if (c.equals(CongruenceSet.class)) {
-			promptForParameters();
-		}
+		return values;
 		
 	}
 	
-	private void promptForParameters() {
+	private int promptForParameter(String name) {
+		String ans = JOptionPane.showInputDialog("Enter value for " + name + ": ");
+		int i;
+		try {
+			i = Integer.parseInt(ans);
+		} catch (NumberFormatException e) {
+			i = promptForParameter(name);
+		}
+		return i;
 		
 	}
 	
