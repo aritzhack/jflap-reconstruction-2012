@@ -13,6 +13,7 @@ import util.view.magnify.MagnifiablePanel;
 import view.action.sets.FinishConstructionAction;
 import view.sets.SetsDropdownMenu;
 import view.sets.state.CreateState;
+import view.sets.state.UseExistingState;
 
 public class OptionsMenu extends MagnifiablePanel {
 
@@ -34,8 +35,10 @@ public class OptionsMenu extends MagnifiablePanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("existing");
-				myContainer.expandView(new SetsDropdownMenu());
+				SetsDropdownMenu source = new SetsDropdownMenu();
+				FinishConstructionAction fin = new FinishConstructionAction(myKeeper, new UseExistingState(source));
+				myContainer.expandView(source);
+				myContainer.expandView(new MagnifiableButton(fin, JFLAPPreferences.getDefaultTextSize()));
 			}
 
 		});
@@ -44,9 +47,7 @@ public class OptionsMenu extends MagnifiablePanel {
 		input.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("input");
-				
+			public void actionPerformed(ActionEvent arg0) {				
 				SetDefinitionPanel source = new SetDefinitionPanel(myKeeper);
 				FinishConstructionAction fin = new FinishConstructionAction(myKeeper, new CreateState(source));
 				myContainer.expandView(source);

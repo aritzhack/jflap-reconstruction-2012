@@ -11,9 +11,11 @@ import errors.JFLAPException;
 
 import model.sets.AbstractSet;
 import model.sets.CustomFiniteSet;
+import model.sets.SetsManager;
 import model.sets.elements.Element;
 import model.sets.elements.ElementsParser;
 import model.undo.UndoKeeper;
+import universe.JFLAPUniverse;
 import view.sets.edit.SetDefinitionPanel;
 import view.sets.edit.SetsEditingPanel;
 
@@ -25,6 +27,7 @@ import view.sets.edit.SetsEditingPanel;
 public class CreateState extends State {
 
 	private SetDefinitionPanel mySource;
+	private AbstractSet mySet;
 
 	public CreateState(Component source) {
 		mySource = (SetDefinitionPanel) source;
@@ -32,13 +35,13 @@ public class CreateState extends State {
 
 	@Override
 	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SetsEditingPanel(keeper);
 	}
 
 	@Override
 	public AbstractSet finish(UndoKeeper keeper) throws Exception {
 
+		
 		String name = mySource.getName() == null ? getAutomatedName() : mySource.getName();
 		String description = mySource.getDescription();
 		if (mySource.getElements() == null || mySource.getElements().trim().length() == 0) {
@@ -50,14 +53,14 @@ public class CreateState extends State {
 			Set<Element> elements = parser.parse();
 			
 			if (description == null)
-				return new CustomFiniteSet(name, elements);
-			return new CustomFiniteSet(name, description, elements);
+				mySet = new CustomFiniteSet(name, elements);
+			mySet = new CustomFiniteSet(name, description, elements);
 		} catch (JFLAPException e) {
 			
 		} catch (Exception e) {
 		
 		}
-		return null;
+		return mySet;
 	}
 
 
@@ -65,6 +68,21 @@ public class CreateState extends State {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
 		return System.getProperty("user.name") + format.format(cal.getTime());
+	}
+
+	@Override
+	public boolean undo() {
+		SetsManager.ACTIVE_REGISTRY.remove(mySet);
+//		SetsEditingPanel editor = new SetsEditingPanel(myKeeper);
+//		editor.createFromExistingSet(mySet);
+//		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(editor);
+		return true;
+	}
+
+	@Override
+	public boolean redo() {
+		SetsManager.ACTIVE_REGISTRY.add(mySet);
+		return false;
 	}
 
 }

@@ -2,6 +2,7 @@ package view.sets.state;
 
 import model.sets.AbstractSet;
 import model.sets.CustomFiniteSet;
+import model.sets.SetsManager;
 import model.undo.UndoKeeper;
 import view.sets.edit.SetDefinitionPanel;
 import view.sets.edit.SetsEditingPanel;
@@ -14,28 +15,42 @@ import view.sets.edit.SetsEditingPanel;
 public class ModifyState extends State {
 	
 	private SetDefinitionPanel mySource;
-	private AbstractSet mySet;
+	private AbstractSet myOriginalSet;
+	private AbstractSet myModifiedSet;
 	
 	public ModifyState(SetDefinitionPanel source, AbstractSet set) {
 		mySource = source;
-		mySet = set;
+		myOriginalSet = set;
 	}
 
 	@Override
 	public AbstractSet finish(UndoKeeper keeper) {
 		// TODO 
 		
-		return mySet;
+		return myOriginalSet;
 		
 	}
 
 
 	@Override
 	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		// TODO Auto-generated method stub
 		SetsEditingPanel editor = new SetsEditingPanel(keeper);
-		editor.createFromExistingSet(mySet);
+		editor.createFromExistingSet(myOriginalSet);
 		return editor;
+	}
+
+	@Override
+	public boolean undo() {
+		SetsManager.ACTIVE_REGISTRY.remove(myModifiedSet);
+		SetsManager.ACTIVE_REGISTRY.add(myOriginalSet);
+		return true;
+	}
+
+	@Override
+	public boolean redo() {
+		SetsManager.ACTIVE_REGISTRY.add(myModifiedSet);
+		SetsManager.ACTIVE_REGISTRY.remove(myModifiedSet);
+		return true;
 	}
 
 }
