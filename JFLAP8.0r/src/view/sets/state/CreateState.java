@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import errors.JFLAPException;
 
 import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
+import model.sets.FiniteSet;
 import model.sets.SetsManager;
 import model.sets.elements.Element;
 import model.sets.elements.ElementsParser;
@@ -42,7 +42,7 @@ public class CreateState extends State {
 	public AbstractSet finish(UndoKeeper keeper) throws Exception {
 
 		
-		String name = mySource.getName() == null ? getAutomatedName() : mySource.getName();
+		String name = mySource.getSetName() == null ? getAutomatedName() : mySource.getSetName();
 		String description = mySource.getDescription();
 		if (mySource.getElements() == null || mySource.getElements().trim().length() == 0) {
 			throw new Exception("Set must contain at least one element!");
@@ -53,8 +53,8 @@ public class CreateState extends State {
 			Set<Element> elements = parser.parse();
 			
 			if (description == null)
-				mySet = new CustomFiniteSet(name, elements);
-			mySet = new CustomFiniteSet(name, description, elements);
+				mySet = new FiniteSet(name, elements);
+			mySet = new FiniteSet(name, description, elements);
 		} catch (JFLAPException e) {
 			
 		} catch (Exception e) {
@@ -64,11 +64,6 @@ public class CreateState extends State {
 	}
 
 
-	private String getAutomatedName() {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-		return System.getProperty("user.name") + format.format(cal.getTime());
-	}
 
 	@Override
 	public boolean undo() {
@@ -83,6 +78,13 @@ public class CreateState extends State {
 	public boolean redo() {
 		SetsManager.ACTIVE_REGISTRY.add(mySet);
 		return false;
+	}
+	
+
+	public static String getAutomatedName() {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		return System.getProperty("user.name") + format.format(cal.getTime());
 	}
 
 }

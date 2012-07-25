@@ -3,9 +3,11 @@ package view.sets.edit;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Scrollbar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -17,6 +19,7 @@ import universe.preferences.JFLAPPreferences;
 import util.view.magnify.Magnifiable;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.MagnifiableScrollPane;
 import util.view.magnify.MagnifiableTextArea;
 import util.view.magnify.MagnifiableTextField;
 import view.EditingPanel;
@@ -52,7 +55,9 @@ public class SetDefinitionPanel extends EditingPanel {
 				JFLAPPreferences.getDefaultTextSize()));
 		panel.add(myElements);
 		
-		return panel;
+		MagnifiableScrollPane scroller = new MagnifiableScrollPane(panel);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		return scroller;
 	}
 	
 	

@@ -1,26 +1,21 @@
-TODO
 
-model
+MODEL
 - generate infinite numbers
-- fix powerset	DONE
+- set operations with infinite numbers
+- break generateMore into generateNext and checkOverflow
+- element => symbol/symbolstring
+
+VIEW
+- add braces for set definition bar
+- one editing panel for parameters (e.g. congruence)
+- show examples for Multiples Of and Congruence in dropdown
+
+- get cardinality, check if element in set
 
 
-view
-- expanding editing views (states?)		done
-- finish button options (states?)		done
+REFACTOR
+DOCUMENT
 
-- creating new set vs updating existing set		done
-
-- instantiating predef sets -> hard code	DONE
-
-- refactor!!
-
-
-- GUI aesthetics
-- modify state - don't hard code cast
-- 
-
-
-editing panel
-- options: select existing, create new by input	DONE
-- SHOW FINISH BUTTON NOW		DONE
+- input sets (load from file)
+- saving to XML
+- export language as set
