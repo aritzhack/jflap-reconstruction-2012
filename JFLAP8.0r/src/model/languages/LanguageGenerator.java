@@ -6,15 +6,18 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
+import model.algorithms.conversion.ConversionAlgorithm;
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
+import model.algorithms.conversion.autotogram.TMtoGrammarConversion;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
+import model.algorithms.transform.fsa.NFAtoDFAConverter;
 import model.algorithms.transform.grammar.ConstructDependencyGraph;
 import model.algorithms.transform.grammar.DependencyGraph;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.Variable;
@@ -33,6 +36,32 @@ public abstract class LanguageGenerator {
 		if(new ContextFreeChecker().matchesGrammar(g) && !isGrammarFinite(g))
 			return new ContextFreeLanguageGenerator(g);
 		return new BruteLanguageGenerator(g);
+	}
+	
+	public static LanguageGenerator createGenerator(FiniteStateAcceptor fsa){
+		FSAtoRegGrammarConversion convert = new FSAtoRegGrammarConversion(fsa);
+		convert.stepToCompletion();
+		return createGenerator(convert.getConvertedGrammar());
+	}
+	
+	public static LanguageGenerator createGenerator(PushdownAutomaton pda){
+		PDAtoCFGConverter convert = new PDAtoCFGConverter(pda);
+		convert.stepToCompletion();
+		return createGenerator(convert.getConvertedGrammar());
+	}
+	
+	public static LanguageGenerator createGenerator(MultiTapeTuringMachine tm){
+		TMtoGrammarConversion convert = new TMtoGrammarConversion(tm);
+		convert.stepToCompletion();
+		return createGenerator(convert.getConvertedGrammar());
+	}
+	
+	public static LanguageGenerator createGenerator(RegularExpression regex){
+		ConversionAlgorithm convert = new RegularExpressionToNFAConversion(regex);
+		convert.stepToCompletion();
+		convert = new FSAtoRegGrammarConversion(((RegularExpressionToNFAConversion) convert).getConvertedDefinition());
+		convert.stepToCompletion();
+		return createGenerator(((FSAtoRegGrammarConversion) convert).getConvertedGrammar());
 	}
 	
 	public LanguageGenerator(Grammar g){
