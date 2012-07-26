@@ -4,10 +4,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import errors.BooleanWrapper;
+
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
 import view.grammar.LanguageGeneratorView;
 
+import model.algorithms.AlgorithmException;
 import model.grammar.Grammar;
 
 public class LanguageGeneratorAction extends AbstractAction {
@@ -22,6 +25,12 @@ public class LanguageGeneratorAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (myGrammar == null) return;
+		
+		BooleanWrapper[] bw = myGrammar.isComplete();
+		if (bw.length > 0){
+			throw new AlgorithmException(bw);
+		}
+		
 		LanguageGeneratorView view = new LanguageGeneratorView(myGrammar);
 		
 		JFLAPEnvironment environ = JFLAPUniverse.getActiveEnvironment();

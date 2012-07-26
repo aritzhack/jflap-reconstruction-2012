@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.event.ChangeEvent;
+
 import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.Derivation;
@@ -35,7 +37,7 @@ import model.symbols.SymbolString;
  */
 
 public class UnrestrictedBruteParser extends Parser {
-	public static final int MAX_REACHED = 2, LEVEL_CHANGED = 5;
+	public static final int MAX_REACHED = 2, LEVEL_CHANGED = 4;
 	private int myCapacity;
 
 	private LinkedList<Derivation> myDerivationsQueue;
@@ -121,9 +123,10 @@ public class UnrestrictedBruteParser extends Parser {
 		if (capacityReached()) {
 			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED,
 					myCapacity));
-			return false;
 		}
-		return true;
+		//returns false so that the new distributed changes
+		//are done instead of the one in SteppableAlgorithm.step()
+		return false;
 	}
 
 	/**
@@ -170,7 +173,7 @@ public class UnrestrictedBruteParser extends Parser {
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
-			JFLAPDebug.print(d);
+			
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = i; j < Math.min(maxLHSsize + i, result.size()); j++) {
 					SymbolString LHS = result.subList(i, j + 1);
@@ -188,12 +191,12 @@ public class UnrestrictedBruteParser extends Parser {
 						// Even if node=derivation is invalid, it is still
 						// generated.
 						myNodesGenerated++;
-
+						
 						SymbolString sentential = tempDerivation.createResult();
 						if (isPossibleSententialForm(sentential)) {
 							mySententialsSeen.add(sentential);
 							nextLevel.add(tempDerivation);
-							JFLAPDebug.print(tempDerivation);
+						
 							if (sentential.equals(getInput())) {
 								// Not sure if this is good, but ensures that
 								// only nodes on
