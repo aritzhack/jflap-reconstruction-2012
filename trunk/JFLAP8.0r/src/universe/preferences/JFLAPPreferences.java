@@ -78,6 +78,8 @@ public class JFLAPPreferences {
 	public static final String MODE_CHANGED = "mode";
 	
 	public static boolean MODE = DEFAULT_MODE;
+	
+	public static boolean CYK_DIAGONAL = false;
 
 	public static int getDefaultTMBufferSize(){
 		return 5;
@@ -205,7 +207,7 @@ public class JFLAPPreferences {
 	}
 
 	public static boolean isCYKtableDiagonal(){
-		return false;
+		return CYK_DIAGONAL;
 	}
 	
 }

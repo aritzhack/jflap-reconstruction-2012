@@ -24,6 +24,7 @@ import javax.swing.table.TableColumnModel;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.change.events.AdvancedChangeEvent;
@@ -58,7 +59,8 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	private Map<Integer, Color> myHighlightData;
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
-	private boolean diagonal, animated;
+	private boolean diagonal;
+	private Timer animated;
 
 	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
@@ -106,17 +108,17 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			int newColumn = getColFromMapping(rowIndex, columnIndex);
-			int newRow = getRowFromMapping(rowIndex, columnIndex);
-			
+			int newColumn = getColumnFromParser(rowIndex, columnIndex);
+			int newRow = getRowFromParser(rowIndex, columnIndex);
+
 			return myParser.isCellEditable(newRow, newColumn);
 		}
 
 		@Override
 		public Set<Symbol> getValueAt(int rowIndex, int columnIndex) {
-			int newColumn = getColFromMapping(rowIndex, columnIndex);
-			int newRow = getRowFromMapping(rowIndex, columnIndex);
-			
+			int newColumn = getColumnFromParser(rowIndex, columnIndex);
+			int newRow = getRowFromParser(rowIndex, columnIndex);
+
 			return myParser.getValueAt(newRow, newColumn);
 		}
 
@@ -132,9 +134,9 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 			value = value.replaceAll(" ", "");
 			Set<Symbol> attemptSet = new HashSet<Symbol>(Symbolizers.symbolize(
 					value, myParser.getGrammar()));
-			int newColumn = getColFromMapping(rowIndex, columnIndex);
-			int newRow = getRowFromMapping(rowIndex, columnIndex);
-			
+			int newColumn = getColumnFromParser(rowIndex, columnIndex);
+			int newRow = getRowFromParser(rowIndex, columnIndex);
+
 			if (!myParser.insertSet(newRow, newColumn, attemptSet))
 				setCellColor(rowIndex, columnIndex, RED_HIGHLIGHT);
 			else
@@ -161,19 +163,37 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		public void stateChanged(ChangeEvent e) {
 			if (e instanceof AdvancedChangeEvent
 					&& ((AdvancedChangeEvent) e).comesFrom(myParser)) {
+				if (((AdvancedChangeEvent) e).getType() == InputUsingAlgorithm.INPUT_SET) {
+					myHighlightData.clear();
+				}
+
 				notifyTable();
+				notifyAnimationTimer();
 
 				TableColumnModel columnModel = getTable().getColumnModel();
 
 				for (int i = 0; i < getColumnCount(); i++) {
 					setTableColumnInfo(columnModel, i);
 
-					for (int j = i; j < getColumnCount(); j++) {
+					for (int j = diagonal ? i : 0; j < (diagonal ? getColumnCount()
+							: getColumnCount() - i); j++) {
 						if (!myHighlightData.containsKey(singleIndex(i, j))
 								|| !isCellEditable(i, j))
+
 							setCellColor(i, j, Color.WHITE);
 					}
 				}
+			}
+		}
+
+		/**
+		 * Stops animation when a cell, row, or table is autofilled, or if the
+		 * table is reset, so there aren't cells being highlighted at random.
+		 */
+		private void notifyAnimationTimer() {
+			if (animated != null && animated.isRunning()) {
+				animated.stop();
+				animated = null;
 			}
 		}
 
@@ -216,10 +236,10 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		int column = table.getSelectedColumn();
 		if (row < 0 || column < 0)
 			return;
-		
-		int newColumn = getColFromMapping(row, column);
-		int newRow = getRowFromMapping(row, column);
-		
+
+		int newColumn = getColumnFromParser(row, column);
+		int newRow = getRowFromParser(row, column);
+
 		parser.autofillCell(newRow, newColumn);
 		setCellColor(row, column, Color.WHITE);
 	}
@@ -276,7 +296,8 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	 * cells as transparent.
 	 */
 	private void setCellBackground(int row, int column, JLabel l) {
-		if ((diagonal && row > column) || (!diagonal && row + column >= getTable().getColumnCount())) {
+		if ((diagonal && row > column)
+				|| (!diagonal && row + column >= getTable().getColumnCount())) {
 			l.setBackground(TRANSPARENT);
 			l.setBorder(BorderFactory.createEmptyBorder());
 			return;
@@ -294,16 +315,18 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		int row = table.getSelectedRow();
 		int column = table.getSelectedColumn();
 
-		if (animated || !table.isCellEditable(row, column))
+		if ((animated != null && animated.isRunning())
+				|| !table.isCellEditable(row, column))
 			return;
+		int newColumn = getColumnFromParser(row, column);
+		int newRow = getRowFromParser(row, column);
 
-		if (row < column) {
-			int newColumn = getColFromMapping(row, column);
-			int newRow = getRowFromMapping(row, column);
-			
-			animated = true;
-			HighlightAction animate = new HighlightAction(newRow, newColumn);
-		}
+		if (newRow < newColumn) {
+			animated = new Timer(1000, new HighlightAction(newRow, newColumn));
+			animated.setInitialDelay(500);
+			animated.start();
+		} else
+			dehighlightHeaders();
 		table.clearSelection();
 		repaint();
 	}
@@ -313,45 +336,40 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		private int row;
 		private int column;
 		private int k;
-		private Timer timer;
 
 		public HighlightAction(int row, int column) {
 			this.row = row;
 			this.k = row;
 			this.column = column;
-
-			this.timer = new Timer(1000, this);
-			timer.setInitialDelay(500);
-			timer.start();
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
-//			int mappedRow = getRowFromMapping(row, k);
-//			int mappedK = getRowFromMapping(k + 1, column);
-//			int oldRow = getRowFromMapping(row, k - 1);
-//			int oldK = getRowFromMapping(k, column);
-//
-//			if (k != row) {
-//				setCellColor(oldRow, k - 1, Color.white);
-//				setCellColor(oldK, column, Color.white);
-//				CYKParseTablePanel.this.repaint();
-//				if (k >= column) {
-//					timer.stop();
-//					animated = false;
-//					// Get rid of this listener, no longer needed.
-//					try {
-//						this.finalize();
-//					} catch (Throwable e) {
-//						e.printStackTrace();
-//					}
-//					return;
-//				}
-//			}
-//			setCellColor(mappedRow, k, YELLOW_HIGHLIGHT);
-//			setCellColor(mappedK, column, YELLOW_HIGHLIGHT);
-//			CYKParseTablePanel.this.repaint();
-//			k++;
+
+			if (k != row) {
+				setCellColor(getRowFromTable(row, k - 1),
+						getColumnFromTable(row, k - 1), Color.white);
+				setCellColor(getRowFromTable(k, column),
+						getColumnFromTable(k, column), Color.white);
+				CYKParseTablePanel.this.repaint();
+				if (k >= column) {
+					animated.stop();
+					dehighlightHeaders();
+					// Get rid of this listener, no longer needed.
+					try {
+						this.finalize();
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+			}
+			setCellColor(getRowFromTable(row, k), getColumnFromTable(row, k),
+					YELLOW_HIGHLIGHT);
+			setCellColor(getRowFromTable(k + 1, column),
+					getColumnFromTable(k + 1, column), YELLOW_HIGHLIGHT);
+			CYKParseTablePanel.this.repaint();
+			k++;
 		}
 	}
 
@@ -383,9 +401,9 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	 * on the next repaint.
 	 */
 	private void highlightHeader(int row, int column) {
-		int newColumn = getColFromMapping(row, column);
-		int newRow = getRowFromMapping(row, column);
-		
+		int newColumn = getColumnFromParser(row, column);
+		int newRow = getRowFromParser(row, column);
+
 		TableColumnModel columnModel = getTable().getColumnModel();
 
 		for (int i = newRow; i <= newColumn; i++) {
@@ -427,16 +445,49 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		return row + (column << 22);
 	}
 
-	
-	private int getRowFromMapping(int row, int column){
+	/**
+	 * Returns the row in the CYK Parser that is represented by row, column
+	 * in the table. If the table is diagonal, it is simply the row, if not,
+	 * it is the column.
+	 */
+	private int getRowFromParser(int row, int column) {
 		return diagonal ? row : column;
 	}
-	
-	private int getColFromMapping(int row, int column){
-		if(diagonal) return column;
+
+	/**
+	 * Returns the column in the CYK Parser that is represented by row, column
+	 * in the table. If the table is diagonal, it is simply the column, if not,
+	 * it is the the column plus the row (wrapping around input's length).
+	 */
+	private int getColumnFromParser(int row, int column) {
+		if (diagonal)
+			return column;
 		int newCol = column + row;
 		int length = getTable().getColumnCount();
-		
+
 		return newCol < length ? newCol : newCol - length;
+	}
+
+	/**
+	 * Returns the row in the table that is represented by row, column in the
+	 * CYK Parser. If diagonal, it is simply the row, otherwise it is the column
+	 * - the row (wrapping around the input's length)
+	 */
+	private int getRowFromTable(int row, int column) {
+		if (diagonal)
+			return row;
+		int newRow = column - row;
+		int length = getTable().getColumnCount();
+
+		return newRow >= 0 ? newRow : newRow + length;
+	}
+
+	/**
+	 * Returns the column in the table that is represented by row, column in the
+	 * CYK Parser. If diagonal, it is simply the column, otherwise it is the
+	 * row.
+	 */
+	private int getColumnFromTable(int row, int column) {
+		return diagonal ? column : row;
 	}
 }
