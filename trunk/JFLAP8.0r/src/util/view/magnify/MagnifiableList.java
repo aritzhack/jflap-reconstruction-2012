@@ -2,8 +2,10 @@ package util.view.magnify;
 
 import java.awt.Font;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.ListModel;
+
+import universe.preferences.JFLAPPreferences;
 
 public class MagnifiableList extends JList implements Magnifiable {
 	
@@ -14,8 +16,9 @@ public class MagnifiableList extends JList implements Magnifiable {
 		myDefaultSize = defaultSize;
 	}
 	
-	public MagnifiableList () {
-		super(new DefaultListModel());
+	public MagnifiableList (ListModel model, int defaultSize) {
+		super(model);
+		myDefaultSize = defaultSize;
 	}
 	
 	@Override

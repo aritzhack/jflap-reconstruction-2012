@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
 import util.UtilFunctions;
 
 import file.xml.XMLCodec;
@@ -28,10 +30,11 @@ import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
 import model.languages.Language;
+import model.languages.LanguageGenerator;
 import model.languages.samplelanguages.EvenLetterLanguage;
 import model.languages.samplelanguages.OddLetterLanguage;
 import model.grammar.*;
-import model.languages.LanguageGenerator;
+import model.languages.ContextFreeLanguageGenerator;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionGrammar;
@@ -41,31 +44,34 @@ import model.symbols.SymbolString;
 public class StringGeneratorTest {
 
 	public static void main (String[] args) {
-//
-//		Variable S = new Variable("S"), NP = new Variable("NP"),VP = new Variable("VP"),
-//				PP = new Variable("PP"), V = new Variable("V"), P = new Variable("P"),
-//				Det = new Variable("Det"), N = new Variable("N");
-//		Terminal eats = new Terminal("eats"), she = new Terminal("she"), with = new Terminal("with"),
-//				fish = new Terminal("fish"), fork = new Terminal("fork"), a = new Terminal("a");
-//		VariableAlphabet v = new VariableAlphabet();
-//		v.addAll(S,NP,VP,PP,V,P,Det,N);
-//		TerminalAlphabet t = new TerminalAlphabet();
-//		t.addAll(eats,she,with,fish,fork,a);
-//		ProductionSet p = new ProductionSet();
-//		p.add(new Production(S, NP,VP));
-//		p.add(new Production(VP, VP, PP));
-//		p.add(new Production(VP, V,NP));
-//		p.add(new Production(VP, eats));
-//		p.add(new Production(PP, P, NP));
-//		p.add(new Production(NP, Det,N));
-//		p.add(new Production(NP, she));
-//		p.add(new Production(V, eats));
-//		p.add(new Production(P, with));
-//		p.add(new Production(N, fish));
-//		p.add(new Production(N, fork));
-//		p.add(new Production(Det, a));
-//		StartVariable s = new StartVariable("S");
+		
+		Grammar g = new Grammar();
+		
+		Variable S = new Variable("S"), NP = new Variable("NP"),VP = new Variable("VP"),
+				PP = new Variable("PP"), V = new Variable("V"), P = new Variable("P"),
+				Det = new Variable("Det"), N = new Variable("N");
+		Terminal eats = new Terminal("eats"), she = new Terminal("she"), with = new Terminal("with"),
+				fish = new Terminal("fish"), fork = new Terminal("fork"), a = new Terminal("a");
+		
+		g.setStartVariable(S);
+		
+		ProductionSet p = g.getProductionSet();
+		p.add(new Production(S, NP,VP));
+		p.add(new Production(VP, VP, PP));
+		p.add(new Production(VP, V,NP));
+		p.add(new Production(VP, eats));
+		p.add(new Production(PP, P, NP));
+		p.add(new Production(NP, Det,N));
+		p.add(new Production(NP, she));
+		p.add(new Production(V, eats));
+		p.add(new Production(P, with));
+		p.add(new Production(N, fish));
+		p.add(new Production(N, fork));
+		p.add(new Production(Det, a));
+		
 
+		LanguageGenerator gen = LanguageGenerator.createGenerator(g);
+		JFLAPDebug.print(gen.getStringsOfLength(10));
 		
 //		StateSet states = new StateSet();
 //		InputAlphabet input = new InputAlphabet();
@@ -137,10 +143,10 @@ public class StringGeneratorTest {
 //		
 //		System.out.println(ans.toString());
 //		
-		TerminalAlphabet input = new TerminalAlphabet();
-		for (char i = 'a'; i <= 'd'; i++){
-			input.add(new Terminal(Character.toString(i)));
-		}
+//		TerminalAlphabet input = new TerminalAlphabet();
+//		for (char i = 'a'; i <= 'd'; i++){
+//			input.add(new Terminal(Character.toString(i)));
+//		}
 //		in.add(new Symbol(Character.toString('a')));
 //		in.add(new Symbol(Character.toString('b')));
 //		RegularExpressionGrammar grammar = new RegularExpressionGrammar(in, new OperatorAlphabet());
@@ -158,8 +164,8 @@ public class StringGeneratorTest {
 //		List<SymbolString> list = LLgen.generateStringsOfLength(8);
 //		System.out.println(UtilFunctions.createDelimitedString(list, "\n"));
 		
-		Language lang = new EvenLetterLanguage(input, new Terminal("a"));
-		System.out.println(lang.getStrings(100));
+//		Language lang = new EvenLetterLanguage(input, new Terminal("a"));
+//		System.out.println(lang.getStrings(100));
 	}
 	
 }
