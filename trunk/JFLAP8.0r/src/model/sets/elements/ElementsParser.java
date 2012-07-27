@@ -1,6 +1,5 @@
 package model.sets.elements;
 
-import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.TreeSet;
 
@@ -51,11 +50,14 @@ public class ElementsParser {
 			}
 
 			else if (current == '}') {
-				try {
-					myStack.pop();
-				} catch (EmptyStackException e) {
+//				try {
+//					myStack.pop();
+//				} catch (EmptyStackException e) {
+//					throw new SetOperationException("Invalid formatting: not enough }'s");
+//				}
+				if (myStack.pop() == null)
 					throw new SetOperationException("Invalid formatting: not enough }'s");
-				}
+				
 			}
 
 			running += current;

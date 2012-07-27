@@ -1,42 +1,29 @@
 package model.sets.operations;
 
-import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
-import model.sets.CustomInfiniteSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+import model.sets.FiniteSet;
+import model.sets.InfiniteSet;
 import model.sets.elements.Element;
-import debug.JFLAPDebug;
 
 public class Intersection extends SetOperation {
 
-	public Intersection () {
-		super();
+	@Override
+	protected FiniteSet getFiniteAnswer() {
+		Set<Element> elements = new TreeSet<Element>();
+		for (Element e : myOperands.get(0).getSet()) {
+			if (myOperands.get(1).getSet().contains(3)) {
+				elements.add(e);
+			}
+		}
+		return new FiniteSet(getDescription(), elements);
 	}
 
 	@Override
-	public AbstractSet evaluate() {
-		
-		CustomFiniteSet answer = new CustomFiniteSet();
-		
-//		if (!myOperands.get(0).isFinite() || !myOperands.get(1).isFinite()) {
-//			answer = new CustomInfiniteSet();
-//		}		
-		
-		if (answer.isFinite()) {
-			// case 1 - both sets are finite
-			for (Element e : myOperands.get(0).getSet()) {
-				if (myOperands.get(1).getSet().contains(e)) {
-					((CustomFiniteSet) answer).add(e);
-				}
-			}
-			
-		}
-		else {
-			
-		}
-				
-		answer.setName(getDescription());
-		
-		return answer;
+	protected InfiniteSet getInfiniteAnswer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

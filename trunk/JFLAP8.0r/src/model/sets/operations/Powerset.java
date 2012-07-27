@@ -2,35 +2,31 @@ package model.sets.operations;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import universe.preferences.JFLAPPreferences;
-import util.JFLAPConstants;
-
 import model.languages.SetOperators;
-import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
+import model.sets.FiniteSet;
+import model.sets.InfiniteSet;
 import model.sets.elements.Element;
+import universe.preferences.JFLAPPreferences;
 
 public class Powerset extends SetOperation {
 
+	
 	@Override
-	public AbstractSet evaluate() {
-		// case 1 = finite
-		if (myOperands.get(0).isFinite()) {
-			return new CustomFiniteSet(getDescription(), null, powerset(myOperands.get(0).getSet()));
-		}
-		
-		// answer is infinite...
-		else {
-			return null;
-		}
+	protected FiniteSet getFiniteAnswer() {
+		return new FiniteSet(getDescription(), powerset(myOperands.get(0).getSet()));
 	}
-	
-	
+
+
+	@Override
+	protected InfiniteSet getInfiniteAnswer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	private Set<Element> powerset (Set<Element> original) {
 		Set<Set<Element>> intermediate = SetOperators.powerSet(original);

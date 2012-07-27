@@ -1,6 +1,7 @@
 package model.sets.num;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 import model.sets.AbstractSet;
 import model.sets.InfiniteSet;
@@ -14,14 +15,21 @@ import model.sets.elements.Element;
  */
 
 public abstract class PredefinedNumberSet extends InfiniteSet {
-	
+
+
 	public abstract AbstractSet getNumbersInRange(int min, int max);
 
 	public abstract Element getNthElement(int n);
 	
 	@Override
 	public String getSetAsString() {
-		return "...";
+		StringBuilder str = new StringBuilder();
+		Iterator<Element> iter = getSet().iterator();
+		while (iter.hasNext()) {
+			str.append(iter.next() + ", ");
+		}
+		str.append("...");
+		return str.toString();
 		
 	}
 }

@@ -3,15 +3,9 @@ package model.sets.operations;
 import java.util.ArrayList;
 
 import model.sets.AbstractSet;
+import model.sets.FiniteSet;
+import model.sets.InfiniteSet;
 
-/**
- * To add a new set operation, subclass this class and
- * implements its abstract methods. It will automatically
- * be added via reflection.
- * 
- * @author Peggy Li
- *
- */
 
 public abstract class SetOperation {
 	
@@ -19,21 +13,41 @@ public abstract class SetOperation {
 	
 	public SetOperation () { }
 	
-	public void setOperands (ArrayList<AbstractSet> operands) throws SetOperationException {
+	public void setOperands (ArrayList<AbstractSet> operands) {
 		if (operands.size() != getNumberOfOperands()) {
-			throw new SetOperationException("Wrong # of operands!");
+			throw new SetOperationException("Wrong number of operands!\n" +
+					"The " + getName() + " operation takes " + getNumberOfOperands() + " operand(s), " +
+					"but you supplied " + operands.size() + ".");
 		}
-		
 		myOperands = operands;
 	}
 	
-	
-	public abstract AbstractSet evaluate();
-	
 	public abstract int getNumberOfOperands();
+
+		
+	public AbstractSet evaluate() {
+		if (answerIsFinite()) {
+			return getFiniteAnswer();
+		}
+		return getInfiniteAnswer();
+	}
+
 	
+	protected boolean answerIsFinite() {
+		for (AbstractSet set : myOperands) {
+			if (!set.isFinite())
+				return false;
+		}
+		return true;
+	}
+
+	protected abstract FiniteSet getFiniteAnswer();
+
+	protected abstract InfiniteSet getInfiniteAnswer();
+
 	public abstract String getName();
 	
 	public abstract String getDescription();
+	
 
 }

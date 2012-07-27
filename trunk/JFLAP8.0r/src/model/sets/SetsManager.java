@@ -1,14 +1,6 @@
 package model.sets;
 
-import view.sets.ActiveSetDisplay;
-
-/**
- * Contains all information for the current set environment
- * such as the active sets and references to the GUI panes
- * 
- * @author peggyli
- *
- */
+import view.sets.ActiveSetsList;
 
 public class SetsManager {
 
@@ -18,7 +10,7 @@ public class SetsManager {
 		ACTIVE_REGISTRY = new ActiveSetsRegistry();
 	}
 	
-	public void setActiveDisplayObserver (ActiveSetDisplay disp) {
+	public void setActiveDisplayObserver (ActiveSetsList disp) {
 		ACTIVE_REGISTRY.setObserver(disp);
 	}
 }

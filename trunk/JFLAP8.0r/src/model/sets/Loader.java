@@ -15,21 +15,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import model.numbersets.defined.PredefinedSet;
-
 public class Loader {
 	
 	
 
 	@SuppressWarnings("rawtypes")
-	public static Class[] getLoadedClasses(String filepath) {
+	public static Class[] getLoadedClasses(String filepath, Class superclass) {
 
 		Set<URL> urls = new HashSet<URL>();
 		iterate(new File(filepath), urls);
 		
 		ArrayList<Class> loadedClasses = new ArrayList<Class>();
 		loadClasses(urls, loadedClasses);
-		ArrayList<Class> classesToKeep = filter(loadedClasses);
+		ArrayList<Class> classesToKeep = filter(loadedClasses, superclass);
 		
 		Class[] classes = new Class[classesToKeep.size()];
 		for (int i = 0; i < classesToKeep.size(); i++) {
@@ -44,10 +42,10 @@ public class Loader {
 	 * @param classes
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static ArrayList<Class> filter (ArrayList<Class> classes) {
+	private static ArrayList<Class> filter (ArrayList<Class> classes, Class parent) {
 		ArrayList<Class> filtered = new ArrayList<Class>();
 		for (Class c : classes) {
-			if (!c.isAssignableFrom(PredefinedSet.class) || Modifier.isAbstract(c.getModifiers())) {
+			if (!parent.isAssignableFrom(c) || Modifier.isAbstract(c.getModifiers())) {
 				filtered.add(c);
 			}
 		}

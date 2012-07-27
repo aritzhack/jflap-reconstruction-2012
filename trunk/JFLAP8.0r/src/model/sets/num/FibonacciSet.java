@@ -4,28 +4,35 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
+import model.sets.FiniteSet;
 import model.sets.elements.Element;
-import model.sets.elements.FibonacciGenerator;
-import model.sets.elements.Generator;
 
 
 public class FibonacciSet extends PredefinedNumberSet {
 
+	/**
+	 * Equivalent to f(n)
+	 */
+	private int current;
 
-	private Generator myGenerator;
+	/**
+	 * Equivalent to f(n-1)
+	 */
+	private int previous;
+
+	/**
+	 * Equivalent to f(n-2)
+	 */
+	private int last;
+
 	private Set<Element> myElements;
 
 	public FibonacciSet () {
-		myGenerator = new FibonacciGenerator();
 		myElements = new TreeSet<Element>();
+		last = 0;
+		previous = 1;
 	}
 
-	@Override
-	public void generateMore() {
-		// TODO Auto-generated method stub
-		myElements.add(new Element(myGenerator.generateNextValue()));
-	}
 
 	@Override
 	public Set<Element> getSet() {
@@ -45,7 +52,11 @@ public class FibonacciSet extends PredefinedNumberSet {
 
 	@Override
 	public boolean contains (Element e) {
-		return contains(Integer.parseInt(e.getValue()));
+		try {
+			return contains(Integer.parseInt(e.getValue()));
+		} catch (NumberFormatException arg0) {
+			return false;
+		}
 	}
 
 
@@ -65,11 +76,10 @@ public class FibonacciSet extends PredefinedNumberSet {
 
 		Set<Element> range = new TreeSet<Element>();
 		for (Element e : myElements) {
-			// if between min and max
 			range.add(e);
 		}
 
-		return new CustomFiniteSet(range);
+		return new FiniteSet("Fibonacci between " + min + " and " + max, range);
 
 	}
 
@@ -85,6 +95,23 @@ public class FibonacciSet extends PredefinedNumberSet {
 		return fibonacci(n-2) + fibonacci(n-1);
 	}
 
+	@Override
+	public Object copy() {
+		return new FibonacciSet();
+	}
+
+	@Override
+	protected Element getNext() {
+		if (myElements.size() == 0) 
+			return new Element(last);
+		else if (myElements.size() == 1) 
+			return new Element(previous);
+
+		current = previous + last;
+		previous = current;
+		last = previous;
+		return new Element(current);
+	}
 
 
 }

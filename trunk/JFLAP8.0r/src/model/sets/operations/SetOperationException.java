@@ -2,6 +2,7 @@ package model.sets.operations;
 
 import errors.JFLAPException;
 
+@SuppressWarnings("serial")
 public class SetOperationException extends JFLAPException {
 	
 	public SetOperationException() {
