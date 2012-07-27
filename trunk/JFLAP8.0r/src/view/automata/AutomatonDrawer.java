@@ -67,10 +67,18 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 
 	private void drawArrow(Graphics g, Point2D ctrl, Point2D pFrom, Point2D pTo) {
 		double rad = getVertexDrawer().getVertexRadius();
-		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,ctrl);
-		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,ctrl);
+		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,pTo);
+		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,pFrom);
 		CurvedArrow arrow = new CurvedArrow(edgeFrom, ctrl, edgeTo, ARROW_LENGTH, ARROW_ANGLE);
 		arrow.draw(g);
+		drawPoint(g,ctrl);
+	}
+
+	private void drawPoint(Graphics g, Point2D p) {
+		g.drawOval((int)p.getX() - JFLAPConstants.CONTROL_POINT_RADIUS, 
+				(int)p.getY() - JFLAPConstants.CONTROL_POINT_RADIUS, 
+				JFLAPConstants.CONTROL_POINT_RADIUS * 2,
+				JFLAPConstants.CONTROL_POINT_RADIUS * 2);	
 	}
 
 	public void drawLabel(Graphics2D g2d, T t, Point2D center) {

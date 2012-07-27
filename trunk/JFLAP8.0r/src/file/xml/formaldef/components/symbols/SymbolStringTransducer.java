@@ -40,6 +40,7 @@ public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 
 	@Override
 	public SymbolString createInstance(String text) {
+		if (text==null) text="";
 		return mySymbolizer.symbolize(text);
 	}
 	

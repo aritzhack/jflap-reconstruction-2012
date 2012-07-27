@@ -8,6 +8,7 @@ import java.awt.geom.QuadCurve2D;
 import java.awt.geom.QuadCurve2D.Double;
 import java.awt.geom.Rectangle2D;
 
+
 import debug.JFLAPDebug;
 
 import util.Point2DAdv;
@@ -115,18 +116,15 @@ public class GeometryHelper {
 	}
 
 	public static void translatePerpendicular(Point2D p,
-			double d, Point2D pFrom, Point2D pTo) {
-		double theta = GeometryHelper.calculateAngle(pFrom,pTo)+Math.PI/2; 
+			double d, Point2D from, Point2D to) {
+		double theta = calculatePerpendicularAngle(from, to); 
 		translate(p, theta, d);
 
 	}
 
 	public static Point2D pointOnCircle(Point2D center, double rad, Point2D o) {
-		double angle = calculateAngle(center, o);
-		Point2DAdv point = new Point2DAdv(center);
-		double x = Math.cos(angle) * rad;
-		double y = Math.sin(angle) * rad;
-		point.translate((int) x, (int) y);
+		Point2D point = new Point2D.Double(center.getX(), center.getY());
+		translateTowards(point,o,rad);
 		return point;
 	}
 
@@ -138,6 +136,11 @@ public class GeometryHelper {
 	public static void translate(Point2D p, double theta, double d){
 		double dx = d*Math.cos(theta), dy = d*Math.sin(theta); 
 		p.setLocation(p.getX()+dx,p.getY()+dy);
+	}
+
+	public static double calculatePerpendicularAngle(Point2D from,
+			Point2D to) {
+		return calculateAngle(from, to) + Math.PI/2;
 	}
 
 

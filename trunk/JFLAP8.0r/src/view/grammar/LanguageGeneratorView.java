@@ -27,7 +27,8 @@ import util.view.magnify.MagnifiableTextField;
 import util.view.magnify.MagnifiableToolbar;
 import view.formaldef.BasicFormalDefinitionView;
 import view.grammar.productions.ProductionTable;
-
+//JZG - this is super clean. Nice job. 
+//It needs some kind of progress indicator. I guess this means I will be making a threading API after all :(
 public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 	private LanguageGenerator myGenerator;
