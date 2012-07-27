@@ -1,5 +1,6 @@
 package model.sets;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import util.Copyable;
@@ -38,7 +39,19 @@ public abstract class AbstractSet implements Copyable {
 		return getName();
 	}
 	
-	public abstract String getSetAsString();
+	public String getSetAsString() {
+		
+		StringBuilder s = new StringBuilder();
+		ArrayList<Element> list = new ArrayList<Element>(getSet());
+		if (list.size() == 0)
+			return "";
+		
+		for (int i = 0; i < list.size() - 1; i++) {
+			s.append(list.get(i).toString() + ", ");
+		}
+		s.append(list.get(list.size()-1));
+		return s.toString();
+	}
 	
 	
 }

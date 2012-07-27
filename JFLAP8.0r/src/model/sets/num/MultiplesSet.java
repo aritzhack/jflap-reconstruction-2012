@@ -8,12 +8,12 @@ import model.sets.elements.Element;
 
 public class MultiplesSet extends PredefinedNumberSet {
 	
-	private Set<Element> myElements;
 	private int myFactor;
 	private int myIndex;
 	
 	public MultiplesSet (int factor) {
-		myElements = new TreeSet<Element>();
+		super();
+		
 		myFactor = factor;
 		myIndex = 0;
 		generateMore(DEFAULT_NUMBER_TO_GENERATE);

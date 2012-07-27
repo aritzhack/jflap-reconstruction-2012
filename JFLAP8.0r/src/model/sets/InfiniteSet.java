@@ -1,6 +1,7 @@
 package model.sets;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.sets.elements.Element;
 
@@ -8,7 +9,7 @@ import model.sets.elements.Element;
 
 public abstract class InfiniteSet extends AbstractSet {
 
-	protected static final int DEFAULT_NUMBER_TO_GENERATE = 10;
+	protected static final int DEFAULT_NUMBER_TO_GENERATE = 100;
 	
 	/**
 	 * Indicates whether more numbers can be generated
@@ -20,7 +21,9 @@ public abstract class InfiniteSet extends AbstractSet {
 	protected String myDescription;
 	protected Set<Element> myElements;
 	
-	public InfiniteSet() {}
+	public InfiniteSet() {
+		this("", "", new TreeSet<Element>());
+	}
 	
 	public InfiniteSet(String name, String description, Set<Element> elements) {
 		myName = name;
@@ -84,7 +87,7 @@ public abstract class InfiniteSet extends AbstractSet {
 
 	@Override
 	public String getSetAsString() {
-		return "...";
+		return super.getSetAsString() + " ...";
 	}
 
 	@Override

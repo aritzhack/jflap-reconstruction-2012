@@ -8,7 +8,6 @@ import model.sets.elements.Element;
 
 public class CongruenceSet extends PredefinedNumberSet {
 	
-	private Set<Element> myElements;
 	private int myOriginalStart;
 	
 	private int myWrappedStart;
@@ -24,7 +23,7 @@ public class CongruenceSet extends PredefinedNumberSet {
 	 *            first value in the set
 	 */
 	public CongruenceSet (int start, int modulus) {
-		myElements = new TreeSet<Element>();
+		super();
 		myOriginalStart = start;
 		
 		myIndex = 0;

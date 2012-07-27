@@ -25,12 +25,12 @@ public class FibonacciSet extends PredefinedNumberSet {
 	 */
 	private int last;
 
-	private Set<Element> myElements;
-
 	public FibonacciSet () {
-		myElements = new TreeSet<Element>();
+		super();
 		last = 0;
 		previous = 1;
+		
+		generateMore(DEFAULT_NUMBER_TO_GENERATE);
 	}
 
 
