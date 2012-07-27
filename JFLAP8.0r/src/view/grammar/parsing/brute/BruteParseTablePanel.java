@@ -13,6 +13,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.change.events.AdvancedChangeEvent;
@@ -97,6 +99,7 @@ public class BruteParseTablePanel extends RunningView {
 			}
 			fireTableRowsInserted(myData.size()-1, myData.size()-1);
 			BruteParseTablePanel.this.repaint();
+			JFLAPDebug.print();
 		}
 	}
 

@@ -47,20 +47,31 @@ import view.grammar.parsing.RunningView;
  * @author Ian McMahon
  * 
  */
+//JZG - Organize your methods in the class. Put all inner-classes at the bottom in a block together, 
+//	put private methods together, put inherited methods together, and put public methods together.
+//	I thend to order my classes:
+//		Constants
+//		Fields
+//		Constructors
+//		Overridden Methods
+//		Public Methods
+//		Private Methods
+//		Inner classes
 @SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
 	private static final Color YELLOW_HIGHLIGHT = new Color(255, 255, 66);
 	private static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
-	private static final Color TRANSPARENT = JFLAPUniverse
-			.getActiveEnvironment().getBackground();
+	private static final Color TRANSPARENT = JFLAPUniverse 	//JZG - This is a weird way to retrieve the default grey color.
+			.getActiveEnvironment().getBackground();	   	//	You could probably just google "default swing grey color" or
+															//	something like that and make a constant for all to use in JFLAPConstants.
 
 	private SelectingEditor myEditor;
 	private Map<Integer, Color> myHighlightData;
 	private EmptySetCellRenderer myRenderer;
 	private HighlightTableHeaderRenderer myHeadRenderer;
-	private boolean diagonal;
-	private Timer animated;
+	private boolean diagonal;	
+	private Timer animated; 	//JZG - animationTimer maybe?
 
 	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
@@ -111,7 +122,12 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 			int newColumn = getColumnFromParser(rowIndex, columnIndex);
 			int newRow = getRowFromParser(rowIndex, columnIndex);
 
-			return myParser.isCellEditable(newRow, newColumn);
+			return myParser.isCellEditable(newRow, newColumn); 
+//				JZG - Editable (imo) makes no sense in the context of the CYK parser.
+//					The CYK parser is not a square table with only an upper triangular set of 
+//					cell that are editable. Rather it is simply a triangular table. Even
+//					your comment on isCellEditable suggests a better name for this method,
+//					i.e. isInActiveDiagonal or isActive
 		}
 
 		@Override
@@ -131,16 +147,18 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			String value = (String) aValue;
-			value = value.replaceAll(" ", "");
+			value = value.replaceAll(" ", ""); //JZG - this is a bad hack. In custom mode, this is going to create a single symbol
+												// 	every time. I realize the issue though, and symbolizers are now fixed, i.e.
+//													they split every string input on a space, so this is now unnecessary.
+//													test it, but I think this line can safely be deleted.
 			Set<Symbol> attemptSet = new HashSet<Symbol>(Symbolizers.symbolize(
 					value, myParser.getGrammar()));
 			int newColumn = getColumnFromParser(rowIndex, columnIndex);
 			int newRow = getRowFromParser(rowIndex, columnIndex);
 
-			if (!myParser.insertSet(newRow, newColumn, attemptSet))
-				setCellColor(rowIndex, columnIndex, RED_HIGHLIGHT);
-			else
-				setCellColor(rowIndex, columnIndex, Color.WHITE);
+			boolean inserted = !myParser.insertSet(newRow, newColumn, attemptSet); //JZG - I refactored this to save you time.
+				
+			setCellColor(rowIndex, columnIndex,inserted ? Color.WHITE:RED_HIGHLIGHT);
 		}
 
 		/**
@@ -207,7 +225,10 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 			column.setCellRenderer(myRenderer);
 			column.setHeaderRenderer(myHeadRenderer);
 			column.setCellEditor(myEditor);
-			column.setHeaderValue(getColumnNames()[i]);
+			column.setHeaderValue(getColumnNames()[i]); 
+			//JZG - you are reconstructing the same columnheader array for each column, making this method n^2 in stead of just n.
+//				maybe add a listened for inputSet event, cache the headers when you recieve that event, and then
+//				get column names will simply pull from the cached array rather than needing to be revaluated each time
 		}
 
 		/**
@@ -439,7 +460,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	}
 
 	/**
-	 * Converts a row and column index to an index.
+	 * Converts a row and column index to an index. //JZG - Huh? The comment could be clearer
 	 */
 	private int singleIndex(int row, int column) {
 		return row + (column << 22);
@@ -474,6 +495,16 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	 * - the row (wrapping around the input's length)
 	 */
 	private int getRowFromTable(int row, int column) {
+//		JZG - so lets say I am someone trying to use JFLAP to build soemthing cool.
+//			I am familiar with the interface, and I love how you can toggle between
+//			the diagonal rows vs. normal rows in the CYK parse table. It is my dream to
+//			make a program that  prints out a CYK parse table in a loop,
+//			alternating between diagonal and non-diagonal. But LO I cannot because this
+//			is only functionality present in the view. I am a sad panda :(
+//			TL;DR, I think you should put the diagonal boolean in the model component
+//			and make it do all the hard work translating when I say getValue(row,column)
+//			That way you dont have to do all this weird and repetitive getRow/ColumnFromTable/Parser
+		
 		if (diagonal)
 			return row;
 		int newRow = column - row;

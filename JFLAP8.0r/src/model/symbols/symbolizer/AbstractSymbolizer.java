@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import javax.management.RuntimeErrorException;
 
+import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
 
 import debug.JFLAPDebug;
@@ -43,7 +44,10 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 	@Override
 	public SymbolString symbolize(String in){
 		myMap.clear();
-		Collection<Object> extracted = extractSymbols(in);
+		Collection<Object> extracted = new ArrayList<Object>();
+		if (in==null) return null;
+		for(String s:in.split(JFLAPPreferences.getSymbolStringDelimiter()))
+			extracted.addAll(extractSymbols(s));
 		SymbolString result = new SymbolString();
 		for (Object o : extracted){
 			if (o instanceof Symbol)
@@ -116,5 +120,5 @@ public abstract class AbstractSymbolizer implements Symbolizer {
 		}
 		return count;
 	}
-
 }
+

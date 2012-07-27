@@ -34,7 +34,7 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 	public void runTest() {
 		String toSave = System.getProperties().getProperty("user.dir")
 				+ "/filetest";
-		File f = new File(toSave + "/fsa2.jff");
+		File f = new File(toSave + "/fsa.jff");
 		Automaton a = XMLCodec.decode(f, Automaton.class);
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
