@@ -1,9 +1,9 @@
 package view.sets;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
 
@@ -13,6 +13,7 @@ import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableTextField;
 import util.view.magnify.MagnifiableToolbar;
+import util.view.thinscroller.ThinScrollBarScrollPane;
 import view.EditingPanel;
 import debug.JFLAPDebug;
 
@@ -43,11 +44,10 @@ public abstract class SetDefinitionView extends EditingPanel {
 		
 		this.setLayout(new BorderLayout());
 		add(myCentralPanel, BorderLayout.CENTER);
-		
-		JFLAPDebug.print("End of SetDefintionView constructor");
+	
 	}
 	
-	private JComponent makeAttributePanel(String title, JTextComponent field) {
+	private JComponent makeAttributePanel(String title, JTextComponent field) {		
 		MagnifiableToolbar panel = new MagnifiableToolbar();
 		panel.setFloatable(false);
 		panel.add(new MagnifiableLabel(title, JFLAPPreferences.getDefaultTextSize()));

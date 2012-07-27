@@ -1,9 +1,12 @@
 package view.sets.state;
 
 
+import javax.swing.JComponent;
+
 import model.sets.AbstractSet;
 import model.sets.SetsManager;
 import model.undo.UndoKeeper;
+import view.sets.ParameterConstructionHelper;
 import view.sets.SetDefinitionView;
 import view.sets.SetsDropdownMenu;
 
@@ -21,7 +24,11 @@ public class UseExistingState extends State {
 
 	@Override
 	public AbstractSet finish(UndoKeeper keeper) throws Exception {
-		mySet = mySource.getSelectedSet();
+		Class c = mySource.getSelectedSetClass();
+		JComponent params = ParameterConstructionHelper.createInputPanel(c);
+		if (params == null) {
+			mySet = (AbstractSet) c.newInstance();
+		}
 		return mySet;
 	}
 

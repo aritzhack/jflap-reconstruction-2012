@@ -47,20 +47,23 @@ public class SetsDropdownMenu extends JComboBox {
 	}
 	
 	
-	public AbstractSet getSelectedSet() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException {
-		Class cl = myClassNamesMap.get((String) getSelectedItem());
-		
-		if (cl.equals(MultiplesSet.class)) {
-			int[] params = getParameters(new String[] {"factor"});
-			return (AbstractSet) cl.getDeclaredConstructor(int.class).newInstance(params[0]);
-		}
-		if (cl.equals(CongruenceSet.class)) {
-			int[] params = getParameters(new String[] {"dividend", "modulus"});
-			return (AbstractSet) cl.getDeclaredConstructor(int.class, int.class).newInstance(params[0], params[1]);
-		}
-		return (AbstractSet) cl.newInstance();
-	}
+//	public AbstractSet getSelectedSet() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException {
+//		Class cl = myClassNamesMap.get((String) getSelectedItem());
+//		
+//		if (cl.equals(MultiplesSet.class)) {
+//			int[] params = getParameters(new String[] {"factor"});
+//			return (AbstractSet) cl.getDeclaredConstructor(int.class).newInstance(params[0]);
+//		}
+//		if (cl.equals(CongruenceSet.class)) {
+//			int[] params = getParameters(new String[] {"dividend", "modulus"});
+//			return (AbstractSet) cl.getDeclaredConstructor(int.class, int.class).newInstance(params[0], params[1]);
+//		}
+//		return (AbstractSet) cl.newInstance();
+//	}
 	
+	public Class getSelectedSetClass() {
+		return myClassNamesMap.get((String) getSelectedItem());
+	}
 	
 	private int[] getParameters(String[] names) {
 		int[] values = new int[names.length];
