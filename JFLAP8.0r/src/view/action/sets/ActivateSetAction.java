@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
-import view.sets.edit.SetsEditingPanel;
+import view.sets.SetsEditingPanel;
 
 public class ActivateSetAction extends AbstractAction {
 
