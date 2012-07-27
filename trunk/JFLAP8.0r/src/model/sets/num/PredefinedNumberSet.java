@@ -1,7 +1,6 @@
 package model.sets.num;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.TreeSet;
 
 import model.sets.AbstractSet;
 import model.sets.InfiniteSet;
@@ -15,21 +14,20 @@ import model.sets.elements.Element;
  */
 
 public abstract class PredefinedNumberSet extends InfiniteSet {
+	
+	public PredefinedNumberSet() {
+		super();
+		setName(getName());
+		setDescription(getDescription());
+	}
 
+	public PredefinedNumberSet(String name, String description,
+			TreeSet<Element> elements) {
+		super(name, description, elements);
+	}
 
 	public abstract AbstractSet getNumbersInRange(int min, int max);
 
 	public abstract Element getNthElement(int n);
-	
-	@Override
-	public String getSetAsString() {
-		StringBuilder str = new StringBuilder();
-		Iterator<Element> iter = getSet().iterator();
-		while (iter.hasNext()) {
-			str.append(iter.next() + ", ");
-		}
-		str.append("...");
-		return str.toString();
-		
-	}
+
 }

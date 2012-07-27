@@ -61,17 +61,6 @@ public class FiniteSet extends AbstractSet {
 	}
 
 
-	public String getSetAsString() {
-		StringBuilder s = new StringBuilder();
-		ArrayList<Element> list = new ArrayList<Element>(myElements);
-		for (int i = 0; i < myElements.size() - 1; i++) {
-			s.append(list.get(i).toString() + ", ");
-		}
-		s.append(list.get(list.size()-1));
-
-		return s.toString();
-	}
-
 	@Override
 	public FiniteSet copy() {
 		return new FiniteSet(this.getName(), 
@@ -92,5 +81,9 @@ public class FiniteSet extends AbstractSet {
 	@Override
 	public void setDescription(String description) {
 		myDescription = description;
+	}
+	
+	public void setElements(Set<Element> elements) {
+		myElements = elements;
 	}
 }

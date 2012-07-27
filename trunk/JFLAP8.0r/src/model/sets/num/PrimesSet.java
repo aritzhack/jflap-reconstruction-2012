@@ -15,6 +15,7 @@ public class PrimesSet extends PredefinedNumberSet {
 	private int myCurrentEndpoint;
 	
 	public PrimesSet() {
+		super();
 		myElements = new TreeSet<Element>();
 		myCurrentEndpoint = 2;
 		
