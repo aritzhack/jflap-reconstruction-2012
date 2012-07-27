@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 
@@ -27,10 +28,20 @@ import util.view.magnify.MagnifiableTextField;
 import util.view.magnify.MagnifiableToolbar;
 import view.formaldef.BasicFormalDefinitionView;
 import view.grammar.productions.ProductionTable;
-//JZG - this is super clean. Nice job. 
-//It needs some kind of progress indicator. I guess this means I will be making a threading API after all :(
+
+/**
+ * View for language generation. Current design only holds for Grammar views,
+ * but should be expanded to be capable to hold anything that is equivalent to a
+ * grammar.
+ * 
+ * @author Ian McMahon
+ * 
+ */
+
 public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
+	private static final int RECOMMENDED_LIMIT = 1000;
+	
 	private LanguageGenerator myGenerator;
 	private MagnifiableList myList;
 
@@ -42,6 +53,8 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 	@Override
 	public JComponent createCentralPanel(Grammar model, UndoKeeper keeper,
 			boolean editable) {
+		// When expanded upon, prodView will need to change. No need to show a
+		// production table for FSAs, regexs, etc.
 		Component prodView = new ProductionTable(getDefinition(), getKeeper(),
 				false);
 		Component langView = new MagnifiableScrollPane(
@@ -77,8 +90,8 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 			myLabel = new MagnifiableLabel("Generate: ", size);
 			myTextField = new MagnifiableTextField(size);
-			myGenerateButton = new MagnifiableButton("strings", size);
-			myLengthButton = new MagnifiableButton("length strings", size);
+			myGenerateButton = new MagnifiableButton("# of Strings", size);
+			myLengthButton = new MagnifiableButton("String Length", size);
 
 			this.add(myLabel);
 			this.add(myTextField);
@@ -94,7 +107,9 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					setList(myGenerator.getStrings((getNumberToGenerate())));
+					int numToGen = getNumberToGenerate();
+					if (verifyNumberToGenerate(numToGen))
+						setList(myGenerator.getStrings(numToGen));
 				}
 
 			});
@@ -103,8 +118,13 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					setList(myGenerator
-							.getStringsOfLength((getNumberToGenerate())));
+					int numToGen = getNumberToGenerate();
+					int terminalSize = myGenerator.getGrammar().getTerminals()
+							.size();
+					if (verifyNumberToGenerate((int) Math.pow(terminalSize,
+							numToGen)))
+
+						setList(myGenerator.getStringsOfLength((numToGen)));
 				}
 			});
 
@@ -112,6 +132,7 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 		private int getNumberToGenerate() {
 			String input = myTextField.getText();
+
 			try {
 				int numToGen = Integer.parseInt(input);
 				return numToGen;
@@ -121,6 +142,22 @@ public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 			}
 		}
 
+	}
+
+	private boolean verifyNumberToGenerate(int numberToGenerate) {
+		int n = JOptionPane.YES_OPTION;
+		int terminalSize = myGenerator.getGrammar().getTerminals().size();
+
+		if (numberToGenerate > RECOMMENDED_LIMIT) {
+			n = JOptionPane
+					.showConfirmDialog(
+							this,
+							"Warning: Generation of this size may cause JFLAP to slow down drastically or freeze."
+									+ "\nWould you like to continue?",
+							"Generation Warning", JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE);
+		}
+		return n == JOptionPane.YES_OPTION;
 	}
 
 	private void setList(List<SymbolString> generatedStrings) {

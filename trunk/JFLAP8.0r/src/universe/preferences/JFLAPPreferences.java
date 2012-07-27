@@ -163,6 +163,14 @@ public class JFLAPPreferences {
 		distributeChange(MODE_CHANGED, CUSTOM_MODE);
 	}
 	
+	public static void setCYKDiagonal(){
+		CYK_DIAGONAL = true;
+	}
+	
+	public static void setCYKHorizontal(){
+		CYK_DIAGONAL = false;
+	}
+	
 	public static void setDefaultMode(){
 		MODE = DEFAULT_MODE;
 		distributeChange(MODE_CHANGED, DEFAULT_MODE);

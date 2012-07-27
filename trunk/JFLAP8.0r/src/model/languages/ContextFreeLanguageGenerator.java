@@ -10,19 +10,12 @@ package model.languages;
 
 import java.util.*;
 
-import model.algorithms.AlgorithmException;
-import model.algorithms.conversion.autotogram.*;
-import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
+import debug.JFLAPDebug;
+
 import model.algorithms.testinput.parse.*;
 import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.algorithms.transform.grammar.CNFConverter;
-import model.algorithms.transform.grammar.ConstructDependencyGraph;
-import model.algorithms.transform.grammar.DependencyGraph;
-import model.automata.acceptors.fsa.*;
-import model.automata.acceptors.pda.PushdownAutomaton;
 import model.grammar.*;
-import model.grammar.typetest.matchers.*;
-import model.regex.RegularExpression;
 import model.symbols.*;
 
 public class ContextFreeLanguageGenerator extends LanguageGenerator {
