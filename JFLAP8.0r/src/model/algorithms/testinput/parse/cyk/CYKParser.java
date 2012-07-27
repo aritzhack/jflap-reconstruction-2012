@@ -273,7 +273,7 @@ public class CYKParser extends Parser {
 	 * Symbols at that location.
 	 */
 	public void autofillCell(int row, int col) {
-		if (!isCellEditable(row, col))
+		if (!isActive(row, col))
 			return;
 		Set<Symbol> selectedSet = getLHSVariablesForNode(row, col);
 		insertSet(row, col, selectedSet);
@@ -328,7 +328,7 @@ public class CYKParser extends Parser {
 	/**
 	 * Returns true if the cell is a member of the current diagonal/row.
 	 */
-	public boolean isCellEditable(int row, int col) {
+	public boolean isActive(int row, int col) {
 		return col - row == myIncrement - 1;
 	}
 }
