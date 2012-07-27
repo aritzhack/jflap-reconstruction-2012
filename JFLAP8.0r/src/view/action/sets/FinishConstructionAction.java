@@ -9,7 +9,6 @@ import model.sets.SetsManager;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
-import view.sets.edit.SetsEditingPanel;
 import view.sets.state.State;
 
 @SuppressWarnings("serial")
@@ -32,7 +31,6 @@ public class FinishConstructionAction extends AbstractAction implements IUndoRed
 		try {
 			mySet = myState.finish(myKeeper);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (mySet == null)	return;
@@ -44,18 +42,12 @@ public class FinishConstructionAction extends AbstractAction implements IUndoRed
 	
 	@Override
 	public boolean undo() {
-		SetsManager.ACTIVE_REGISTRY.remove(mySet);
-		SetsEditingPanel editor = new SetsEditingPanel(myKeeper);
-		editor.createFromExistingSet(mySet);
-		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(editor);
-		
-		return true;
+		return myState.undo();
 	}
 
 	@Override
 	public boolean redo() {
-		SetsManager.ACTIVE_REGISTRY.add(mySet);
-		return true;
+		return myState.redo();
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import javax.swing.AbstractAction;
 import model.sets.AbstractSet;
 import model.sets.SetsManager;
 import model.sets.operations.SetOperation;
-import model.sets.operations.SetOperationException;
 
 public class DoSetOperationAction extends AbstractAction {
 
@@ -23,13 +22,10 @@ public class DoSetOperationAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 
 		ArrayList<AbstractSet> operands = SetsManager.ACTIVE_REGISTRY.getSelectedSets();
-		try {
-			myOperation.setOperands(operands);
-			AbstractSet answer = myOperation.evaluate();
-			SetsManager.ACTIVE_REGISTRY.add(answer);
-		} catch (SetOperationException e1) {
-			e1.printStackTrace();
-		}
+		myOperation.setOperands(operands);
+		AbstractSet answer = myOperation.evaluate();
+		SetsManager.ACTIVE_REGISTRY.add(answer);
+
 	}
-	
+
 }

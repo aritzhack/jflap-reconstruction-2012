@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import debug.JFLAPDebug;
-
 import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
@@ -24,11 +22,7 @@ public class ActivateSetAction extends AbstractAction {
 	public void actionPerformed(ActionEvent arg0) {
 
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
-		env.addSelectedComponent(new SetsEditingPanel(myKeeper));
+		env.addSelectedComponent(new SetsEditingPanel(myKeeper, true));
 	}
-
-
-
-
 
 }
