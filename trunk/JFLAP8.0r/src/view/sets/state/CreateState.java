@@ -1,13 +1,8 @@
 package view.sets.state;
 
-import java.awt.Component;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Set;
-import java.util.TimeZone;
 
-import errors.JFLAPException;
+import debug.JFLAPDebug;
 
 import model.sets.AbstractSet;
 import model.sets.FiniteSet;
@@ -15,9 +10,7 @@ import model.sets.SetsManager;
 import model.sets.elements.Element;
 import model.sets.elements.ElementsParser;
 import model.undo.UndoKeeper;
-import universe.JFLAPUniverse;
-import view.sets.edit.SetDefinitionPanel;
-import view.sets.edit.SetsEditingPanel;
+import view.sets.SetDefinitionView;
 
 /**
  * State for creating a new set entirely
@@ -26,40 +19,33 @@ import view.sets.edit.SetsEditingPanel;
  */
 public class CreateState extends State {
 
-	private SetDefinitionPanel mySource;
 	private AbstractSet mySet;
+	private UndoKeeper myKeeper;
 
-	public CreateState(Component source) {
-		mySource = (SetDefinitionPanel) source;
+	private SetDefinitionView myDefinition;
+
+	public CreateState(UndoKeeper keeper) {
+		myKeeper = keeper;
 	}
 
-	@Override
-	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		return new SetsEditingPanel(keeper, true);
-	}
 
 	@Override
 	public AbstractSet finish(UndoKeeper keeper) throws Exception {
 
-		
-		String name = mySource.getSetName() == null ? getAutomatedName() : mySource.getSetName();
-		String description = mySource.getDescription();
-		if (mySource.getElements() == null || mySource.getElements().trim().length() == 0) {
-			throw new Exception("Set must contain at least one element!");
+		String name = myDefinition.getNameOfSet();
+		if (name == null)
+			name = SetsManager.getAutomatedName();
+		String description = myDefinition.getDescriptionOfSet();
+		ElementsParser parser = new ElementsParser(myDefinition.getElements());
+		Set<Element> elements = parser.parse();
+		if (description == null) {
+			mySet = new FiniteSet(name, elements);
 		}
-		
-		ElementsParser parser = new ElementsParser(mySource.getElements());
-		try {
-			Set<Element> elements = parser.parse();
-			
-			if (description == null)
-				mySet = new FiniteSet(name, elements);
+		else {
 			mySet = new FiniteSet(name, description, elements);
-		} catch (JFLAPException e) {
-			
-		} catch (Exception e) {
-		
 		}
+
+		JFLAPDebug.print("New set created");
 		return mySet;
 	}
 
@@ -68,9 +54,6 @@ public class CreateState extends State {
 	@Override
 	public boolean undo() {
 		SetsManager.ACTIVE_REGISTRY.remove(mySet);
-//		SetsEditingPanel editor = new SetsEditingPanel(myKeeper);
-//		editor.createFromExistingSet(mySet);
-//		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(editor);
 		return true;
 	}
 
@@ -79,12 +62,26 @@ public class CreateState extends State {
 		SetsManager.ACTIVE_REGISTRY.add(mySet);
 		return false;
 	}
-	
 
-	public static String getAutomatedName() {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-		return System.getProperty("user.name") + format.format(cal.getTime());
+
+	@Override
+	public SetDefinitionView createDefinitionView() {
+		myDefinition = new CreateDefinitionView(myKeeper);
+		return myDefinition;
+	}
+
+
+	private class CreateDefinitionView extends SetDefinitionView {
+
+		public CreateDefinitionView(UndoKeeper keeper) {
+			super(keeper);
+		}
+
+		@Override
+		public void updateDefinitionPanel() {
+
+		}
+
 	}
 
 }

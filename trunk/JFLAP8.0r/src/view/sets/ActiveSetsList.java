@@ -24,7 +24,7 @@ import util.view.magnify.MagnifiableList;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableScrollPane;
 import view.action.sets.RemoveSetAction;
-import view.sets.edit.EditingPanelFactory;
+import view.sets.state.ModifyState;
 
 @SuppressWarnings("serial")
 public class ActiveSetsList extends MagnifiablePanel {
@@ -97,7 +97,10 @@ public class ActiveSetsList extends MagnifiablePanel {
 			getPopupMenu(set).show(e.getComponent(), e.getX(), e.getY());
 		// double click to edit
 		if (e.getClickCount() == 2) {
-			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(EditingPanelFactory.createPanelFromSet(myKeeper, set));
+			SetsEditingPanel editor = new SetsEditingPanel(myKeeper, true);
+			ModifyState state = new ModifyState(set, myKeeper);
+			editor.createCentralPanel(state);
+			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(editor);
 		
 		}
 	}
