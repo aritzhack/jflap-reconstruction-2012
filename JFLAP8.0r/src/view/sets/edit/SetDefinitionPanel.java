@@ -1,35 +1,31 @@
 package view.sets.edit;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Scrollbar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 
 import model.sets.AbstractSet;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
-import util.view.magnify.Magnifiable;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableScrollPane;
 import util.view.magnify.MagnifiableTextArea;
 import util.view.magnify.MagnifiableTextField;
+import util.view.thinscroller.ThinScrollBarScrollPane;
 import view.EditingPanel;
+import view.sets.PropertiesPanel;
 
 @SuppressWarnings("serial")
 public class SetDefinitionPanel extends EditingPanel {
 	
-	private MagnifiableTextField myNameField;
-	private MagnifiableTextField myDescriptionField;
-	private MagnifiableTextField myElements;
+	private MagnifiableTextField myNameTextField;
+	private MagnifiableTextField myDescriptionTextField;
+	private JTextComponent myElementTextArea;
 	
 	public SetDefinitionPanel (UndoKeeper keeper) {
 		super(keeper, true);
@@ -40,64 +36,64 @@ public class SetDefinitionPanel extends EditingPanel {
 	}
 	
 	private JComponent createComponents() {
-		myNameField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
-		myDescriptionField = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
-		myElements = new MagnifiableTextField(JFLAPPreferences.getDefaultTextSize());
+		int size = JFLAPPreferences.getDefaultTextSize();
+		myNameTextField = new MagnifiableTextField(size);
+		myDescriptionTextField = new MagnifiableTextField(size);
+		myElementTextArea = new MagnifiableTextArea(size);
 		
 		MagnifiablePanel panel = new MagnifiablePanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.add(new MagnifiableLabel("Name", JFLAPPreferences.getDefaultTextSize()));
-		panel.add(myNameField);
+		panel.add(myNameTextField);
 		panel.add(new MagnifiableLabel("Description (optional)", JFLAPPreferences.getDefaultTextSize()));
-		panel.add(myDescriptionField);
+		panel.add(myDescriptionTextField);
 		panel.add(new MagnifiableLabel("Elements (separated with spaces or commas)", 
 				JFLAPPreferences.getDefaultTextSize()));
-		panel.add(myElements);
+		panel.add(myElementTextArea);
 		
 		MagnifiableScrollPane scroller = new MagnifiableScrollPane(panel);
-		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		return scroller;
+		return panel;
 	}
+	
+	
+//	private JComponent makeElementsPanel() {
+//		int size = JFLAPPreferences.getDefaultTextSize();
+//		myElementTextArea = new MagnifiableTextField(size);
+//		ThinScrollBarScrollPane scroller = new ThinScrollBarScrollPane(size, 
+//				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
+//				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//		scroller.setViewportView(myElementTextArea);
+//		this.add(myElementTextArea);
+//		
+//		MagnifiablePanel panel = new MagnifiablePanel();
+//		panel.add(new MagnifiableLabel("{", size));
+////		this.add(scroller);
+//		panel.add(new MagnifiableLabel("}", size));
+//		return myElementTextArea;
+//	}
+	
 	
 	
 	public String getSetName() {
-		return myNameField.getText();
+		return myNameTextField.getText();
 	}
 	
 	public String getDescription() {
-		return myDescriptionField.getText();
+		return myDescriptionTextField.getText();
 	}
 	
 	public String getElements () {
-		return myElements.getText();
-	}
-	
-	
-	private class InputChangeListener implements DocumentListener {
-
-		@Override
-		public void changedUpdate(DocumentEvent arg0) {
-			System.out.println("change");
-		}
-
-		@Override
-		public void insertUpdate(DocumentEvent arg0) {
-			System.out.println("insert");
-		}
-
-		@Override
-		public void removeUpdate(DocumentEvent arg0) {
-			System.out.println("remove");
-		}
-		
+		return myElementTextArea.getText();
 	}
 	
 	
 	public void createFromExistingSet (AbstractSet set) {
-		myNameField.setText(set.getName());
-		myDescriptionField.setText(set.getDescription());
-		myElements.setText(set.getSetAsString());
+		myNameTextField.setText(set.getName());
+		myDescriptionTextField.setText(set.getDescription());
+		myElementTextArea.setText(set.getSetAsString());
+		add(new PropertiesPanel(set));
 	}
+	
+
 
 }

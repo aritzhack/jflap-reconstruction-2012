@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import model.sets.AbstractSet;
@@ -23,23 +22,25 @@ import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiableList;
 import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.MagnifiableScrollPane;
 import view.action.sets.RemoveSetAction;
 import view.sets.edit.EditingPanelFactory;
 
 @SuppressWarnings("serial")
-public class ActiveSetDisplay extends MagnifiablePanel {
+public class ActiveSetsList extends MagnifiablePanel {
 
 	private UndoKeeper myKeeper;
 
 	private MagnifiableLabel myTitle;
 	private static MagnifiableList myActiveSets;
 
-	public ActiveSetDisplay(UndoKeeper keeper) {
+	public ActiveSetsList(UndoKeeper keeper) {
 
 		myKeeper = keeper;
-		initComponents ();
+		myTitle = new MagnifiableLabel("Active Sets", JFLAPPreferences.getDefaultTextSize());
+		myActiveSets = new MagnifiableList(JFLAPPreferences.getDefaultTextSize());
 
-		JScrollPane scroll = new JScrollPane(myActiveSets);
+		MagnifiableScrollPane scroll = new MagnifiableScrollPane(myActiveSets);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -51,16 +52,13 @@ public class ActiveSetDisplay extends MagnifiablePanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (getSelectedSets() == null || getSelectedSets().size() == 0)
+					return;
 				doClickResponse(getSelectedSets().get(0), e);
 			}
 
 		});
 
-	}
-
-	private void initComponents () {
-		myTitle = new MagnifiableLabel("Active Sets", JFLAPPreferences.getDefaultTextSize());
-		myActiveSets = new MagnifiableList(JFLAPPreferences.getDefaultTextSize());
 	}
 
 
@@ -94,17 +92,11 @@ public class ActiveSetDisplay extends MagnifiablePanel {
 
 	public void doClickResponse(AbstractSet set, MouseEvent e) {
 		if (set == null)	return;
-		// right click for delete
+		// right click to delete
 		if (e.getButton() == MouseEvent.BUTTON3)
 			getPopupMenu(set).show(e.getComponent(), e.getX(), e.getY());
-		// double click for edit
+		// double click to edit
 		if (e.getClickCount() == 2) {
-//			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(
-//					EditingPanelFactory.createPanelFromSet(myKeeper, set));
-
-//			SetDefinitionPanel source = new SetDefinitionPanel(myKeeper);
-//			source.createFromExistingSet(set);
-//			FinishConstructionAction fin = new FinishConstructionAction(myKeeper, new ModifyState(source, set));
 			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(EditingPanelFactory.createPanelFromSet(myKeeper, set));
 		
 		}

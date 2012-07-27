@@ -17,7 +17,7 @@ public class UseExistingState extends State {
 
 	@Override
 	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		SetsEditingPanel editor = new SetsEditingPanel(keeper);
+		SetsEditingPanel editor = new SetsEditingPanel(keeper, false);
 		editor.createFromExistingSet(mySet);
 		return editor;
 	}

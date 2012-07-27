@@ -1,13 +1,9 @@
 package view.sets;
 
-/**
- * @author Peggy Li
- */
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 
 import model.sets.operations.CartesianProduct;
@@ -16,14 +12,26 @@ import model.sets.operations.Intersection;
 import model.sets.operations.Powerset;
 import model.sets.operations.SetOperation;
 import model.sets.operations.Union;
+import universe.preferences.JFLAPPreferences;
+import util.view.magnify.MagnifiableButton;
 import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.MagnifiableToolbar;
+import view.action.sets.DoSetOperationAction;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
-public class SetOperationsPanel extends MagnifiablePanel {
+public class OperationsToolbar extends MagnifiablePanel {
+	
+	private static final Class[] myOperationsClasses = {
+		Intersection.class,
+		Union.class,
+		Powerset.class,
+		Difference.class,
+		CartesianProduct.class
+	};
 
-	public SetOperationsPanel() {
-		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-
+	
+	public OperationsToolbar() {
+//		setFloatable(floatable);
 		initOperations();
 	}
 	
@@ -31,7 +39,6 @@ public class SetOperationsPanel extends MagnifiablePanel {
 		for (Class c : myOperationsClasses) {
 			if (!Modifier.isAbstract(c.getModifiers()) && 
 				SetOperation.class.isAssignableFrom(c)) 
-				
 				add(createNewButton(c));
 		}
 	}
@@ -65,14 +72,20 @@ public class SetOperationsPanel extends MagnifiablePanel {
 	}
 
 	
-	private static final Class[] myOperationsClasses = {
-		Intersection.class,
-		Union.class,
-		Powerset.class,
-		Difference.class,
-		CartesianProduct.class
-	};
 	
+	
+	private class SetOperationButton extends MagnifiableButton {
+		
+		public SetOperationButton (SetOperation operation) {
+			super(new DoSetOperationAction(operation), 30);
+			setToolTipText(createToolTipText(operation));
+		}
+		
+		private String createToolTipText(SetOperation op) {
+			return op.getName() + " (" + op.getNumberOfOperands() + ")";
+		}
+		
+	}
 	
 	
 }

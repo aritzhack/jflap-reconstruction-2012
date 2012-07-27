@@ -4,14 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 import model.sets.SetsManager;
 import model.undo.UndoKeeper;
 import util.view.magnify.MagnifiablePanel;
+import util.view.magnify.MagnifiableSplitPane;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
-import view.sets.edit.ElementsBar;
-import view.sets.edit.SetsEditingPanel;
 import view.undoing.UndoPanel;
 
 @SuppressWarnings("serial")
@@ -21,12 +21,12 @@ public class SetsView extends EditingPanel {
 	
 	private DefaultSetPanel myDefaultPanel;
 	
-	private ActiveSetDisplay myActiveSetDisplay;
+	private ActiveSetsList myActiveSetDisplay;
 
 	public SetsView (SetsManager manager) {
 		super(new UndoKeeper(), true);
 		
-		myActiveSetDisplay = new ActiveSetDisplay(getKeeper());
+		myActiveSetDisplay = new ActiveSetsList(getKeeper());
 		myCentralPane = createCentralPane();
 		
 		setLayout(new BorderLayout());	
@@ -42,6 +42,8 @@ public class SetsView extends EditingPanel {
 		assignObserver(manager);
 	}
 	
+	
+	
 
 	
 	private JComponent createCentralPane () {
@@ -52,7 +54,7 @@ public class SetsView extends EditingPanel {
 	}
 	
 	
-	public ActiveSetDisplay getActiveSetDisplay () {
+	public ActiveSetsList getActiveSetDisplay () {
 		return myActiveSetDisplay;
 	}
 	
@@ -67,5 +69,12 @@ public class SetsView extends EditingPanel {
 		return "Sets View";
 	}
 
+	
+	
+	public JComponent createCentralPanel () {
+		MagnifiableSplitPane split = new MagnifiableSplitPane(JSplitPane.VERTICAL_SPLIT, null, null);
+		
+		return null;
+	}
 	
 }

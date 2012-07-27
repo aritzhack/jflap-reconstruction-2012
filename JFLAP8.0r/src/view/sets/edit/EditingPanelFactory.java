@@ -14,13 +14,13 @@ import model.undo.UndoKeeper;
 public class EditingPanelFactory {
 	
 	public static SetsEditingPanel createNewEditingPanel (UndoKeeper keeper) {
-		SetsEditingPanel editor = new SetsEditingPanel(keeper);
+		SetsEditingPanel editor = new SetsEditingPanel(keeper, true);
 		return editor;
 	}
 	
 	
 	public static JComponent createPanelFromSet (UndoKeeper keeper, AbstractSet set) {
-		SetsEditingPanel editor = new SetsEditingPanel(keeper);
+		SetsEditingPanel editor = new SetsEditingPanel(keeper, true);
 		SetDefinitionPanel definition = new SetDefinitionPanel(keeper);
 		definition.createFromExistingSet(set);
 		FinishConstructionAction fin = new FinishConstructionAction(keeper, new ModifyState(definition, set));
