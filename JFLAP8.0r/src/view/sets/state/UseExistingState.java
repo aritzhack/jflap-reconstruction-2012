@@ -1,26 +1,23 @@
 package view.sets.state;
 
+
 import model.sets.AbstractSet;
 import model.sets.SetsManager;
 import model.undo.UndoKeeper;
+import view.sets.SetDefinitionView;
 import view.sets.SetsDropdownMenu;
-import view.sets.edit.SetsEditingPanel;
 
 public class UseExistingState extends State {
-	
+
+	private UndoKeeper myKeeper;
 	private SetsDropdownMenu mySource;
 	private AbstractSet mySet;
-	
-	public UseExistingState (SetsDropdownMenu source) {
+
+	public UseExistingState (SetsDropdownMenu source, UndoKeeper keeper) {
 		mySource = source;
+		myKeeper = keeper;
 	}
 
-	@Override
-	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		SetsEditingPanel editor = new SetsEditingPanel(keeper, false);
-		editor.createFromExistingSet(mySet);
-		return editor;
-	}
 
 	@Override
 	public AbstractSet finish(UndoKeeper keeper) throws Exception {
@@ -40,4 +37,35 @@ public class UseExistingState extends State {
 		return true;
 	}
 
+
+
+	@Override
+	public SetDefinitionView createDefinitionView() {
+
+		return new ExistingView(mySet, myKeeper);
+
+	}
+
+
+	private class ExistingView extends SetDefinitionView {
+
+		private AbstractSet mySet;
+
+		public ExistingView(AbstractSet set, UndoKeeper keeper) {
+			super(keeper);
+			mySet = set;
+			updateDefinitionPanel();
+		}
+
+		@Override
+		public void updateDefinitionPanel() {
+			myNameTextField.setText(mySet.getName());
+			myDescriptionTextField.setText(mySet.getDescription());
+			myElementsTextField.setText(mySet.getSetAsString());
+
+			setFieldsEditable(false);
+
+		}
+
+	}
 }

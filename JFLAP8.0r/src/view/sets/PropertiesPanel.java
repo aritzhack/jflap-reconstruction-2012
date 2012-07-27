@@ -2,6 +2,8 @@ package view.sets;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -12,7 +14,7 @@ import javax.swing.event.DocumentListener;
 import model.sets.AbstractSet;
 import model.sets.FiniteSet;
 import model.sets.elements.Element;
-import model.sets.num.PrimesSet;
+import model.sets.num.MultiplesSet;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
@@ -54,7 +56,6 @@ public class PropertiesPanel extends MagnifiablePanel {
 			textField.setText("Undefined for infinite set");
 		}
 		panel.add(textField);
-		setPreferredSize(new Dimension(500, 200));
 		
 		return panel;
 	}
@@ -124,7 +125,14 @@ public class PropertiesPanel extends MagnifiablePanel {
 	
 	public static void main (String[] args) {
 		JFrame frame = new JFrame("Test");
-		frame.add(new PropertiesPanel(new PrimesSet()));
+		frame.add(new PropertiesPanel(new MultiplesSet(7)));
+		
+//		Set<Element> nums = new TreeSet<Element>();
+//		nums.add(new Element(5));
+//		nums.add(new Element(12));
+//		nums.add(new Element(-7));
+//		FiniteSet set = new FiniteSet("Test", "random values", nums);
+//		frame.add(new PropertiesPanel(set));
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
