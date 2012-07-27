@@ -1,6 +1,5 @@
 package universe.preferences;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.io.File;
@@ -57,6 +56,7 @@ public class JFLAPPreferences {
     public static String LAMBDA = "\u03BB";     // Jinghui Lim added stuff
     public static String EPSILON = "\u03B5";    // see MultipleSimulateAction
     private static String BLANK = "\u25A1";
+    public static String EMPTY_SET = "\u2205";
 	
 	/** The main mask for keystrokes in a menu. */
 	private static int MAIN_MENU_MASK;
