@@ -60,7 +60,7 @@ public class ModifyState extends State {
 
 	@Override
 	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		SetsEditingPanel editor = new SetsEditingPanel(keeper);
+		SetsEditingPanel editor = new SetsEditingPanel(keeper, true);
 		editor.createFromExistingSet(myOriginalSet);
 		return editor;
 	}

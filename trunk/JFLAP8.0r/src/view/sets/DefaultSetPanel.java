@@ -24,7 +24,7 @@ public class DefaultSetPanel extends MagnifiablePanel {
 		
 		NewSetButton create = new NewSetButton(myKeeper);
 		
-		this.add(new SetOperationsPanel());
+//		this.add(new SetOperationsPanel());
 		this.add(parent.getActiveSetDisplay());
 		this.add(create);
 		create.setAlignmentX(CENTER_ALIGNMENT);

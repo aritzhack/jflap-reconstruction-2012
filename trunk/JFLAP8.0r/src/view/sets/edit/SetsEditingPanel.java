@@ -23,8 +23,8 @@ public class SetsEditingPanel extends EditingPanel {
 	private MagnifiablePanel myCentralPanel;
 	private SetDefinitionPanel mySetDefinition;
 	
-	public SetsEditingPanel (UndoKeeper keeper) {
-		super(keeper, true);
+	public SetsEditingPanel (UndoKeeper keeper, boolean editable) {
+		super(keeper, editable);
 		myKeeper = keeper;
 		
 		setLayout(new BorderLayout());

@@ -35,7 +35,7 @@ public class CreateState extends State {
 
 	@Override
 	public SetsEditingPanel createEditingPanel(UndoKeeper keeper) {
-		return new SetsEditingPanel(keeper);
+		return new SetsEditingPanel(keeper, true);
 	}
 
 	@Override
