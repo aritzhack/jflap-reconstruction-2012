@@ -2,15 +2,21 @@ package model.sets;
 
 import java.util.Set;
 
+import util.Copyable;
+
 import model.sets.elements.Element;
 
-public abstract class AbstractSet {
+public abstract class AbstractSet implements Copyable {
 
 	public abstract Set<Element> getSet();
 	
 	public abstract String getName();
 	
 	public abstract String getDescription();
+	
+	public abstract void setName(String name);
+	
+	public abstract void setDescription(String description);
 	
 	public abstract boolean isFinite();
 	
@@ -22,14 +28,17 @@ public abstract class AbstractSet {
 	}
 	
 	public boolean equals (Object obj) {
-		return getSet().equals(((AbstractSet) obj).getSet());
+		AbstractSet other = (AbstractSet) obj;
+		return 	getName().equals(other.getName()) && 
+				getDescription().equals(other.getDescription()) &&
+				getSet().equals(other.getSet());
 	}
 	
 	public String toString () {
 		return getName();
 	}
 	
-	
 	public abstract String getSetAsString();
+	
 	
 }

@@ -6,17 +6,18 @@ import java.util.TreeSet;
 import model.sets.AbstractSet;
 import model.sets.elements.Element;
 
-public class OddsSet extends PredefinedNumberSet {
+public class MultiplesSet extends PredefinedNumberSet {
 	
 	private Set<Element> myElements;
+	private int myFactor;
 	private int myIndex;
 	
-	public OddsSet() {
+	public MultiplesSet (int factor) {
 		myElements = new TreeSet<Element>();
+		myFactor = factor;
 		myIndex = 0;
 		generateMore(DEFAULT_NUMBER_TO_GENERATE);
 	}
-
 
 	@Override
 	public AbstractSet getNumbersInRange(int min, int max) {
@@ -26,9 +27,15 @@ public class OddsSet extends PredefinedNumberSet {
 
 	@Override
 	public Element getNthElement(int n) {
-		return new Element(2*n - 1);
+		return new Element(n * myFactor);
 	}
 
+	@Override
+	protected Element getNext() {
+		int next = myIndex * myFactor;
+		myIndex++;
+		return new Element(next);
+	}
 
 	@Override
 	public Set<Element> getSet() {
@@ -37,35 +44,27 @@ public class OddsSet extends PredefinedNumberSet {
 
 	@Override
 	public String getName() {
-		return "Odd Numbers";
+		return "Multiples of " + myFactor;
 	}
 
 	@Override
 	public String getDescription() {
-		return "Positive odd integers";
+		return myDescription;
 	}
 
 	@Override
 	public boolean contains(Element e) {
 		try {
-			return Integer.parseInt(e.getValue()) % 2 == 1;
+			return Integer.parseInt(e.getValue()) % myFactor == 0;
 		} catch (NumberFormatException arg0) {
 			return false;
 		}
 	}
 
-
 	@Override
 	public Object copy() {
-		return new OddsSet();
+		return new MultiplesSet(myFactor);
 	}
 
-
-	@Override
-	protected Element getNext() {
-		int next = myIndex * 2 + 1;
-		myIndex++;
-		return new Element(next);
-	}
-
+	
 }

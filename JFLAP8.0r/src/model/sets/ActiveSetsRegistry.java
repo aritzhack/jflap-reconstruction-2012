@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import view.sets.ActiveSetDisplay;
+import view.sets.ActiveSetsList;
 
 
 /**
@@ -30,9 +30,7 @@ public class ActiveSetsRegistry {
 	 */
 	public void add (AbstractSet set) {
 		myRegistryMap.put(set.getName(), set);
-		
 		notifyObserver();
-		
 	}
 	
 	public void remove (AbstractSet set) {
@@ -45,20 +43,20 @@ public class ActiveSetsRegistry {
 		return myRegistryMap.get(key);
 	}
 	
-	private ActiveSetDisplay myObserver;
+	private ActiveSetsList mySubject;
 	
-	public void setObserver (ActiveSetDisplay disp) {
-		myObserver = disp;
+	public void setObserver (ActiveSetsList disp) {
+		mySubject = disp;
 		
 	}
 	
 	public void notifyObserver () {
-		myObserver.update(this.getNameArray());
+		mySubject.update(this.getNameArray());
 	}
 	
 	
 	public ArrayList<AbstractSet> getSelectedSets () {
-		return myObserver.getSelectedSets();
+		return mySubject.getSelectedSets();
 	}
 	
 	/**

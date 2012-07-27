@@ -1,12 +1,26 @@
 package model.sets.num;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.sets.AbstractSet;
-import model.sets.PredefinedNumberSet;
 import model.sets.elements.Element;
 
 public class PrimesSet extends PredefinedNumberSet {
+	
+	private Set<Element> myElements;
+	/**
+	 * The last number that was tested (and possibly added)
+	 */
+	private int myCurrentEndpoint;
+	
+	public PrimesSet() {
+		myElements = new TreeSet<Element>();
+		myCurrentEndpoint = 2;
+		
+		generateMore(DEFAULT_NUMBER_TO_GENERATE);
+	}
+	
 
 	@Override
 	public AbstractSet getNumbersInRange(int min, int max) {
@@ -14,22 +28,17 @@ public class PrimesSet extends PredefinedNumberSet {
 		return null;
 	}
 
+
 	@Override
 	public Element getNthElement(int n) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public void generateMore() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public Set<Element> getSet() {
-		// TODO Auto-generated method stub
-		return null;
+		return myElements;
 	}
 
 	@Override
@@ -39,13 +48,16 @@ public class PrimesSet extends PredefinedNumberSet {
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Set of prime numbers";
 	}
 
 	@Override
 	public boolean contains(Element e) {
-		return isPrime(Integer.parseInt(e.getValue()));
+		try {
+			return isPrime(Integer.parseInt(e.getValue()));
+		} catch (NumberFormatException arg0) {
+			return false;
+		}
 	}
 	
 	
@@ -55,6 +67,22 @@ public class PrimesSet extends PredefinedNumberSet {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	protected Element getNext() {
+		while (!isPrime(myCurrentEndpoint)){
+			myCurrentEndpoint++;
+		}
+		int prime = myCurrentEndpoint;
+		myCurrentEndpoint++;
+		return new Element(prime);
+	}
+
+
+	@Override
+	public AbstractSet copy() {
+		return new PrimesSet();
 	}
 
 }

@@ -4,16 +4,21 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
+import model.sets.FiniteSet;
 import model.sets.elements.Element;
 
 public class EvensSet extends PredefinedNumberSet {
 	
 	private Set<Element> myElements;
+	private int myIndex;
 	
 	public EvensSet () {
 		myElements = new TreeSet<Element>();
+		myIndex = 0;
+		generateMore(DEFAULT_NUMBER_TO_GENERATE);
 	}
+	
+	
 
 	@Override
 	public AbstractSet getNumbersInRange(int min, int max) {
@@ -23,10 +28,9 @@ public class EvensSet extends PredefinedNumberSet {
 		for (int i = min/2; i <= max/2; i++) {
 			values.add(new Element(i * 2));
 		}
-		
-		CustomFiniteSet answer = new CustomFiniteSet(values);
-		answer.setName("Even numbers between " + min + " and " + max);
-		return answer;
+
+		String name = "Even numbers between " + min + " and " + max;
+		return new FiniteSet(name, values);
 	}
 
 	@Override
@@ -35,8 +39,14 @@ public class EvensSet extends PredefinedNumberSet {
 	}
 
 	@Override
-	public void generateMore() {
-		// TODO Auto-generated method stub
+	public void generateMore(int numToGenerate) {
+		if (!shouldContinue)
+			return;
+		
+		for (int i = 0; i < numToGenerate; i++) {	
+			myElements.add(new Element(myIndex * 2));
+			myIndex++;
+		}
 		
 	}
 
@@ -60,9 +70,20 @@ public class EvensSet extends PredefinedNumberSet {
 		return ((Integer.parseInt(e.getValue()))%2 == 0);
 	}
 
+
+
 	@Override
-	public String getSetAsString() {
-		return super.getSetAsString();
+	public Object copy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	protected Element getNext() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

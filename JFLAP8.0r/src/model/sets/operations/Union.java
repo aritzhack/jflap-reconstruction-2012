@@ -1,31 +1,30 @@
 package model.sets.operations;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import model.sets.AbstractSet;
-import model.sets.CustomFiniteSet;
+import model.sets.FiniteSet;
+import model.sets.InfiniteSet;
 import model.sets.elements.Element;
 
 public class Union extends SetOperation {
 
-	public Union () {
 
+	@Override
+	protected FiniteSet getFiniteAnswer() {
+		Set<Element> elements = new TreeSet<Element>();
+		for (AbstractSet set : myOperands) {
+			for (Element e : set.getSet()) {
+				elements.add(e);
+			}
+		}
+		return new FiniteSet(getDescription(), elements);
 	}
 
 	@Override
-	public AbstractSet evaluate() {
+	protected InfiniteSet getInfiniteAnswer() {
 		// TODO Auto-generated method stub
-
-		if (myOperands.get(0).isFinite() && myOperands.get(0).isFinite()){
-			CustomFiniteSet answer = new CustomFiniteSet();
-			for (int i = 0; i < myOperands.size(); i++) {
-				for (Element e : myOperands.get(i).getSet()) {
-					answer.add(e);
-				}
-			}
-			answer.setName(getDescription());
-			return answer;
-		}
-		
-		
 		return null;
 	}
 

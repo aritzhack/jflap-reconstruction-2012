@@ -1,6 +1,6 @@
 package model.sets.elements;
 
-public class Element implements Comparable {
+public class Element implements Comparable<Element> {
 
 	private String myValue;
 	
@@ -38,10 +38,10 @@ public class Element implements Comparable {
 	
 	
 	@Override
-	public int compareTo(Object arg0) {
-		Element other = (Element) arg0;
+	public int compareTo(Element other) {
 		if (myValue.length() != other.myValue.length())
 			return myValue.length() - other.myValue.length();
-		return myValue.compareTo(((Element) arg0).myValue);
+		return myValue.compareTo(other.myValue);
 	}
+
 }

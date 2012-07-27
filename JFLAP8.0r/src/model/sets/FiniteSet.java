@@ -1,15 +1,96 @@
 package model.sets;
 
+import java.util.ArrayList;
+import java.util.Set;
 
-public abstract class FiniteSet extends AbstractSet {
+import model.sets.elements.Element;
+
+public class FiniteSet extends AbstractSet {
+
+	private String myName;
+	private String myDescription;
+	private Set<Element> myElements;
+
+	/**
+	 * Creates a new finite set with the specified name, description, and elements
+	 * @param name
+	 * @param description
+	 * @param elements
+	 */
+	public FiniteSet(String name, String description, Set<Element> elements) {
+		myName = name;
+		myDescription = description;
+		myElements = elements;
+	}
+
+	/**
+	 * Creates a new finite set with the specified name and elements
+	 * 
+	 * If no description is provided, the description field will be initialized
+	 * to an empty string by default
+	 * @param name
+	 * @param elements
+	 */
+	public FiniteSet (String name, Set<Element> elements) {
+		this(name, "", elements);
+	}
 
 	
+	public int getCardinality() {
+		return myElements.size();
+	}
+
+	
+	public Set<Element> getSet() {
+		return myElements;
+	}
+
+	
+	public boolean contains(Element e) {
+		return myElements.contains(e);
+	}
+
+	
+	public String getName() {
+		return myName;
+	}
+
+	
+	public String getDescription() {
+		return myDescription;
+	}
+
+
+	public String getSetAsString() {
+		StringBuilder s = new StringBuilder();
+		ArrayList<Element> list = new ArrayList<Element>(myElements);
+		for (int i = 0; i < myElements.size() - 1; i++) {
+			s.append(list.get(i).toString() + ", ");
+		}
+		s.append(list.get(list.size()-1));
+
+		return s.toString();
+	}
+
 	@Override
-	public boolean isFinite () {
+	public FiniteSet copy() {
+		return new FiniteSet(this.getName(), 
+				this.getDescription(),
+				this.getSet());
+	}
+
+	@Override
+	public final boolean isFinite() {
 		return true;
 	}
-	
-	public abstract int getCardinality ();
-	
-	
+
+	@Override
+	public void setName(String name) {
+		myName = name;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		myDescription = description;
+	}
 }

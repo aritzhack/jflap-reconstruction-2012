@@ -1,11 +1,19 @@
 package model.sets.num;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.sets.AbstractSet;
 import model.sets.elements.Element;
 
 public class CongruenceSet extends PredefinedNumberSet {
+	
+	private Set<Element> myElements;
+	private int myOriginalStart;
+	
+	private int myWrappedStart;
+	private int myModulus;
+	private int myIndex;
 	
 	/**
 	 * Constructor for all numbers i such that i mod modulus = startValue mod modulus
@@ -15,10 +23,24 @@ public class CongruenceSet extends PredefinedNumberSet {
 	 * @param startValue
 	 *            first value in the set
 	 */
-	public CongruenceSet (int modulus, int start) {
+	public CongruenceSet (int start, int modulus) {
+		myElements = new TreeSet<Element>();
+		myOriginalStart = start;
 		
+		myIndex = 0;
+		myModulus = modulus;
+		myWrappedStart = wrap(start);
+		
+		generateMore(DEFAULT_NUMBER_TO_GENERATE);
 	}
 	
+	private int wrap(int num) {
+		while (num >= myModulus) {
+			num -= myModulus;
+		}
+		return num;
+	}
+
 
 	@Override
 	public AbstractSet getNumbersInRange(int min, int max) {
@@ -33,38 +55,42 @@ public class CongruenceSet extends PredefinedNumberSet {
 	}
 
 	@Override
-	public void generateMore() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public Set<Element> getSet() {
-		// TODO Auto-generated method stub
-		return null;
+		return myElements;
 	}
 
 	@Override
 	public String getName() {
-		return "Congruence Set";
+		return "Congruence Set of " + myOriginalStart + " mod " + myModulus;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return myDescription;
 	}
 
 	@Override
 	public boolean contains(Element e) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			int n = Integer.parseInt(e.getValue());
+			return (myOriginalStart - n) % myModulus == 0;
+		} catch (NumberFormatException arg0) {
+			return false;
+		}
 	}
 
 	@Override
-	public String getSetAsString() {
-		// TODO Auto-generated method stub
-		return null;
+	public Object copy() {
+		return new CongruenceSet(myOriginalStart, myModulus);
 	}
+
+	@Override
+	protected Element getNext() {
+		int next = myModulus * myIndex + myWrappedStart;
+		myIndex++;
+		return new Element(next);
+	}
+	
+
 
 }
