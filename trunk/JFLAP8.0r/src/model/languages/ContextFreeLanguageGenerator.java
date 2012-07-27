@@ -10,8 +10,6 @@ package model.languages;
 
 import java.util.*;
 
-import debug.JFLAPDebug;
-
 import model.algorithms.testinput.parse.*;
 import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.algorithms.transform.grammar.CNFConverter;
@@ -19,8 +17,6 @@ import model.grammar.*;
 import model.symbols.*;
 
 public class ContextFreeLanguageGenerator extends LanguageGenerator {
-
-	private int LARGE_NUMBER = 100000;
 	private Grammar CNFGrammar;
 	private Parser myParser;
 	private Set<SymbolString> myPossibleStrings;

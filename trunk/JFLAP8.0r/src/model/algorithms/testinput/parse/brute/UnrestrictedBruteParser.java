@@ -243,8 +243,12 @@ public class UnrestrictedBruteParser extends Parser {
 	public boolean isPossibleSententialForm(SymbolString sent) {
 		if (mySententialsSeen.contains(sent))
 			return false;
-		int min = minimumLength(sent.toArray(new Symbol[0]), mySmallerSet);
+		int min = getMinimumLength(sent.toArray(new Symbol[0]));
 		return min <= getInput().size();
+	}
+	
+	public int getMinimumLength(Symbol[] sentential){
+		return minimumLength(sentential, mySmallerSet);
 	}
 
 	/**
@@ -256,7 +260,7 @@ public class UnrestrictedBruteParser extends Parser {
 	 * @param smaller
 	 *            the "smaller" set, as returned by {@link #smallerSymbols}
 	 */
-	public int minimumLength(Symbol[] right, Set<Symbol> smaller) {
+	private int minimumLength(Symbol[] right, Set<Symbol> smaller) {
 		int length = 0;
 		for (Symbol s : right)
 			if (!smaller.contains(s))
