@@ -19,6 +19,8 @@ import model.symbols.SymbolString;
 
 public abstract class LanguageGenerator {
 
+	public static int LARGE_NUMBER = 100000;
+	
 	private Grammar myGrammar;
 	private Set<SymbolString> myStringsInLanguage;
 	private int myNumberToGenerate;

@@ -1,7 +1,6 @@
 package model.languages;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -104,8 +103,41 @@ public class BruteLanguageGenerator extends LanguageGenerator {
 
 	@Override
 	public void generateStringsOfLength(int length) {
-		// TODO: ???
-		return;
-	}
+		setNumberToGenerate(LARGE_NUMBER);
+		
+		for (Production p : getGrammar().getStartProductions()) {
+			Derivation d = new Derivation(p);
+			myDerivationQueue.add(d);
 
+			SymbolString sentential = d.createResult();
+			if (sentential.getSymbolsOfClass(Variable.class).size() == 0
+					&& length == sentential.size()) {
+				mySententialsSeen.add(sentential);
+				addStringToLanguage(sentential);
+			}
+		}
+
+		while (getStringsInLanguage().size() < getNumberToGenerate()
+				&& !myDerivationQueue.isEmpty()) {
+			makeNextReplacement();
+			makeLengthAdjustments(length);
+		}
+	}
+	
+	private void makeLengthAdjustments(int length){
+		for(SymbolString string : getStringsInLanguage()){
+			if(string.size() != length)
+				getStringsInLanguage().remove(string);
+		}
+		UnrestrictedBruteParser parser = new UnrestrictedBruteParser(getGrammar());
+		Queue<Derivation> newQueue = new LinkedList<Derivation>();
+		
+		for(Derivation d : myDerivationQueue){
+			SymbolString sentential = d.createResult();
+			if(parser.getMinimumLength(sentential.toArray(new Symbol[0])) <= length)
+				newQueue.add(d);
+		}
+		myDerivationQueue.clear();
+		myDerivationQueue.addAll(newQueue);
+	}
 }

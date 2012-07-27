@@ -107,6 +107,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		int newRow = getRowFromParser(row, column);
 
 		parser.autofillCell(newRow, newColumn);
+		dehighlightHeaders();
 		setCellColor(row, column, Color.WHITE);
 	}
 
