@@ -40,31 +40,8 @@ public class OptionsMenu extends MagnifiablePanel {
 				panel.setLayout(new BorderLayout());
 				panel.add(source, BorderLayout.CENTER);
 				FinishConstructionAction action = new FinishConstructionAction(myKeeper, state);
-				panel.add(new MagnifiableButton(action, JFLAPPreferences.getDefaultTextSize()));
+				panel.add(new MagnifiableButton(action, JFLAPPreferences.getDefaultTextSize()), BorderLayout.SOUTH);
 				myContainer.createRequestPanel(panel);
-				try {
-					AbstractSet set = source.getSelectedSet();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				myContainer.createCentralPanel(state);
 			}
 
 		});

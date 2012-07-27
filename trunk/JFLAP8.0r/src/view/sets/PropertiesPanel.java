@@ -113,7 +113,8 @@ public class PropertiesPanel extends MagnifiablePanel {
 				}
 
 				private void updateAnswer() {
-					String element = myInputTextField.getText();
+					String element = myInputTextField.getText().trim();
+					element.replaceAll("\\s+", " ");
 					boolean contains = mySet.contains(new Element(element));
 					myAnswerTextField.setText(Boolean.toString(contains));
 				}
@@ -123,18 +124,4 @@ public class PropertiesPanel extends MagnifiablePanel {
 		}
 	}
 	
-	public static void main (String[] args) {
-		JFrame frame = new JFrame("Test");
-		frame.add(new PropertiesPanel(new MultiplesSet(7)));
-		
-//		Set<Element> nums = new TreeSet<Element>();
-//		nums.add(new Element(5));
-//		nums.add(new Element(12));
-//		nums.add(new Element(-7));
-//		FiniteSet set = new FiniteSet("Test", "random values", nums);
-//		frame.add(new PropertiesPanel(set));
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
 }

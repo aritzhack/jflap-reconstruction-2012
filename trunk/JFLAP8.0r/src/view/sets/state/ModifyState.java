@@ -117,7 +117,7 @@ public class ModifyState extends State {
 			myDescriptionTextField.setText(mySet.getDescription());
 			myElementsTextField.setText(mySet.getSetAsString());
 			add(new PropertiesPanel(mySet), BorderLayout.SOUTH);
-			setFieldsEditable(false);
+			setFieldsEditable(true);
 		
 		}
 	}

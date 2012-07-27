@@ -14,6 +14,7 @@ import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.action.sets.FinishConstructionAction;
 import view.sets.state.State;
+import debug.JFLAPDebug;
 
 @SuppressWarnings("serial")
 public class SetsEditingPanel extends EditingPanel {
@@ -47,7 +48,7 @@ public class SetsEditingPanel extends EditingPanel {
 	public void createCentralPanel(State state) {
 		myState = state;
 		myOptionsMenu.setVisible(false);
-		
+		myCentralPanel.removeAll();
 		myCentralPanel.add(myState.createDefinitionView(), BorderLayout.CENTER);
 		myCentralPanel.add(new MagnifiableButton(
 				new FinishConstructionAction(myKeeper, state), 
@@ -63,8 +64,10 @@ public class SetsEditingPanel extends EditingPanel {
 
 	
 	public void createRequestPanel(JComponent comp) {
+		myCentralPanel.removeAll();
 		myCentralPanel.add(comp);
-		this.repaint();
+		myCentralPanel.repaint();
+		JFLAPDebug.print("Select");
 	}
 	
 }
