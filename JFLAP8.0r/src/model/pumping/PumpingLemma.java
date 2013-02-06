@@ -22,6 +22,7 @@ package model.pumping;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -98,17 +99,17 @@ public abstract class PumpingLemma implements Serializable
     /**
      * All the possible cases. Cases should not be removed from this list.
      */
-    protected ArrayList myAllCases;
+    protected ArrayList<Case> myAllCases;
     /**
      * Cases that the user has already done. Cases should not be removed from
      * <code>myAllCases</code> to add to this, they should just be added.
      */
-    protected ArrayList myDoneCases;
+    protected ArrayList<Case> myDoneCases;
     /**
      * Stores all the decompositions and <i>i</i> values the user has already attempted 
      * in separate int[] entries.
      */
-    protected ArrayList myAttempts;
+    protected ArrayList<String> myAttempts;
     /**
      * A suggested range for <i>m</i>.
      */
@@ -124,9 +125,9 @@ public abstract class PumpingLemma implements Serializable
      */
     public PumpingLemma()
     {
-        myDoneCases = new ArrayList();
-        myAllCases = new ArrayList();
-        myAttempts = new ArrayList();
+        myDoneCases = new ArrayList<Case>();
+        myAllCases = new ArrayList<Case>();
+        myAttempts = new ArrayList<String>();
         setRange();
         setDescription();
         reset();
@@ -209,7 +210,7 @@ public abstract class PumpingLemma implements Serializable
      * 
      * @return the current list of attempts
      */
-    public ArrayList getAttempts()
+    public List<String> getAttempts()
     {
     	return myAttempts;
     }
@@ -487,9 +488,9 @@ public abstract class PumpingLemma implements Serializable
      * 
      * @return descriptions of each case
      */
-    public ArrayList getDoneDescriptions()
+    public ArrayList<String> getDoneDescriptions()
     {
-        ArrayList ret = new ArrayList();
+        ArrayList<String> ret = new ArrayList<String>();
         for(int i = 0; i < myDoneCases.size(); i++)
             ret.add(myDoneCases.get(i).toString());
         return ret;
@@ -532,7 +533,7 @@ public abstract class PumpingLemma implements Serializable
      * 
      * @return the list of done <code>Case</code>s
      */
-    public ArrayList getDoneCases()
+    public ArrayList<Case> getDoneCases()
     {
         return myDoneCases;
     }

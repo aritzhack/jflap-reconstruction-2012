@@ -67,27 +67,7 @@ public abstract class Case
      * of this case, <code>false</code> otherwise
      */
     public abstract boolean isCase(String v, String y);
-    
-    
-    /**
-     * Given a <i>w</i> value, returns in an int[] the dividers separating
-     * u, v, x, y, & z
-     * Used by the computer when it goes first. 
-     *
-    public int[] chooseDecompositionOfCase(String s) 
-    {
-    	int size = s.length();
-    	for (int w=0; w<s.length(); w++)
-    		for (int x=w; x<s.length(); x++)
-    			for (int y=x; y<s.length(); y++)
-    				for (int z=y; z<s.length(); z++)
-    					if (isCase(s.substring(w, x), s.substring(y, z)))
-    						return new int[] {size - w - x - y - z,
-    										  size - x - y - z,
-    										  size - y - z,
-    										  size - z}; 
-    	return null; //shouldn't happen
-    }*/
+   
     
     /**
      * Returns a short description of this case.

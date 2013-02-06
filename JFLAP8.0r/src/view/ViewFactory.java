@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.grammar.Grammar;
-import model.sets.SetsManager;
 import view.grammar.GrammarView;
-import view.sets.SetsView;
+import view.pumping.CFPumpingLemmaChooser;
+import view.pumping.PumpingLemmaChooserPane;
+import view.pumping.RegPumpingLemmaChooser;
+import debug.JFLAPDebug;
 import file.xml.XMLCodec;
+//import view.sets.SetsView;
 
 public class ViewFactory {
 
@@ -18,7 +21,9 @@ public class ViewFactory {
 	static{
 		myClassToComponent = new HashMap<Class, Class<? extends Component>>();
 		myClassToComponent.put(Grammar.class, GrammarView.class);
-		myClassToComponent.put(SetsManager.class, SetsView.class);
+		myClassToComponent.put(CFPumpingLemmaChooser.class, PumpingLemmaChooserPane.class);
+		myClassToComponent.put(RegPumpingLemmaChooser.class, PumpingLemmaChooserPane.class);
+//		myClassToComponent.put(SetsManager.class, SetsView.class);
 
 	}
 	
@@ -29,6 +34,7 @@ public class ViewFactory {
 	public static Component createView(Object decode) {
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
+		JFLAPDebug.print(argClass+" "+viewClass);
 		try {
 			return viewClass.getConstructor(argClass).newInstance(decode);
 		} catch (Exception e) {

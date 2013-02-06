@@ -45,7 +45,7 @@ public class W1VVrW2 extends ContextFreePumpingLemma {
         	   "<i>n<sub>a</sub></i>(<i>w<sub>1</sub></i>) = " +
         	   "<i>n<sub>a</sub></i>(<i>w<sub>2</sub></i>),  " +
         	   "|<i>v</i>| " + GREATER_THAN +" 3,  <i>v</i>, <i>w<sub>1</sub>, " +
-        	   "w<sub>2</sub> " + ELEMENT_OF + " " + AB_STAR;        	    
+        	   "w<sub>2</sub></i> " + ELEMENT_OF + " " + AB_STAR;        	    
     }
     
     public void setDescription()
