@@ -168,7 +168,6 @@ public class JFLAPEnvironment extends JFrame{
 	public void addSelectedComponent(Component component){		
 		addView(component);
 		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount()-1);
-		
 	}
 	
 	private void distributeTabChangedEvent() {
