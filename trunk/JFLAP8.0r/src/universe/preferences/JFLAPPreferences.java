@@ -12,6 +12,25 @@ import javax.swing.JMenu;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.Terminal;
 import model.grammar.Variable;
+import model.lsystem.commands.BeginPolygonCommand;
+import model.lsystem.commands.DecrementColorCommand;
+import model.lsystem.commands.DecrementPColorCommand;
+import model.lsystem.commands.DecrementWidthCommand;
+import model.lsystem.commands.EndPolygonCommand;
+import model.lsystem.commands.ForwardCommand;
+import model.lsystem.commands.DrawCommand;
+import model.lsystem.commands.IncrementColorCommand;
+import model.lsystem.commands.IncrementPColorCommand;
+import model.lsystem.commands.IncrementWidthCommand;
+import model.lsystem.commands.LeftYawCommand;
+import model.lsystem.commands.PitchDownCommand;
+import model.lsystem.commands.PitchUpCommand;
+import model.lsystem.commands.PopCommand;
+import model.lsystem.commands.PushCommand;
+import model.lsystem.commands.RightYawCommand;
+import model.lsystem.commands.LeftRollCommand;
+import model.lsystem.commands.RightRollCommand;
+import model.lsystem.commands.YawCommand;
 import model.regex.EmptySub;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
@@ -125,11 +144,88 @@ public class JFLAPPreferences {
 	public static String getDefaultStateNameBase() {
 		return "q";
 	}
+	
 
 	public static UnionOperator getUnionOperator() {
 		return new UnionOperator("+");
 	}
+	
+	public static BeginPolygonCommand getBeginPolygonCommand(){
+		return new BeginPolygonCommand("{");
+	}
+	
+	public static EndPolygonCommand getEndPolygonCommand(){
+		return new EndPolygonCommand("}");
+	}
+	
+	public static DecrementColorCommand getDColorCommand(){
+		return new DecrementColorCommand("@");
+	}
 
+	public static IncrementColorCommand getIColorCommand(){
+		return new IncrementColorCommand("#");
+	}
+	
+	public static DecrementPColorCommand getDPolyColorCommand(){
+		return new DecrementPColorCommand("@@");
+	}
+	
+	public static IncrementPColorCommand getIPolyColorCommand(){
+		return new IncrementPColorCommand("##");
+	}
+	
+	public static DecrementWidthCommand getDWidthCommand(){
+		return new DecrementWidthCommand("~");
+	}
+	
+	public static IncrementWidthCommand getIWidthCommand(){
+		return new IncrementWidthCommand("!");
+	}
+	
+	public static ForwardCommand getForwardCommand(){
+		return new ForwardCommand("f");
+	}
+	
+	public static DrawCommand getDrawCommand(){
+		return new DrawCommand("g");
+	}
+	
+	public static LeftYawCommand getLeftYawCommand(){
+		return new LeftYawCommand("-");
+	}
+	
+	public static RightYawCommand getRightYawCommand(){
+		return new RightYawCommand("+");
+	}
+	
+	public static PitchDownCommand getPitchDownCommand(){
+		return new PitchDownCommand("&");
+	}
+	
+	public static PitchUpCommand getPitchUpCommand(){
+		return new PitchUpCommand("^");
+	}
+	
+	public static PushCommand getPushCommand(){
+		return new PushCommand("[");
+	}
+	
+	public static PopCommand getPopCommand(){
+		return new PopCommand("]");
+	}
+	
+	public static RightRollCommand getRightRollCommand(){
+		return new RightRollCommand("/");
+	}
+	
+	public static LeftRollCommand getLeftRollCommand(){
+		return new LeftRollCommand("*");
+	}
+	
+	public static YawCommand getYawCommand(){
+		return new YawCommand("%");
+	}
+	
 	public static EmptySub getSubForEmptyString() {
 		return new EmptySub("!");
 	}
