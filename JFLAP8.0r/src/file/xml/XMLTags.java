@@ -25,7 +25,8 @@ public interface XMLTags {
 		FINAL_STATESET_TAG = "final_states",
 		OUTPUT_FUNC_SET = "output_set",
 		OUTPUT_FUNC_TAG = "output_func",
-		FSA_TRANS = "fsa_trans";
+		FSA_TRANS = "fsa_trans",
+		MODE_TAG = "mode";
 	
 	public static final String MOORE_TAG = "moore_machine";
 	public static final String MEALY_TAG = "mealy_machine";

@@ -1,16 +1,10 @@
 package file.xml.formaldef.components.symbols;
 
-import java.util.Arrays;
-
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.DefaultSymbolizer;
+import model.symbols.symbolizer.SimpleSymbolizer;
 import model.symbols.symbolizer.Symbolizer;
-
-import org.w3c.dom.Element;
-
-import debug.JFLAPDebug;
 import file.xml.formaldef.components.SingleNodeTransducer;
 
 public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
@@ -18,7 +12,7 @@ public class SymbolStringTransducer extends SingleNodeTransducer<SymbolString> {
 	private Symbolizer mySymbolizer;
 
 	public SymbolStringTransducer(String tag, Alphabet ... alphs){
-		this(tag, new DefaultSymbolizer(alphs));
+		this(tag, new SimpleSymbolizer(alphs));
 	}
 
 
