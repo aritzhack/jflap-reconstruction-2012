@@ -15,6 +15,14 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 	private SymbolString myPop;
 	private SymbolString myPush;
 
+	public PDATransition(State from, State to) {
+		this(from, to, new SymbolString(),new SymbolString(), new SymbolString());
+	}
+	
+	public PDATransition(State from, State to, Symbol in, Symbol pop, Symbol push) {
+		this(from, to, new SymbolString(in),new SymbolString(pop), new SymbolString(push));
+	}
+	
 	public PDATransition(State from, State to, SymbolString input, SymbolString pop, SymbolString push) {
 		super(from, to, input);
 		setPop(pop);

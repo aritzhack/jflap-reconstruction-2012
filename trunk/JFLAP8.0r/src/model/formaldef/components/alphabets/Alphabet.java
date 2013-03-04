@@ -56,6 +56,7 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 		return null;
 	}
 	
+
 	public boolean equals(Object o){
 		if (!super.equals(o))
 			return false;
@@ -88,14 +89,6 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 		return true;
 	}
 
-
-	public Symbol getByString(String sym) {
-		for (Symbol s: this){
-			if (sym.equals(s.getString()))
-				return s;
-		}
-		return null;
-	}
 
 	public Set<Character> getUniqueCharacters() {
 		Set<Character> chars = new TreeSet<Character>();

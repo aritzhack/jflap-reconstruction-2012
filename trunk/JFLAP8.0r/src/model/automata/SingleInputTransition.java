@@ -51,6 +51,15 @@ public abstract class SingleInputTransition<T extends SingleInputTransition<T>> 
 		super(from, to);
 		myInput = input;
 	}
+	
+	public SingleInputTransition(State from, State to, Symbol s) {
+		this(from, to, new SymbolString(s));
+	}
+	
+	public SingleInputTransition(State from, State to) {
+		this(from,to, new SymbolString());
+	}
+
 
 	public Symbol[] getInput(){
 		return myInput.toArray(new Symbol[0]);

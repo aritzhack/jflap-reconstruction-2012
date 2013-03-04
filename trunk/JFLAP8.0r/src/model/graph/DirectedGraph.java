@@ -6,27 +6,6 @@ import model.automata.State;
 
 public class DirectedGraph<T> extends Graph<T> {
 
-	/** Adds an edge between two vertices.  Overwrites <code>Graph.addEdge()</code>.
-	 * 
-	 * @param from the object from which this edge is pointing.
-	 * @param to the object to which this edge is pointing.
-	 * @return 
-	 */
-	@Override
-	public boolean addEdge(T from, T to) {
-		return adjacent(from).add(to);			
-	}
-	
-	/**Removes an edge between two vertices.  Overwrites <code>Graph.removeEdge()</code>.
-	 * 
-	 * @param from the object from which this edge is pointing.
-	 * @param to the object to which this edge is pointing.
-	 * @return 
-	 */
-	@Override
-	public boolean removeEdge(T from, T to) {
-		return adjacent(from).remove(to);		
-	}
 	
 	/**
 	 * Returns the number of vertices that point from this object.  
@@ -60,5 +39,10 @@ public class DirectedGraph<T> extends Graph<T> {
 			if (hasEdge(v, to) && (!v.equals(to) || !excludeSameVertexEdges))
 				count++;
 		return count;
+	}
+
+	@Override
+	public boolean isDirected() {
+		return true;
 	}
 }

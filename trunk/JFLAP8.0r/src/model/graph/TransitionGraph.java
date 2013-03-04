@@ -24,6 +24,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import model.change.events.AddEvent;
 import model.change.events.AdvancedChangeEvent;
 import model.change.events.RemoveEvent;
 import model.graph.layout.CircleLayoutAlgorithm;
+import model.graph.layout.GEMLayoutAlgorithm;
 import model.graph.layout.SpiralLayoutAlgorithm;
 
 
@@ -67,54 +69,33 @@ import model.graph.layout.SpiralLayoutAlgorithm;
 public class TransitionGraph<T extends Transition<T>> extends DirectedGraph<State> 
 implements ChangeListener {	
 
+	
+
+	private Map<Integer,List<T>> myOrderedTransitions;
 	private Set<Object> mySelected;
 	private Map<T,Point2D> myCenterMap;
-	private Map<State,Map<State,Integer>> myEdgeIDs;
-	private Map<Integer,ControlPoint> myCtrlPoints;
-	private Map<Integer,List<T>> myOrderedTransitions;
-
-
+	private Automaton<T> myAutomaton;
 	public TransitionGraph(Automaton<T> a){
-		this(a, new CircleLayoutAlgorithm());
+		this(a, new GEMLayoutAlgorithm());
 	}
 
-	/**
-	 * Constructs a directed graph using an automaton.
-	 * 
-	 * @param automaton
-	 *            the automaton to build the graph from
-	 */
-	public TransitionGraph(Automaton<T> automaton, LayoutAlgorithm a) {
-		automaton.addListener(this);
+	public TransitionGraph(Automaton<T> a, LayoutAlgorithm alg) {
+		myOrderedTransitions = new HashMap<Integer,List<T>>();
 		mySelected = new TreeSet<Object>();
 		myCenterMap = new TreeMap<T, Point2D>();
-		myEdgeIDs = new TreeMap<State, Map<State,Integer>>();
-		myCtrlPoints = new HashMap<Integer, ControlPoint>();
-		myOrderedTransitions = new HashMap<Integer,List<T>>();
-		for (State s: automaton.getStates())
+		myAutomaton = a;
+		myAutomaton.addListener(this);
+		for (State s: a.getStates())
 			this.addVertex(s, new Point());
-		a.layout(this, new HashSet<State>());
-		for (T t: automaton.getTransitions()){
+		alg.layout(this, new HashSet<State>());
+		for (T t: a.getTransitions()){
 			addTransition(t);
 		}
-		resetControlPoints();
 	}
 
-
-	private void resetControlPoints() {
-		for (State from: myEdgeIDs.keySet()){
-			for (State to: myEdgeIDs.get(from).keySet()){
-				Point2D ctrl = getDefaultControlPoint(from, to);
-				setControlPt(ctrl, from, to);
-			}
-		}
-	}
-
-	@Override @Deprecated
+	@Override
 	public boolean addEdge(State from, State to) {
-		//DO NOT CALL THIS METHOD In TransitionGraph
-		//instead add a transition to the automaton within.
-		return false;
+		return myAutomaton.createAndAddTransiton(from, to);
 	}
 
 	private void removeTransition(T t) {
@@ -140,104 +121,70 @@ implements ChangeListener {
 			super.distributeChanged();
 
 	}
+	
+	public void setControlPt(Point2D ctrl, T trans){
+		setControlPt(ctrl, trans.getFromState(), trans.getToState());
+	}
+
+	@Override
+	public void setControlPt(Point2D ctrl, State from, State to) {
+		super.setControlPt(ctrl, from, to);
+		updateLabelCenters(from,to);
+	}
+	
+	@Override
+	public boolean removeEdge(State from, State to) {
+		myOrderedTransitions.remove(getID(from,to));
+		return super.removeEdge(from, to);
+	}
 
 	private void addTransition(T t) {
 		State from = t.getFromState();
 		State to = t.getToState();
-		if (!this.hasEdge(from, to)){
-			super.addEdge(from, to);
-			initMappings(from, to);
+		if (!this.hasEdge(from, to)) {
+			boolean changed = super.addEdge(from, to);
+			if (changed) myOrderedTransitions.put(getID(from, to), new ArrayList<T>());
 		}
 
 		int edgeID = getID(from, to);
 		List<T> stack = myOrderedTransitions.get(edgeID);
-		double d = (stack.size())*JFLAPConstants.EDITOR_CELL_HEIGHT;
+		stack.add(t);
+
+		updateLabelCenter(t,stack.size()-1,from,to);
+
+
+	}
+	
+	private void updateLabelCenters(State from, State to) {
+		int i = 0;
+		for (T t: myOrderedTransitions.get(getID(from, to))){
+			updateLabelCenter(t,i++,from,to);
+		}
+	}
+	private void updateLabelCenter(T t, int lvl, State from, State to) {
+		double d = -(lvl+1)*JFLAPConstants.EDITOR_CELL_HEIGHT;
 		Point2D ctrl =getControlPt(from, to);
 		Point2D pFrom=this.pointForVertex(from),
 				pTo=this.pointForVertex(to),
 				center=GeometryHelper.getCenterPoint(pFrom,pTo);
 		center = GeometryHelper.getCenterPoint(center, ctrl);
 
-		GeometryHelper.translatePerpendicular(center,d,pFrom,pTo);
+		if (t.isLoop()) GeometryHelper.translate(center,Math.PI/2,d-5);
+		else GeometryHelper.translatePerpendicular(center,d,pFrom,pTo);
 
-		myCenterMap.put(t, center);
-		stack.add(t);
+		myCenterMap.put(t, center);		
+	}
+
+	private void updateLabelCenter(T t) {
+		State from=t.getFromState(), to=t.getToState();
+		int edgeID = getID(from, to);
+		List<T> stack = myOrderedTransitions.get(edgeID);
+		int lvl = stack.indexOf(t);
+		updateLabelCenter(t, lvl, from, to);
 	}
 
 
-	private void initMappings(State from, State to) {
-		Point2D pFrom=this.pointForVertex(from),
-				pTo=this.pointForVertex(to);
-
-		ControlPoint ctrl = getDefaultControlPoint(from,to);
-		
-		//add control points map
-		int newID = getNextEdgeID();
-
-		Map<State,Integer> mapping = myEdgeIDs.get(from);
-		mapping.put(to, newID);
-		myCtrlPoints.put(newID, ctrl);
-		
-		if(from.equals(to)) 
-			GeometryHelper.translatePerpendicular(ctrl,
-					JFLAPConstants.INITAL_LOOP_HEIGHT,pFrom,pTo);
-		//Applies the autobending
-		else if (this.hasEdge(to, from) && !hasBeenBent(to,from)){
-			applyAutoBend(ctrl,pFrom,pTo);
-			applyAutoBend(myCtrlPoints.get(getID(to, from)),pTo,pFrom);
-		}
-
-		JFLAPDebug.print(myEdgeIDs);
-
-		//add transition map
-		myOrderedTransitions.put(newID, new ArrayList<T>());
-	}
-
-
-	private ControlPoint getDefaultControlPoint(State from, State to) {
-		Point2D pFrom=this.pointForVertex(from),
-				pTo=this.pointForVertex(to),
-				center = GeometryHelper.getCenterPoint(pFrom,pTo);
-		JFLAPDebug.print("From: "+pFrom+"\tCenter: "+center+"\tTo: "+pTo);
-		return new ControlPoint(center,pFrom,pTo);
-	}
-
-	private int getNextEdgeID() {
-		int i=0;
-		Set<Integer> used = new HashSet<Integer>();
-		for (Map<State,Integer> map: myEdgeIDs.values()){
-			used.addAll(map.values());
-		}
-		while (used.contains(i)) i++;
-		return i;
-	}
-
-	private int getID(State from, State to){
-		return myEdgeIDs.get(from).get(to);
-	}
-
-	private void applyAutoBend(Point2D ctrl, Point2D pFrom, Point2D pTo) {
-		GeometryHelper.translatePerpendicular(ctrl,
-				JFLAPConstants.AUTO_BEND_HEIGHT,pTo,pFrom);
-
-	}
-
-	private boolean hasBeenBent(State to, State from) {
-		Point2D pFrom=this.pointForVertex(from),
-				pTo=this.pointForVertex(to),
-				ctrl=this.getControlPt(from, to),
-				center=GeometryHelper.getCenterPoint(pFrom,pTo);
-		return !ctrl.equals(center) && !isAutoBent(from,to);
-	}
-
-	private boolean isAutoBent(State from, State to) {
-		Point2D pFrom=this.pointForVertex(from),
-				pTo=this.pointForVertex(to),
-				ctrl=this.getControlPt(from, to),
-				test=GeometryHelper.getCenterPoint(pFrom,pTo);
-		applyAutoBend(test, pFrom, pTo);
-		return test.equals(ctrl);
-	}
+	
 
 	@Override
 	public void stateChanged(ChangeEvent event) {
@@ -260,74 +207,6 @@ implements ChangeListener {
 	}
 
 
-	@Override
-	public boolean addVertex(State vertex, Point2D point) {
-		if (!this.hasVertex(vertex)){
-			myEdgeIDs.put(vertex, new TreeMap<State, Integer>());
-		}
-		return super.addVertex(vertex, point);
-	}
-
-	@Override
-	public boolean removeVertex(State vertex) {
-		for (State to: myEdgeIDs.get(vertex).keySet().toArray(new State[0])){
-			removeEdge(vertex,to);
-		}
-		myEdgeIDs.remove(vertex);
-		for (Entry<State,Map<State,Integer>> e: myEdgeIDs.entrySet().toArray(new Entry[0])){
-			Map<State,Integer> map = e.getValue();
-			if (map.containsKey(vertex))
-				removeEdge(e.getKey(), vertex);
-
-		}
-
-		return super.removeVertex(vertex);
-	}
-
-	@Override
-	public boolean removeEdge(State from, State to) {
-		int edgeID = getID(from, to);
-		myOrderedTransitions.remove(edgeID);
-		myCtrlPoints.remove(edgeID);
-		if (hasEdge(to, from) && isAutoBent(to, from)){
-			//undoes the AutoBend
-			GeometryHelper.translatePerpendicular(getControlPt(to,from),
-					JFLAPConstants.AUTO_BEND_HEIGHT,pointForVertex(to),pointForVertex(from));
-		}
-		myEdgeIDs.get(from).remove(to);
-		return super.removeEdge(from, to);
-	}
-
-
-	@Override
-	public void moveVertex(State vertex, Point2D point) {
-		super.moveVertex(vertex, point);
-		for (int id: myEdgeIDs.get(vertex).values()){
-			myCtrlPoints.get(id).setFrom(point.getX(), point.getY());
-		}
-		for (Map<State,Integer> map: myEdgeIDs.values()){
-			if (map.containsKey(vertex)){
-				int id=map.get(vertex);
-				myCtrlPoints.get(id).setTo(point.getX(), point.getY());
-			}
-		}
-	}
-
-	public Point2D getControlPt(State from, State to) {
-		int edgeID = getID(from, to);
-		return myCtrlPoints.get(edgeID).toBasicPoint();
-	}
-
-
-	public void setControlPt(Point2D ctrl, T trans){
-		setControlPt(ctrl, trans.getFromState(), trans.getToState());
-	}
-
-	public void setControlPt(Point2D ctrl, State from, State to) {
-		int id = getID(from, to);
-		myCtrlPoints.get(id).setTo(ctrl.getX(), ctrl.getY());
-	}
-
 	public boolean setSelected(Object o, boolean select){
 		return select ? mySelected.add(o) : mySelected.remove(o);
 	}
@@ -338,6 +217,10 @@ implements ChangeListener {
 
 	public Point2D getLabelCenter(T t){
 		return myCenterMap.get(t);
+	}
+
+	public void clearSelection() {
+		mySelected.clear();
 	}
 
 }

@@ -38,6 +38,8 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	 */
 	private HashSet<Transition<E>> myConvertedTransitions;
 
+	private boolean addedStart;
+
 	
 	
 	public AutomatonToGrammarConversion(T automaton) throws AlgorithmException{
@@ -113,10 +115,11 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 		
 		if (added && isStartMapping(mapping)){
 //			System.out.println("|" + myConvertedGrammar.getStartVariable().getString() + "|");
-			if(getConvertedGrammar().getStartVariable() != null)
+			if(addedStart=false)
 				throw new AlgorithmException("A Start Variable mapping has already been added " +
 						"to the Converted grammar.");
 			getConvertedGrammar().setStartVariable(var);
+			addedStart=true;
 		}
 		
 		return new BooleanWrapper (added, 
@@ -127,6 +130,7 @@ public abstract class AutomatonToGrammarConversion<T extends Automaton<E>,
 	public boolean reset() throws AlgorithmException{
 		myMappedVariables = new HashMap<S, Variable>();
 		myConvertedTransitions = new HashSet<Transition<E>>();
+		addedStart=false;
 		return super.reset();
 	}
 

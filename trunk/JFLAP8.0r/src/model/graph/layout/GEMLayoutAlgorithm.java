@@ -23,11 +23,14 @@ package model.graph.layout;
 import java.awt.geom.Point2D;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import debug.JFLAPDebug;
 
 import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
@@ -124,7 +127,6 @@ public class GEMLayoutAlgorithm extends LayoutAlgorithm {
 			Object vertex = vertices.remove(index);
 			Record record = (Record) records.get(vertex);
 			Point2D point = graph.pointForVertex(vertex);
-
 			// Compute the impulse of V.
 			double Theta = graph.degree(vertex);
 			Theta *= 1.0 + Theta / 2.0;

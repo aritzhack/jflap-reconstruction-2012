@@ -24,9 +24,7 @@ public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {
 
 	private BooleanWrapper checkExternalGrouping(String string) {
 		
-		boolean correct = string.length() > 2 && 
-							string.indexOf(this.getOpenGroup()) == 0 && 
-							string.indexOf(this.getCloseGroup()) == string.length()-1;
+		boolean correct = checkExternalGrouping(string,this.getGroupingPair());
 		
 			return new BooleanWrapper(correct, "The Variable " + string + 
 												" does not contain the necessary "+ 
@@ -80,5 +78,9 @@ public class VariableGroupingRule extends GroupingRule<VariableAlphabet> {
 		return "Variable Grouping Rule";
 	}
 
+	
+	public static boolean checkExternalGrouping(String string, GroupingPair gp){
+		return string.length() > 2 && gp.isGrouped(string);
+	}
 
 }

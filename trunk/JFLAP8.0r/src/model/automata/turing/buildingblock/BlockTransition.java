@@ -24,6 +24,10 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 		this(from,to,new SymbolString(input));
 	}
 
+	public BlockTransition(Block from, Block to) {
+		this(from,to,new SymbolString());
+	}
+	
 	@Override
 	public String getDescriptionName() {
 		return "Building Block Transition";

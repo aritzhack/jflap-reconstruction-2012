@@ -2,6 +2,7 @@ package model.automata.transducers.moore;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
+import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.fsa.FSATransition;
@@ -18,7 +19,7 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 							OutputAlphabet outputAlph,
 							TransitionSet<FSATransition> functions,
 							StartState start,
-							OutputFunctionSet outputFunctions) {
+							OutputFunctionSet<MooreOutputFunction> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 	
@@ -28,7 +29,7 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 				new OutputAlphabet(),
 				new TransitionSet<FSATransition>(),
 				new StartState(),
-				new OutputFunctionSet());
+				new OutputFunctionSet<MooreOutputFunction>());
 	}
 
 	@Override
@@ -40,6 +41,7 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 	public String getDescription() {
 		return null;
 	}
+
 
 
 }

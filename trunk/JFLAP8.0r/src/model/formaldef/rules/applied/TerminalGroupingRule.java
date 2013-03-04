@@ -38,7 +38,12 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 	}
 
 	private boolean containsGrouping(Symbol newSymbol) {
-		return newSymbol.containsCharacters(this.getOpenGroup(), this.getCloseGroup());
+		return containsGrouping(newSymbol.getString(), getGroupingPair());
+	}
+
+	public static boolean containsGrouping(String string, GroupingPair gp) {
+		return string.contains(gp.getOpenGroup().toString()) ||	
+				string.contains(gp.getCloseGroup().toString());
 	}
 
 

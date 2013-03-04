@@ -20,15 +20,26 @@
 
 package model.graph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Map.Entry;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.event.ChangeEvent;
+
+import debug.JFLAPDebug;
+
+import util.JFLAPConstants;
+import util.arrows.GeometryHelper;
 
 import model.change.ChangingObject;
 
@@ -40,11 +51,101 @@ import model.change.ChangingObject;
  * @author Thomas Finley
  */
 
-public class Graph<T> extends ChangingObject{
-	/** Creates a new empty graph structure. */
-	public Graph() {
-
+public abstract class Graph<T> extends ChangingObject {
+	
+	private int getNextEdgeID() {
+		int i=0;
+		Set<Integer> used = new HashSet<Integer>();
+		for (Map<T,Integer> map: myEdgeIDs.values()){
+			used.addAll(map.values());
+		}
+		while (used.contains(i)) i++;
+		return i;
 	}
+
+	protected int getID(T from, T to){
+		return myEdgeIDs.get(from).get(to);
+	}
+
+	
+	public ControlPoint getControlPt(T from, T to) {
+		int edgeID = getID(from, to);
+		return myCtrlPoints.get(edgeID);
+	}
+
+	public void setControlPt(Point2D ctrl, T from, T to) {
+		int id = getID(from, to);
+		myCtrlPoints.get(id).setTo(ctrl.getX(), ctrl.getY());
+	}
+
+	
+	private void applyAutoBend(Point2D ctrl, Point2D pFrom, Point2D pTo) {
+		GeometryHelper.translatePerpendicular(ctrl,
+				-JFLAPConstants.AUTO_BEND_HEIGHT,pFrom,pTo);
+	}
+	
+	private void undoAutoBend(T from, T to){
+		GeometryHelper.translatePerpendicular(getControlPt(from,to),
+				JFLAPConstants.AUTO_BEND_HEIGHT,pointForVertex(to),pointForVertex(from));
+	}
+
+	private boolean hasBeenBent(T to, T from) {
+		Point2D pFrom=this.pointForVertex(from),
+				pTo=this.pointForVertex(to),
+				ctrl=this.getControlPt(from, to),
+				center=GeometryHelper.getCenterPoint(pFrom,pTo);
+		return !ctrl.equals(center) && !isAutoBent(from,to);
+	}
+
+	private boolean isAutoBent(T from, T to) {
+		Point2D pFrom=this.pointForVertex(from),
+				pTo=this.pointForVertex(to),
+				ctrl=this.getControlPt(from, to),
+				test=GeometryHelper.getCenterPoint(pFrom,pTo);
+		applyAutoBend(test, pFrom, pTo);
+		return test.equals(ctrl);
+	}
+	
+	private ControlPoint getDefaultControlPoint(T from, T to) {
+		Point2D pFrom=this.pointForVertex(from),
+				pTo=this.pointForVertex(to),
+				center = GeometryHelper.getCenterPoint(pFrom,pTo);
+		ControlPoint ctrl = new ControlPoint(center,pFrom,pTo);
+		if(from.equals(to)){ 
+			GeometryHelper.translate(ctrl,Math.PI/2,
+					-JFLAPConstants.INITAL_LOOP_HEIGHT);
+		}
+		return ctrl;
+	}
+
+
+
+
+	private void resetControlPoints() {
+		for (T from: myEdgeIDs.keySet()){
+			for (T to: myEdgeIDs.get(from).keySet()){
+				Point2D ctrl = getDefaultControlPoint(from, to);
+				setControlPt(ctrl, from, to);
+			}
+		}
+	}
+
+	private Map<T,Map<T,Integer>> myEdgeIDs;
+	private Map<Integer,ControlPoint> myCtrlPoints;
+	/**
+	 * Constructs a directed graph using an automaton.
+	 * 
+	 * @param automaton
+	 *            the automaton to build the graph from
+	 */
+	public Graph() {
+		myEdgeIDs = new TreeMap<T, Map<T,Integer>>();
+		myCtrlPoints = new HashMap<Integer, ControlPoint>();
+	}
+	
+	private Map<T, Point2D> verticesToPoints = new HashMap<T, Point2D>();
+	private Map<T, Set<T>> verticesToNeighbors = new HashMap<T, Set<T>>();
+	
 
 	/** Clears all vertices and edges. */
 	public void clear() {
@@ -64,25 +165,42 @@ public class Graph<T> extends ChangingObject{
 
 	/** Returns the set of vertices a vertex is adjacent to. */
 	public Set<T> adjacent(T vertex) {
-		if (!verticesToNeighbors.containsKey(vertex))
-			verticesToNeighbors.put(vertex, new HashSet<T>());
-		return (Set<T>) verticesToNeighbors.get(vertex);
+		return (Set<T>) myEdgeIDs.get(vertex).keySet();
 	}
 
 	/** Adds an edge between two vertices. */
 	public boolean addEdge(T vertex1, T vertex2) {
-		boolean changed = adjacent(vertex1).add(vertex2) &&
-					adjacent(vertex2).add(vertex1);
-		if (changed) distributeChanged();
-		return changed;
+		Point2D pFrom=this.pointForVertex(vertex1),
+				pTo=this.pointForVertex(vertex2);
+		int newID = getNextEdgeID();
+		
+		//add control point so that autobend can be applied downstream
+		ControlPoint ctrl = getDefaultControlPoint(vertex1,vertex2);
+		myCtrlPoints.put(newID, ctrl);
+		
+
+		myEdgeIDs.get(vertex1).put(vertex2, newID);
+		if (!isDirected()) myEdgeIDs.get(vertex2).put(vertex1, newID);
+		else if (!vertex1.equals(vertex2) && this.hasEdge(vertex2, vertex1) && !hasBeenBent(vertex2,vertex1)){
+			applyAutoBend(ctrl,pFrom,pTo);
+			applyAutoBend(getControlPt(vertex2, vertex1),pTo,pFrom);
+		}
+
+		distributeChanged();
+		return true;
 	}
 
 	/** Removes an edge between two vertices. */
 	public boolean removeEdge(T vertex1, T vertex2) {
-		boolean changed = adjacent(vertex1).remove(vertex2) &&
-				adjacent(vertex2).remove(vertex1);
-		if (changed) distributeChanged();
-		return changed;
+		if (!hasEdge(vertex1, vertex2)) return false;
+		
+		if (!isDirected()) myEdgeIDs.get(vertex2).remove(vertex1);
+		else if (isAutoBent(vertex2, vertex1)) undoAutoBend(vertex1, vertex2);
+		myEdgeIDs.get(vertex1).remove(vertex2);
+		myCtrlPoints.remove(getID(vertex1, vertex2));
+		
+		distributeChanged();
+		return true;
 	}
 
 	/** Returns if an edge exists between two vertices. */
@@ -96,26 +214,50 @@ public class Graph<T> extends ChangingObject{
 	
 	/** Adds a vertex. */
 	public boolean addVertex(T vertex, Point2D point) {
-		boolean changed = verticesToPoints.put(vertex, (Point2D) point.clone()) != null;
-		if (changed) distributeChanged();
-		return changed;
+		if (this.hasVertex(vertex)) return false;
+		myEdgeIDs.put(vertex, new TreeMap<T, Integer>());
+		verticesToPoints.put(vertex, (Point2D) point.clone());
+		distributeChanged();
+		return true;
 	}
 
 	/** Removes a vertex. */
 	public boolean removeVertex(T vertex) {
-		Set<T> others = adjacent(vertex);
-		Iterator<T> it = others.iterator();
-		while (it.hasNext())
-			adjacent(it.next()).remove(vertex);
-		boolean changed = verticesToNeighbors.remove(vertex) != null &&
-				verticesToPoints.remove(vertex) != null;
-		if (changed) distributeChanged();
-		return changed; 
+		if (this.hasVertex(vertex)) return false;
+		
+		for (Object to: myEdgeIDs.get(vertex).keySet().toArray(new Object[0])) 
+			removeEdge(vertex,(T) to);
+		
+		for (Entry<T,Map<T,Integer>> e: myEdgeIDs.entrySet().toArray(new Entry[0])){
+			Map<T,Integer> map = e.getValue();
+			if (map.containsKey(vertex))
+				removeEdge(e.getKey(), vertex);
+	
+		}
+		myEdgeIDs.remove(vertex);
+		verticesToNeighbors.remove(vertex);
+		verticesToPoints.remove(vertex);
+		return true; 
 	}
 
 	/** Moves a vertex to a new point. */
 	public void moveVertex(T vertex, Point2D point) {
-		addVertex(vertex, point);
+		this.pointForVertex(vertex).setLocation(point);
+		ControlPoint ctrl;
+		for (Entry<T,Integer> e: myEdgeIDs.get(vertex).entrySet()){
+			ctrl = myCtrlPoints.get(e.getValue());
+			ctrl.setFrom(point.getX(), point.getY());
+			setControlPt(ctrl.toBasicPoint(), vertex,e.getKey());
+		}
+		for (T from: myEdgeIDs.keySet()){
+			Map<T,Integer> map = myEdgeIDs.get(from);
+			if (map.containsKey(vertex)){
+				int id=map.get(vertex);
+				ctrl = myCtrlPoints.get(id);
+				ctrl.setTo(point.getX(), point.getY());
+				setControlPt(ctrl.toBasicPoint(), from,vertex);
+			}
+		}
 		distributeChanged();
 	}
 
@@ -179,7 +321,6 @@ public class Graph<T> extends ChangingObject{
 		return sb.toString();
 	}
 
-	private Map<T, Point2D> verticesToPoints = new HashMap<T, Point2D>();
-
-	private Map<T, Set<T>> verticesToNeighbors = new HashMap<T, Set<T>>();
+	public abstract boolean isDirected();
+	
 }

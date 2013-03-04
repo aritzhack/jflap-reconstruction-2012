@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import util.UtilFunctions;
 import model.automata.AutomatonException;
 import model.automata.InputAlphabet;
@@ -19,6 +20,13 @@ public class MultiTapeTMTransition extends Transition<MultiTapeTMTransition> {
 	private TuringMachineMove[] myMoves;
 	private Symbol[] myReads;
 
+	public MultiTapeTMTransition(State from, State to){
+		this(from,to,
+				JFLAPPreferences.getTMBlankSymbol(),
+				JFLAPPreferences.getTMBlankSymbol(),
+				TuringMachineMove.RIGHT);
+	}
+	
 	public MultiTapeTMTransition(State from, 
 										State to,
 										Symbol read,

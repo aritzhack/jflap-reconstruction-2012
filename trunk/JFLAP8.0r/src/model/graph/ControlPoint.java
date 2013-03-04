@@ -85,7 +85,6 @@ public class ControlPoint extends java.awt.geom.Point2D {
 		int mul =  isAbove ? 1 : -1;
 	
 		myHeight= mul * Line2D.ptLineDist(fx, fy, tx, ty, myX, myY);
-		JFLAPDebug.print("X: " + myX + "," + "Y: " + myY + "|" + myRatio + ", " + myFrom + " -> " + myTo);
 	}
 
 	private void updateLocation() {
@@ -105,6 +104,7 @@ public class ControlPoint extends java.awt.geom.Point2D {
 		
 		myX = xClose+dx;
 		myY = yClose+dy;
+
 	}
 
 	public Point2D toBasicPoint() {

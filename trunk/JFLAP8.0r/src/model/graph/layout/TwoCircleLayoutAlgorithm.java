@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
+import model.graph.UndirectedGraph;
 
 
 
@@ -269,7 +270,7 @@ public class TwoCircleLayoutAlgorithm extends LayoutAlgorithm {
     	
     	//Point2D.Double center = new Point2D.Double(f.getWidth()/2, f.getHeight()/2);
 		String[] vertices = new String[20];
-		Graph graph = new Graph();
+		Graph graph = new UndirectedGraph();
 		LayoutAlgorithm layout = new RandomLayoutAlgorithm();		
 		for (int i=0; i<vertices.length; i++) {
 			vertices[i] = "V" + i;

@@ -84,10 +84,12 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	@Override
 	public boolean purgeOfSymbols(Alphabet a, Collection<Symbol> s) {
-		if (getAlphabetClass().isAssignableFrom(a.getClass())){
-			if (mySymbol != null && s.contains(mySymbol))
-				this.clear();
 
+		if (getAlphabetClass().isAssignableFrom(a.getClass())){
+			if (mySymbol != null && s.contains(mySymbol)){
+				this.clear();
+				return true;
+			}
 		}
 
 		return false;
@@ -111,6 +113,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 	@Override
 	public boolean applySymbolMod(String from, String to) {
 		if(isPermanent()) return false;
+		if (getSymbol() == null) return false;
 		boolean applies = mySymbol.getString().equals(from) &&
 				!mySymbol.getString().equals(to);
 		if (applies){

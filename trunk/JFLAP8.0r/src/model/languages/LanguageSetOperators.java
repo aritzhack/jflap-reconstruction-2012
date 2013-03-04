@@ -10,7 +10,7 @@ import model.automata.InputAlphabet;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.DefaultSymbolizer;
+import model.symbols.symbolizer.SimpleSymbolizer;
 import model.symbols.symbolizer.Symbolizer;
 
 /**
@@ -160,7 +160,7 @@ public class LanguageSetOperators {
 		for(char i='a';i<='z';i++){
 			alphs.add(new Symbol(i+""));
 		}
-		Symbolizer s = new DefaultSymbolizer(alphs);
+		Symbolizer s = new SimpleSymbolizer(alphs);
 		set.add(s.symbolize("acdc"));
 		set.add(s.symbolize("bccd"));
 		Set<SymbolString> set2 = new TreeSet<SymbolString>();
