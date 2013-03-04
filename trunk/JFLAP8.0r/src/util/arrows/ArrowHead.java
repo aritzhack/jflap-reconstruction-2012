@@ -12,9 +12,9 @@ public class ArrowHead{
 					 myDirection;
 	private Point2D myLocation;
 
-	public ArrowHead(Point location, double direction, double headLength, double headAngle) {
+	public ArrowHead(Point2D pTo, double direction, double headLength, double headAngle) {
 		this(headLength, headAngle);
-		setLocation(location);
+		setLocation(pTo);
 		setDirection(direction);
 	}
 
@@ -39,6 +39,7 @@ public class ArrowHead{
 	}
 	
 	public void draw(Graphics g) {
+		if (myLength<=0) return;
 		drawPiece(g, -myDirection + myArrowAngle);
 		drawPiece(g, -myDirection - myArrowAngle);
 	}

@@ -4,13 +4,11 @@ package test;
  * Test for the ElementsParser class (for user-input when building a new set)
  */
 
-import static org.junit.Assert.assertEquals;
 
 import java.util.TreeSet;
 
-import model.sets.ElementsParser;
+import model.sets.elements.ElementsParser;
 
-import org.junit.Test;
 
 public class SetsParserTest {
 

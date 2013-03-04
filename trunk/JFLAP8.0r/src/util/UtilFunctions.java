@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.formaldef.FormalDefinition;
 import model.grammar.Terminal;
@@ -87,8 +89,22 @@ public class UtilFunctions {
 		return false;
 	}
 	
-	public Class getGenericParam(Object o, int i){
+	public static Class getGenericParam(Object o, int i){
 		return (Class) ((ParameterizedType) o.getClass().getGenericSuperclass()).getActualTypeArguments()[i];
+	}
+
+
+	public static boolean isAllUpperCase(String sym) {
+		for (Character c: sym.toCharArray())
+			if (!Character.isUpperCase(c)) return false;
+		return true;
+	}
+
+
+	public static boolean isAllNonUpperCase(String sym) {
+		for (Character c: sym.toCharArray())
+			if (Character.isUpperCase(c)) return false;
+		return true;
 	}
 	
 }
