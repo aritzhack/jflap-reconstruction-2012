@@ -8,8 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import universe.preferences.JFLAPMode;
 
 import debug.JFLAPDebug;
 
@@ -27,8 +30,18 @@ import file.xml.formaldef.components.alphabet.AlphabetTransducer;
 
 public abstract class FormalDefinitionTransducer<T extends FormalDefinition> extends MetaTransducer<T> {
 
+	@Override
+	public Element appendComponentsToRoot(Document doc, T structure, Element root) {
+		root.setAttribute(MODE_TAG, structure.getMode().toString());
+		return super.appendComponentsToRoot(doc, structure, root);
+	};
 	
-	
+	@Override
+	public T fromStructureRoot(Element root) {
+		T def = super.fromStructureRoot(root);
+		def.setMode(JFLAPMode.getMode(root.getAttribute(MODE_TAG)));
+		return def;
+	}
 	
 
 	@Override
@@ -37,7 +50,6 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 		List<Alphabet> alphs = retrieveAlphabets(list);
 		List<Object> comps = new ArrayList<Object>(alphs);
 		
-		Map<Element, XMLTransducer> tdMap = new HashMap<Element, XMLTransducer>();
 		for (Element e: list){
 			XMLTransducer trans = StructureTransducer.getStructureTransducer(e);
 			if (trans == null)
@@ -91,5 +103,7 @@ public abstract class FormalDefinitionTransducer<T extends FormalDefinition> ext
 		}
 		return null;
 	}
+	
+	
 
 }
