@@ -1,5 +1,6 @@
 package model.automata;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import util.UtilFunctions;
 
 import debug.JFLAPDebug;
 
@@ -165,5 +168,16 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 		}
 		return states;
 	}
+	
+	public T createBlankTransition(State from, State to){
+		try {
+			return (T) UtilFunctions.getGenericParam(this,0).getConstructor(from.getClass(),to.getClass()).newInstance(from,to);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
 
+	}
+
+	
 }

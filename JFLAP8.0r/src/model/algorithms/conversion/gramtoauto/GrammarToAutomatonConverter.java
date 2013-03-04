@@ -92,10 +92,11 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 		return true;
 	}
 	
-	private boolean convertAndAddProduction(Production p) {
+	public boolean convertAndAddProduction(Production p) {
 		S trans = this.convertProduction(p);
 		boolean success = trans != null && 
 				this.getConvertedAutomaton().getTransitions().add(trans);
+		if (success) myConvertedProductions.add(p);
 		return success;
 	}
 
@@ -138,7 +139,6 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 	public abstract boolean doSetup();
 
 	public abstract GrammarType[] getValidTypes();
-	
 	
 	public abstract S convertProduction(Production p);
 	

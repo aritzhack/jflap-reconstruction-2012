@@ -1,7 +1,6 @@
 package model.automata;
 
 import util.UtilFunctions;
-import model.formaldef.components.functionset.function.LanguageFunction;
 
 public abstract class Transition<T extends Transition<T>> extends
 		AutomatonFunction<T> {

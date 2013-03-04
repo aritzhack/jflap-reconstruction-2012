@@ -17,7 +17,7 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 			OutputAlphabet outputAlph,
 			TransitionSet<FSATransition> functions,
 			StartState start,
-			OutputFunctionSet outputFunctions) {
+			OutputFunctionSet<MealyOutputFunction> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 	
@@ -27,7 +27,7 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 				new OutputAlphabet(),
 				new TransitionSet<FSATransition>(),
 				new StartState(),
-				new OutputFunctionSet());
+				new OutputFunctionSet<MealyOutputFunction>());
 	}
 
 	@Override
@@ -41,5 +41,5 @@ public class MealyMachine extends Transducer<MealyOutputFunction> {
 		return null;
 	}
 
-
+	
 }

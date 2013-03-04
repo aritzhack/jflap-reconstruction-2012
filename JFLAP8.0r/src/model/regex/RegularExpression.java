@@ -1,5 +1,6 @@
 package model.regex;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -107,6 +108,11 @@ public class RegularExpression extends FormalDefinition {
 	@Override
 	public void componentChanged(AdvancedChangeEvent event) {
 		super.componentChanged(event);
+	}
+	
+	@Override
+	public Alphabet[] getParsingAlphabets() {
+		return UtilFunctions.combine(super.getAlphabets(),myOperatorAlphabet);
 	}
 
 	//	/**
@@ -306,5 +312,25 @@ public class RegularExpression extends FormalDefinition {
 	public InputAlphabet getLanguageAlphabet() {
 		return getInputAlphabet();
 	}
+
+	@Override
+	public Symbol createSymbol(String sym) {
+		Symbol ret = null;
+		if (sym.length() == 1) 
+			ret = myOperatorAlphabet.getSymbolForString(sym);
+		if (ret == null && noOperators(sym))
+			ret = super.createSymbol(sym);
+		return ret;
+	}
+
+
+	private boolean noOperators(String sym) {
+		for (Symbol s: myOperatorAlphabet){
+			if (sym.contains(s.getString()))
+				return false;
+		}
+		return true;
+	}
+
 
 }

@@ -44,6 +44,7 @@ public class VariableAlphabet extends Alphabet{
 		}
 		return super.addAll(e);
 	}
+	
 
 	@Override
 	public VariableAlphabet copy() {

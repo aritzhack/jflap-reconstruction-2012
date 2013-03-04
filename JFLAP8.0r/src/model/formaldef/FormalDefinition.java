@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
 
+import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 import util.JFLAPConstants;
@@ -45,7 +46,7 @@ JFLAPConstants,
 Copyable{
 
 	private LinkedList<FormalDefinitionComponent> myComponents;
-
+	private JFLAPMode myMode;
 
 	public FormalDefinition(FormalDefinitionComponent ... comps) {
 		myComponents = new LinkedList<FormalDefinitionComponent>();
@@ -270,5 +271,32 @@ Copyable{
 		}
 		return changed;
 	}
+
+	public JFLAPMode getMode() {
+		if (myMode == null)
+			myMode=JFLAPMode.intuitMode(this);
+		return myMode;
+	}
+
+	public void setMode(JFLAPMode myMode) {
+		this.myMode = myMode;
+	}
+	
+	public boolean usingGrouping(){
+		return false;
+	}
+	
+	public Symbol createSymbol(String sym) {
+		return new Symbol(sym);
+	}
+	
+	public boolean isValidSymbol(String sym){
+		return createSymbol(sym) != null;
+	}
+
+	public Alphabet[] getParsingAlphabets() {
+		return getAlphabets();
+	}
+
 
 }

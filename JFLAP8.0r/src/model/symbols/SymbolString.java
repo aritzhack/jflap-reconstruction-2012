@@ -137,10 +137,8 @@ Settable<SymbolString>{
 	public String toString(){
 		if (this.isEmpty()) 
 			return JFLAPPreferences.getEmptyStringSymbol();
-		else if(JFLAPPreferences.isCustomMode())
-			return UtilFunctions.createDelimitedString(this, 
-					JFLAPPreferences.getSymbolStringDelimiter());
-		return  UtilFunctions.createDelimitedString(this, "");
+		return UtilFunctions.createDelimitedString(this, 
+				JFLAPPreferences.getSymbolStringDelimiter());
 	}
 
 	public boolean equals(Object o){
@@ -290,7 +288,7 @@ Settable<SymbolString>{
 	}
 
 	public static boolean isVariable(String s) {
-		GroupingPair pair = JFLAPPreferences.getVariableGrouping();
+		GroupingPair pair = JFLAPPreferences.getDefaultGrouping();
 		return pair.isGrouped(s);
 	}
 

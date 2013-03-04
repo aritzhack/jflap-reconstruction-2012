@@ -7,7 +7,9 @@ import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 
+import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
+import util.UtilFunctions;
 
 import debug.JFLAPDebug;
 
@@ -93,9 +95,25 @@ public class Grammar extends FormalDefinition{
 	}
 
 	public void setVariableGrouping(GroupingPair gp) {
-		clearGroupingPairRules();
+		clearVariableGrouping();
 		addGroupingPairRules(gp);
+		super.setMode(JFLAPMode.CUSTOM);
 		myGrouping = gp;
+	}
+	
+	public void clearVariableGrouping() {
+		clearGroupingPairRules();
+		myGrouping = null;
+	}
+	
+	@Override
+	public void setMode(JFLAPMode mode) {
+		if (!usingGrouping() && mode==JFLAPMode.CUSTOM)
+			this.setVariableGrouping(JFLAPPreferences.getDefaultGrouping());
+		else {
+			this.clearVariableGrouping();
+			super.setMode(mode);
+		}
 	}
 	
 	/**
@@ -116,10 +134,12 @@ public class Grammar extends FormalDefinition{
 	 * @return
 	 */
 	public Character getCloseGroup(){
-		if (myGrouping != null)
+		if (this.usingGrouping())
 			return myGrouping.getCloseGroup();
 		return null;
 	}
+	
+
 	
 	/**
 	 * Retrieves the {@link VariableAlphabet} of this grammar
@@ -190,8 +210,9 @@ public class Grammar extends FormalDefinition{
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean usingGrouping() {
-		return this.getVariables().getRuleOfClass(GroupingRule.class) != null;
+		return (myGrouping != null);
 	}
 
 	public boolean isType(GrammarType type) {
@@ -249,8 +270,30 @@ public class Grammar extends FormalDefinition{
 		if (event.comesFrom(VariableAlphabet.class) && 
 				this.getStartVariable()==null &&
 				event.getType() == ITEM_ADDED)
-			this.setStartVariable(((TreeSet<Variable>) event.getArg(0)).first());
+			this.setStartVariable(((ArrayList<Variable>) event.getArg(0)).get(0));
 		super.componentChanged(event);
+	}
+
+	@Override
+	public Symbol createSymbol(String sym) {
+		
+		JFLAPMode mode = getMode();
+		switch(mode){
+		case CUSTOM:
+			if (VariableGroupingRule.checkExternalGrouping(sym, myGrouping) &&
+					!TerminalGroupingRule.containsGrouping(sym.substring(1,sym.length()-1), myGrouping))
+				return new Variable(sym);
+			else if (!TerminalGroupingRule.containsGrouping(sym, myGrouping))
+				return new Terminal(sym);
+			else return null;
+			
+		case DEFAULT: if (sym.length()>1) return null;
+		case MULTI_CHAR_DEFAULT: //do nothing
+		default:
+			if (UtilFunctions.isAllUpperCase(sym)) return new Variable(sym);
+			if (UtilFunctions.isAllNonUpperCase(sym)) return new Terminal(sym);
+			return null;
+		}
 	}	
 
 }

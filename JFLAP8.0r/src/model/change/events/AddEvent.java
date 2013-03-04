@@ -1,5 +1,6 @@
 package model.change.events;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -13,7 +14,7 @@ public class AddEvent<T extends SetSubComponent<T>> extends AdvancedUndoableEven
 	}
 	
 	public AddEvent(SetComponent<T> source, Collection<? extends T> c) {
-		super(source, ITEM_ADDED, c);
+		super(source, ITEM_ADDED, new ArrayList<T>(c));
 	}
 
 	@Override

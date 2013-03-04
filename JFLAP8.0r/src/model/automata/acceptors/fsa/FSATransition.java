@@ -22,11 +22,11 @@ public class FSATransition extends SingleInputTransition<FSATransition> {
 
 	
 	public FSATransition(State from, State to) {
-		this(from, to, new SymbolString());
+		super(from,to);
 	}
 
 	public FSATransition(State from, State to, Symbol s) {
-		this(from, to, new SymbolString(s));
+		super(from, to, s);
 	}
 
 	@Override

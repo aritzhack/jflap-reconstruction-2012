@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.AlgorithmException;
 import model.algorithms.steppable.AlgorithmStep;
 import model.automata.Automaton;
@@ -57,7 +59,6 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 	public FSATransition convertProduction(Production p) {
 		Variable lhsVar = (Variable) p.getLHS()[0];
 		Symbol[] rhs = p.getRHS();
-		
 		State from = this.getStateForVariable(lhsVar),
 				to;
 		
@@ -86,6 +87,7 @@ public class RGtoFSAConverter extends GrammarToAutomatonConverter<FiniteStateAcc
 			if (s.getName().equals(createStateString(first)))
 				return s;
 		}
+		JFLAPDebug.print(first);
 		return null;
 	}
 

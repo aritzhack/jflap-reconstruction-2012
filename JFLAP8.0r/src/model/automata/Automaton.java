@@ -4,6 +4,8 @@ import java.io.ObjectInputStream.GetField;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.sql.rowset.spi.TransactionalWriter;
+
 import debug.JFLAPDebug;
 
 import model.change.events.AdvancedChangeEvent;
@@ -68,6 +70,15 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 		super.componentChanged(event);
 	}
 
+	public boolean createAndAddTransiton(State from, State to){
+		StateSet states = this.getStates();
+		TransitionSet<T> transitions = this.getTransitions();
+		
+		if (!(states.contains(from)&&states.contains(to))) return false;
+		T newTrans = transitions.createBlankTransition(from, to);
+		return transitions.add(newTrans);
+	}
+	
 
 	@Override
 	public InputAlphabet getLanguageAlphabet() {
