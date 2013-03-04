@@ -1,17 +1,25 @@
 package view.graph;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.awt.geom.QuadCurve2D;
+
+import util.JFLAPConstants;
+import util.arrows.ArrowHead;
+import util.arrows.CurvedArrow;
+import util.arrows.GeometryHelper;
 
 import debug.JFLAPDebug;
 
 import model.graph.Graph;
 
-public class GraphDrawer<T> {
+public class GraphDrawer<T> implements JFLAPConstants {
 
 	private VertexDrawer<T> myVertexDrawer;
 
+	
 	public GraphDrawer(VertexDrawer<T> vDraw){
 		myVertexDrawer = vDraw;
 	}
@@ -34,20 +42,47 @@ public class GraphDrawer<T> {
 
 	public void drawEdges(Graph<T> obj, Graphics g) {
 		for (T from : obj.vertices()){
-			for (T to: obj.adjacent(from))
+			for (T to: obj.adjacent(from)){
 				drawEdge(from, to, obj, g);
+				drawLabel(from,to,obj,g);
+			}
 		}
+	}
+
+	public void drawLabel(T from, T to, Graph<T> obj, Graphics g) {
+		
 	}
 
 	public void drawEdge(T from, T to, Graph<T> obj, Graphics g) {
 		Point2D pFrom = obj.pointForVertex(from);
 		Point2D pTo = obj.pointForVertex(to);
-		g.drawLine((int)pFrom.getX(),(int)pFrom.getY(), 
-					(int)pTo.getX(),(int) pTo.getY());
+		Point2D ctrl = obj.getControlPt(from,to);
+		double rad = getVertexDrawer().getVertexRadius();
+		double theta1 = GeometryHelper.calculateAngle(pFrom, pTo),
+				theta2=GeometryHelper.calculateAngle(pTo, pFrom);
+		if (from.equals(to)){
+			theta1=-3*Math.PI/4;
+			theta2=-Math.PI/4;
+		}
+			
+		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);
+		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,theta2);
 		
-
+		drawEdge((Graphics2D) g,edgeFrom,edgeTo,ctrl,obj.isDirected());
 	}
 	
+	public void drawEdge(Graphics2D g, Point2D from, Point2D to, Point2D ctrl,boolean directed) {
+
+		double arrowheadLen = 0;
+		if (directed) arrowheadLen=ARROW_LENGTH;
+		CurvedArrow curve = new CurvedArrow(arrowheadLen, ARROW_ANGLE);
+		curve.setCurve(from, ctrl, to);
+		curve.draw(g);
+		
+		
+	}
+
+		
 	public VertexDrawer<T> getVertexDrawer(){
 		return myVertexDrawer;
 	}
