@@ -31,6 +31,25 @@ import model.lsystem.commands.RightYawCommand;
 import model.lsystem.commands.LeftRollCommand;
 import model.lsystem.commands.RightRollCommand;
 import model.lsystem.commands.YawCommand;
+import model.lsystem.commands.BeginPolygonCommand;
+import model.lsystem.commands.DecrementColorCommand;
+import model.lsystem.commands.DecrementPColorCommand;
+import model.lsystem.commands.DecrementWidthCommand;
+import model.lsystem.commands.EndPolygonCommand;
+import model.lsystem.commands.ForwardCommand;
+import model.lsystem.commands.DrawCommand;
+import model.lsystem.commands.IncrementColorCommand;
+import model.lsystem.commands.IncrementPColorCommand;
+import model.lsystem.commands.IncrementWidthCommand;
+import model.lsystem.commands.LeftYawCommand;
+import model.lsystem.commands.PitchDownCommand;
+import model.lsystem.commands.PitchUpCommand;
+import model.lsystem.commands.PopCommand;
+import model.lsystem.commands.PushCommand;
+import model.lsystem.commands.RightYawCommand;
+import model.lsystem.commands.LeftRollCommand;
+import model.lsystem.commands.RightRollCommand;
+import model.lsystem.commands.YawCommand;
 import model.regex.EmptySub;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
@@ -84,19 +103,21 @@ public class JFLAPPreferences {
 		return " ";
 	}
 
+	public static String getSymbolizeDelimiter() {
+		return " ";
+	}
+	
 	public static String getEmptyStringSymbol() {
 		return LAMBDA;
 	}
 	
 	public static final Terminal SLR_MARKER = new Terminal("_");
-	public static final boolean CUSTOM_MODE = true,
-								DEFAULT_MODE = false;
 
 	public static final String RECENT_CHANGED = "recent_changed";
 
 	public static final String MODE_CHANGED = "mode";
 	
-	public static boolean MODE = DEFAULT_MODE;
+	public static JFLAPMode DEFAULT_MODE = JFLAPMode.DEFAULT;
 	
 	public static boolean CYK_DIAGONAL = false;
 
@@ -254,9 +275,9 @@ public class JFLAPPreferences {
 		return 1;
 	}
 
-	public static void setToCustomMode(){
-		MODE = CUSTOM_MODE;
-		distributeChange(MODE_CHANGED, CUSTOM_MODE);
+	public static void setDefaultMode(JFLAPMode mode){
+		DEFAULT_MODE = mode;
+		distributeChange(MODE_CHANGED, mode);
 	}
 	
 	public static void setCYKDiagonal(){
@@ -267,20 +288,16 @@ public class JFLAPPreferences {
 		CYK_DIAGONAL = false;
 	}
 	
-	public static void setDefaultMode(){
-		MODE = DEFAULT_MODE;
-		distributeChange(MODE_CHANGED, DEFAULT_MODE);
+	
+	public static JFLAPMode getDefaultMode() {
+		return JFLAPMode.DEFAULT;
 	}
 	
-	public static boolean isCustomMode() {
-		return MODE;
-	}
-
 	public static Variable getDefaultStartVariable() {
 		return new Variable("S");
 	}
 
-	public static GroupingPair getVariableGrouping() {
+	public static GroupingPair getDefaultGrouping() {
 		return new GroupingPair('<', '>');
 	}
 
