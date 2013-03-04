@@ -290,7 +290,7 @@ public class JFLAPPreferences {
 	
 	
 	public static JFLAPMode getDefaultMode() {
-		return JFLAPMode.DEFAULT;
+		return DEFAULT_MODE;
 	}
 	
 	public static Variable getDefaultStartVariable() {
