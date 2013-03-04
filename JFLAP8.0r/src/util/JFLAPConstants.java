@@ -86,7 +86,7 @@ public interface JFLAPConstants {
 		public static final int EDITOR_CELL_HEIGHT = 13;
 		public static final String TAB_CHANGED = "TAB_CHANGED";
 		public static final int CONFIGURATION_PADDING = 5;
-		public static final int INITAL_LOOP_HEIGHT = 40;
+		public static final int INITAL_LOOP_HEIGHT = 70;
 
 		public static final int MAIN_MENU_MASK = KeyEvent.CTRL_MASK;
 		

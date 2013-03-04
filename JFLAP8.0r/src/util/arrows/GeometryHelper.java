@@ -47,7 +47,10 @@ public class GeometryHelper {
 	}
 
 	public static double calculateAngle(Point2D p1, Point2D p2) {
-		return Math.atan2(getYDisplacement(p1, p2), getXDisplacement(p1, p2));
+		double 	dy=getYDisplacement(p1, p2),
+				dx=getXDisplacement(p1, p2);
+		double theta = Math.atan(dy/dx) + (dx < 0 ? Math.PI :0);
+		return theta;
 	}
 
 	public static double getYDisplacement(Point2D p1, Point2D p2) {
@@ -122,9 +125,9 @@ public class GeometryHelper {
 
 	}
 
-	public static Point2D pointOnCircle(Point2D center, double rad, Point2D o) {
+	public static Point2D pointOnCircle(Point2D center, double rad, double theta) {
 		Point2D point = new Point2D.Double(center.getX(), center.getY());
-		translateTowards(point,o,rad);
+		translate(point,theta, rad);
 		return point;
 	}
 
@@ -134,12 +137,13 @@ public class GeometryHelper {
 	}
 
 	public static void translate(Point2D p, double theta, double d){
-		double dx = d*Math.cos(theta), dy = d*Math.sin(theta); 
+		double dx = d*Math.cos(theta), dy = d*Math.sin(theta);
 		p.setLocation(p.getX()+dx,p.getY()+dy);
 	}
 
 	public static double calculatePerpendicularAngle(Point2D from,
 			Point2D to) {
+
 		return calculateAngle(from, to) + Math.PI/2;
 	}
 

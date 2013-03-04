@@ -35,13 +35,11 @@ public class RegExTest extends TestHarness{
 		String toSave = System.getProperties().getProperty("user.dir") +"/filetest";
 		File f = new File(toSave + "/regEx.jff");
 		RegularExpression regex = (RegularExpression) new XMLCodec().decode(f);
-
 		
-		//set regex
-		String in = "((a+b)*+c)";
+		String in = "aaaaaaaab";
 		
 		//try matching!
-		boolean matches = regex.matches(in = "aaaaaaaab");
+		boolean matches = regex.matches(in);
 		outPrintln("RegEx matches " + in + ": \n" + matches);
 
 		//test against actual java object

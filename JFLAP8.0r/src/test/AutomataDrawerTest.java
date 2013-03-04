@@ -2,6 +2,8 @@ package test;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.File;
 import java.util.TreeSet;
 
@@ -34,7 +36,7 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 	public void runTest() {
 		String toSave = System.getProperties().getProperty("user.dir")
 				+ "/filetest";
-		File f = new File(toSave + "/fsa.jff");
+		File f = new File(toSave + "/tm_AnBnCn.jff");
 		Automaton a = XMLCodec.decode(f, Automaton.class);
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
@@ -61,8 +63,6 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 
 		public DrawPanel(Automaton<T> a2){
 			myGraph = new TransitionGraph<T>(a2);
-			LayoutAlgorithm a = LayoutAlgorithmFactory.getLayoutAlgorithm(3);
-			a.layout(myGraph, new TreeSet());
 		}
 		
 		@Override
@@ -70,6 +70,8 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 			super.paintComponent(g);
 			this.setBackground(Color.white);
 			StateDrawer vDraw = new StateDrawer();
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
 			GraphDrawer<State> drawer = 
 					new AutomatonDrawer(vDraw);
 

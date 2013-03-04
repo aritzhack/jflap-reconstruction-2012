@@ -5,6 +5,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
+import debug.JFLAPDebug;
+
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -49,6 +51,7 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizer;
 import model.symbols.symbolizer.Symbolizers;
+import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.UtilFunctions;
@@ -260,11 +263,11 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 
 	private RegularExpression createRegex() {
 		RegularExpression regex = new RegularExpression(new InputAlphabet());
-
+		regex.setMode(JFLAPMode.DEFAULT);
 		// set regex
 		String in = "((a+b)*+c)";
-		Symbolizer s = Symbolizers.getSymbolizer(regex);
-		regex.setTo(s.symbolize(in));
+		SymbolString expression = Symbolizers.symbolize(in,regex);
+		regex.setTo(expression);
 		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
 		// trim alphabets
 		regex.trimAlphabets();
