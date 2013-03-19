@@ -34,6 +34,7 @@ public abstract class NewAction<T> extends AbstractAction{
 		return new NewAction[]
 				{new NewGrammarAction(),
 				new NewSetsAction(),
+				new NewLSystemAction(),
 				new NewCFPumpingLemmaAction(),
 				new NewRegPumpingLemmaAction()
 				};

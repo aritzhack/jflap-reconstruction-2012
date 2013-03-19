@@ -9,6 +9,8 @@ import java.util.TreeMap;
 
 import debug.JFLAPDebug;
 
+import model.formaldef.FormalDefinition;
+import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
@@ -16,7 +18,7 @@ import model.grammar.Variable;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public class NLSystem {
+public class NLSystem extends FormalDefinition{
 	private CommandAlphabet myCommandAlph;
 	private SymbolString myAxiom;
 	private Grammar myGrammar;
@@ -82,5 +84,30 @@ public class NLSystem {
 			if(p.size() > 1) return true;
 		}
 		return false;
+	}
+
+	@Override
+	public String getDescriptionName() {
+		return "L-System";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Lindenmayer System";
+	}
+
+	@Override
+	public Object copy() {
+		return new NLSystem(myAxiom, myGrammar, myParameters);
+	}
+
+	@Override
+	public Alphabet getLanguageAlphabet() {
+		return myGrammar.getLanguageAlphabet();
+	}
+
+	@Override
+	public FormalDefinition alphabetAloneCopy() {
+		return new NLSystem(new SymbolString(), myGrammar.alphabetAloneCopy(), new HashMap<String, String>());
 	}
 }
