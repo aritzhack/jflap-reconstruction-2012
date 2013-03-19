@@ -190,12 +190,12 @@ public abstract class GrowableTableModel extends AbstractTableModel implements
 
 	public void setValueAt(Object newdata, int row, int column) {
 		getData().set(row, completeRow(newdata, row, column));
-		if (this.checkEmpty(row) && this.getRowCount() > 1){
+		if (this.getRowCount() > 1 && this.checkEmpty(row)){
 			this.deleteRow(row);
 			fireTableRowsDeleted(row, row);
 			row--;
-		}
-			if (row == getRowCount()) {
+		}	
+			if (row == getRowCount() - 1) {
 				getData().add(createEmptyRow());
 				fireTableRowsInserted(row, row);
 			}
