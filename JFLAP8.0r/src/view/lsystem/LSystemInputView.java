@@ -358,7 +358,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 			JLabel l = (JLabel) super.getTableCellRendererComponent(table,
 					value, isSelected, hasFocus, row, column);
 			if (l != null) {
-				String[] lhs = l.getText().trim().split(" ");
+				String[] lhs = l.getText().trim().replaceAll("\\s+", " ").split(" ");
 				if (lhs.length > 1 && Character.isDigit(lhs[0].charAt(0))) {
 					int index = lhs[0].charAt(0) - '0' + 1;
 					if (index < lhs.length) {
