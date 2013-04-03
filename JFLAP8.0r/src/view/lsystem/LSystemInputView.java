@@ -35,10 +35,13 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.Grammar;
@@ -46,10 +49,12 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.lsystem.CommandAlphabet;
 import model.lsystem.NLSystem;
+import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableScrollPane;
@@ -58,6 +63,7 @@ import util.view.magnify.MagnifiableTextField;
 import util.view.magnify.SizeSlider;
 import view.EditingPanel;
 import view.formaldef.BasicFormalDefinitionView;
+import view.grammar.parsing.cyk.CYKParseTablePanel;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
 
@@ -92,6 +98,8 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 
 	/** The cached L-system. Firing an L-S input event invalidates this. */
 	private NLSystem cachedSystem = null;
+
+	private TableCellRenderer myRenderer = new NumberBoldingRenderer();
 
 	/**
 	 * Instantiates an empty <CODE>LSystemInputPane</CODE>.
@@ -280,10 +288,18 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 			}
 		}
 
-		myProdTable = new ProductionTable(g, keeper, true);
+		myProdTable = new ProductionTable(g, keeper, true) {
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+				if (column == 0)
+					return myRenderer;
+				return super.getCellRenderer(row, column);
+			}
+		};
 		myProdTable.setPreferredSize(bestSize);
-		
-		MagnifiableScrollPane prodScroller = new MagnifiableScrollPane(myProdTable);
+
+		MagnifiableScrollPane prodScroller = new MagnifiableScrollPane(
+				myProdTable);
 		prodScroller.setPreferredSize(bestSize);
 		scroller.setPreferredSize(bestSize);
 		MagnifiableSplitPane split = new MagnifiableSplitPane(
@@ -317,15 +333,53 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 		for (int i = 0; i < words.length; i++) {
 			menu.add(words[i]).addActionListener(listener);
 		}
-		JPanel c = new JPanel();
+		JLabel c = new JLabel();
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				menu.show((Component) e.getSource(), e.getPoint().x,
 						e.getPoint().y);
 			}
 		});
+		c.setText(" P");
 		scroller.setCorner(JScrollPane.UPPER_RIGHT_CORNER, c);
 		initializeListener();
 		return central;
+	}
+
+	/**
+	 * The modified table cell renderer. Replaces square brackets with {},
+	 * renders empty sets as the Empty Set Symbol, and deals with highlighting
+	 * of table cells (notifying the header renderer when necessary).
+	 */
+	private class NumberBoldingRenderer extends DefaultTableCellRenderer {
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			JLabel l = (JLabel) super.getTableCellRendererComponent(table,
+					value, isSelected, hasFocus, row, column);
+			if (l != null) {
+				String[] lhs = l.getText().trim().split(" ");
+				if (lhs.length > 1 && Character.isDigit(lhs[0].charAt(0))) {
+					int index = lhs[0].charAt(0) - '0' + 1;
+					if (index < lhs.length) {
+						StringBuilder left = new StringBuilder(), right = new StringBuilder();
+						for(int i=1; i < lhs.length; i++){
+							lhs[i] = lhs[i].replaceAll("&", "&amp;");
+							lhs[i] = lhs[i].replaceAll("\"", "&quot;");
+							lhs[i] = lhs[i].replaceAll("<", "&lt;");
+							lhs[i] = lhs[i].replaceAll(">", "&gt;");
+							if(i < index)
+								left.append(lhs[i]+" ");
+							else if(i > index)
+								right.append(lhs[i]+" ");
+						}
+						l.setText(String.format("<html>%s<b>%s</b>%s</html>",
+								left.toString(), lhs[index] + " ",
+								right.toString()).trim());
+					}
+				}
+			}
+			return l;
+		}
 	}
 }
