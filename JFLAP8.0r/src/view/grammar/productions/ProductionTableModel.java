@@ -72,8 +72,7 @@ implements JFLAPConstants{
 	 *            the grammar to have for the grammar table model initialized to
 	 */
 	public ProductionTableModel(Grammar g, UndoKeeper keeper) {
-		super(3, new ProductionDataHelper(g, keeper));
-		myGrammar = g;
+		this( g, keeper, new ProductionDataHelper(g, keeper));
 		//		this.addTableModelListener(new TableModelListener() {
 		//			@Override
 		//			public void tableChanged(TableModelEvent e) {
@@ -84,6 +83,12 @@ implements JFLAPConstants{
 	
 	public Grammar getGrammar(){
 		return myGrammar;
+	}
+	
+	public ProductionTableModel(Grammar g, UndoKeeper keeper, ProductionDataHelper helper){
+		super(3, helper);
+		myGrammar = g;
+		
 	}
 
 	/**

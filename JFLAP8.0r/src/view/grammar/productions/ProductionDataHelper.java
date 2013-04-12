@@ -37,7 +37,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	private ArrayList<Production> myOrderedProductions;
 	private ProductionSet myProductions;
 	private UndoKeeper myKeeper;
-	private Grammar myGrammar;
+	protected Grammar myGrammar;
 
 	public ProductionDataHelper(Grammar model, UndoKeeper keeper){
 		myKeeper = keeper;
@@ -129,7 +129,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	}
 
 
-	private Production objectToProduction(Object[] input){
+	protected Production objectToProduction(Object[] input){
 
 //		if(!SymbolString.canBeParsed((String) input[0], getGrammar())){
 //			checkAndAddError(new BooleanWrapper(false, 
@@ -150,7 +150,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		return new Production(LHS, RHS);
 	}
 
-	private boolean isEmptyString(String object) {
+	protected boolean isEmptyString(String object) {
 		return object.equals(JFLAPPreferences.getEmptyStringSymbol());
 	}
 
