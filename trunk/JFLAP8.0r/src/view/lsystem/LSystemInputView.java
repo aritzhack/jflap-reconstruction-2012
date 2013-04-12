@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -43,10 +42,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
 import model.lsystem.CommandAlphabet;
 import model.lsystem.NLSystem;
 import model.symbols.Symbol;
@@ -54,16 +53,13 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
-import util.JFLAPConstants;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableScrollPane;
 import util.view.magnify.MagnifiableSplitPane;
 import util.view.magnify.MagnifiableTextField;
-import util.view.magnify.SizeSlider;
-import view.EditingPanel;
 import view.formaldef.BasicFormalDefinitionView;
-import view.grammar.parsing.cyk.CYKParseTablePanel;
+import view.grammar.productions.ProductionDataHelper;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
 
@@ -288,7 +284,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 			}
 		}
 
-		myProdTable = new ProductionTable(g, keeper, true) {
+		myProdTable = new ProductionTable(g, keeper, true, new ProductionTableModel(g, keeper, new LSystemDataHelper(g, keeper))) {
 			@Override
 			public TableCellRenderer getCellRenderer(int row, int column) {
 				if (column == 0)
@@ -297,6 +293,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 			}
 		};
 		myProdTable.setPreferredSize(bestSize);
+		
 
 		MagnifiableScrollPane prodScroller = new MagnifiableScrollPane(
 				myProdTable);
@@ -380,6 +377,40 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 				}
 			}
 			return l;
+		}
+	}
+	
+	private class LSystemDataHelper extends ProductionDataHelper{
+
+		public LSystemDataHelper(Grammar model, UndoKeeper keeper) {
+			super(model, keeper);
+		}
+		
+		@Override
+		protected Production objectToProduction(Object[] input) {
+			if (isEmptyString((String) input[0]))
+				input[0] = "";
+			if (isEmptyString((String) input[2]))
+				input[2] = "";
+			String[] LHS = ((String) input[0]).trim().replaceAll(" +", " ").split(" "),
+					RHS = ((String) input[2]).trim().replaceAll(" +", " ").split(" ");
+			
+			for(String l : LHS)
+				if(isParenthesisCommand(l))
+					myGrammar.getLanguageAlphabet().add(new Terminal(l));
+			for(String r : RHS)
+				if(isParenthesisCommand(r))
+					myGrammar.getLanguageAlphabet().add(new Terminal(r));
+			return super.objectToProduction(input);
+		}
+		
+		private boolean isParenthesisCommand(String s){
+			CommandAlphabet alph = new CommandAlphabet();
+			for(Symbol symbol: alph.getParenCommands()){
+				if(s.endsWith(")") && s.startsWith(symbol.getString()+"("))
+					return true;
+			}
+			return false;
 		}
 	}
 }

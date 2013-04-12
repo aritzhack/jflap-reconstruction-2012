@@ -3,6 +3,7 @@ package model.lsystem;
 import universe.preferences.JFLAPPreferences;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
+import model.grammar.Terminal;
 import model.lsystem.commands.BeginPolygonCommand;
 import model.lsystem.commands.DecrementColorCommand;
 import model.lsystem.commands.DecrementPColorCommand;
@@ -22,6 +23,7 @@ import model.lsystem.commands.RightYawCommand;
 import model.lsystem.commands.LeftRollCommand;
 import model.lsystem.commands.RightRollCommand;
 import model.lsystem.commands.YawCommand;
+import model.symbols.Symbol;
 
 public class CommandAlphabet extends Alphabet{
 
@@ -172,5 +174,9 @@ public class CommandAlphabet extends Alphabet{
 	@Override
 	public CommandAlphabet copy() {
 		return (CommandAlphabet) super.copy();
+	}
+	
+	public Symbol[] getParenCommands(){
+		return new Symbol[]{myDraw, myForward, myRight, myLeft, myDown, myUp, myRRight, myRLeft, myIWidth, myDWidth, myIColor, myDColor, myIPolyColor, myDPolyColor};
 	}
 }

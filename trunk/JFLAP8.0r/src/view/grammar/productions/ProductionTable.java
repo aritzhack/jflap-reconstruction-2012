@@ -51,13 +51,16 @@ public class ProductionTable extends HighlightTable
 	 * @param editable 
 	 */
 	public ProductionTable(Grammar g, UndoKeeper keeper, boolean editable) {
-		super(new ProductionTableModel(g, keeper));
+		this(g, keeper, editable, new ProductionTableModel(g, keeper));
+	}
+
+	public ProductionTable(Grammar g, UndoKeeper keeper, boolean editable, ProductionTableModel model){
+		super(model);
 		setEnabled(editable);
 		g.getProductionSet().addListener(this);
 		initView();
 		myKeeper = keeper;
 	}
-
 
 
 

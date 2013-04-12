@@ -26,17 +26,16 @@ import view.undoing.undo.MenuUndoAction;
 import view.undoing.undo.UndoAction;
 import view.undoing.undo.UndoButton;
 
-public class EditMenu extends JMenu implements TabChangeListener{
+public class EditMenu extends JMenu implements TabChangeListener {
 
 	public EditMenu(JFLAPEnvironment e) {
 		super("Edit");
 		e.addTabListener(this);
 		this.update(e.getCurrentView());
 	}
-	
+
 	public Action[] createActions(JFLAPEnvironment e) {
-		return new Action[]{new MenuUndoAction(e),
-				new MenuRedoAction(e)};
+		return new Action[] { new MenuUndoAction(e), new MenuRedoAction(e) };
 	}
 
 	@Override
@@ -47,26 +46,27 @@ public class EditMenu extends JMenu implements TabChangeListener{
 
 	private void update(Component view) {
 		this.removeAll();
-		UndoKeeper keeper;
-		try {
+		UndoKeeper keeper = null;
+		if(view instanceof EditingPanel){
 			keeper = ((EditingPanel) view).getKeeper();
-		}catch(Exception ex){
-			ex.printStackTrace();
-			keeper = null;
+			this.setVisible(true);
 		}
-		this.add(new UndoRelatedMenuItem(new RedoAction(keeper)));
-		this.add(new UndoRelatedMenuItem(new UndoAction(keeper)));		
-		
-		//Grammar Options
-		if (view instanceof GrammarView){
+		else{
+			this.setVisible(false);
+		}
+		if (keeper != null) {
+			this.add(new UndoRelatedMenuItem(new RedoAction(keeper)));
+			this.add(new UndoRelatedMenuItem(new UndoAction(keeper)));
+		}
+		// Grammar Options
+		if (view instanceof GrammarView) {
 			GrammarView v = (GrammarView) view;
 			ProductionTable table = (ProductionTable) v.getCentralPanel();
 			this.add(new DeleteAction(table));
-			this.add(new SortProductionsAction(keeper, 
+			this.add(new SortProductionsAction(keeper,
 					(ProductionTableModel) table.getModel()));
 		}
-			
-			
+
 	}
 
 }

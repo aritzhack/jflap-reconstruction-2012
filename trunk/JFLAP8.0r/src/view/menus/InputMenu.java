@@ -14,6 +14,7 @@ import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
+import view.lsystem.LSystemRenderView;
 
 public class InputMenu extends JMenu implements TabChangeListener {
 	
@@ -30,7 +31,7 @@ public class InputMenu extends JMenu implements TabChangeListener {
 	
 	private void update(Component view) {
 		this.removeAll();
-		UndoKeeper keeper;
+		this.setVisible(true);
 		if (view instanceof GrammarView){
 			GrammarView v = (GrammarView) view;
 			this.add(new BruteParseAction(v));
@@ -41,6 +42,8 @@ public class InputMenu extends JMenu implements TabChangeListener {
 			LSystemInputView v = (LSystemInputView) view;
 			this.add(new LSystemRenderAction(v));	
 		}
+		if (view instanceof LSystemRenderView)
+			this.setVisible(false);
 	}
 
 }
