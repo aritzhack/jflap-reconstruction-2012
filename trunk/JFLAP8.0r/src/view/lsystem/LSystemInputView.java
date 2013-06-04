@@ -47,7 +47,7 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.Terminal;
 import model.lsystem.CommandAlphabet;
-import model.lsystem.NLSystem;
+import model.lsystem.LSystem;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
@@ -70,9 +70,9 @@ import view.grammar.productions.ProductionTableModel;
  * @author Thomas Finley
  */
 
-public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
+public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	/** An empty L-system. */
-	private static final NLSystem SYSTEM = new NLSystem();
+	private static final LSystem SYSTEM = new LSystem();
 
 	/** The axiom text field. */
 	private MagnifiableTextField axiomField;
@@ -93,7 +93,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 	private LSystemInputEvent reusedEvent = new LSystemInputEvent(this);
 
 	/** The cached L-system. Firing an L-S input event invalidates this. */
-	private NLSystem cachedSystem = null;
+	private LSystem cachedSystem = null;
 
 	private TableCellRenderer myRenderer = new NumberBoldingRenderer();
 
@@ -111,7 +111,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 	 * @param lsystem
 	 *            the lsystem to display
 	 */
-	public LSystemInputView(NLSystem lsystem) {
+	public LSystemInputView(LSystem lsystem) {
 		super(lsystem, new UndoKeeper(), true);
 	}
 
@@ -121,7 +121,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 	 * @param lsystem
 	 *            the L-system to initialize the views on
 	 */
-	private void initializeStructures(NLSystem lsystem) {
+	private void initializeStructures(LSystem lsystem) {
 		// Create the axiom text field.
 		axiomField = new MagnifiableTextField(
 				JFLAPPreferences.getDefaultTextSize());
@@ -167,7 +167,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 	 * 
 	 * @return the L-system this pane displays
 	 */
-	public NLSystem getLSystem() {
+	public LSystem getLSystem() {
 		// Make sure we're not editing anything.
 		if (myProdTable.getCellEditor() != null)
 			myProdTable.getCellEditor().stopCellEditing();
@@ -178,7 +178,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 			if (cachedSystem == null) {
 				Grammar g = ((ProductionTableModel) myProdTable.getModel())
 						.getGrammar();
-				cachedSystem = new NLSystem(Symbolizers.symbolize(
+				cachedSystem = new LSystem(Symbolizers.symbolize(
 						axiomField.getText(), g), g,
 						parameterModel.getParameters());
 			}
@@ -247,7 +247,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<NLSystem> {
 	}
 
 	@Override
-	public JComponent createCentralPanel(NLSystem model, UndoKeeper keeper,
+	public JComponent createCentralPanel(LSystem model, UndoKeeper keeper,
 			boolean editable) {
 		initializeStructures(model);
 		MagnifiablePanel central = new MagnifiablePanel(new BorderLayout());
