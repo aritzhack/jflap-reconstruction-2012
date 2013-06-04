@@ -1,200 +1,137 @@
-/*
- *  JFLAP - Formal Languages and Automata Package
- * 
- * 
- *  Susan H. Rodger
- *  Computer Science Department
- *  Duke University
- *  August 27, 2009
-
- *  Copyright (c) 2002-2009
- *  All rights reserved.
-
- *  JFLAP is open source software. Please see the LICENSE for terms.
- *
- */
-
-
-
-
-
 package model.lsystem;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import model.formaldef.FormalDefinition;
+import model.formaldef.components.FormalDefinitionComponent;
+import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.Grammar;
 import model.grammar.Production;
+import model.grammar.ProductionSet;
+import model.grammar.Variable;
+import model.lsystem.formaldef.Axiom;
+import model.lsystem.formaldef.FormalParameters;
+import model.lsystem.formaldef.FormalGrammarComponent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
 
-
-
-/**
- * The <CODE>LSystem</CODE> class represents L-systems. This does not do any
- * simulation of L-systems, but rather has the minimal mathematical definitions
- * required, i.e., the axiom, replacement rules, with some concession given to
- * define parameters for drawing.
- * 
- * @author Thomas Finley
- */
-
-// Oh, I'm just doing fine. Thank you very much. Just very well.
-// Oh, just fine! Thank you. Very well. Mmm-hmm! I'm just...
-public class LSystem implements Serializable {
-	/**
-	 * Constructs an empty L-System.
-	 */
-	public LSystem() {
-		this("", new Grammar(), new HashMap());
+public class LSystem extends FormalDefinition{
+	private CommandAlphabet myCommandAlph;
+	private SymbolString myAxiom;
+	private Grammar myGrammar;
+	private Map<String, String> myParameters;
+	private Map<SymbolString, List<SymbolString>> myReplacements;
+	
+	public LSystem(){
+		this(new SymbolString(), new Grammar(), new HashMap<String, String>());
+	}
+	
+	public LSystem(SymbolString axiom, Grammar g, Map<String, String> parameters){
+		myAxiom = axiom;
+		myCommandAlph = new CommandAlphabet();
+		myGrammar = g;
+		myGrammar.getLanguageAlphabet().addAll(myCommandAlph);
+		addAxiomToAlphabet();
+		myParameters = parameters;
+		initReplacements();
 	}
 
-	/**
-	 * Constructs a new L-System.
-	 * 
-	 * @param replacements
-	 *            the grammar holding the replacement rules, where each
-	 *            production has (on the left hand side) the symbol to replace,
-	 *            while on the right hand side is a string containing space
-	 *            delimited symbols
-	 * @param values
-	 *            various parameters controlling drawing in the lsystem
-	 * @param axiom
-	 *            the start symbols as a space delimited string
-	 */
-	public LSystem(String axiom, Grammar replacements, Map values) {
-		this.values = Collections.unmodifiableMap(values);
-		initReplacements(replacements);
-		this.axiom = tokenify(axiom);
+	private void initReplacements() {
+		myReplacements = new TreeMap<SymbolString, List<SymbolString>>();
+		ProductionSet prods = myGrammar.getProductionSet();
+		
+		for(Production p : prods){
+			SymbolString lhs = new SymbolString(p.getLHS());
+			if(!myReplacements.containsKey(lhs))
+				myReplacements.put(lhs, new ArrayList<SymbolString>());
+			SymbolString rhs = new SymbolString(p.getRHS());
+			myReplacements.get(lhs).add(rhs);
+		}
 	}
 
-	/**
-	 * Given a space delimited string, returns a list of the non-whitespace
-	 * tokens.
-	 * 
-	 * @param string
-	 *            the string to take tokens from
-	 * @return a list containing all tokens of the string
-	 */
-	public static List tokenify(String string) {
-		StringTokenizer st = new StringTokenizer(string);
-		ArrayList list = new ArrayList();
-		while (st.hasMoreTokens())
-			list.add(st.nextToken());
-		return list;
-	}
-
-	/**
-	 * Initializes the list of rewriting rules.
-	 * 
-	 * @param replacements
-	 *            the grammar holding the replacement rules
-	 */
-	private void initReplacements(Grammar replacements) {
-		Map reps = new HashMap();
-		Production[] p = replacements.getProductionSet().toArray(new Production[0]);
-		for (int i = 0; i < p.length; i++) {
-			Symbol[] replace = p[i].getLHS();
-			ArrayList currentReplacements = null;
-			if (!reps.containsKey(replace))
-				reps.put(replace, currentReplacements = new ArrayList());
+	private void addAxiomToAlphabet() {
+		for(Symbol s : myAxiom){
+			if(s instanceof Variable)
+				myGrammar.getVariables().add(s);
 			else
-				currentReplacements = (ArrayList) reps.get(replace);
-			List currentSubstitution = Arrays.asList(p[i].getRHS());
-			try {
-				List lastSubstitution = (List) currentReplacements
-						.get(currentReplacements.size() - 1);
-				if (!currentSubstitution.equals(lastSubstitution))
-					nondeterministic = true;
-			} catch (IndexOutOfBoundsException e) {
-
-			}
-			currentReplacements.add(currentSubstitution);
-		}
-		Iterator it = reps.entrySet().iterator();
-		symbolToReplacements = new TreeMap();
-		List[] emptyListArray = new List[0];
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			List l = (List) entry.getValue();
-			List[] replacementArray = (List[]) l.toArray(emptyListArray);
-			symbolToReplacements.put(entry.getKey(), replacementArray);
+				myGrammar.getTerminals().add(s);
 		}
 	}
-
-	/**
-	 * Returns the list of symbols for the axiom.
-	 * 
-	 * @return the list of symbols for the axiom
-	 */
-	public List getAxiom() {
-		return axiom;
+	
+	public SymbolString getAxiom(){
+		return myAxiom;
+	}
+	
+	public void setAxiom(String axiom){
+		setAxiom(Symbolizers.symbolize(axiom, this));
+	}
+	
+	private void setAxiom(SymbolString axiom){
+		myAxiom = axiom;
+		addAxiomToAlphabet();
+	}
+	
+	public Map<String, String> getParameters(){
+		return myParameters;
+	}
+	
+	public SymbolString[] getReplacements(SymbolString s){
+		List<SymbolString> sList = myReplacements.get(s);
+		SymbolString[] emptyArray = new SymbolString[0];
+		return sList == null ? emptyArray : sList.toArray(emptyArray);
+	}
+	
+	public Set<SymbolString> getSymbolStringsWithReplacements(){
+		return myReplacements.keySet();
+	}
+	
+	public boolean isNondeterministic(){
+		for(List<SymbolString> p : myReplacements.values()){
+			if(p.size() > 1) return true;
+		}
+		return false;
 	}
 
-	/**
-	 * Returns the array of replacements for a symbol.
-	 * 
-	 * @param symbol
-	 *            the symbol to get the replacements for
-	 * @return an array of lists, where each list is a list of the strings; the
-	 *         array will be empty if there are no replacements
-	 */
-	public List[] getReplacements(String symbol) {
-		List[] toReturn = (List[]) symbolToReplacements.get(symbol);
-		return toReturn == null ? EMPTY_LIST : toReturn;
+	@Override
+	public String getDescriptionName() {
+		return "L-System";
 	}
 
-	/**
-	 * Returns the symbols for which there are replacements.
-	 * 
-	 * @return the set of symbols that have replacements in this L-system
-	 */
-	public Set getSymbolsWithReplacements() {
-		return symbolToReplacements.keySet();
+	@Override
+	public String getDescription() {
+		return "Lindenmayer System";
 	}
 
-	/**
-	 * Returns a mapping of names of parameters for the L-system to their
-	 * respective values
-	 * 
-	 * @return the map of names of parameters to the parameters themselves
-	 */
-	public Map getValues() {
-		return values;
+	@Override
+	public Object copy() {
+		return new LSystem(myAxiom, myGrammar, myParameters);
 	}
 
-	/**
-	 * Returns whether the l-system is nondeterministic, i.e., if there are any
-	 * symbols that could result in an ambiguous outcome (a sort of stochiastic
-	 * thing).
-	 * 
-	 * @return if the l-system is nondeterministic
-	 */
-	public boolean nondeterministic() {
-		return nondeterministic;
+	@Override
+	public Alphabet getLanguageAlphabet() {
+		return myGrammar.getLanguageAlphabet();
 	}
 
-	/** The grammar holding the replacement rules. */
-	private Map symbolToReplacements;
-
-	/** The mapping of keys to values. */
-	private Map values;
-
-	/** The axiom. */
-	private List axiom;
-
-	/** Whether or not the L-system has stochiastic properties. */
-	private boolean nondeterministic = false;
-
-	/** An empty list array. */
-	private static final List[] EMPTY_LIST = new List[0];
+	@Override
+	public FormalDefinition alphabetAloneCopy() {
+		return new LSystem(new SymbolString(), myGrammar.alphabetAloneCopy(), new HashMap<String, String>());
+	}
+	
+	@Override
+	public FormalDefinitionComponent[] getComponents() {
+		FormalDefinitionComponent[] fullComps = new FormalDefinitionComponent[2];
+		if(myGrammar != null)
+			fullComps[1] = new FormalGrammarComponent(myGrammar);
+		
+		fullComps[0] = new Axiom(myAxiom);
+		fullComps[fullComps.length-1] = new FormalParameters(myParameters);
+		
+		return fullComps;
+	}
 }

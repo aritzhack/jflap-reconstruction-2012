@@ -41,8 +41,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.lsystem.NExpander;
-import model.lsystem.NLSystem;
+import model.lsystem.Expander;
+import model.lsystem.LSystem;
 import model.symbols.SymbolString;
 import view.help.ImageDisplayComponent;
 
@@ -59,11 +59,11 @@ public class LSystemRenderView extends JPanel {
 	 * @param lsystem
 	 *            the L-system to display
 	 */
-	public LSystemRenderView(NLSystem lsystem) {
+	public LSystemRenderView(LSystem lsystem) {
 		super(new BorderLayout());
 		this.lsystem = lsystem;
 
-		expander = new NExpander(lsystem);
+		expander = new Expander(lsystem);
 		// We can't edit the expansion, of course.
 		expansionDisplay.setEditable(false);
 		// The user has to be able to change the recursion depth.
@@ -188,10 +188,10 @@ public class LSystemRenderView extends JPanel {
 	}
 
 	/** The L-system we are displaying here. */
-	private NLSystem lsystem;
+	private LSystem lsystem;
 
 	/** The current expander. */
-	private NExpander expander = null;
+	private Expander expander = null;
 
 	/** The renderer. */
 	private Renderer renderer = new Renderer();

@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import model.lsystem.LSystemException;
-import model.lsystem.NLSystem;
+import model.lsystem.LSystem;
 
 import universe.JFLAPUniverse;
 import view.environment.JFLAPEnvironment;
@@ -23,7 +23,7 @@ public class LSystemRenderAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		NLSystem l = myView.getLSystem();
+		LSystem l = myView.getLSystem();
 		
 		if(l == null)
 			return;

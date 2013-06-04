@@ -1,16 +1,16 @@
 package view.action.newactions;
 
-import model.lsystem.NLSystem;
+import model.lsystem.LSystem;
 
-public class NewLSystemAction extends NewAction<NLSystem>{
+public class NewLSystemAction extends NewAction<LSystem>{
 
 	public NewLSystemAction() {
 		super("L-System");
 	}
 
 	@Override
-	public NLSystem createNewModel() {
-		return new NLSystem();
+	public LSystem createNewModel() {
+		return new LSystem();
 	}
 
 }
