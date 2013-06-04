@@ -120,7 +120,11 @@ public class JFLAPPreferences {
 	public static JFLAPMode DEFAULT_MODE = JFLAPMode.DEFAULT;
 	
 	public static boolean CYK_DIAGONAL = false;
-
+	
+	public static final int CYK_WIDTH = 817;
+	
+	public static final int CYK_HEIGHT = 725;
+	
 	public static int getDefaultTMBufferSize(){
 		return 5;
 	}

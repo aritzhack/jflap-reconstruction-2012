@@ -3,6 +3,8 @@ package view.action.grammar.parse;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.grammar.Grammar;
 
+import universe.JFLAPUniverse;
+import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.parsing.ParserView;
 import view.grammar.parsing.brute.BruteParserView;
@@ -23,6 +25,9 @@ public class BruteParseAction extends ParseAction<UnrestrictedBruteParser> {
 	@Override
 	public ParserView<UnrestrictedBruteParser> createParseView(Grammar g) {
 		UnrestrictedBruteParser parser = UnrestrictedBruteParser.createNewBruteParser(g);
+		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+		
+		env.setSize(700, env.getHeight());
 		return new BruteParserView(parser);
 	}
 

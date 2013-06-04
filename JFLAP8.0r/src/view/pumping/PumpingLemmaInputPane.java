@@ -656,4 +656,8 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
     	String prefix = myLemma instanceof ContextFreePumpingLemma ? "Context Free" : "Regular";
     	return prefix+ " Pumping Lemma";
     }
+    
+    public PumpingLemma getLemma(){
+    	return myLemma;
+    }
 }

@@ -3,11 +3,8 @@ package file.xml;
 import java.lang.Thread.State;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -23,36 +20,50 @@ import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
-import model.automata.turing.TuringMachine;
-import model.automata.turing.TuringMachineMove;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
-import model.regex.ExpressionComponent;
+import model.lsystem.LSystem;
+import model.pumping.cf.AiBjCk;
+import model.pumping.cf.AkBnCnDj;
+import model.pumping.cf.AnBjAnBj;
+import model.pumping.cf.AnBn;
+import model.pumping.cf.AnBnCn;
+import model.pumping.cf.NagNbeNc;
+import model.pumping.cf.W1BnW2;
+import model.pumping.cf.W1CW2CW3CW4;
+import model.pumping.cf.W1VVrW2;
+import model.pumping.cf.WW;
+import model.pumping.cf.WW1WrEquals;
+import model.pumping.cf.WW1WrGrtrThanEq;
+import model.pumping.reg.AB2n;
+import model.pumping.reg.ABnAk;
+import model.pumping.reg.AnBk;
+import model.pumping.reg.AnBkCnk;
+import model.pumping.reg.AnBlAk;
+import model.pumping.reg.AnEven;
+import model.pumping.reg.B5W;
+import model.pumping.reg.B5Wmod;
+import model.pumping.reg.BBABAnAn;
+import model.pumping.reg.BkABnBAn;
+import model.pumping.reg.NaNb;
+import model.pumping.reg.Palindrome;
 import model.regex.RegularExpression;
-import model.symbols.SymbolString;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-
 import file.xml.formaldef.automata.BlockTMTransducer;
 import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.automata.MealyMachineTransducer;
 import file.xml.formaldef.automata.MooreMachineTransducer;
-import file.xml.formaldef.automata.PDATransducer;
 import file.xml.formaldef.automata.MultiTapeTMTransducer;
+import file.xml.formaldef.automata.PDATransducer;
 import file.xml.formaldef.components.alphabet.InputAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.OutputAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.StackAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.TapeAlphabetTransducer;
 import file.xml.formaldef.components.alphabet.TerminalsTransducer;
 import file.xml.formaldef.components.alphabet.VariablesTransducer;
-import file.xml.formaldef.components.functions.transitions.tm.TMMoveTransducer;
 import file.xml.formaldef.components.states.BlockSetTransducer;
 import file.xml.formaldef.components.states.FinalStateSetTransducer;
 import file.xml.formaldef.components.states.FromStateTransducer;
@@ -64,8 +75,12 @@ import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
 import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
-import file.xml.formaldef.regex.ExpressionStringTransducer;
+import file.xml.formaldef.lsystem.LSystemTransducer;
+import file.xml.formaldef.lsystem.Parameter;
+import file.xml.formaldef.lsystem.ParameterTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
+import file.xml.pumping.CFPumpingLemmaTransducer;
+import file.xml.pumping.RegPumpingLemmaTransducer;
 
 public class TransducerFactory{
 
@@ -109,7 +124,39 @@ public class TransducerFactory{
 		
 		//RegEx
 		addMapping(RegularExpression.class, new RegExTransducer());
-
+		
+		//LSystem
+		addMapping(LSystem.class, new LSystemTransducer());
+		addMapping(Parameter.class, new ParameterTransducer());
+		
+		//Context-Free Pumping Lemma
+		addMapping(AiBjCk.class, new CFPumpingLemmaTransducer());
+		addMapping(AkBnCnDj.class, new CFPumpingLemmaTransducer());
+		addMapping(AnBjAnBj.class, new CFPumpingLemmaTransducer());
+		addMapping(AnBn.class, new CFPumpingLemmaTransducer());
+		addMapping(AnBnCn.class, new CFPumpingLemmaTransducer());
+		addMapping(NagNbeNc.class, new CFPumpingLemmaTransducer());
+		addMapping(W1BnW2.class, new CFPumpingLemmaTransducer());
+		addMapping(W1CW2CW3CW4.class, new CFPumpingLemmaTransducer());
+		addMapping(W1VVrW2.class, new CFPumpingLemmaTransducer());
+		addMapping(WW.class, new CFPumpingLemmaTransducer());
+		addMapping(WW1WrEquals.class, new CFPumpingLemmaTransducer());
+		addMapping(WW1WrGrtrThanEq.class, new CFPumpingLemmaTransducer());
+		
+		//Regular Pumping Lemma
+		addMapping(AB2n.class, new RegPumpingLemmaTransducer());
+		addMapping(ABnAk.class, new RegPumpingLemmaTransducer());
+		addMapping(AnBk.class, new RegPumpingLemmaTransducer());
+		addMapping(AnBkCnk.class, new RegPumpingLemmaTransducer());
+		addMapping(AnBlAk.class, new RegPumpingLemmaTransducer());
+		addMapping(model.pumping.reg.AnBn.class, new RegPumpingLemmaTransducer());
+		addMapping(AnEven.class, new RegPumpingLemmaTransducer());
+		addMapping(B5W.class, new RegPumpingLemmaTransducer());
+		addMapping(B5Wmod.class, new RegPumpingLemmaTransducer());
+		addMapping(BBABAnAn.class, new RegPumpingLemmaTransducer());
+		addMapping(BkABnBAn.class, new RegPumpingLemmaTransducer());
+		addMapping(NaNb.class, new RegPumpingLemmaTransducer());
+		addMapping(Palindrome.class, new RegPumpingLemmaTransducer());
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {

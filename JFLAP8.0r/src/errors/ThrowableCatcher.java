@@ -24,6 +24,9 @@ import java.awt.*;
 import java.io.*;
 import javax.swing.*;
 
+import universe.JFLAPUniverse;
+import view.environment.JFLAPEnvironment;
+
 /**
  * Handles uncaught exceptions and errors in the AWT thread. The goal of JFLAP's
  * code is, of course, to not have any uncaught exceptions at all. However,
@@ -35,7 +38,7 @@ import javax.swing.*;
  * @author Thomas Finley
  */
 
-public class ThrowableCatcher {
+public class ThrowableCatcher implements Thread.UncaughtExceptionHandler{
 	/**
 	 * Handles an exception uncaught by our code.
 	 * 
@@ -43,8 +46,22 @@ public class ThrowableCatcher {
 	 *            the throwable we are trying to catch
 	 */
 	public void handle(Throwable throwable) {
+		handleException(Thread.currentThread().getName(), throwable);
+	}
+
+	/** The location of the uncaught error message. */
+	private static final String ERROR_LOCATION = "/DOCS/error.html";
+
+	@Override
+	public void uncaughtException(Thread t, Throwable e) {
+		handleException(t.getName(), e);
+	}
+	
+	private void handleException(String name, Throwable throwable){
 		if (throwable instanceof JFLAPException){
-			JFLAPError.show(throwable.getMessage(), "Error");
+			JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+			
+			JFLAPError.show(env, throwable.getMessage(), "Error");
 			return;
 		}
 		String message = null;
@@ -84,7 +101,4 @@ public class ThrowableCatcher {
 		panel.setPreferredSize(new Dimension(400, 400));
 		JOptionPane.showMessageDialog(null, panel);
 	}
-
-	/** The location of the uncaught error message. */
-	private static final String ERROR_LOCATION = "/DOCS/error.html";
 }

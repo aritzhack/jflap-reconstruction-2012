@@ -373,4 +373,14 @@ public abstract class ContextFreePumpingLemma extends PumpingLemma implements Se
     	// with cases is currently commented out, but can be added if desired.
     	chooseDecompositionWithoutCases();  	
     }    	
+    
+    public String toString(){
+    	return getSpecialHTML() +"\n"+
+    			"U: "+ u + "\n" +
+    			"V: "+ v + "\n" +
+    			"W: "+ w + "\n" +
+    			"X: "+ x + "\n" +
+    			"Y: "+ y + "\n" +
+    			"Z: "+ z + "\n" ;
+    }
 }

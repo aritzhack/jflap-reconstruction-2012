@@ -54,9 +54,10 @@ public interface XMLTags {
 	public static final String TAPE_ALPH = "tape_alph";
 	public static final String BOSS_TAG = "BOS_symbol";
 	public static final String TM_BLANK_TAG = "blank_symbol";
-
-
-
+	public static final String AXIOM_TAG = "axiom";
+	public static final String PARAMETER_TAG = "parameter";
+	public static final String PARAMETER_NAME_TAG = "parameter name";
+	public static final String PARAMETER_VALUE_TAG = "value";
 
 
 	

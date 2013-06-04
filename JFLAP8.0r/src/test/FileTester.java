@@ -1,12 +1,8 @@
 package test;
 
-import java.awt.image.TileObserver;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-
-import debug.JFLAPDebug;
-
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -32,7 +28,6 @@ import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.HaltBlock;
-import model.automata.turing.buildingblock.library.StartHaltBlock;
 import model.automata.turing.buildingblock.library.MoveBlock;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
 import model.automata.turing.buildingblock.library.ShiftBlock;
@@ -46,18 +41,21 @@ import model.grammar.Terminal;
 import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
+import model.pumping.ContextFreePumpingLemma;
+import model.pumping.PumpingLemma;
+import model.pumping.RegularPumpingLemma;
+import model.pumping.cf.AiBjCk;
+import model.pumping.reg.AB2n;
 import model.regex.RegularExpression;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.Symbolizer;
 import model.symbols.symbolizer.Symbolizers;
 import universe.preferences.JFLAPMode;
-import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.UtilFunctions;
 import file.xml.XMLCodec;
 
-public class FileTester extends TestHarness implements JFLAPConstants{
+public class FileTester extends TestHarness implements JFLAPConstants {
 
 	@Override
 	public void runTest() {
@@ -73,6 +71,22 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		codec.encode(fsa, f, null);
 		fsa = (FiniteStateAcceptor) codec.decode(f);
 		outPrintln("After import:\n" + fsa.toString());
+
+		// SAVE AND LOAD CF PUMPING LEMMA
+		ContextFreePumpingLemma lem = createCFLemma();
+		f = new File(toSave + "/CFLemma.jff");
+		outPrintln("Before import:\n" + lem.toString());
+		codec.encode((ContextFreePumpingLemma) lem, f, null);
+		lem = (ContextFreePumpingLemma) codec.decode(f);
+		outPrintln("After import:\n" + lem.toString());
+
+		// SAVE AND LOAD REG PUMPING LEMMA
+		RegularPumpingLemma reg = createRegLemma();
+		f = new File(toSave + "/RegLemma.jff");
+		outPrintln("Before import:\n" + reg.toString());
+		codec.encode((RegularPumpingLemma) reg, f, null);
+		reg = (RegularPumpingLemma) codec.decode(f);
+		outPrintln("After import:\n" + reg.toString());
 
 		// SAVE AND LOAD GRAMMAR
 		Grammar g = createGrammar();
@@ -105,26 +119,26 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		codec.encode(tm, f, null);
 		tm = (MultiTapeTuringMachine) codec.decode(f);
 		outPrintln("After import:\n" + tm.toString());
-		
+
 		// SAVE AND LOAD BLOCK TM
 		BlockTuringMachine blockTM = createBlockTM();
 		doSaveAndImport(blockTM, toSave + "/blockTM_unaryAdd.jff");
-		
+
 		// SAVE AND LOAD MOORE
 		MealyMachine mealy = createMealyMachine();
 		doSaveAndImport(mealy, toSave + "/mealyTest.jff");
-		
+
 		// SAVE AND LOAD MEALY
 		MooreMachine moore = createMooreMachine();
 		doSaveAndImport(moore, toSave + "/mooreTest.jff");
-		
+
 		// SAVE AND LOAD MEALY
 		fsa = createFSA2();
 		doSaveAndImport(fsa, toSave + "/fsa2.jff");
 
 	}
-	
-	public File doSaveAndImport(Object o, String filename){
+
+	public File doSaveAndImport(Object o, String filename) {
 		File f = new File(filename);
 		outPrintln("Before import:\n" + o.toString());
 		XMLCodec codec = new XMLCodec();
@@ -132,6 +146,29 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		o = codec.decode(f);
 		outPrintln("After import:\n" + o.toString());
 		return f;
+	}
+
+	private ContextFreePumpingLemma createCFLemma() {
+		ContextFreePumpingLemma lem = new AiBjCk();
+		lem.setFirstPlayer(PumpingLemma.HUMAN);
+		lem.setM(3);
+		lem.setDecomposition(new int[] { 2, 1, 1, 1, 5 });
+		lem.chooseI();
+		return lem;
+	}
+	
+	private RegularPumpingLemma createRegLemma() {
+		RegularPumpingLemma lem = new AB2n();
+		lem.setFirstPlayer(PumpingLemma.COMPUTER);
+		lem.chooseM();
+		lem.setW("abababab");
+		lem.chooseDecomposition();
+		lem.setI(2);
+		if (lem.isInLang(lem.createPumpedString()))
+        	lem.addAttempt(lem.getDecompositionAsString()+"; I = "+lem.getI() + "; <i>Failed</i>");
+        else
+        	lem.addAttempt(lem.getDecompositionAsString()+"; I = "+lem.getI() + "; <i>Won</i>");
+		return lem;
 	}
 
 	private FiniteStateAcceptor createFSA() {
@@ -187,7 +224,7 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		return fsa;
 
 	}
-	
+
 	private FiniteStateAcceptor createFSA2() {
 		StateSet states = new StateSet();
 		InputAlphabet input = new InputAlphabet();
@@ -211,17 +248,18 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		State q0 = new State("q0", 0);
 		State q1 = new State("q1", 1);
 
-		fsa.getFinalStateSet().addAll(Arrays.asList(new State[] {q1 }));
+		fsa.getFinalStateSet().addAll(Arrays.asList(new State[] { q1 }));
 
 		Symbol ONE = new Terminal("1");
 		Symbol ZERO = new Terminal("0");
 
 		FSATransition t0 = new FSATransition(q0, q1, new SymbolString(ZERO));
 		FSATransition t1 = new FSATransition(q0, q1, new SymbolString(ONE));
-		FSATransition t2 = new FSATransition(q0, q1, new SymbolString(ONE,ZERO));
-		FSATransition t3 = new FSATransition(q0, q1, new SymbolString(ONE,ONE));
+		FSATransition t2 = new FSATransition(q0, q1,
+				new SymbolString(ONE, ZERO));
+		FSATransition t3 = new FSATransition(q0, q1, new SymbolString(ONE, ONE));
 		fsa.getTransitions().addAll(
-				(Arrays.asList(new FSATransition[] { t0, t1,t2,t3})));
+				(Arrays.asList(new FSATransition[] { t0, t1, t2, t3 })));
 
 		return fsa;
 
@@ -266,7 +304,7 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		regex.setMode(JFLAPMode.DEFAULT);
 		// set regex
 		String in = "((a+b)*+c)";
-		SymbolString expression = Symbolizers.symbolize(in,regex);
+		SymbolString expression = Symbolizers.symbolize(in, regex);
 		regex.setTo(expression);
 		outPrintln("RegEx set to " + in + ": \n" + regex.toString());
 		// trim alphabets
@@ -287,54 +325,57 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 
 		Symbol a = new Symbol("a"), b = new Symbol("b"), c = new Symbol("c");
 		TapeAlphabet tapeAlph = new TapeAlphabet();
-//		tapeAlph.addAll(a, b, c);
+		// tapeAlph.addAll(a, b, c);
 
 		BlankSymbol blank = new BlankSymbol();
 		Symbol square = blank.getSymbol();
 		InputAlphabet inputAlph = new InputAlphabet();
-//		inputAlph.addAll(a, b, c);
+		// inputAlph.addAll(a, b, c);
 
 		TransitionSet<MultiTapeTMTransition> functions = new TransitionSet<MultiTapeTMTransition>();
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
 				states.getStateWithID(0), new Symbol[] { a, square, square },
 				new Symbol[] { a, a, square }, new TuringMachineMove[] {
-			TuringMachineMove.RIGHT, TuringMachineMove.RIGHT,
-			TuringMachineMove.STAY }));
+						TuringMachineMove.RIGHT, TuringMachineMove.RIGHT,
+						TuringMachineMove.STAY }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
 				states.getStateWithID(1), new Symbol[] { b, square, square },
-				new Symbol[] { b, square, b}, new TuringMachineMove[] {
-			TuringMachineMove.RIGHT, TuringMachineMove.STAY,
-			TuringMachineMove.RIGHT }));
+				new Symbol[] { b, square, b }, new TuringMachineMove[] {
+						TuringMachineMove.RIGHT, TuringMachineMove.STAY,
+						TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(0),
-				states.getStateWithID(4), new Symbol[] { square, square, square },
-				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-			TuringMachineMove.STAY, TuringMachineMove.LEFT,
-			TuringMachineMove.STAY }));
+				states.getStateWithID(4),
+				new Symbol[] { square, square, square }, new Symbol[] { square,
+						square, square }, new TuringMachineMove[] {
+						TuringMachineMove.STAY, TuringMachineMove.LEFT,
+						TuringMachineMove.STAY }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(1),
 				states.getStateWithID(1), new Symbol[] { b, square, square },
-				new Symbol[] { b, square, b}, new TuringMachineMove[] {
-			TuringMachineMove.RIGHT, TuringMachineMove.STAY,
-			TuringMachineMove.RIGHT }));
+				new Symbol[] { b, square, b }, new TuringMachineMove[] {
+						TuringMachineMove.RIGHT, TuringMachineMove.STAY,
+						TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(1),
 				states.getStateWithID(2), new Symbol[] { c, square, square },
 				new Symbol[] { c, square, square }, new TuringMachineMove[] {
-			TuringMachineMove.STAY, TuringMachineMove.LEFT,
-			TuringMachineMove.LEFT }));
+						TuringMachineMove.STAY, TuringMachineMove.LEFT,
+						TuringMachineMove.LEFT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(2),
-				states.getStateWithID(2), new Symbol[] { c, a, b},
-				new Symbol[] { c, a, b}, new TuringMachineMove[] {
-			TuringMachineMove.RIGHT, TuringMachineMove.LEFT,
-			TuringMachineMove.LEFT }));
+				states.getStateWithID(2), new Symbol[] { c, a, b },
+				new Symbol[] { c, a, b }, new TuringMachineMove[] {
+						TuringMachineMove.RIGHT, TuringMachineMove.LEFT,
+						TuringMachineMove.LEFT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(2),
-				states.getStateWithID(3), new Symbol[] { square, square, square },
-				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-			TuringMachineMove.STAY, TuringMachineMove.STAY,
-			TuringMachineMove.RIGHT }));
+				states.getStateWithID(3),
+				new Symbol[] { square, square, square }, new Symbol[] { square,
+						square, square }, new TuringMachineMove[] {
+						TuringMachineMove.STAY, TuringMachineMove.STAY,
+						TuringMachineMove.RIGHT }));
 		functions.add(new MultiTapeTMTransition(states.getStateWithID(4),
-				states.getStateWithID(3), new Symbol[] { square, square, square },
-				new Symbol[] { square, square, square }, new TuringMachineMove[] {
-			TuringMachineMove.STAY, TuringMachineMove.STAY,
-			TuringMachineMove.STAY }));
+				states.getStateWithID(3),
+				new Symbol[] { square, square, square }, new Symbol[] { square,
+						square, square }, new TuringMachineMove[] {
+						TuringMachineMove.STAY, TuringMachineMove.STAY,
+						TuringMachineMove.STAY }));
 
 		StartState start = new StartState(states.getStateWithID(0));
 		FinalStateSet finalStates = new FinalStateSet();
@@ -347,8 +388,8 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 
 		return tm;
 	}
-	
-	private BlockTuringMachine createBlockTM(){
+
+	private BlockTuringMachine createBlockTM() {
 		BlockSet blocks = new BlockSet();
 		TapeAlphabet alph = new TapeAlphabet();
 		BlankSymbol blank = new BlankSymbol();
@@ -356,133 +397,150 @@ public class FileTester extends TestHarness implements JFLAPConstants{
 		TransitionSet<BlockTransition> transitions = new TransitionSet<BlockTransition>();
 		StartState startState = new StartState();
 		FinalStateSet finalStates = new FinalStateSet();
-		
+
 		Symbol square = blank.getSymbol();
 		Symbol ONE = new Symbol("1");
 		Symbol PLUS = new Symbol("+");
 		Symbol TILDE = new Symbol(JFLAPConstants.TILDE);
 
 		int id = 0;
-		
+
 		Block start = new StartBlock(id++);
 		startState.setState(start);
 		blocks.add(start);
-		
+
 		Block shiftLeft = new ShiftBlock(TuringMachineMove.LEFT, alph, id++);
-		Block rightToBlank = new MoveUntilBlock(TuringMachineMove.RIGHT, square, alph, id++);
+		Block rightToBlank = new MoveUntilBlock(TuringMachineMove.RIGHT,
+				square, alph, id++);
 		Block writeONE = new WriteBlock(ONE, alph, id++);
-		Block leftToBlank = new MoveUntilBlock(TuringMachineMove.LEFT, square, alph, id++);
+		Block leftToBlank = new MoveUntilBlock(TuringMachineMove.LEFT, square,
+				alph, id++);
 		Block moveRight1 = new MoveBlock(TuringMachineMove.RIGHT, alph, id++);
 		Block writeBlank = new WriteBlock(square, alph, id++);
 		Block moveRight2 = new MoveBlock(TuringMachineMove.RIGHT, alph, id++);
 		Block halt = new HaltBlock(id);
 		finalStates.add(halt);
-		
+
 		BlockTransition[] trans = new BlockTransition[9];
-		
+
 		trans[0] = new BlockTransition(start, shiftLeft, new SymbolString(ONE));
-		trans[1] = new BlockTransition(shiftLeft, rightToBlank, new SymbolString(TILDE));
-		trans[2] = new BlockTransition(rightToBlank, writeONE, new SymbolString(TILDE));
-		trans[3] = new BlockTransition(writeONE, leftToBlank, new SymbolString(TILDE));
-		trans[4] = new BlockTransition(leftToBlank, moveRight1, new SymbolString(TILDE));
-		trans[5] = new BlockTransition(moveRight1, start, new SymbolString(TILDE));
-		trans[6] = new BlockTransition(start, writeBlank, new SymbolString(PLUS));
-		trans[7] = new BlockTransition(writeBlank, moveRight2, new SymbolString(TILDE));
-		trans[8] = new BlockTransition(moveRight2, halt, new SymbolString(TILDE));
-		
-		for (Block b: new Block[]{shiftLeft, rightToBlank, writeONE, leftToBlank, 
-									moveRight1, writeBlank, moveRight2, halt}){
+		trans[1] = new BlockTransition(shiftLeft, rightToBlank,
+				new SymbolString(TILDE));
+		trans[2] = new BlockTransition(rightToBlank, writeONE,
+				new SymbolString(TILDE));
+		trans[3] = new BlockTransition(writeONE, leftToBlank, new SymbolString(
+				TILDE));
+		trans[4] = new BlockTransition(leftToBlank, moveRight1,
+				new SymbolString(TILDE));
+		trans[5] = new BlockTransition(moveRight1, start, new SymbolString(
+				TILDE));
+		trans[6] = new BlockTransition(start, writeBlank,
+				new SymbolString(PLUS));
+		trans[7] = new BlockTransition(writeBlank, moveRight2,
+				new SymbolString(TILDE));
+		trans[8] = new BlockTransition(moveRight2, halt,
+				new SymbolString(TILDE));
+
+		for (Block b : new Block[] { shiftLeft, rightToBlank, writeONE,
+				leftToBlank, moveRight1, writeBlank, moveRight2, halt }) {
 			blocks.add(b);
 		}
 
-		for (BlockTransition t: trans){
+		for (BlockTransition t : trans) {
 			transitions.add(t);
 		}
-		
-		return new BlockTuringMachine(blocks, alph, blank, inputAlph, transitions, startState, finalStates);
+
+		return new BlockTuringMachine(blocks, alph, blank, inputAlph,
+				transitions, startState, finalStates);
 
 	}
-	
+
 	private MooreMachine createMooreMachine() {
 		StateSet states = new StateSet();
 		InputAlphabet alph = new InputAlphabet();
-		OutputAlphabet out	= new OutputAlphabet();
+		OutputAlphabet out = new OutputAlphabet();
 		TransitionSet<FSATransition> transitions = new TransitionSet<FSATransition>();
 		StartState start = new StartState();
 		OutputFunctionSet<MooreOutputFunction> outputFunc = new OutputFunctionSet<MooreOutputFunction>();
-		MooreMachine moore = new MooreMachine(states, alph, out, transitions, start, outputFunc);
-		
+		MooreMachine moore = new MooreMachine(states, alph, out, transitions,
+				start, outputFunc);
+
 		Symbol a = new Symbol("A");
 		Symbol b = new Symbol("B");
 		Symbol c = new Symbol("C");
 		Symbol d = new Symbol("D");
 
-		
 		State s1 = new State("q1", 1);
 		State s2 = new State("q2", 2);
 		State s3 = new State("q3", 3);
-		
+
 		start.setState(s1);
-		
+
 		FSATransition t0 = new FSATransition(s1, s1, a);
 		FSATransition t1 = new FSATransition(s1, s2, a);
 		FSATransition t2 = new FSATransition(s2, s2, b);
 		FSATransition t3 = new FSATransition(s2, s3, c);
 		FSATransition t4 = new FSATransition(s3, s3, c);
-		
-		MooreOutputFunction o1 = new MooreOutputFunction(s1, new SymbolString(d));
-		MooreOutputFunction o2 = new MooreOutputFunction(s2, new SymbolString(c));
-		MooreOutputFunction o3 = new MooreOutputFunction(s3, new SymbolString(b));
 
-		transitions.addAll(toCollection(t0,t1,t2,t3,t4));
-		outputFunc.addAll(toCollection(o1,o2,o3));
-		
+		MooreOutputFunction o1 = new MooreOutputFunction(s1,
+				new SymbolString(d));
+		MooreOutputFunction o2 = new MooreOutputFunction(s2,
+				new SymbolString(c));
+		MooreOutputFunction o3 = new MooreOutputFunction(s3,
+				new SymbolString(b));
+
+		transitions.addAll(toCollection(t0, t1, t2, t3, t4));
+		outputFunc.addAll(toCollection(o1, o2, o3));
+
 		return moore;
 	}
-	
+
 	private MealyMachine createMealyMachine() {
 		StateSet states = new StateSet();
 		InputAlphabet alph = new InputAlphabet();
-		OutputAlphabet out	= new OutputAlphabet();
+		OutputAlphabet out = new OutputAlphabet();
 		TransitionSet<FSATransition> transitions = new TransitionSet<FSATransition>();
 		StartState start = new StartState();
 		OutputFunctionSet<MealyOutputFunction> outputFunc = new OutputFunctionSet<MealyOutputFunction>();
-		MealyMachine mealy = new MealyMachine(states, alph, out, transitions, start, outputFunc);
-		
+		MealyMachine mealy = new MealyMachine(states, alph, out, transitions,
+				start, outputFunc);
+
 		Symbol a = new Symbol("A");
 		Symbol b = new Symbol("B");
 		Symbol c = new Symbol("C");
 		Symbol d = new Symbol("D");
 
-		
 		State s1 = new State("q1", 1);
 		State s2 = new State("q2", 2);
 		State s3 = new State("q3", 3);
-		
+
 		start.setState(s1);
-		
-		
+
 		FSATransition t0 = new FSATransition(s1, s1, a);
 		FSATransition t1 = new FSATransition(s1, s2, a);
 		FSATransition t2 = new FSATransition(s2, s2, b);
 		FSATransition t3 = new FSATransition(s2, s3, c);
 		FSATransition t4 = new FSATransition(s3, s3, c);
-		
-		MealyOutputFunction o0 = new MealyOutputFunction(t0, new SymbolString(d));
-		MealyOutputFunction o1 = new MealyOutputFunction(t1, new SymbolString(d));
-		MealyOutputFunction o2 = new MealyOutputFunction(t2, new SymbolString(c));
-		MealyOutputFunction o3 = new MealyOutputFunction(t3, new SymbolString(b));
-		MealyOutputFunction o4 = new MealyOutputFunction(t4, new SymbolString(b));
 
-		transitions.addAll(toCollection(t0,t1,t2,t3,t4));
-		outputFunc.addAll(toCollection(o0, o1,o2,o3, o4));
-		
+		MealyOutputFunction o0 = new MealyOutputFunction(t0,
+				new SymbolString(d));
+		MealyOutputFunction o1 = new MealyOutputFunction(t1,
+				new SymbolString(d));
+		MealyOutputFunction o2 = new MealyOutputFunction(t2,
+				new SymbolString(c));
+		MealyOutputFunction o3 = new MealyOutputFunction(t3,
+				new SymbolString(b));
+		MealyOutputFunction o4 = new MealyOutputFunction(t4,
+				new SymbolString(b));
+
+		transitions.addAll(toCollection(t0, t1, t2, t3, t4));
+		outputFunc.addAll(toCollection(o0, o1, o2, o3, o4));
+
 		return mealy;
 	}
 
-
-	private <T> Collection<T> toCollection(T ... array) {
+	private <T> Collection<T> toCollection(T... array) {
 		return Arrays.asList(array);
 	}
-	
+
 }
