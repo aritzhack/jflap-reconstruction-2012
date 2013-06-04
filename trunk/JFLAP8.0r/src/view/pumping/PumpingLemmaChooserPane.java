@@ -197,6 +197,10 @@ public class PumpingLemmaChooserPane extends EditingPanel
         }
     }
     
+    public void setComputerFirst(){
+    		computerButton.doClick();
+    }
+    
     @Override
     public String getName() {
     	return "Pumping Lemma";

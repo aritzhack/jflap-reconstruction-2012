@@ -33,6 +33,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import debug.JFLAPDebug;
+
 import universe.JFLAPUniverse;
 
 
@@ -69,6 +71,16 @@ public class Main {
         
 
 		dontQuit=dont;
+		
+		try {
+			System.setProperty("sun.awt.exception.handler",
+					ThrowableCatcher.class.getName());
+		} catch (SecurityException e) {
+			System.err.println("Warning: could not set the "
+					+ "AWT exception handler.");
+		}		
+		Thread.setDefaultUncaughtExceptionHandler(new ThrowableCatcher());
+		
 		// Make sure we're not some old version.
 		try {
 			String v = System.getProperty("java.specification.version");
@@ -84,13 +96,7 @@ public class Main {
 			// Eh, that shouldn't happen.
 		}
 		
-		try {
-			System.setProperty("sun.awt.exception.handler",
-					ThrowableCatcher.class.getName());
-		} catch (SecurityException e) {
-			System.err.println("Warning: could not set the "
-					+ "AWT exception handler.");
-		}		
+		
 		// Apple is stupid.
 		try {
 			// Well, Apple WAS stupid...

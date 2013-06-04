@@ -250,5 +250,15 @@ public abstract class RegularPumpingLemma extends PumpingLemma implements Serial
 	}
     
 	public abstract String getSpecialHTML();
+	
+	public String toString() {
+		return getSpecialHTML() + "\n" +
+				"M: "+ m + "\n" +
+				"W: "+ w + "\n" +
+				"I: "+ i + "\n" +
+				"X: "+ x + "\n" + 
+				"Y: "+ y + "\n" +
+				"Z: "+ z + "\n";
+	}
     
 }

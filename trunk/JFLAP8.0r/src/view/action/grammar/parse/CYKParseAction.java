@@ -5,6 +5,9 @@ import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.grammar.Grammar;
 import model.grammar.typetest.matchers.CNFChecker;
 
+import universe.JFLAPUniverse;
+import universe.preferences.JFLAPPreferences;
+import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.parsing.ParserView;
 import view.grammar.parsing.cyk.CYKParseView;
@@ -28,8 +31,11 @@ public class CYKParseAction extends ParseAction<CYKParser> {
 		if (!new CNFChecker().matchesGrammar(g))
 			throw new ParserException(
 					"The grammar must be in CNF form to be parsed!");
-
-		return new CYKParseView(new CYKParser(g));
+		CYKParser parser = new CYKParser(g);
+		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+		
+		env.setSize(JFLAPPreferences.CYK_WIDTH, JFLAPPreferences.CYK_HEIGHT);
+		return new CYKParseView(parser);
 	}
 
 }
