@@ -29,17 +29,18 @@ import model.pumping.ContextFreePumpingLemma;
  * @see pumping.ContextFreePumpingLemma
  *
  */
-public class CompCFPumpingLemmaInputPane extends ComputerFirstPane {
+public class CompCFPumpingLemmaInputView extends ComputerFirstView {
 
 	/**
      * Creates a <code>CompCFPumpingInputPane</code> for a <code>ContextFreePumpingLemma</code>.
      *
      * @param l the <code>ContextFreePumpingLemma</code> we want to run
      */
-	public CompCFPumpingLemmaInputPane(ContextFreePumpingLemma l)
+	public CompCFPumpingLemmaInputView(ContextFreePumpingLemma l)
     {
         super(l);
-    }				
+        setPreferredSize(CF_COMP_SIZE);
+    }
 	
 	/**
      * Initializes the animation canvas with the values of <i>u</i>, <i>v</i>,

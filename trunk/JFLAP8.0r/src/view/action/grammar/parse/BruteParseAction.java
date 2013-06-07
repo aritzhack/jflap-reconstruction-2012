@@ -27,7 +27,6 @@ public class BruteParseAction extends ParseAction<UnrestrictedBruteParser> {
 		UnrestrictedBruteParser parser = UnrestrictedBruteParser.createNewBruteParser(g);
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
 		
-		env.setSize(700, env.getHeight());
 		return new BruteParserView(parser);
 	}
 

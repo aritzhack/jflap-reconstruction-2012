@@ -56,7 +56,8 @@ public interface XMLTags {
 	public static final String TM_BLANK_TAG = "blank_symbol";
 	public static final String AXIOM_TAG = "axiom";
 	public static final String PARAMETER_TAG = "parameter";
-	public static final String PARAMETER_NAME_TAG = "parameter name";
+	public static final String PARAMETER_MAP_TAG = "parameter_map";
+	public static final String PARAMETER_NAME_TAG = "parameter_name";
 	public static final String PARAMETER_VALUE_TAG = "value";
 
 

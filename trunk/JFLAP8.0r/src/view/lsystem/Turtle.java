@@ -37,13 +37,14 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 
 /**
  * This represents the current context for rendering strings of symbols. Aside
  * from various methods.
  * 
- * @author Thomas Finley
+ * @author Thomas Finley, Ian McMahon
  */
 
 class Turtle implements Copyable{
@@ -53,11 +54,11 @@ class Turtle implements Copyable{
 	public Turtle() {
 		parametersToNumbers = new HashMap<String, Number>();
 
-		setDistance(15.0);
-		setAngleChange(15.0);
-		setHueChange(10.0);
-		setLineWidth(1.0);
-		setLineIncrement(1.0);
+		setDistance(JFLAPPreferences.DEFAULT_LS_DISTANCE);
+		setAngleChange(JFLAPPreferences.DEFAULT_LS_ANGLE);
+		setHueChange(JFLAPPreferences.DEFAULT_LS_HUE);
+		setLineWidth(JFLAPPreferences.DEFAULT_LS_WIDTH);
+		setLineIncrement(JFLAPPreferences.DEFAULT_LS_LINCREMENT);
 
 		updateBounds();
 	}
@@ -284,6 +285,7 @@ class Turtle implements Copyable{
 			float c1 = Float.parseFloat(st[0]);
 			float c2 = Float.parseFloat(st[1]);
 			float c3 = Float.parseFloat(st[2]);
+			
 			if (c1 < 0f || c1 > 255f || c2 < 0f || c2 > 255f || c3 < 0f
 					|| c3 > 255f)
 				return null; // Out of range!
@@ -543,7 +545,7 @@ class Turtle implements Copyable{
 		StringReader reader = new StringReader(string);
 		StreamTokenizer st = new StreamTokenizer(reader);
 		st.ordinaryChar('/');
-		ArrayList list = new ArrayList();
+		ArrayList<Object> list = new ArrayList<Object>();
 		Number zero = new Integer(0);
 		boolean number = false;
 		Character plus = new Character('+');

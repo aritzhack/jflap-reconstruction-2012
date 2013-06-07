@@ -1,4 +1,6 @@
-package errors;
+package file;
+
+import errors.JFLAPException;
 
 public class SavingException extends JFLAPException {
 	

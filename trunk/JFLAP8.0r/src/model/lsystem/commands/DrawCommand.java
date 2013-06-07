@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to move forward and draw a line
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class DrawCommand extends LSystemCommand{
 
 	public DrawCommand(String s) {

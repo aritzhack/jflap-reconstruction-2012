@@ -1,6 +1,7 @@
 package view.grammar.parsing.brute;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
@@ -12,8 +13,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import debug.JFLAPDebug;
 
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
@@ -39,11 +38,13 @@ public class BruteParseTablePanel extends RunningView {
 
 		TableColumn levels = colModel.getColumn(0);
 		levels.setMinWidth(70);
-		levels.setMaxWidth(100);
+		levels.setMaxWidth(70);
 
 		TableColumn nodes = colModel.getColumn(1);
 		nodes.setMinWidth(175);
-		nodes.setMaxWidth(200);
+		nodes.setMaxWidth(175);
+		
+		setPreferredSize(new Dimension(300, 180));
 	}
 
 	@Override
@@ -99,7 +100,6 @@ public class BruteParseTablePanel extends RunningView {
 			}
 			fireTableRowsInserted(myData.size()-1, myData.size()-1);
 			BruteParseTablePanel.this.repaint();
-			JFLAPDebug.print();
 		}
 	}
 

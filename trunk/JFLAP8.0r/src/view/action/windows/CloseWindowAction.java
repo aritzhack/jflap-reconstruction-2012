@@ -14,12 +14,7 @@
  *
  */
 
-
-
-
-
 package view.action.windows;
-
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -27,13 +22,15 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
+import debug.JFLAPDebug;
+
+import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import view.environment.JFLAPEnvironment;
 
-
 /**
- * The <CODE>CloseWindowAction</CODE> invokes the close method on the <CODE>EnvironmentFrame</CODE>
- * to which they belong.
+ * The <CODE>CloseWindowAction</CODE> invokes the close method on the
+ * <CODE>EnvironmentFrame</CODE> to which they belong.
  * 
  * @author Thomas Finley
  */
@@ -45,8 +42,8 @@ public class CloseWindowAction extends AbstractAction {
 	 * Instantiates a <CODE>CloseWindowAction</CODE>.
 	 * 
 	 * @param frame
-	 *            the <CODE>EnvironmentFrame</CODE> to dismiss when an action
-	 *            is registered
+	 *            the <CODE>EnvironmentFrame</CODE> to dismiss when an action is
+	 *            registered
 	 */
 	public CloseWindowAction(JFLAPEnvironment e) {
 		super("Close", null);
@@ -59,6 +56,7 @@ public class CloseWindowAction extends AbstractAction {
 	 * Handles the closing of the window.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		myEnvironment.close(true);
+		if (myEnvironment.close(true))
+			JFLAPUniverse.deregisterEnvironment(myEnvironment);
 	}
 }

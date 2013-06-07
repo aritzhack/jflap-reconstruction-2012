@@ -1,22 +1,26 @@
 package file.xml.formaldef.lsystem;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import model.symbols.Symbol;
-import model.symbols.SymbolString;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import debug.JFLAPDebug;
 
 import file.xml.BasicTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
-import file.xml.formaldef.components.symbols.SymbolStringTransducer;
+import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 
+/**
+ * Transducer specific to a Parameter of an LSystem.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class ParameterTransducer extends BasicTransducer<Parameter> {
 
 	@Override
@@ -27,19 +31,24 @@ public class ParameterTransducer extends BasicTransducer<Parameter> {
 	@Override
 	public Parameter fromStructureRoot(Element root) {
 		List<Element> eleChildren = XMLHelper.getElementChildren(root);
-		Map<String, String> childrenMap = new HashMap<String, String>();
+		ParameterName name = new ParameterName(null);
+		ParameterValue value = new ParameterValue("");
+		
 		for (Element e : eleChildren) {
 			String tag = e.getTagName();
-			XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
-
-			childrenMap.put(tag, (String) trans.fromStructureRoot(e));
+			
+			boolean isName = tag.equals(PARAMETER_NAME_TAG);
+			boolean isValue = tag.equals(PARAMETER_VALUE_TAG);
+			if(isName || isValue){
+				XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
+				
+				if(isName)
+					name = (ParameterName) trans.fromStructureRoot(root);
+				else
+					value = (ParameterValue) trans.fromStructureRoot(root);
+				
+			}
 		}
-		if (!childrenMap.containsKey(PARAMETER_NAME_TAG)
-				|| !childrenMap.containsKey(PARAMETER_VALUE_TAG))
-			return new Parameter(null, "");
-		String name = childrenMap.get(PARAMETER_NAME_TAG), value = childrenMap
-				.get(PARAMETER_VALUE_TAG);
-
 		return new Parameter(name, value);
 	}
 
@@ -48,10 +57,10 @@ public class ParameterTransducer extends BasicTransducer<Parameter> {
 
 		Element root = XMLHelper.createElement(doc, getTag(), null, null);
 
-		XMLTransducer trans = new SingleStringTransducer(PARAMETER_NAME_TAG);
+		XMLTransducer trans = new ParameterNameTransducer();
 		root.appendChild(trans.toXMLTree(doc, param.getName()));
-		
-		trans = new SingleStringTransducer(PARAMETER_VALUE_TAG);
+
+		trans = new ParameterValueTransducer();
 		root.appendChild(trans.toXMLTree(doc, param.getValue()));
 
 		return root;

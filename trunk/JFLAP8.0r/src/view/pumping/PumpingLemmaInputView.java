@@ -47,7 +47,7 @@ import model.undo.UndoKeeper;
 
 
 /**
- * A <code>PumpingLemmaInputPane</code> is a <code>JPanel</code> that 
+ * A <code>PumpingLemmaInputView</code> is an <code>EditingPanel</code> that 
  * provides the user with an interface to work with regular or
  * context-free pumping lemmas where either the user or the computer
  * go first.
@@ -56,22 +56,13 @@ import model.undo.UndoKeeper;
  * @see pumping.PumpingLemma
  *
  */
-public abstract class PumpingLemmaInputPane extends EditingPanel 
+public abstract class PumpingLemmaInputView extends EditingPanel 
 {
 	/**
      * The maximum size of the window. It should fit onto most
      * screens.
      */
-    protected static Dimension MAX_SIZE = new Dimension(640, 580);   
-    /**
-     * The instruction that prompts the user to view the animation.
-     */
-    private static String PROMPT_ANIM = "Click \"Step\" in Box 5 to step the animation.";
-    /**
-     * The instruction that prompts the user to view the animation or add the case.
-     */
-    private static String PROMPT_CASE = "Click \"Step\" in Box 5 to step the animation or " +
-            "\"Add\" in the right panel to add this case.";    
+    protected static Dimension MAX_SIZE = new Dimension(700, 580);   
     /**
      * The <code>PumpingLemma</code> that we are demonstrating.
      */
@@ -143,7 +134,7 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
      * @param l the pumping lemma we are working with
      * @param title the title of the lemma
      */
-    public PumpingLemmaInputPane(PumpingLemma l, String title)
+    public PumpingLemmaInputView(PumpingLemma l, String title)
     {
     	super(new UndoKeeper(), false);
         this.setLayout(new BorderLayout());
@@ -167,7 +158,7 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
         leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         initLeftPanel();
-        if(myLemma.numCasesTotal() <= 1 || this instanceof ComputerFirstPane)
+        if(myLemma.numCasesTotal() <= 1 || this instanceof ComputerFirstView)
         {
             leftPanel.setPreferredSize(MAX_SIZE);
             leftPanel.setMaximumSize(MAX_SIZE);
@@ -217,7 +208,7 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
      	
     	for (int i=0; i<stages.length; i++)
     		leftPanel.add(stages[i]);
-    	if (this instanceof HumanFirstPane)
+    	if (this instanceof HumanFirstView)
         	stages[2].setVisible(false);
         for (int i=3; i<stages.length; i++)
     		stages[i].setVisible(false);
@@ -264,13 +255,14 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
             }
         });
                 
-        String objectiveText = addTopGameFeatures(clear);        
+        String objectiveText = addTopGameFeatures(clear);     
+        Dimension size = new Dimension(MAX_SIZE.width, MAX_SIZE.height/10);
         p.add(clear);
         p.add(explain);
         p.add(sp);
         p.setBorder(BorderFactory.createTitledBorder("Objective: "+objectiveText));
-        p.setMaximumSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
-        p.setPreferredSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
+        p.setMaximumSize(size);
+        p.setPreferredSize(size);
     	return p;
     }
     
@@ -291,9 +283,10 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
         p.add(q, BorderLayout.CENTER);
         
         JPanel s = new JPanel();
+        Dimension size = new Dimension(MAX_SIZE.width, MAX_SIZE.height/10);
         s.setLayout(new BoxLayout(s, BoxLayout.X_AXIS));     
-        p.setMaximumSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
-        p.setPreferredSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
+        p.setMaximumSize(size);
+        p.setPreferredSize(size);
         return p;
     }
     
@@ -306,11 +299,13 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
     {
         JPanel p = new JPanel(new BorderLayout());
         String message = addWGameFeatures();
+        Dimension size = new Dimension(MAX_SIZE.width, MAX_SIZE.height/10);
+        
         p.setBorder(BorderFactory.createTitledBorder("2. " + message));
         p.add(myWDisplay, BorderLayout.NORTH);
         p.add(stageMessages[2], BorderLayout.SOUTH);
-        p.setMaximumSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
-        p.setPreferredSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
+        p.setMaximumSize(size);
+        p.setPreferredSize(size);
         return p;
     }
     
@@ -331,6 +326,8 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
     {
         JPanel o = new JPanel(new BorderLayout());
         JPanel p = new JPanel();
+        Dimension size = new Dimension(MAX_SIZE.width, MAX_SIZE.height/10);
+        
         p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
         p.add(new JLabel("i: "));
         String message = addIGameFeatures();        
@@ -343,8 +340,8 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
         o.setBorder(BorderFactory.createTitledBorder("4. " + message));
         o.add(p, BorderLayout.NORTH);
         o.add(p.add(stageMessages[4]), BorderLayout.SOUTH);
-        o.setMaximumSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
-        o.setPreferredSize(new Dimension(MAX_SIZE.width, MAX_SIZE.height/10));
+        o.setMaximumSize(size);
+        o.setPreferredSize(size);
         return o;
     }    
     
@@ -396,11 +393,12 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
         q.add(myStartAnimation);
         myCanvas.setRestartButton(myStartAnimation);
            
+        Dimension size = new Dimension(MAX_SIZE.width, 35*MAX_SIZE.height/100);
         p.add(stageMessages[5], BorderLayout.NORTH);
         p.add(q, BorderLayout.SOUTH);
         p.setBorder(BorderFactory.createTitledBorder("5. Animation"));
-        p.setMaximumSize(new Dimension(MAX_SIZE.width, 35*MAX_SIZE.height/100));
-        p.setPreferredSize(new Dimension(MAX_SIZE.width, 35*MAX_SIZE.height/100));
+        p.setMaximumSize(size);
+        p.setPreferredSize(size);
         return p;
     }        
     
@@ -448,7 +446,7 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
             myCases.setAddReplaceButtonsEnabled(false);
         }
         
-        if (this instanceof HumanFirstPane)
+        if (this instanceof HumanFirstView)
         	setVisibilityStages(2, false);
         else
         	setVisibilityStages(3, false);
@@ -602,6 +600,7 @@ public abstract class PumpingLemmaInputPane extends EditingPanel
         
         int count = 1;
         StringBuffer ret = new StringBuffer();
+        
         for(int i = 0; i < s.length(); i++)
         {
             for(int j = i + 1; j < s.length(); j++)

@@ -48,10 +48,12 @@ import model.undo.UndoKeeper;
  * @author Jinghui Lim
  *
  */
-public class PumpingLemmaChooserPane extends EditingPanel 
+public class PumpingLemmaChooserView extends EditingPanel 
 {
-    /**
-     * The list of puming lemmas to choose from.
+    private static final Dimension DEFAULT_REG_SIZE = new Dimension(650, 640);
+	private static final Dimension DEFAULT_CF_SIZE = new Dimension(750, 700);
+	/**
+     * The list of pumping lemmas to choose from.
      */
     PumpingLemmaChooser myChooser;
     /**
@@ -67,7 +69,7 @@ public class PumpingLemmaChooserPane extends EditingPanel
      * @param plc the associated <code>PumpingLemmaChooser</code> 
      * @param env the associated <code>Environment</code>
      */
-    public PumpingLemmaChooserPane(PumpingLemmaChooser plc)
+    public PumpingLemmaChooserView(PumpingLemmaChooser plc)
     {
     	super(new UndoKeeper(), false);
         super.setLayout(new BorderLayout());
@@ -75,12 +77,16 @@ public class PumpingLemmaChooserPane extends EditingPanel
         init();
     }
     
-    public PumpingLemmaChooserPane(RegPumpingLemmaChooser reg){
+    public PumpingLemmaChooserView(RegPumpingLemmaChooser reg){
     	this((PumpingLemmaChooser) reg);
+    	setMaximumSize(DEFAULT_REG_SIZE);
+    	setPreferredSize(DEFAULT_REG_SIZE);
     }
     
-    public PumpingLemmaChooserPane(CFPumpingLemmaChooser cf){
+    public PumpingLemmaChooserView(CFPumpingLemmaChooser cf){
     	this((PumpingLemmaChooser) cf);
+    	setMaximumSize(DEFAULT_CF_SIZE);
+    	setPreferredSize(DEFAULT_CF_SIZE);
     }
     
     /**
@@ -91,6 +97,7 @@ public class PumpingLemmaChooserPane extends EditingPanel
     	JPanel listPanel = new JPanel();
     	listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
     	listPanel.setBorder(BorderFactory.createTitledBorder("Then select a lemma."));
+    	
     	add(initRadioButtonPanel(), BorderLayout.NORTH);
         for(int i = 0; i < myChooser.size(); i++)
             listPanel.add(addPumpingLemma(i));
@@ -127,25 +134,26 @@ public class PumpingLemmaChooserPane extends EditingPanel
     private JPanel addPumpingLemma(int i)
     {
         PumpingLemma lemma = myChooser.get(i);
-        JPanel pane = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         JEditorPane ep = new JEditorPane("text/html", "<html><body align=center><b><i>L</i> = {" + 
                 lemma.getHTMLTitle() + "}</b></body></html>");
+        
         ep.setBackground(this.getBackground());
         ep.setDisabledTextColor(Color.BLACK);
         ep.setEnabled(false);
-        pane.add(ep, BorderLayout.CENTER);
+        panel.add(ep, BorderLayout.CENTER);
 
         PumpingLemmaChooseButton button = new PumpingLemmaChooseButton(myChooser.get(i), i);
 
-        pane.add(button, BorderLayout.EAST);
-        pane.setBorder(BorderFactory.createEtchedBorder());
+        panel.add(button, BorderLayout.EAST);
+        panel.setBorder(BorderFactory.createEtchedBorder());
         
-        return pane;
+        return panel;
     }
     
     /**
      * A <code>PumpingLemmaChooseButton</code> is a <code>JButton</code>
-     * that opens a {@link PumpingLemmaInputPane} for its associated
+     * that opens a {@link PumpingLemmaInputView} for its associated
      * {@link pumping.PumpingLemma}.
      * 
      * @author Jinghui Lim
@@ -175,23 +183,22 @@ public class PumpingLemmaChooserPane extends EditingPanel
             this.addActionListener(new ActionListener()
                 {
                     public void actionPerformed(ActionEvent e)
-                    {
-                        myChooser.reset(myIndex);
+                    {   myChooser.reset(myIndex);
                         myChooser.setCurrent(myIndex);
-                        PumpingLemmaInputPane pane = null;   //this value should change
+                        PumpingLemmaInputView inputView = null;   //this value should change
                         if (humanButton.isSelected()) {
                         	if(myLemma instanceof RegularPumpingLemma)
-                        		pane = new HumanRegPumpingLemmaInputPane((RegularPumpingLemma)myLemma);
+                        		inputView = new HumanRegPumpingLemmaInputView((RegularPumpingLemma)myLemma);
                         	else if(myLemma instanceof ContextFreePumpingLemma)
-                        		pane = new HumanCFPumpingLemmaInputPane((ContextFreePumpingLemma)myLemma);
+                        		inputView = new HumanCFPumpingLemmaInputView((ContextFreePumpingLemma)myLemma);
                         }                        
                         else if (computerButton.isSelected()) {
                         	if(myLemma instanceof RegularPumpingLemma)
-                        		pane = new CompRegPumpingLemmaInputPane((RegularPumpingLemma)myLemma);
+                        		inputView = new CompRegPumpingLemmaInputView((RegularPumpingLemma)myLemma);
                         	else if(myLemma instanceof ContextFreePumpingLemma)
-                        		pane = new CompCFPumpingLemmaInputPane((ContextFreePumpingLemma)myLemma);
+                        		inputView = new CompCFPumpingLemmaInputView((ContextFreePumpingLemma)myLemma);
                         }
-                        JFLAPUniverse.getActiveEnvironment().addSelectedComponent(pane);
+                        JFLAPUniverse.getActiveEnvironment().addSelectedComponent(inputView);
                     }
                 });
         }

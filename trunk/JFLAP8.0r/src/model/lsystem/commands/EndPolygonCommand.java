@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to stop drawing a polygon
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class EndPolygonCommand extends LSystemCommand {
 
 	public EndPolygonCommand(String s) {

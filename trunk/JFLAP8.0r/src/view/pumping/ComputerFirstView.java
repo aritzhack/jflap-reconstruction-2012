@@ -41,7 +41,7 @@ import model.pumping.PumpingLemma;
  * 
  * @author Chris Morgan & Jinghui Lim
  */
-public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
+public abstract class ComputerFirstView extends PumpingLemmaInputView {
 	/**
 	 * The goal of the user, which is to try to force a contradiction.
 	 */
@@ -62,6 +62,11 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
      * The instruction that prompts the user for the selection of <i>i</i>.
      */
 	private static String PROMPT_I = "Please enter a possible value for i and press \"Enter\".";
+	
+	protected static Dimension REG_COMP_SIZE = new Dimension(750, 710);
+	
+	protected static Dimension CF_COMP_SIZE = new Dimension(750, 700);
+	
     /**
      * The message that states not every case can be generated with the current <i>w</i> value. 
      */
@@ -74,7 +79,9 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
      */
     protected JLabel decompLabel;
     
-	public ComputerFirstPane(PumpingLemma l)
+    
+    
+	public ComputerFirstView(PumpingLemma l)
     {
 		super(l, l.getHTMLTitle());
 		l.setFirstPlayer(PumpingLemma.COMPUTER);
@@ -142,9 +149,6 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
                    String w = myWDisplay.getText();
                    
                    if(myLemma.isInLang(w) && w.length() >= myLemma.getM()) {
-                	  // String oldW, oldMessage;
-                	  // oldW = myLemma.getW();
-                	  // oldMessage = stageMessages[2].getText();
                 	   
                        myLemma.setW(w);
                        stages[3].setVisible(true);
@@ -155,20 +159,6 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
                		   decompLabel.setText("\n\n"+myLemma.getDecompositionAsString());
                        resetMessages();
                        leftPanel.revalidate();
-                       /*
-                        * If this is has only one case, myCases will not be initialized
-                        * so we check for null.
-                        */
-                    /*   if(myCases != null) {                    	   
-                    	   if (!oldW.equals(w)) {
-                        	   myCases.clearAll();                        	   
-                    		   if (!oldMessage.equals(ALL_CASES_NOT_APPLICABLE) && !myLemma.checkAllCasesPossible()) {
-                    			   stageMessages[2].setText(ALL_CASES_NOT_APPLICABLE);
-                    		   }
-                    	   }
-                    	   myCases.setDecomposition(myLemma.getDecomposition());
-                           myCases.setAddReplaceButtonsEnabled(false);
-                       }*/
                     }
                     else {
                 	    String error;
@@ -197,6 +187,7 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
                     int i = Integer.parseInt(myIDisplay.getText());
                     if(!(i  >= 0 && i != 1 && i <= 12))
                         throw new NumberFormatException();
+                    
                     stages[5].setVisible(true);
                     myLemma.setI(i);
                     if (myLemma.isInLang(myLemma.createPumpedString()))
@@ -209,6 +200,7 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
                     leftPanel.revalidate();
                     setCanvas();
                     myCanvas.stop();
+                    
                     if(myCases != null) {
                     	myCases.setI(i);                        
                         myCases.setAddReplaceButtonsEnabled(true);
@@ -231,10 +223,10 @@ public abstract class ComputerFirstPane extends PumpingLemmaInputPane {
         String s = myLemma.createPumpedString();
         myPumpedStringDisplay.setText(s);        
         if(myLemma.isInLang(s))
-            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputPane.toHTMLString(s) 
+            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputView.toHTMLString(s) 
                 + " = " + s + " is in the language.  Please try again.");
         else
-            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputPane.toHTMLString(s) 
+            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputView.toHTMLString(s) 
             + " = " + s + " is NOT in the language.  YOU WIN!");
     }
     

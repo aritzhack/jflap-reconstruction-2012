@@ -14,13 +14,17 @@ import org.w3c.dom.NodeList;
 
 import file.xml.XMLHelper;
 
+/**
+ * Transducer for saving any Context-Free Pumping Lemma.
+ * 
+ * @author Jinghui Lim, Ian McMahon
+ *
+ */
 public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
 	
-	public static final String CF_LEMMA_TAG = "context-free pumping lemma";
+	public static final String CF_LEMMA_TAG = "context-free_pumping_lemma";
     private static final String U_NAME = "uLength";
     private static final String V_NAME = "vLength";
-    private static final String X_NAME = "xLength";
-    private static final String Y_NAME = "yLength";
     private static final String CASE_NAME = "case";
     private static final String CASE_I_NAME = "caseI";
     private static final String CASE_U_NAME = "caseULength";
@@ -114,7 +118,7 @@ public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
                 root.appendChild(XMLHelper.createElement(doc, ATTEMPT, (String)attempts.get(i), null));
                 
         //Encode the list of attempts.
-        ArrayList cases = pl.getDoneCases();
+        ArrayList<Case> cases = pl.getDoneCases();
         if(cases != null && cases.size() > 0)
             for(int i = 0; i < cases.size(); i++)
                 root.appendChild(createCaseElement(doc, (Case)cases.get(i)));

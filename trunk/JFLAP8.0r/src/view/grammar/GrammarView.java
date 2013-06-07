@@ -1,6 +1,7 @@
 package view.grammar;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -17,6 +18,7 @@ import view.grammar.productions.ProductionTable;
 
 public class GrammarView extends BasicFormalDefinitionView<Grammar>{
 
+	private static final Dimension GRAMMAR_SIZE = new Dimension(500, 600);
 	private ProductionTable myTable;
 
 	public GrammarView(Grammar g){
@@ -26,6 +28,8 @@ public class GrammarView extends BasicFormalDefinitionView<Grammar>{
 	public GrammarView(Grammar definition, UndoKeeper keeper,
 			boolean editable) {
 		super(definition, keeper, editable);
+		setPreferredSize(GRAMMAR_SIZE);
+		setMaximumSize(GRAMMAR_SIZE);
 	}
 
 	@Override

@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to yaw/turn left
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class LeftYawCommand extends LSystemCommand {
 
 	public LeftYawCommand(String s) {

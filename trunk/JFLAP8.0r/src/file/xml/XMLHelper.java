@@ -21,6 +21,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
+import debug.JFLAPDebug;
+
 import file.DataException;
 
 public class XMLHelper {

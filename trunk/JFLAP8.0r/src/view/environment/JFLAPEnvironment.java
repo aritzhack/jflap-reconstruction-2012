@@ -13,23 +13,26 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
+import oldnewstuff.main.JFLAP;
+
 import model.pumping.PumpingLemma;
 
+import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
 import view.formaldef.FormalDefinitionView;
 import view.menus.JFLAPMenuBar;
 import view.pumping.CFPumpingLemmaChooser;
-import view.pumping.CompCFPumpingLemmaInputPane;
-import view.pumping.ComputerFirstPane;
-import view.pumping.HumanCFPumpingLemmaInputPane;
+import view.pumping.CompCFPumpingLemmaInputView;
+import view.pumping.ComputerFirstView;
+import view.pumping.HumanCFPumpingLemmaInputView;
 import view.pumping.PumpingLemmaChooser;
-import view.pumping.PumpingLemmaChooserPane;
-import view.pumping.PumpingLemmaInputPane;
+import view.pumping.PumpingLemmaChooserView;
+import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
 import debug.JFLAPDebug;
-import errors.SavingException;
+import file.SavingException;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
 
@@ -49,7 +52,7 @@ public class JFLAPEnvironment extends JFrame {
 	public JFLAPEnvironment(File f, int id) {
 		this(ViewFactory.createView(f), id);
 		setFile(f);
-		if (myPrimaryView instanceof PumpingLemmaInputPane)
+		if (myPrimaryView instanceof PumpingLemmaInputView)
 			addPLChooser();
 	}
 
@@ -62,33 +65,26 @@ public class JFLAPEnvironment extends JFrame {
 		myTabbedPane = new SpecialTabbedPane();
 		this.add(myTabbedPane);
 		myPrimaryView = component;
-		addView(component);
+		addSelectedComponent(component);
 		JFLAPMenuBar menu = MenuFactory.createMenu(this);
 		this.setJMenuBar(menu);
+		// I believe this is needed to make sure it doesn't close on
+		// a cancelled save.
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				JFLAPEnvironment.this.close(true);
+				if (!JFLAPEnvironment.this.close(true)) {
+					return;
+				}
+
 			}
 
 		});
 		this.pack();
 		this.setVisible(true);
-
-		int width = 480, height = 400;
-		/*
-		 * If it is a pumping lemma, make the window bigger.
-		 */
-		if (component instanceof PumpingLemmaChooserPane
-				|| component instanceof PumpingLemmaInputPane) {
-			width = 800;
-			height = 700;
-		}
-
-		width = Math.max(width, this.getSize().width);
-		height = Math.max(height, this.getSize().height);
-		setSize(new Dimension(width, height));
+//		setSize(component.getPreferredSize());
 		setVisible(true);
 	}
 
@@ -116,14 +112,16 @@ public class JFLAPEnvironment extends JFrame {
 
 	public boolean close(boolean save) {
 		// Should check if there's any actual information to save
-		if (save && this.isDirty()) {
+		if (save && this.isDirty() && getSavableObject() != null) {
 			int result = JOptionPane.showConfirmDialog(this,
 					"Save changes before closing?");
-			if (result == 2) {
+			if (result == JOptionPane.CLOSED_OPTION
+					|| result == JOptionPane.CANCEL_OPTION) {
 				return false;
 			}
-			if (result == 0) {
-				this.save(false);
+			if (result == JOptionPane.YES_OPTION) {
+				if (!this.save(false))
+					return false;
 			}
 		}
 		this.dispose();
@@ -133,6 +131,12 @@ public class JFLAPEnvironment extends JFrame {
 	public boolean save(boolean saveAs) {
 		// Used to change myFile back to its current state if save is cancelled
 		File temp = myFile;
+
+		// The getSavableObject() may need to be modified
+		Object obj = getSavableObject();
+		if (obj == null) {
+			throw new SavingException("No data to save");
+		}
 
 		if (saveAs || myFile == null) {
 			XMLFileChooser chooser = new XMLFileChooser();
@@ -152,18 +156,16 @@ public class JFLAPEnvironment extends JFrame {
 		if (myFile.exists()) {
 			int n = JOptionPane.showConfirmDialog(this,
 					"File already exists. Overwrite file?");
-			if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION) {
+			if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION
+					|| n == JOptionPane.CLOSED_OPTION) {
 				myFile = temp;
 				return false;
 			}
 		}
+		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
+				+ ")");
 		XMLCodec codec = new XMLCodec();
 
-		// The getSavableObject() may need to be modified
-		Object obj = getSavableObject();
-		if (obj == null) {
-			throw new SavingException("Nothing to save");
-		}
 		codec.encode(obj, myFile, null);
 		amDirty = false;
 		for (EditingPanel ep : getEditingPanels()) {
@@ -181,8 +183,8 @@ public class JFLAPEnvironment extends JFrame {
 				JFLAPDebug.print(c.getClass());
 				if (c instanceof FormalDefinitionView) {
 					return ((FormalDefinitionView) c).getDefinition();
-				} else if (c instanceof PumpingLemmaInputPane) {
-					return ((PumpingLemmaInputPane) c).getLemma();
+				} else if (c instanceof PumpingLemmaInputView) {
+					return ((PumpingLemmaInputView) c).getLemma();
 				}
 			}
 		}
@@ -283,6 +285,10 @@ public class JFLAPEnvironment extends JFrame {
 		@Override
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
+			Dimension newSize = this.getComponentAt(index).getPreferredSize();
+			
+			JFLAPEnvironment.this.setPreferredSize(newSize);
+			JFLAPEnvironment.this.setSize(newSize);
 			JFLAPEnvironment.this.update();
 			distributeTabChangedEvent();
 		}
@@ -313,21 +319,21 @@ public class JFLAPEnvironment extends JFrame {
 
 	private void addPLChooser() {
 		PumpingLemmaChooser plc;
-		PumpingLemmaChooserPane pane;
-		
-		if (myPrimaryView instanceof CompCFPumpingLemmaInputPane
-				|| myPrimaryView instanceof HumanCFPumpingLemmaInputPane)
+		PumpingLemmaChooserView pane;
+
+		if (myPrimaryView instanceof CompCFPumpingLemmaInputView
+				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView)
 			plc = new CFPumpingLemmaChooser();
 		else
 			plc = new RegPumpingLemmaChooser();
-		
-		pane = new PumpingLemmaChooserPane(plc);
-		
-		//As PumpingLemmaChooserPanes instatiate as Human First by default:
-		if (myPrimaryView instanceof ComputerFirstPane)
+
+		pane = new PumpingLemmaChooserView(plc);
+
+		// As PumpingLemmaChooserPanes instatiate as Human First by default:
+		if (myPrimaryView instanceof ComputerFirstView)
 			pane.setComputerFirst();
-		
-		//Place the PLCP under the active tab
+
+		// Place the PLCP under the active tab
 		myTabbedPane.add(pane, myTabbedPane.indexOfComponent(myPrimaryView));
 		distributeTabChangedEvent();
 		myTabbedPane.revalidate();

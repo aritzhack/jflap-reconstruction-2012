@@ -20,6 +20,7 @@
 package view.pumping;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -43,7 +44,7 @@ import model.pumping.PumpingLemma;
  * 
  * @author Chris Morgan & Jinghui Lim
  */
-public abstract class HumanFirstPane extends PumpingLemmaInputPane {
+public abstract class HumanFirstView extends PumpingLemmaInputView {
 	/**
 	 * The goal of the user, which is to try to find a valid pumping lemma.
 	 */
@@ -64,6 +65,10 @@ public abstract class HumanFirstPane extends PumpingLemmaInputPane {
      * The description that explains the selection of <i>i</i>.
      */
 	private static String DESCRIBE_I = "I have selected i to give a contradition. It is displayed in Box 4.";
+	
+	protected static final Dimension REG_HUMAN_SIZE = new Dimension(750, 715);
+	
+	protected static final Dimension CF_HUMAN_SIZE = new Dimension(850, 700);
     /**
      * This string allows subclasses to set the title of myDecompButton.
      */
@@ -105,7 +110,7 @@ public abstract class HumanFirstPane extends PumpingLemmaInputPane {
     protected JPanel sliderPanel;    
     
 	
-	public HumanFirstPane(PumpingLemma l) 
+	public HumanFirstView(PumpingLemma l) 
 	{
 		super(l, l.getHTMLTitle());
 		l.setFirstPlayer(PumpingLemma.HUMAN);
@@ -176,6 +181,7 @@ public abstract class HumanFirstPane extends PumpingLemmaInputPane {
                 	resetMessages();                	
                     setI();
                     displayIEnd();
+                    
                     if (myLemma.isInLang(myLemma.createPumpedString()))
                     	myLemma.addAttempt(myLemma.getDecompositionAsString()+"; I = "+myLemma.getI() + "; <i>Won</i>");
                     else
@@ -292,10 +298,10 @@ public abstract class HumanFirstPane extends PumpingLemmaInputPane {
         String s = myLemma.createPumpedString();
         myPumpedStringDisplay.setText(s);        
         if(myLemma.isInLang(s))
-            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputPane.toHTMLString(s) 
+            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputView.toHTMLString(s) 
                 + " = " + s + " is in the language.  YOU WIN!");
         else        	
-            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputPane.toHTMLString(s) 
+            myLastWord.setText(createXYZ() + " = " + PumpingLemmaInputView.toHTMLString(s) 
             + " = " + s + " is NOT in the language.  Please try again.");
     }
     

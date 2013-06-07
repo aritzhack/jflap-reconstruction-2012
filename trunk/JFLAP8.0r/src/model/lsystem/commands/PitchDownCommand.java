@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to pitch down
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PitchDownCommand extends LSystemCommand {
 
 	public PitchDownCommand(String s) {

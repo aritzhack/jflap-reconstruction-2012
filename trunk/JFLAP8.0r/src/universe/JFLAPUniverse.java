@@ -168,7 +168,9 @@ public class JFLAPUniverse{
 	public static void exit(boolean should_save) {
 		JFLAPEnvironment e;
 		while ((e = getActiveEnvironment()) != null){
-			if (!e.close(should_save)) return;
+			if (!e.close(should_save)){
+				return;
+			}
 			deregisterEnvironment(e);
 		}
 		System.exit(0);

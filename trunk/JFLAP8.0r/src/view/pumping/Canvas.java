@@ -26,7 +26,7 @@ import java.awt.geom.*;
  * to construct the pumped string. 
  * 
  * @author Jinghui Lim
- * @see gui.pumping.PumpingLemmaInputPane
+ * @see PumpingLemmaInputView
  *
  */
 public class Canvas extends JPanel 

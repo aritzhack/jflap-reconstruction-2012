@@ -2,6 +2,7 @@ package view.grammar;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -11,6 +12,8 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+
+import debug.JFLAPDebug;
 
 import model.algorithms.AlgorithmException;
 import model.grammar.Grammar;
@@ -41,12 +44,13 @@ import view.grammar.productions.ProductionTable;
 public class LanguageGeneratorView extends BasicFormalDefinitionView<Grammar> {
 
 	private static final int RECOMMENDED_LIMIT = 1000;
-	
+
 	private LanguageGenerator myGenerator;
 	private MagnifiableList myList;
 
 	public LanguageGeneratorView(Grammar g) {
 		super(g, new UndoKeeper(), false);
+		setPreferredSize(new Dimension(550, 600));
 		myGenerator = LanguageGenerator.createGenerator(g);
 	}
 

@@ -2,6 +2,11 @@ package model.lsystem;
 
 import errors.JFLAPException;
 
+/**
+ * Exception class for anything having to do with L-Systems.
+ * @author Ian McMahon
+ *
+ */
 public class LSystemException extends JFLAPException {
 	
 	public LSystemException(){

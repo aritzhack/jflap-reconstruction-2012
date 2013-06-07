@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to start drawing a polygon
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class BeginPolygonCommand extends LSystemCommand {
 
 	public BeginPolygonCommand(String s) {

@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to increment color
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class IncrementColorCommand extends LSystemCommand {
 
 	public IncrementColorCommand(String s) {

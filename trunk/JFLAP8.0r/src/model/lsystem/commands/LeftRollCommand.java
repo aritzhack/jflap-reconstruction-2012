@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to roll left
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class LeftRollCommand extends LSystemCommand {
 
 	public LeftRollCommand(String s) {

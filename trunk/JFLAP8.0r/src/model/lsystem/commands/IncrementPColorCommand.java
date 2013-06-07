@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to increment polygon color
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class IncrementPColorCommand extends LSystemCommand {
 
 	public IncrementPColorCommand(String s) {

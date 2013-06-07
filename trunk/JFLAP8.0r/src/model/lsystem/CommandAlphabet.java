@@ -25,6 +25,12 @@ import model.lsystem.commands.RightRollCommand;
 import model.lsystem.commands.YawCommand;
 import model.symbols.Symbol;
 
+/**
+ * Collection of the special symbols used by LSystems to render turtle graphics
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class CommandAlphabet extends Alphabet{
 
 	private BeginPolygonCommand myBegin;
@@ -174,9 +180,5 @@ public class CommandAlphabet extends Alphabet{
 	@Override
 	public CommandAlphabet copy() {
 		return (CommandAlphabet) super.copy();
-	}
-	
-	public Symbol[] getParenCommands(){
-		return new Symbol[]{myDraw, myForward, myRight, myLeft, myDown, myUp, myRRight, myRLeft, myIWidth, myDWidth, myIColor, myDColor, myIPolyColor, myDPolyColor};
 	}
 }

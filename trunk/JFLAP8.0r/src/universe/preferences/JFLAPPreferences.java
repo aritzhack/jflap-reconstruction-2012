@@ -31,25 +31,6 @@ import model.lsystem.commands.RightYawCommand;
 import model.lsystem.commands.LeftRollCommand;
 import model.lsystem.commands.RightRollCommand;
 import model.lsystem.commands.YawCommand;
-import model.lsystem.commands.BeginPolygonCommand;
-import model.lsystem.commands.DecrementColorCommand;
-import model.lsystem.commands.DecrementPColorCommand;
-import model.lsystem.commands.DecrementWidthCommand;
-import model.lsystem.commands.EndPolygonCommand;
-import model.lsystem.commands.ForwardCommand;
-import model.lsystem.commands.DrawCommand;
-import model.lsystem.commands.IncrementColorCommand;
-import model.lsystem.commands.IncrementPColorCommand;
-import model.lsystem.commands.IncrementWidthCommand;
-import model.lsystem.commands.LeftYawCommand;
-import model.lsystem.commands.PitchDownCommand;
-import model.lsystem.commands.PitchUpCommand;
-import model.lsystem.commands.PopCommand;
-import model.lsystem.commands.PushCommand;
-import model.lsystem.commands.RightYawCommand;
-import model.lsystem.commands.LeftRollCommand;
-import model.lsystem.commands.RightRollCommand;
-import model.lsystem.commands.YawCommand;
 import model.regex.EmptySub;
 import model.regex.operators.CloseGroup;
 import model.regex.operators.OpenGroup;
@@ -119,11 +100,17 @@ public class JFLAPPreferences {
 	
 	public static JFLAPMode DEFAULT_MODE = JFLAPMode.DEFAULT;
 	
+	public static double DEFAULT_LS_DISTANCE = 15.0;
+	
+	public static double DEFAULT_LS_ANGLE = 15.0;
+	
+	public static double DEFAULT_LS_HUE = 10.0;
+	
+	public static double DEFAULT_LS_WIDTH = 1.0;
+	
+	public static double DEFAULT_LS_LINCREMENT = 1.0;
+	
 	public static boolean CYK_DIAGONAL = false;
-	
-	public static final int CYK_WIDTH = 817;
-	
-	public static final int CYK_HEIGHT = 725;
 	
 	public static int getDefaultTMBufferSize(){
 		return 5;

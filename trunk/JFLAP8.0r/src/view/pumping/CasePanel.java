@@ -46,7 +46,7 @@ import model.pumping.PumpingLemma;
 /**
  * A <code>CasePanel</code> manages the graphical representation of
  * the various {@link pumping.Case}s in a pumping lemma. It is 
- * associated with a {@link gui.pumping.PumpingLemmaInputPane}and a
+ * associated with a {@link gui.pumping.PumpingLemmaInputView}and a
  * {@link pumping.PumpingLemma}.
  * 
  * @author Jinghui Lim
@@ -86,11 +86,11 @@ public class CasePanel extends JPanel
      */
     private JTextArea myMessage;
     /**
-     * The <code>PumpingLemmaInputPane</code> that is the "parent" of this
+     * The <code>PumpingLemmaInputView</code> that is the "parent" of this
      * <code>CasePanel</code>. This is used when 
      * {@link #setDecomposition(int[])} is called.
      */
-    private PumpingLemmaInputPane myPane;
+    private PumpingLemmaInputView myPane;
     /**
      * The button that shows all cases.
      */
@@ -127,7 +127,7 @@ public class CasePanel extends JPanel
      * @param l the pumping lemma we are demonstrating
      * @param p the input pane that deals with the user input
      */
-    public CasePanel(PumpingLemma l, PumpingLemmaInputPane p)
+    public CasePanel(PumpingLemma l, PumpingLemmaInputView p)
     {
         myPane = p;
         myLemma = l;
@@ -380,7 +380,7 @@ public class CasePanel extends JPanel
      * <code>PumpingLemmaInputPane</code>.
      * 
      * @param i the case we wish to display
-     * @see gui.pumping.PumpingLemmaInputPane#setDecomposition(int[])
+     * @see gui.pumping.PumpingLemmaInputView#setDecomposition(int[])
      */
     protected void showCase(int i)
     {

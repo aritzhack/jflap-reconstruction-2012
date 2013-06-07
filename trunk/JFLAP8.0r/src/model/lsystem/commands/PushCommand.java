@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to push a turtle onto the stack
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PushCommand extends LSystemCommand {
 
 	public PushCommand(String s) {

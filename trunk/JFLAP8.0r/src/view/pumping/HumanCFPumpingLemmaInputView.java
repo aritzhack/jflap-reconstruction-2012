@@ -35,7 +35,7 @@ import model.pumping.ContextFreePumpingLemma;
  * @see pumping.ContextFreePumpingLemma
  *
  */
-public class HumanCFPumpingLemmaInputPane extends HumanFirstPane
+public class HumanCFPumpingLemmaInputView extends HumanFirstView
 {
     /**
      * Message displayed if computer wins.
@@ -61,9 +61,10 @@ public class HumanCFPumpingLemmaInputPane extends HumanFirstPane
      *
      * @param l the <code>ContextFreePumpingLemma</code> we want to run
      */
-    public HumanCFPumpingLemmaInputPane(ContextFreePumpingLemma l)
+    public HumanCFPumpingLemmaInputView(ContextFreePumpingLemma l)
     {
         super(l);
+        setPreferredSize(CF_HUMAN_SIZE);
     }
 
     
@@ -86,12 +87,7 @@ public class HumanCFPumpingLemmaInputPane extends HumanFirstPane
      *
      */
     protected void mEnteredReset()
-    {
-    	/*int m = Integer.parseInt(myMDisplay.getText());
-    	reset();
-    	myMDisplay.setText(Integer.toString(m));*/    	        
-    	
-        String s = myLemma.getW();
+    {   String s = myLemma.getW();
         myWDisplay.setText(s);
 
         myUPanel.setSliderMax(s.length());

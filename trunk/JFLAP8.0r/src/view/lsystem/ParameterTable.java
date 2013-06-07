@@ -6,7 +6,14 @@ import universe.preferences.JFLAPPreferences;
 import util.view.magnify.Magnifiable;
 import util.view.tables.HighlightTable;
 
+/**
+ * Table for holding the Parameters of an LSystem
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class ParameterTable extends HighlightTable implements Magnifiable{
+	
 	public ParameterTable(ParameterTableModel model){
 		super(model);
 		getTableHeader().setReorderingAllowed(false);

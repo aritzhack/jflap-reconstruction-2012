@@ -9,63 +9,40 @@ import java.util.Set;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public class Expander{
+/**
+ * Class that takes an L-System and generates the expansions that can be made
+ * starting from the Axiom, given the Production rules. Caches expansions at
+ * each level so that there is less delay if viewing an expansion that has
+ * already been calculated.
+ * 
+ * @author Thomas Finley, Ian McMahon
+ * 
+ */
+public class Expander {
+	private static final Random RANDOM = new Random();
+
 	private LSystem lsystem;
 	private Random stochiastic;
 	private List<SymbolString> cachedExpansions;
 	private Context[] contexts;
-	
-	private static final Random RANDOM = new Random();
-	
-	public Expander (LSystem lsystem){
+
+	public Expander(LSystem lsystem) {
 		this(lsystem, RANDOM.nextLong());
 	}
-	
-	public Expander (LSystem lsystem, long seed){
+
+	public Expander(LSystem lsystem, long seed) {
 		stochiastic = new Random(seed);
 		this.lsystem = lsystem;
 		cachedExpansions = new ArrayList<SymbolString>();
+
 		cachedExpansions.add(lsystem.getAxiom());
 		initializeContexts();
 	}
-	
-	private void initializeContexts(){
-		Set<SymbolString> replacementSet = lsystem.getSymbolStringsWithReplacements();
-		List<Context> contextList = new ArrayList<Context>();
-		boolean hasContexts = false;
-		
-		for(SymbolString s : replacementSet){
-			SymbolString[] replacements = lsystem.getReplacements(s);
-			int context = 0;
-			
-			switch(s.size()){
-			case 0: //In case of empty string
-				continue;
-			case 1:
-				break;
-			default: //Multiple symbols
-				try{
-					context = Integer.parseInt(s.get(0).getString());
-					s.get(context+1); //Finley said to check
-				} catch (NumberFormatException e){
-					//Not a number in the first symbol
-					continue;
-				} catch (IndexOutOfBoundsException e){
-					//The number is out of bounds.
-					continue;
-				}
-				hasContexts = true;
-				s = s.subList(1);
-			}
-			contextList.add(new Context (s, context, replacements));
-		}
-		if (hasContexts)
-			contexts = contextList.toArray(new Context[0]);
-	}
-	
+
 	/**
-	 * Returns the expansion at a given level of recursion. An input of 0 will
-	 * return the axiom (i.e., no replacement or recursion has occurred).
+	 * Returns the expansion at a given level of recursion and cache any
+	 * expansions that are newly calculated. An input of 0 will return the axiom
+	 * (i.e., no replacement or recursion has occurred).
 	 * 
 	 * @param level
 	 *            the level of recursion to sink to
@@ -79,12 +56,54 @@ public class Expander{
 					+ " impossible!");
 		if (level < cachedExpansions.size())
 			return (SymbolString) cachedExpansions.get(level);
-		SymbolString lastOne = cachedExpansions.get(cachedExpansions.size() - 1);
+		SymbolString lastOne = cachedExpansions
+				.get(cachedExpansions.size() - 1);
+
 		for (int i = cachedExpansions.size(); i <= level; i++)
 			cachedExpansions.add(lastOne = expand(lastOne));
 		return lastOne;
 	}
-	
+
+	/**
+	 * Initializes the contexts if there exist productions that are context-sensitive.
+	 * Context-sensitive productions are of the form <CODE>i LHS -> RHS</CODE> where <i>i</i>
+	 * is the index of the symbol in the <i>LHS</i> that will be replaced by <i>RHS</i>.
+	 */
+	private void initializeContexts() {
+		Set<SymbolString> replacementSet = lsystem
+				.getSymbolStringsWithReplacements();
+		List<Context> contextList = new ArrayList<Context>();
+		boolean hasContexts = false;
+
+		for (SymbolString s : replacementSet) {
+			SymbolString[] replacements = lsystem.getReplacements(s);
+			int context = 0;
+
+			switch (s.size()) {
+			case 0: 	// In case of empty string
+				continue;
+			case 1:		// Single symbol, not context-sensitive
+				break;
+			default: 	// Multiple symbols
+				try {
+					context = Integer.parseInt(s.get(0).getString());
+					s.get(context + 1);
+				} catch (NumberFormatException e) {
+					// Not a number in the first symbol
+					continue;
+				} catch (IndexOutOfBoundsException e) {
+					// The number is out of bounds.
+					continue;
+				}
+				hasContexts = true;
+				s = s.subList(1);
+			}
+			contextList.add(new Context(s, context, replacements));
+		}
+		if (hasContexts)
+			contexts = contextList.toArray(new Context[0]);
+	}
+
 	/**
 	 * Does the expansion of a given SymbolString.
 	 * 
@@ -97,21 +116,24 @@ public class Expander{
 			return expandNoContext(symbols);
 		return expandContext(symbols);
 	}
-	
+
 	/**
-	 * Does the expansion of a given string list thing given that we have no
+	 * Does the expansion of a given SymbolString given that we have no
 	 * "contexts" to worry about.
 	 * 
 	 * @param symbols
-	 *            the list of symbols to expand
+	 *            the SymbolString to expand
 	 * @return the expansion of the passed in symbols
 	 */
 	private SymbolString expandNoContext(SymbolString symbols) {
 		SymbolString newExpansion = new SymbolString();
+		
 		for (int i = 0; i < symbols.size(); i++) {
 			Symbol s = symbols.get(i);
-			SymbolString[] replacements = lsystem.getReplacements(new SymbolString(s));
+			SymbolString[] replacements = lsystem
+					.getReplacements(new SymbolString(s));
 			SymbolString newReplacement;
+			
 			switch (replacements.length) {
 			case 0:
 				// This cannot be replaced, so we skip to the next symbol.
@@ -132,21 +154,23 @@ public class Expander{
 		}
 		return newExpansion;
 	}
-	
+
 	/**
-	 * Does the expansion of a given string list thing given that we have
+	 * Does the expansion of a given SymbolString given that we have
 	 * contexts. This can be computationally more expensive, though not horribly
 	 * so.
 	 * 
 	 * @param symbols
-	 *            the list of symbols to expand
+	 *            the SymbolString to expand
 	 * @return the expansion of the passed in symbols
 	 */
 	private SymbolString expandContext(SymbolString symbols) {
 		SymbolString newExpansion = new SymbolString();
+		
 		for (int i = 0; i < symbols.size(); i++) {
 			Symbol s = symbols.get(i);
 			ArrayList<SymbolString> replacementsList = new ArrayList<SymbolString>();
+			
 			for (int j = 0; j < contexts.length; j++) {
 				SymbolString[] l = contexts[j].matches(symbols, i);
 				for (int k = 0; k < l.length; k++)
@@ -155,6 +179,7 @@ public class Expander{
 			SymbolString[] replacements = replacementsList
 					.toArray(new SymbolString[0]);
 			SymbolString newReplacement;
+			
 			switch (replacements.length) {
 			case 0:
 				// This cannot be replaced, so we skip to the next symbol.
@@ -175,8 +200,7 @@ public class Expander{
 		}
 		return newExpansion;
 	}
-	
-	
+
 	/**
 	 * This is a class that is used to perform limited matchings of a list.
 	 */
@@ -184,7 +208,7 @@ public class Expander{
 		private SymbolString symbols;
 		private int center;
 		private SymbolString[] results;
-		
+
 		/**
 		 * Instantiates a given context list.
 		 * 
@@ -213,7 +237,8 @@ public class Expander{
 		public SymbolString[] matches(SymbolString list, int centerList) {
 			centerList -= center;
 			try {
-				List sub = list.subList(centerList, centerList + symbols.size());
+				List sub = list
+						.subList(centerList, centerList + symbols.size());
 				if (sub.equals(symbols))
 					return results;
 			} catch (IndexOutOfBoundsException e) {
@@ -224,7 +249,6 @@ public class Expander{
 		/**
 		 * Returns a string description of this context.
 		 * 
-		 * @return a string description of this context
 		 */
 		public String toString() {
 			StringBuffer sb = new StringBuffer(super.toString());
@@ -237,6 +261,5 @@ public class Expander{
 			return sb.toString();
 		}
 
-		
 	}
 }

@@ -37,17 +37,9 @@ import universe.preferences.JFLAPPreferences;
  */
 public abstract class RegularPumpingLemma extends PumpingLemma implements Serializable, Cloneable
 {
-    /**
-     * The <i>x</i> segment of the <i>w</i>.
-     */
+    
     protected String x;
-    /**
-     * The <i>y</i> segment of the <i>w</i>.
-     */
     protected String y;
-    /**
-     * The <i>z</i> segment of the <i>w</i>.
-     */
     protected String z;
         
     /**
