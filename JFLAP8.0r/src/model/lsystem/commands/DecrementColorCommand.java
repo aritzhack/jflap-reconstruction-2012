@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to decrement the color
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class DecrementColorCommand extends LSystemCommand {
 
 	public DecrementColorCommand(String s) {

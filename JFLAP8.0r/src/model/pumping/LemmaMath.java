@@ -117,35 +117,4 @@ public class LemmaMath {
     	}
     	return false;
     }
-    
-    /**
-     * Factorial method.
-     * 
-     * @param n number to obtain the factorial value of
-     * @return n factorial
-     */
-	public static int factorial(int n) {
-        if(n <= 1)
-            return 1;
-        else
-            return n * factorial(n - 1);
-    }
-    
-    /**
-     * Checks to see whether n is a factorial.
-     * 
-     * @return whether n is a factorial.
-     */    
-    public static boolean isFactorial(int n) {
-    	int i, j;
-    	i=1;  j=1;
-    	do {
-    		if (i==n)
-    			return true;
-    		j++;
-    		i = i*j;    		
-    	} 
-    	while (i<=n);    	
-    	return false;
-    }
 }

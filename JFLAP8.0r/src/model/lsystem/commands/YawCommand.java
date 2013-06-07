@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to yaw/turn 180 degrees
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class YawCommand extends LSystemCommand {
 
 	public YawCommand(String s) {

@@ -15,12 +15,12 @@ import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
 import view.pumping.CFPumpingLemmaChooser;
-import view.pumping.CompCFPumpingLemmaInputPane;
-import view.pumping.CompRegPumpingLemmaInputPane;
-import view.pumping.HumanCFPumpingLemmaInputPane;
-import view.pumping.HumanRegPumpingLemmaInputPane;
-import view.pumping.PumpingLemmaChooserPane;
-import view.pumping.PumpingLemmaInputPane;
+import view.pumping.CompCFPumpingLemmaInputView;
+import view.pumping.CompRegPumpingLemmaInputView;
+import view.pumping.HumanCFPumpingLemmaInputView;
+import view.pumping.HumanRegPumpingLemmaInputView;
+import view.pumping.PumpingLemmaChooserView;
+import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
@@ -33,8 +33,8 @@ public class ViewFactory {
 	static{
 		myClassToComponent = new HashMap<Class, Class<? extends Component>>();
 		myClassToComponent.put(Grammar.class, GrammarView.class);
-		myClassToComponent.put(CFPumpingLemmaChooser.class, PumpingLemmaChooserPane.class);
-		myClassToComponent.put(RegPumpingLemmaChooser.class, PumpingLemmaChooserPane.class);
+		myClassToComponent.put(CFPumpingLemmaChooser.class, PumpingLemmaChooserView.class);
+		myClassToComponent.put(RegPumpingLemmaChooser.class, PumpingLemmaChooserView.class);
 		myClassToComponent.put(LSystem.class, LSystemInputView.class);
 //		myClassToComponent.put(SetsManager.class, SetsView.class);
 
@@ -64,11 +64,11 @@ public class ViewFactory {
 		
 		if(pl instanceof RegularPumpingLemma){            
             RegularPumpingLemma reg = (RegularPumpingLemma) pl;
-            PumpingLemmaInputPane inputPane;
+            PumpingLemmaInputView inputPane;
             if (player.equals(PumpingLemma.COMPUTER))
-            	inputPane = new CompRegPumpingLemmaInputPane(reg);                    	
+            	inputPane = new CompRegPumpingLemmaInputView(reg);                    	
             else
-            	inputPane = new HumanRegPumpingLemmaInputPane(reg);
+            	inputPane = new HumanRegPumpingLemmaInputView(reg);
             inputPane.update();
             return inputPane;
 		}
@@ -76,11 +76,11 @@ public class ViewFactory {
 		//Context-Free Pumping Lemma
 		
          ContextFreePumpingLemma cf = (ContextFreePumpingLemma) pl;
-         PumpingLemmaInputPane inputPane;            
+         PumpingLemmaInputView inputPane;            
          if (player.equals(PumpingLemma.COMPUTER))            	
-         	inputPane = new CompCFPumpingLemmaInputPane(cf);
+         	inputPane = new CompCFPumpingLemmaInputView(cf);
          else
-         	inputPane = new HumanCFPumpingLemmaInputPane(cf);
+         	inputPane = new HumanCFPumpingLemmaInputView(cf);
          inputPane.update();
          return inputPane;
 	}

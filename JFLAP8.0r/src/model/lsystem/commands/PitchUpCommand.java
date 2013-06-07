@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to pitch up
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PitchUpCommand extends LSystemCommand {
 
 	public PitchUpCommand(String s) {

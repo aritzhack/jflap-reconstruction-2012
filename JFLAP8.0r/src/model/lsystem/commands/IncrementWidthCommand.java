@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to increment line width
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class IncrementWidthCommand extends LSystemCommand {
 
 	public IncrementWidthCommand(String s) {

@@ -19,6 +19,8 @@
 
 package view.pumping;
 
+import java.awt.Dimension;
+
 import model.pumping.RegularPumpingLemma;
 
 /**
@@ -29,16 +31,17 @@ import model.pumping.RegularPumpingLemma;
  * @see pumping.ContextFreePumpingLemma
  *
  */
-public class CompRegPumpingLemmaInputPane extends ComputerFirstPane {
+public class CompRegPumpingLemmaInputView extends ComputerFirstView {
 
 	/**
      * Creates a <code>CompRegPumpingInputPane</code> for a <code>RegularPumpingLemma</code>.
      *
      * @param l the <code>RegularPumpingLemma</code> we want to run
      */
-	public CompRegPumpingLemmaInputPane(RegularPumpingLemma l)
+	public CompRegPumpingLemmaInputView(RegularPumpingLemma l)
     {		
         super(l);
+        setPreferredSize(REG_COMP_SIZE);
     }				    
 	
 	 /**

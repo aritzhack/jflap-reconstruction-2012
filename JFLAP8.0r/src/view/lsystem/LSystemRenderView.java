@@ -14,13 +14,10 @@
  *
  */
 
-
-
-
-
 package view.lsystem;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -41,57 +38,57 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+
 import model.lsystem.Expander;
 import model.lsystem.LSystem;
 import model.symbols.SymbolString;
 import view.help.ImageDisplayComponent;
 
 /**
- * The L-system display pane has the interface to display an L-system.
+ * The view has the interface to render an L-system.
  * 
- * @author Thomas Finley
+ * @author Thomas Finley, Ian McMahon
  */
 
 public class LSystemRenderView extends JPanel {
-	/**
-	 * Implements a display pane.
-	 * 
-	 * @param lsystem
-	 *            the L-system to display
-	 */
+	
+	private static final Dimension LSYSTEM_RENDER_SIZE = new Dimension(600, 650);
+	
+	private LSystem lsystem;
+	private Expander expander;
+	private Renderer renderer;
+	private ImageDisplayComponent imageDisplay;
+	private JTextField expansionDisplay;
+	private JProgressBar progressBar;
+	private Action displayAction;
+	private SpinnerNumberModel spinnerModel;
+	private SpinnerNumberModel pitchModel;
+	private SpinnerNumberModel rollModel;
+	private SpinnerNumberModel yawModel;
+
 	public LSystemRenderView(LSystem lsystem) {
 		super(new BorderLayout());
-		this.lsystem = lsystem;
+		initView(lsystem);
+		initListeners();
 
-		expander = new Expander(lsystem);
-		// We can't edit the expansion, of course.
+		// We can't edit the expansion.
 		expansionDisplay.setEditable(false);
+
 		// The user has to be able to change the recursion depth.
 		JSpinner spinner = new JSpinner(spinnerModel);
-		spinnerModel.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				updateDisplay();
-			}
-		});
-		// Now, for the angle at which the damn thing is viewed...
-		JSpinner s1 = new JSpinner(pitchModel), s2 = new JSpinner(rollModel), s3 = new JSpinner(
-				yawModel);
-		ChangeListener c = new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				updateDisplay();
-				// displayAction.setEnabled(true);
-			}
-		};
-		pitchModel.addChangeListener(c);
-		rollModel.addChangeListener(c);
-		yawModel.addChangeListener(c);
-		
-		// Lay out the component.
+
+		// Lay out the top Panel.
 		JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(spinner, BorderLayout.EAST);
 		topPanel.add(expansionDisplay, BorderLayout.CENTER);
 		topPanel.add(progressBar, BorderLayout.WEST);
 		add(topPanel, BorderLayout.NORTH);
+
+		// Now, for the angle at which the damn thing is viewed...
+		JSpinner s1 = new JSpinner(pitchModel), s2 = new JSpinner(rollModel), s3 = new JSpinner(
+				yawModel);
+
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.add(new JLabel("Pitch"));
 		bottomPanel.add(s1);
@@ -99,12 +96,65 @@ public class LSystemRenderView extends JPanel {
 		bottomPanel.add(s2);
 		bottomPanel.add(new JLabel("Yaw"));
 		bottomPanel.add(s3);
-		//bottomPanel.setBackground(Color.WHITE);
+
 		JScrollPane scroller = new JScrollPane(imageDisplay);
 		add(scroller, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
+
+		
+		setPreferredSize(LSYSTEM_RENDER_SIZE);
 		// Finally, set the initial display.
 		updateDisplay();
+		
+	}
+	
+	@Override
+	public String getName() {
+		return "L-S Render";
+	}
+
+	/**
+	 * Initializes the private fields of the view.
+	 * 
+	 * @param lsystem
+	 *            L-System to initialize based on.
+	 */
+	private void initView(LSystem lsystem) {
+		this.lsystem = lsystem;
+		expander = new Expander(lsystem);
+		renderer = new Renderer();
+		imageDisplay = new ImageDisplayComponent();
+		expansionDisplay = new JTextField();
+		progressBar = new JProgressBar(0, 1);
+		displayAction = new AbstractAction("Redisplay") {
+			public void actionPerformed(ActionEvent e) {
+				updateDisplay();
+				displayAction.setEnabled(false);
+			}
+		};
+		spinnerModel = new SpinnerNumberModel(0, 0, 200, 1);
+		pitchModel = new SpinnerNumberModel(0, 0, 359, 15);
+		rollModel = new SpinnerNumberModel(0, 0, 359, 15);
+		yawModel = new SpinnerNumberModel(0, 0, 359, 15);
+	}
+
+	/**
+	 * Initialize ChangeListeners for spinners.
+	 */
+	private void initListeners() {
+		spinnerModel.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateDisplay();
+			}
+		});
+		ChangeListener c = new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				updateDisplay();
+			}
+		};
+		pitchModel.addChangeListener(c);
+		rollModel.addChangeListener(c);
+		yawModel.addChangeListener(c);
 	}
 
 	/**
@@ -112,14 +162,16 @@ public class LSystemRenderView extends JPanel {
 	 */
 	private void updateDisplay() {
 		int recursionDepth = spinnerModel.getNumber().intValue();
-		final SymbolString expansion = expander.expansionForLevel(recursionDepth);
+		final SymbolString expansion = expander
+				.expansionForLevel(recursionDepth);
+
 		progressBar.setMaximum(expansion.size() * 2);
 		imageDisplay.setImage(null);
 
 		final javax.swing.Timer t = new javax.swing.Timer(30,
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						int i = renderer.getDoneSymbols() - 1;
+						int i = renderer.getCompletedSymbols() - 1;
 						progressBar.setValue(i);
 						progressBar.repaint();
 					}
@@ -127,25 +179,15 @@ public class LSystemRenderView extends JPanel {
 
 		final Thread drawThread = new Thread() {
 			public void run() {
-				if (expansion.size() < 70) {
+				if (expansion.size() < 100) {
 					String expansionString = expansion.toString();
 					expansionDisplay.setText(expansionString);
 				} else
-					expansionDisplay.setText("Suffice to say, quite long.");
-				// Now, set the display.
-				Map<String, String> parameters = lsystem.getParameters();
-
+					expansionDisplay.setText("Expansion contains "+expansion.size()+ " Symbols!");
 				t.start();
-				Matrix m = new Matrix();
-				double pitch = pitchModel.getNumber().doubleValue(), roll = rollModel
-						.getNumber().doubleValue(), yaw = yawModel.getNumber()
-						.doubleValue();
-				m.pitch(pitch);
-				m.roll(roll);
-				m.yaw(yaw);
-				Point origin = new Point(); // Ignored, for now.
-				Image image = renderer.render(expansion, parameters, m, null,
-						origin);
+
+				Image image = printComponent();
+
 				imageDisplay.setImage(image);
 				t.stop();
 				imageDisplay.repaint();
@@ -158,72 +200,21 @@ public class LSystemRenderView extends JPanel {
 
 	/**
 	 * Prints the current displayed L-system.
-	 * 
-	 * @param g
-	 *            the graphics interface for the printer device
 	 */
-	public void printComponent(Graphics g) {
+	private Image printComponent() {
 		int recursionDepth = spinnerModel.getNumber().intValue();
 		SymbolString expansion = expander.expansionForLevel(recursionDepth);
+		
 		// Now, set the display.
-		Map<String, String> parameters = lsystem.getParameters();
+		ParameterMap parameters = lsystem.getParameters();
 		Matrix m = new Matrix();
-		double pitch = pitchModel.getNumber().doubleValue(), roll = rollModel
-				.getNumber().doubleValue(), yaw = yawModel.getNumber()
-				.doubleValue();
+		double pitch = pitchModel.getNumber().doubleValue(),
+				roll = rollModel.getNumber().doubleValue(), 
+				yaw = yawModel.getNumber().doubleValue();
+		
 		m.pitch(pitch);
 		m.roll(roll);
 		m.yaw(yaw);
-		renderer.render(expansion, parameters, m, (Graphics2D) g, new Point());
-	}
-
-	/**
-	 * Children are not painted here.
-	 * 
-	 * @param g
-	 *            the graphics object to paint to
-	 */
-	public void printChildren(Graphics g) {
-
-	}
-
-	/** The L-system we are displaying here. */
-	private LSystem lsystem;
-
-	/** The current expander. */
-	private Expander expander = null;
-
-	/** The renderer. */
-	private Renderer renderer = new Renderer();
-
-	/** The image display component. */
-	private ImageDisplayComponent imageDisplay = new ImageDisplayComponent();
-
-	/** The spinner model. */
-	private SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0, 0, 200,
-			1);
-
-	/** The text field which displays the expansion. */
-	private JTextField expansionDisplay = new JTextField();
-
-	/** The progress indicator. */
-	private JProgressBar progressBar = new JProgressBar(0, 1);
-
-	/** The action for redisplaying. */
-	private Action displayAction = new AbstractAction("Redisplay") {
-		public void actionPerformed(ActionEvent e) {
-			updateDisplay();
-			displayAction.setEnabled(false);
-		}
-	};
-
-	/** The spinner models for the transforms. */
-	private SpinnerNumberModel pitchModel = new SpinnerNumberModel(0, 0, 359,
-			15), rollModel = new SpinnerNumberModel(0, 0, 359, 15),
-			yawModel = new SpinnerNumberModel(0, 0, 359, 15);
-
-	@Override
-	public String getName() {
-		return "L-S Render";
+		return renderer.render(expansion, parameters, m, null, new Point());
 	}
 }

@@ -11,11 +11,15 @@ import org.w3c.dom.NodeList;
 
 import file.xml.XMLHelper;
 
+/**
+ * Transducer for saving any Regular Pumping Lemma.
+ * 
+ * @author Jinghui Lim, Ian McMahon
+ *
+ */
 public class RegPumpingLemmaTransducer extends PumpingLemmaTransducer {
 
-	public static final String REG_LEMMA_TAG = "regular pumping lemma";
-	private static final String X_NAME = "xLength";
-	private static final String Y_NAME = "yLength";
+	public static final String REG_LEMMA_TAG = "regular_pumping_lemma";
 
 	@Override
 	public String getTag() {

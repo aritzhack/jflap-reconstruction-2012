@@ -1,5 +1,7 @@
 package view.grammar.parsing.brute;
 
+import java.awt.Dimension;
+
 import javax.swing.JOptionPane;
 
 import model.algorithms.testinput.parse.Parser;
@@ -18,6 +20,7 @@ public class BruteParserView extends FindFirstParserView<BruteParseTablePanel> {
 	public BruteParserView(UnrestrictedBruteParser alg) {
 		super(alg);
 
+		setPreferredSize(new Dimension(800, 700));
 	}
 
 	@Override

@@ -36,25 +36,10 @@ import universe.preferences.JFLAPPreferences;
  */
 public abstract class ContextFreePumpingLemma extends PumpingLemma implements Serializable, Cloneable
 {
-    /**
-     * The <i>u</i> segment of the <i>w</i>.
-     */
     protected String u;
-    /**
-     * The <i>v</i> segment of the <i>w</i>.
-     */
     protected String v;
-    /**
-     * The <i>x</i> segment of the <i>w</i>.
-     */
     protected String x;
-    /**
-     * The <i>y</i> segment of the <i>w</i>.
-     */
     protected String y;
-    /**
-     * The <i>z</i> segment of the <i>w</i>.
-     */
     protected String z;        
     
     /**
@@ -263,69 +248,6 @@ public abstract class ContextFreePumpingLemma extends PumpingLemma implements Se
     }
     
     /**
-     * Checks to see whether a given v,y decomposition matches a case currently
-     * in <code>myDoneCases</code>.
-     * 
-     * @param v segment <i>v</i> of the decomposition
-     * @param y segment <i>y</i> of the decomposition
-     */
-    /*protected boolean decompMatchesUnusedCase(String v, String y) {
-    	Case cAll, cDone;
-    	Iterator iAll, iDone;
-    	boolean alreadyDone, toReturn;
-    
-    	toReturn = false;
-    	iAll = myAllCases.iterator();
-		while (iAll.hasNext()) {
-			alreadyDone = false;
-			cAll = (Case) iAll.next();
-			if (cAll.isCase(v, y)) {				
-				
-				iDone = myDoneCases.iterator();				
-				while (iDone.hasNext()) {
-					cDone = (Case) iDone.next();
-					if (cDone.isCase(v, y)) 
-						alreadyDone = true;
-				}
-				
-				if (!alreadyDone)
-					toReturn = true;					
-			}
-		}
-		return toReturn;
-    }*/
-    
-    /**
-     * For values with cases, chooses a decomposition that corresponds to the first case that
-     * hasn't currently been added to the casePanel
-     */
-  /*  protected void chooseDecompositionWithCases() {
-    	String v, x, y;
-    	int[] decomp;
-    	boolean matchesUnusedCase;    	
-    	int size = w.length();
-    	
-    	for (int a=0; a<size; a++)
-    		for (int b=a; b<size; b++)
-    			for (int c=b; c<size; c++)
-    				for (int d=c; d<size; d++) {
-    					v = getW().substring(a, b);
-    					x = getW().substring(b, c);
-    					y = getW().substring(c, d);
-    			
-    					if (v.length() + x.length() + y.length() <= m &&
-    						v.length() + y.length() >= 1) {
-    						matchesUnusedCase = decompMatchesUnusedCase(v, y);
-    						if (matchesUnusedCase) {    						
-    							decomp = new int[] {a, b-a, c-b, d-c};
-    							setDecomposition(decomp);
-    							return;
-    						}    						
-    					}
-    				}
-    }*/
-    
-    /**
      * Chooses a random decomposition, with it randomly spread over the string.
      * |vy| >= 1 && |vxy| <= m;
      */
@@ -364,13 +286,15 @@ public abstract class ContextFreePumpingLemma extends PumpingLemma implements Se
 	}
     
 	public abstract String getSpecialHTML();
+	
     /**
      * Chooses a random context-free decomposition, ignoring cases.
      */
     public void chooseDecomposition()
     {
     	// Currently just chooses a decomposition without cases.  The code for choosing it 
-    	// with cases is currently commented out, but can be added if desired.
+    	// with cases was deleted, as it wasn't being used. Can be found commented out in JFLAP 7.0 source, 
+    	//and can be added if desired.
     	chooseDecompositionWithoutCases();  	
     }    	
     

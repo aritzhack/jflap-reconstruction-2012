@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to move forward
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class ForwardCommand extends LSystemCommand {
 
 	public ForwardCommand(String s) {

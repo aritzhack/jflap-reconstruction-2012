@@ -1,18 +1,28 @@
 package file.xml.formaldef.lsystem;
 
 import java.util.List;
-import java.util.Map;
 
-import model.formaldef.components.FormalDefinitionComponent;
-import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.Grammar;
 import model.lsystem.LSystem;
-import model.symbols.SymbolString;
-import file.xml.XMLTransducer;
-import file.xml.formaldef.FormalDefinitionTransducer;
 
-public class LSystemTransducer extends FormalDefinitionTransducer<LSystem> {
+import org.w3c.dom.Element;
+
+import file.xml.MetaTransducer;
+import file.xml.XMLHelper;
+import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+
+/**
+ * Transducer specific to LSystems. Doesn't extend FormalDefinitionTransducer
+ * due to unneeded/mismatched methods.
+ * 
+ * @author Ian McMahon
+ * 
+ */
+public class LSystemTransducer extends MetaTransducer<LSystem> {
 	private static final String LSYSTEM_TAG = "lsystem";
+	private AxiomTransducer axTrans = new AxiomTransducer();
+	private ParameterMapTransducer mapTrans = new ParameterMapTransducer();
 	
 	@Override
 	public String getTag() {
@@ -20,30 +30,42 @@ public class LSystemTransducer extends FormalDefinitionTransducer<LSystem> {
 	}
 
 	@Override
-	public XMLTransducer getTransducerForStructureNode(String string,
-			List<Alphabet> alphs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public LSystem fromStructureRoot(Element root) {
+		LSystem system = super.fromStructureRoot(root);
 
-	@Override
-	public void addFunctionSetsToMap(Map<Object, XMLTransducer> map,
-			LSystem structure) {
-		// TODO Auto-generated method stub
+		Axiom axiom = axTrans.fromStructureRoot(root);
+		if (axiom != null)
+			system.setAxiom(axiom);
 		
-	}
-	
-	@Override
-	public FormalDefinitionComponent[] getConstituentComponents(
-			LSystem structure) {
-		return super.getConstituentComponents(structure);
+		List<Element> paramMap = XMLHelper.getChildrenWithTag(root, PARAMETER_MAP_TAG);
+		
+		if(paramMap != null && !paramMap.isEmpty()){
+			ParameterMap parameters = mapTrans.fromStructureRoot(paramMap.get(0));
+			if (parameters != null)
+				system.setParameters(parameters);
+		}
+		return system;
+
 	}
 
 	@Override
 	public LSystem buildStructure(Object[] subComp) {
-		return new LSystem(	retrieveTarget(SymbolString.class, subComp), 
-							retrieveTarget(Grammar.class, subComp), 
-							retrieveTarget(Map.class, subComp));
+		Grammar g = retrieveTarget(Grammar.class, subComp);
+		if (g == null)
+			g = new Grammar();
+		ParameterMap params = retrieveTarget(ParameterMap.class, subComp);
+		if (params == null)
+			params = new ParameterMap();
+		return new LSystem(new Axiom(), g, params);
+	}
+
+	@Override
+	public Object[] getConstituentComponents(LSystem structure) {
+		Object[] components = new Object[3];
+		components[0] = new Axiom(structure.getAxiom());
+		components[1] = structure.getGrammar();
+		components[2] = structure.getParameters();
+		return components;
 	}
 
 }

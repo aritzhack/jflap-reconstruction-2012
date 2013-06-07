@@ -36,93 +36,29 @@ import java.util.List;
  */
 public abstract class PumpingLemma implements Serializable
 {
-	/**
-	 * Tag for when the computer goes first.
-	 */
+	
 	public static final String COMPUTER = "Computer";
-	/**
-	 * Tag for when the user goes first.
-	 */
 	public static final String HUMAN = "Human";
-    /**
-     * String representing "{<i>a</i>, <i>b</i>}*".
-     */
-    protected static String AB_STAR = "{<i>a</i>, <i>b</i>}*";
-    /**
-     * String representing "not equals", "&#8800;".
-     */
-    protected static String NOT_EQUAL = "&#8800;";
-    /**
-     * HTML code for "element of", "&#8712;".
-     */
-    protected static String ELEMENT_OF = "&#8712;";
-    /**
-     * HTML code for "greater than or equal to", "&#8805;".
-     */
-    protected static String GREATER_OR_EQ = "&#8805;";
-    /**
-     * HTML code for "grater than", "&#62;".
-     */
-    protected static String GREATER_THAN = "&#62;";
-    /**
-     * HTML code for "less than", "&#60;".
-     */
-    protected static String LESS_THAN = "&#60;";
-    /**
-     * HTML code for "less than or equal to", "&#8804;". 
-     */
-    protected static String LESS_OR_EQ = "&#8804;";
-    /**
-     * States whether there is a valid partition for the language in question.
-     */
+    protected static final String AB_STAR = "{<i>a</i>, <i>b</i>}*";
+    protected static final String NOT_EQUAL = "&#8800;";
+    protected static final String ELEMENT_OF = "&#8712;";
+    protected static final String GREATER_OR_EQ = "&#8805;";
+    protected static final String GREATER_THAN = "&#62;";
+    protected static final String LESS_THAN = "&#60;";
+    protected static final String LESS_OR_EQ = "&#8804;";
     protected boolean partitionIsValid;
-    /**
-     * A description of why this language does or does not have a valid partition.
-     */
     protected String explanation;
-    /**
-     * States who the first player is, the human or the computer.
-     */
     protected String firstPlayer;
-    /**
-     * The <i>m</i> value used by this pumping lemma.
-     */
     protected int m;
-    /**
-     * The <i>w</i> value used by this pumping lemma.
-     */
     protected String w;
-    /**
-     * The <i>w</i> value used by this pumping lemma.
-     */
     protected int i;
-    /**
-     * All the possible cases. Cases should not be removed from this list.
-     */
     protected ArrayList<Case> myAllCases;
-    /**
-     * Cases that the user has already done. Cases should not be removed from
-     * <code>myAllCases</code> to add to this, they should just be added.
-     */
     protected ArrayList<Case> myDoneCases;
-    /**
-     * Stores all the decompositions and <i>i</i> values the user has already attempted 
-     * in separate int[] entries.
-     */
     protected ArrayList<String> myAttempts;
-    /**
-     * A suggested range for <i>m</i>.
-     */
     protected int[] myRange;
-    /**
-     * The current decomposition of this lemma.
-     */
     protected int[] myDecomposition;
     
-    /**
-     * Constructs a new <code>PumpingLemma</code>.
-     *
-     */
+    
     public PumpingLemma()
     {
         myDoneCases = new ArrayList<Case>();
@@ -502,31 +438,6 @@ public abstract class PumpingLemma implements Serializable
      */
     protected abstract void addCases();
     
-    /**
-     * Checks to see whether every case can be generated with the current <i>w</i>
-     * value.  It also clears the list of done cases, so this should be called only
-     * when the list is empty or when one wishes to clear the list.
-     * 
-     * @return whether every case can be generated
-     */
-    /*public boolean checkAllCasesPossible() 
-    {
-    	//Uncomment this method if using cases when the computer goes first.
-    	int[] currentDecomposition = myDecomposition;
-    	clearDoneCases();
-    	for (int i=0; i<myAllCases.size(); i++) {
-    		chooseDecomposition();
-    		addCase(myDecomposition, -1);
-    	}
-    	    	
-    	int numCasesReached = myDoneCases.size();
-    	clearDoneCases();
-    	setDecomposition(currentDecomposition);
-    	if (myAllCases.size() == numCasesReached)
-    		return true;
-    	return false;
-    		
-    }*/
     
     /**
      * Returns the list of done {@link model.pumping.Case}s. 

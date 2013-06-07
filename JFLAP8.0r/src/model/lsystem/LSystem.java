@@ -1,7 +1,6 @@
 package model.lsystem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,94 +12,46 @@ import model.formaldef.components.alphabets.Alphabet;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
-import model.lsystem.formaldef.Axiom;
-import model.lsystem.formaldef.FormalParameters;
-import model.lsystem.formaldef.FormalGrammarComponent;
+import model.lsystem.formaldef.FormalAlph;
+import model.lsystem.formaldef.FormalAxiom;
+import model.lsystem.formaldef.FormalRewritingRules;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.Symbolizers;
+import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
 
-public class LSystem extends FormalDefinition{
-	private CommandAlphabet myCommandAlph;
-	private SymbolString myAxiom;
+/**
+ * The <CODE>LSystem</CODE> class represents L-systems. This does not do any
+ * simulation of L-systems, but rather has the minimal mathematical definitions
+ * required, i.e., the axiom, replacement rules, with some concession given to
+ * define parameters for drawing.
+ * 
+ * @author Ian McMahon, Thomas Finley
+ * 
+ */
+public class LSystem extends FormalDefinition {
+	private Axiom myAxiom;
 	private Grammar myGrammar;
-	private Map<String, String> myParameters;
+	private ParameterMap myParameters;
 	private Map<SymbolString, List<SymbolString>> myReplacements;
-	
-	public LSystem(){
-		this(new SymbolString(), new Grammar(), new HashMap<String, String>());
+
+	public LSystem() {
+		this(new Axiom(), new Grammar(), new ParameterMap());
 	}
-	
-	public LSystem(SymbolString axiom, Grammar g, Map<String, String> parameters){
+
+	public LSystem(Axiom axiom, Grammar g, ParameterMap parameters) {
+		this(new FormalAlph(g.getVariables(), g.getTerminals()),
+				new FormalAxiom(axiom), new FormalRewritingRules(
+						g.getProductionSet()));
 		myAxiom = axiom;
-		myCommandAlph = new CommandAlphabet();
-		myGrammar = g;
-		myGrammar.getLanguageAlphabet().addAll(myCommandAlph);
-		addAxiomToAlphabet();
-		myParameters = parameters;
-		initReplacements();
+		setParameters(parameters);
+		setGrammar(g);
 	}
 
-	private void initReplacements() {
-		myReplacements = new TreeMap<SymbolString, List<SymbolString>>();
-		ProductionSet prods = myGrammar.getProductionSet();
-		
-		for(Production p : prods){
-			SymbolString lhs = new SymbolString(p.getLHS());
-			if(!myReplacements.containsKey(lhs))
-				myReplacements.put(lhs, new ArrayList<SymbolString>());
-			SymbolString rhs = new SymbolString(p.getRHS());
-			myReplacements.get(lhs).add(rhs);
-		}
-	}
-
-	private void addAxiomToAlphabet() {
-		for(Symbol s : myAxiom){
-			if(s instanceof Variable)
-				myGrammar.getVariables().add(s);
-			else
-				myGrammar.getTerminals().add(s);
-		}
-	}
-	
-	public SymbolString getAxiom(){
-		return myAxiom;
-	}
-	
-	public void setAxiom(String axiom){
-		setAxiom(Symbolizers.symbolize(axiom, this));
-	}
-	
-	private void setAxiom(SymbolString axiom){
-		myAxiom = axiom;
-		addAxiomToAlphabet();
-	}
-	
-	public Map<String, String> getParameters(){
-		return myParameters;
-	}
-	
-	public SymbolString[] getReplacements(SymbolString s){
-		List<SymbolString> sList = myReplacements.get(s);
-		SymbolString[] emptyArray = new SymbolString[0];
-		return sList == null ? emptyArray : sList.toArray(emptyArray);
-	}
-	
-	public Set<SymbolString> getSymbolStringsWithReplacements(){
-		return myReplacements.keySet();
-	}
-	
-	public boolean isNondeterministic(){
-		for(List<SymbolString> p : myReplacements.values()){
-			if(p.size() > 1) return true;
-		}
-		return false;
-	}
-
-	@Override
-	public String getDescriptionName() {
-		return "L-System";
+	public LSystem(FormalAlph alph, FormalAxiom ax, FormalRewritingRules rules) {
+		super(ax, alph, rules);
 	}
 
 	@Override
@@ -109,7 +60,12 @@ public class LSystem extends FormalDefinition{
 	}
 
 	@Override
-	public Object copy() {
+	public String getDescriptionName() {
+		return "L-System";
+	}
+
+	@Override
+	public LSystem copy() {
 		return new LSystem(myAxiom, myGrammar, myParameters);
 	}
 
@@ -120,18 +76,148 @@ public class LSystem extends FormalDefinition{
 
 	@Override
 	public FormalDefinition alphabetAloneCopy() {
-		return new LSystem(new SymbolString(), myGrammar.alphabetAloneCopy(), new HashMap<String, String>());
+		return new LSystem(new Axiom(), myGrammar.alphabetAloneCopy(),
+				new ParameterMap());
 	}
-	
+
+	/**
+	 * Sets the Parameters of the LSystem to the passed in ParameterMap
+	 */
+	public void setParameters(ParameterMap parameters) {
+		myParameters = parameters;
+	}
+
+	/**
+	 * Returns the map of parameters for the L-System.
+	 */
+	public ParameterMap getParameters() {
+		return myParameters;
+	}
+
+	/**
+	 * Sets the Grammar of the LSystem to the passed in Grammar, adding the
+	 * Axiom and all LSystem Commands to the Terminal Alphabet of the Grammar.
+	 */
+	public void setGrammar(Grammar g) {
+		myGrammar = g;
+		// Dummy Start Variable, since simulation is done by the Expander but
+		// Start Variables are required.
+		myGrammar.setStartVariable(new Variable("`"));
+
+		TerminalAlphabet term = myGrammar.getTerminals();
+		CommandAlphabet command = new CommandAlphabet();
+
+		if (!term.containsAll(command))
+			term.addAll(command);
+		addAxiomToAlphabet();
+		initReplacements();
+	}
+
+	/**
+	 * Returns an array of all SymbolStrings that <i>s</i> can be replaced by in
+	 * a single Production. In other words, returns all SymbolStrings that occur
+	 * on any Production's RHS that has <i>s</i> as the LHS.
+	 */
+	public SymbolString[] getReplacements(SymbolString s) {
+		List<SymbolString> sList = myReplacements.get(s);
+		SymbolString[] emptyArray = new SymbolString[0];
+		return sList == null ? emptyArray : sList.toArray(emptyArray);
+	}
+
+	/**
+	 * 
+	 * @return Set of all SymbolStrings that can be replaced, ie. appear on the
+	 *         LHS of a Production in the LSystem.
+	 */
+	public Set<SymbolString> getSymbolStringsWithReplacements() {
+		return myReplacements.keySet();
+	}
+
+	/**
+	 * @return True iff there exists at least one SymbolString that has more
+	 *         than 1 replacement.
+	 */
+	public boolean isNondeterministic() {
+		for (List<SymbolString> p : myReplacements.values()) {
+			if (p.size() > 1)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return The L-System's Axiom
+	 */
+	public Axiom getAxiom() {
+		return myAxiom;
+	}
+
+	/**
+	 * Sets the L-System's axiom to the given string, which will be converted to
+	 * an <CODE>Axiom</CODE>.
+	 * 
+	 * @param axiom
+	 *            The String to be set as the new Axiom.
+	 */
+	public void setAxiom(String axiom) {
+		setAxiom(new Axiom(axiom));
+	}
+
+	/**
+	 * @return The underlying Grammar of the L-System.
+	 */
+	public Grammar getGrammar() {
+		return myGrammar;
+	}
+
 	@Override
-	public FormalDefinitionComponent[] getComponents() {
-		FormalDefinitionComponent[] fullComps = new FormalDefinitionComponent[2];
-		if(myGrammar != null)
-			fullComps[1] = new FormalGrammarComponent(myGrammar);
-		
-		fullComps[0] = new Axiom(myAxiom);
-		fullComps[fullComps.length-1] = new FormalParameters(myParameters);
-		
-		return fullComps;
+	public String toString() {
+		String out = "L-System = (A, G, P)\n";
+		out += "\t" + myAxiom.toString() + "\n";
+		out += "\t" + myGrammar.toString() + "\n";
+		out += "\t" + myParameters.toString();
+		return out;
+	}
+
+	/**
+	 * Adds all Symbols in the Axiom to the proper alphabet in the Grammar.
+	 */
+	private void addAxiomToAlphabet() {
+		if (myAxiom != null && !myAxiom.isEmpty()) {
+
+			for (Symbol s : myAxiom) {
+				if (s instanceof Variable)
+					myGrammar.getVariables().add(s);
+				else
+					myGrammar.getTerminals().add(s);
+			}
+		}
+	}
+
+	/**
+	 * Creates a map of all SymbolStrings on the LHS of Productions in the
+	 * Grammar to their (possibly more than 1) RHSs.
+	 */
+	private void initReplacements() {
+		myReplacements = new TreeMap<SymbolString, List<SymbolString>>();
+		ProductionSet prods = myGrammar.getProductionSet();
+
+		for (Production p : prods) {
+			SymbolString lhs = new SymbolString(p.getLHS());
+			if (!myReplacements.containsKey(lhs))
+				myReplacements.put(lhs, new ArrayList<SymbolString>());
+			SymbolString rhs = new SymbolString(p.getRHS());
+			myReplacements.get(lhs).add(rhs);
+		}
+	}
+
+	/**
+	 * Sets the L-System's axiom to the given Axiom and adds it to the Grammar.
+	 * 
+	 * @param axiom
+	 */
+	public void setAxiom(Axiom axiom) {
+		myAxiom = axiom;
+		addAxiomToAlphabet();
 	}
 }

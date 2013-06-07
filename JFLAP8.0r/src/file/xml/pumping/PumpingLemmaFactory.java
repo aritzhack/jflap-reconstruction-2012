@@ -29,6 +29,7 @@ import model.pumping.reg.Palindrome;
 
 
 /**
+ * Factory to produce the correct PumpingLemma instance from a saved file.
  * 
  * @author Jinghui Lim
  *

@@ -1,52 +1,50 @@
 package model.lsystem.formaldef;
 
-import model.formaldef.components.FormalDefinitionComponent;
-import model.grammar.Grammar;
 import errors.BooleanWrapper;
+import model.formaldef.components.FormalDefinitionComponent;
+import model.grammar.ProductionSet;
 
-public class FormalGrammarComponent extends FormalDefinitionComponent {
+public class FormalRewritingRules extends FormalDefinitionComponent {
 
-	private Grammar grammar;
+	private ProductionSet myProductions;
 
-	public FormalGrammarComponent(Grammar g){
-		grammar = g;
+	public FormalRewritingRules(ProductionSet p){
+		myProductions = p;
 	}
 	
 	@Override
 	public String getDescriptionName() {
 		// TODO Auto-generated method stub
-		return "Grammar";
+		return "Rewriting Rules";
 	}
 
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return "Formal Definition Component Wrapper for Grammar";
+		return "LSystem Rewriting Rules";
 	}
 
 	@Override
 	public Character getCharacterAbbr() {
 		// TODO Auto-generated method stub
-		return 'G';
+		return 'R';
 	}
 
 	@Override
 	public BooleanWrapper isComplete() {
-		for(BooleanWrapper b : grammar.isComplete())
-			if(b.isError())
-				return b;
+		// TODO Auto-generated method stub
 		return new BooleanWrapper(true);
 	}
 
 	@Override
 	public FormalDefinitionComponent copy() {
 		// TODO Auto-generated method stub
-		return new FormalGrammarComponent(grammar.copy());
+		return new FormalRewritingRules(myProductions);
 	}
 
 	@Override
 	public void clear() {
-		grammar = new Grammar();
+		myProductions.clear();
 	}
 
 }

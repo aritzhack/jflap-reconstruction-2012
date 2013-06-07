@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to pop a single turtle from the stack
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PopCommand extends LSystemCommand {
 
 	public PopCommand(String s) {

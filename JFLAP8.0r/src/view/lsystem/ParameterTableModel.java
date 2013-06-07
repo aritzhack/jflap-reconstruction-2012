@@ -22,15 +22,18 @@ package view.lsystem;
 
 import java.util.*;
 
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+
 import util.view.tables.GrowableTableModel;
 
 /**
  * A mapping of parameters to values.
  * 
- * @author Thomas Finley
+ * @author Thomas Finley, Ian McMahon
  */
 
 public class ParameterTableModel extends GrowableTableModel {
+	
 	/**
 	 * Constructs an empty parameter table model.
 	 */
@@ -44,7 +47,7 @@ public class ParameterTableModel extends GrowableTableModel {
 	 * @param parameters
 	 *            the mapping of parameter names to parameter objects
 	 */
-	public ParameterTableModel(Map<String, String> parameters) {
+	public ParameterTableModel(ParameterMap parameters) {
 		this();
 		int i=0;
 		for (String key : parameters.keySet()) {
@@ -70,8 +73,9 @@ public class ParameterTableModel extends GrowableTableModel {
 	 * @return the mapping from parameter names to parameters (i.e., map of
 	 *         contents of the left column to contents of the right column)
 	 */
-	public TreeMap<String, String> getParameters() {
-		TreeMap<String, String> map = new TreeMap<String, String>();
+	public ParameterMap getParameters() {
+		ParameterMap map = new ParameterMap();
+		
 		for (int i = 0; i < getRowCount() - 1; i++) {
 			String o = (String) getValueAt(i, 0);
 			if (o.equals(""))

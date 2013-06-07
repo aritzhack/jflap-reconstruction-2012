@@ -14,10 +14,6 @@
  *
  */
 
-
-
-
-
 package view.lsystem;
 
 import java.awt.geom.Point2D;
@@ -26,14 +22,51 @@ import java.io.Serializable;
 import util.Copyable;
 
 /**
- * This is an affine transform matrix rather like the <CODE>AffineTransform</CODE>
- * of <CODE>jawa.awt.geom</CODE> fame, but for three dimensions. This type of
- * matrix does not support shearing or scaling.
+ * This is an affine transform matrix rather like the
+ * <CODE>AffineTransform</CODE> of <CODE>jawa.awt.geom</CODE> fame, but for
+ * three dimensions. This type of matrix does not support shearing or scaling.
  * 
  * @author Thomas Finley
  */
 
 public class Matrix implements Copyable, Serializable {
+	/**
+	 * The entries, where the first index in the array is the row, and the
+	 * second index is the column.
+	 */
+	public double[][] entry;
+
+	/** The backup entries. */
+	private double[][] entry2 = new double[4][4];
+
+	/** The old angles for each of the cached turn matrices. */
+	private static double XAXIS_ANGLE = Double.NaN, YAXIS_ANGLE = Double.NaN,
+			ZAXIS_ANGLE = Double.NaN;
+
+	/** The cached matrices for turning. */
+	private static Matrix XAXIS_TURN, YAXIS_TURN, ZAXIS_TURN;
+
+	/** The old distances for each of the cache translation matrices. */
+	private static double[] DIRS = new double[] { 0.0, 0.0, 0.0 };
+
+	/** The old translation matrix. */
+	private static final Matrix TRANSLATE = new Matrix();
+
+	/**
+	 * The old matrix used for computing inversions back to user space...
+	 */
+	private static final Matrix INVERSE = new Matrix();
+
+	/**
+	 * Used for the origin methods, so new arrays needn't constantly be
+	 * allocated.
+	 */
+	private static final double[] ORIGIN_REUSE = new double[3];
+
+	public static final String arrayString(double[] d) {
+		return "( " + d[0] + ", " + d[1] + ", " + d[2] + " )";
+	}
+	
 	/**
 	 * Instantiates a new identity matrix.
 	 */
@@ -67,15 +100,6 @@ public class Matrix implements Copyable, Serializable {
 	}
 
 	/**
-	 * Returns a copy of this object.
-	 * 
-	 * @return a copy of this matrix
-	 */
-	public Object clone() {
-		return new Matrix(this);
-	}
-
-	/**
 	 * Returns the entry at the given entry.
 	 * 
 	 * @param row
@@ -91,8 +115,8 @@ public class Matrix implements Copyable, Serializable {
 	/**
 	 * Given another matrix, this will premultiply that matrix times this
 	 * matrix, and store the result in this matrix. If <I>A</I> is this matrix
-	 * and <I>B</I> is the matrix passed in as a parameter, then this is
-	 * similar to <I>A = BA</I>.
+	 * and <I>B</I> is the matrix passed in as a parameter, then this is similar
+	 * to <I>A = BA</I>.
 	 * 
 	 * @param matrix
 	 *            the matrix to premultiply
@@ -116,8 +140,8 @@ public class Matrix implements Copyable, Serializable {
 	/**
 	 * Given another matrix, this will premultiply that matrix times this
 	 * matrix, and store the result in this matrix. If <I>B</I> is this matrix
-	 * and <I>A</I> is the matrix passed in as a parameter, then this is
-	 * similar to <I>B = BA</I>.
+	 * and <I>A</I> is the matrix passed in as a parameter, then this is similar
+	 * to <I>B = BA</I>.
 	 * 
 	 * @param matrix
 	 *            the matrix to premultiply
@@ -234,9 +258,9 @@ public class Matrix implements Copyable, Serializable {
 	 * Returns the x, y, and z coordinates of the transformed origin.
 	 * 
 	 * @param array
-	 *            the array of three entries which will hold, in order, the <I>x</I>,
-	 *            <I>y</I>, and <I>z</I> coordinates, or null if you wish a
-	 *            newly allocated array
+	 *            the array of three entries which will hold, in order, the
+	 *            <I>x</I>, <I>y</I>, and <I>z</I> coordinates, or null if you
+	 *            wish a newly allocated array
 	 * @return the array
 	 */
 	public final double[] origin(double[] array) {
@@ -278,46 +302,8 @@ public class Matrix implements Copyable, Serializable {
 		return sb.toString();
 	}
 
-	/**
-	 * The entries, where the first index in the array is the row, and the
-	 * second index is the column.
-	 */
-	public double[][] entry;
-
-	/** The backup entries. */
-	private double[][] entry2 = new double[4][4];
-
-	/** The old angles for each of the cached turn matrices. */
-	private static double XAXIS_ANGLE = Double.NaN, YAXIS_ANGLE = Double.NaN,
-			ZAXIS_ANGLE = Double.NaN;
-
-	/** The cached matrices for turning. */
-	private static Matrix XAXIS_TURN, YAXIS_TURN, ZAXIS_TURN;
-
-	/** The old distances for each of the cache translation matrices. */
-	private static double[] DIRS = new double[] { 0.0, 0.0, 0.0 };
-
-	/** The old translation matrix. */
-	private static final Matrix TRANSLATE = new Matrix();
-
-	/**
-	 * The old matrix used for computing inversions back to user space...
-	 */
-	private static final Matrix INVERSE = new Matrix();
-
-	/**
-	 * Used for the origin methods, so new arrays needn't constantly be
-	 * allocated.
-	 */
-	private static final double[] ORIGIN_REUSE = new double[3];
-
-	public static final String arrayString(double[] d) {
-		return "( " + d[0] + ", " + d[1] + ", " + d[2] + " )";
-	}
-
 	@Override
 	public Object copy() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Matrix(this);
 	}
 }

@@ -1,37 +1,42 @@
 package model.lsystem.formaldef;
 
 import model.formaldef.components.FormalDefinitionComponent;
-import model.symbols.SymbolString;
+import model.formaldef.components.alphabets.Alphabet;
+import model.grammar.TerminalAlphabet;
+import model.grammar.VariableAlphabet;
+import model.lsystem.CommandAlphabet;
 import errors.BooleanWrapper;
 
-public class Axiom extends FormalDefinitionComponent{
-
-	private SymbolString myAxiom;
-
-	public Axiom(){
-		myAxiom = new SymbolString();
+public class FormalAlph extends FormalDefinitionComponent {
+	private Alphabet sigma;
+	
+	public FormalAlph(VariableAlphabet var, TerminalAlphabet term){
+		sigma = new CommandAlphabet();
+		sigma.addAll(term);
+		sigma.addAll(var);
 	}
 	
-	public Axiom(SymbolString axiom){
-		this.myAxiom = axiom;
+	public FormalAlph(Alphabet alph){
+		sigma = new CommandAlphabet();
+		sigma.addAll(alph);
 	}
 	
 	@Override
 	public String getDescriptionName() {
 		// TODO Auto-generated method stub
-		return "Axiom";
+		return "LSystem Alphabet";
 	}
 
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return "Axiom";
+		return "LSystem Alphabet";
 	}
 
 	@Override
 	public Character getCharacterAbbr() {
 		// TODO Auto-generated method stub
-		return 'A';
+		return 'Σ';
 	}
 
 	@Override
@@ -43,12 +48,12 @@ public class Axiom extends FormalDefinitionComponent{
 	@Override
 	public FormalDefinitionComponent copy() {
 		// TODO Auto-generated method stub
-		return new Axiom(myAxiom);
+		return new FormalAlph(sigma);
 	}
 
 	@Override
 	public void clear() {
-		myAxiom = new SymbolString();
+		sigma = new CommandAlphabet();
 	}
 
 }

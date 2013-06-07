@@ -1,5 +1,6 @@
 package view.grammar.parsing;
 
+import debug.JFLAPDebug;
 import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
@@ -23,7 +24,6 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 		runningView = createRunningView(alg);
 
 		dropDownPanel = new DropDownMenuPanel(runningView);
-
 		return dropDownPanel;
 	}
 
@@ -66,6 +66,9 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 	 */
 	public void resetDropDownPanel() {
 		dropDownPanel.removeAllOptions();
+		JFLAPDebug.print(runningView.getPreferredSize());
 		dropDownPanel.addOption(runningView);
+		dropDownPanel.setSize(runningView.getPreferredSize());
+		JFLAPDebug.print(dropDownPanel.getSize());
 	}
 }

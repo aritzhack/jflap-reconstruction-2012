@@ -22,10 +22,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -42,15 +42,17 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import debug.JFLAPDebug;
+
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.Terminal;
 import model.lsystem.CommandAlphabet;
 import model.lsystem.LSystem;
+import model.lsystem.LSystemException;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import model.symbols.symbolizer.Symbolizers;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
@@ -62,50 +64,35 @@ import view.formaldef.BasicFormalDefinitionView;
 import view.grammar.productions.ProductionDataHelper;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
+import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
 
 /**
  * The <CODE>LSystemInputPane</CODE> is a pane used to input and display the
  * textual representation of an L-system.
  * 
- * @author Thomas Finley
+ * @author Thomas Finley, Ian McMahon
  */
 
 public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
-	/** An empty L-system. */
-	private static final LSystem SYSTEM = new LSystem();
-
-	/** The axiom text field. */
+	
+	private static final Dimension LSYSTEM_INPUT_SIZE = new Dimension(500, 650);
+	
 	private MagnifiableTextField axiomField;
-
-	/** The production table. */
 	private ProductionTable myProdTable;
-
-	/** The parameter table model. */
 	private ParameterTableModel parameterModel;
-
-	/** The parameter table view. */
 	private ParameterTable parameterTable;
-
-	/** The set of input listeners. */
-	private Set<LSystemInputListener> myListeners = new HashSet<LSystemInputListener>();
-
-	/** The event reused in firing off the notifications. */
-	private LSystemInputEvent reusedEvent = new LSystemInputEvent(this);
-
-	/** The cached L-system. Firing an L-S input event invalidates this. */
 	private LSystem cachedSystem = null;
-
 	private TableCellRenderer myRenderer = new NumberBoldingRenderer();
 
 	/**
-	 * Instantiates an empty <CODE>LSystemInputPane</CODE>.
+	 * Instantiates an empty <CODE>LSystemInputView</CODE>.
 	 */
 	public LSystemInputView() {
-		this(SYSTEM);
+		this(new LSystem());
 	}
 
 	/**
-	 * Instantiates an <CODE>LSystemInputPane</CODE> for a given
+	 * Instantiates an <CODE>LSystemInputView</CODE> for a given
 	 * <CODE>LSystem</CODE>.
 	 * 
 	 * @param lsystem
@@ -113,6 +100,46 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	 */
 	public LSystemInputView(LSystem lsystem) {
 		super(lsystem, new UndoKeeper(), true);
+		setPreferredSize(LSYSTEM_INPUT_SIZE);
+		setMaximumSize(LSYSTEM_INPUT_SIZE);
+	}
+
+	@Override
+	public String getName() {
+		return "L System";
+	}
+
+	@Override
+	public JComponent createCentralPanel(LSystem model, UndoKeeper keeper,
+			boolean editable) {
+		initializeStructures(model);
+		MagnifiablePanel central = new MagnifiablePanel(new BorderLayout());
+
+		MagnifiablePanel axiomView = createAxiomView();
+		central.add(axiomView, BorderLayout.NORTH);
+
+		MagnifiableScrollPane scroller = new MagnifiableScrollPane(
+				parameterTable);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setPreferredSize(new Dimension(400, 200));
+
+		MagnifiableScrollPane prodScroller = createProductionScroller(model,
+				keeper, new Dimension(400, 210));
+
+		MagnifiableSplitPane split = new MagnifiableSplitPane(
+				JSplitPane.VERTICAL_SPLIT, prodScroller, scroller);
+		split.setDividerLocation(235);
+		central.add(split, BorderLayout.CENTER);
+
+		// Finally, show the grid.
+		parameterTable.setShowGrid(true);
+		parameterTable.setGridColor(Color.lightGray);
+
+		JLabel c = createParameterMenu();
+
+		scroller.setCorner(JScrollPane.UPPER_RIGHT_CORNER, c);
+		initializeListener();
+		return central;
 	}
 
 	/**
@@ -132,8 +159,88 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 
 		// Create the parameter table model.
 		parameterModel = new ParameterTableModel(lsystem.getParameters());
+		parameterTable = new ParameterTable(parameterModel);
+
 		// We may as well use this as our cached system.
 		cachedSystem = lsystem;
+	}
+
+	/**
+	 * @return MagnifiablePanel for user to input Axiom data.
+	 */
+	private MagnifiablePanel createAxiomView() {
+		MagnifiablePanel axiomView = new MagnifiablePanel(new BorderLayout());
+		axiomView.add(
+				new MagnifiableLabel("Axiom: ", JFLAPPreferences
+						.getDefaultTextSize()), BorderLayout.WEST);
+		axiomView.add(axiomField, BorderLayout.CENTER);
+		return axiomView;
+	}
+
+	/**
+	 * 
+	 * @param model
+	 *            The view's initial LSystem
+	 * @param keeper
+	 *            UndoKeeper for the view
+	 * @param bestSize
+	 *            Dimension defining the preferred size of the production table
+	 * @return A ProductionTable representing the LSystem's production rules
+	 *         contained in a MagnifiableScrollPane
+	 */
+	private MagnifiableScrollPane createProductionScroller(LSystem model,
+			UndoKeeper keeper, Dimension bestSize) {
+		Grammar g = model.getGrammar();
+		LSystemDataHelper helper = new LSystemDataHelper(g, keeper);
+		ProductionTableModel tableModel = new ProductionTableModel(g, keeper,
+				helper);
+
+		myProdTable = new ProductionTable(g, keeper, true, tableModel) {
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+				if (column == 0)
+					return myRenderer;
+				return super.getCellRenderer(row, column);
+			}
+		};
+		myProdTable.setPreferredSize(bestSize);
+
+		MagnifiableScrollPane prodScroller = new MagnifiableScrollPane(
+				myProdTable);
+		prodScroller.setPreferredSize(bestSize);
+		return prodScroller;
+	}
+
+	/**
+	 * 
+	 * @return JLabel for the area in which, when clicked, the popup menu
+	 *         containing default Parameters to autofill the ParameterTable will
+	 *         appear.
+	 */
+	private JLabel createParameterMenu() {
+		JLabel c = new JLabel();
+		final JPopupMenu menu = new JPopupMenu();
+
+		ActionListener listener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setEditing(e.getActionCommand());
+			}
+		};
+
+		String[] words = (String[]) Renderer.ASSIGN_WORDS
+				.toArray(new String[0]);
+		for (int i = 0; i < words.length; i++) {
+			menu.add(words[i]).addActionListener(listener);
+		}
+
+		c.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				menu.show((Component) e.getSource(), e.getPoint().x,
+						e.getPoint().y);
+			}
+		});
+		c.setText(" P");
+		return c;
 	}
 
 	/**
@@ -142,30 +249,35 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	public void initializeListener() {
 		axiomField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
-				fireLSystemInputEvent();
+				fireAxiomInputEvent();
 			}
 
 			public void removeUpdate(DocumentEvent e) {
-				fireLSystemInputEvent();
+				fireAxiomInputEvent();
 			}
 
 			public void insertUpdate(DocumentEvent e) {
-				fireLSystemInputEvent();
+				fireAxiomInputEvent();
 			}
 		});
-		TableModelListener tml = new TableModelListener() {
+
+		TableModelListener paramTML = new TableModelListener() {
 			public void tableChanged(TableModelEvent e) {
-				fireLSystemInputEvent();
+				fireParamInputEvent();
 			}
 		};
-		parameterModel.addTableModelListener(tml);
-		myProdTable.getModel().addTableModelListener(tml);
+
+		TableModelListener prodTML = new TableModelListener() {
+			public void tableChanged(TableModelEvent e) {
+				fireGrammarInputEvent();
+			}
+		};
+		parameterModel.addTableModelListener(paramTML);
+		myProdTable.getModel().addTableModelListener(prodTML);
 	}
 
 	/**
-	 * Returns the L-system this pane displays.
-	 * 
-	 * @return the L-system this pane displays
+	 * @return the L-system this view displays
 	 */
 	public LSystem getLSystem() {
 		// Make sure we're not editing anything.
@@ -178,45 +290,56 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 			if (cachedSystem == null) {
 				Grammar g = ((ProductionTableModel) myProdTable.getModel())
 						.getGrammar();
-				cachedSystem = new LSystem(Symbolizers.symbolize(
-						axiomField.getText(), g), g,
+				cachedSystem = new LSystem(new Axiom(axiomField.getText()), g,
 						parameterModel.getParameters());
 			}
 		} catch (IllegalArgumentException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(),
-					"L-System Error", JOptionPane.ERROR_MESSAGE);
+			throw new LSystemException(
+					"Error in retrieving the L-System for rendering!");
 		}
 		return cachedSystem;
 	}
 
 	/**
-	 * Adds an L-system input listener.
-	 * 
-	 * @param listener
-	 *            the listener to start sending change events to
-	 */
-	public void addLSystemInputListener(LSystemInputListener listener) {
-		myListeners.add(listener);
-	}
-
-	/**
-	 * Removes an L-system input listener.
-	 * 
-	 * @param listener
-	 *            the listener to stop sending change events to
-	 */
-	public void removeLSystemInputListener(LSystemInputListener listener) {
-		myListeners.remove(listener);
-	}
-
-	/**
-	 * Fires a notification to listeners that the L-system was changed.
+	 * Signals that the L-system was changed by nullifying the cachedSystem.
 	 */
 	protected void fireLSystemInputEvent() {
 		cachedSystem = null;
-		Iterator it = myListeners.iterator();
-		while (it.hasNext())
-			((LSystemInputListener) (it.next())).lSystemChanged(reusedEvent);
+	}
+
+	/**
+	 * Changes the L-System's Axiom to match the newly input text in the
+	 * axiomField.
+	 */
+	private void fireAxiomInputEvent() {
+		LSystem system = getDefinition();
+		String text = axiomField.getText();
+
+		system.setAxiom(text);
+		fireLSystemInputEvent();
+	}
+
+	/**
+	 * Changes the L-System's Parameters to match to newly input data in the
+	 * parameterTable.
+	 */
+	private void fireParamInputEvent() {
+		LSystem system = getDefinition();
+		system.setParameters(parameterModel.getParameters());
+		fireLSystemInputEvent();
+	}
+
+	/**
+	 * Changes the L-System's Grammar to match to newly input data in the
+	 * productionTable.
+	 */
+	private void fireGrammarInputEvent() {
+		LSystem system = getDefinition();
+		Grammar g = ((ProductionTableModel) myProdTable.getModel())
+				.getGrammar();
+
+		system.setGrammar(g);
+		fireLSystemInputEvent();
 	}
 
 	/**
@@ -237,116 +360,17 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 		if (i == parameterModel.getRowCount()) // We need to create it.
 			parameterModel.setValueAt(item, --i, 0);
 		int column = parameterTable.convertColumnIndexToView(1);
+
 		parameterTable.editCellAt(i, column);
 		parameterTable.requestFocus();
 	}
 
-	@Override
-	public String getName() {
-		return "L System";
-	}
-
-	@Override
-	public JComponent createCentralPanel(LSystem model, UndoKeeper keeper,
-			boolean editable) {
-		initializeStructures(model);
-		MagnifiablePanel central = new MagnifiablePanel(new BorderLayout());
-
-		// Create the view for the axiom text field.
-		MagnifiablePanel axiomView = new MagnifiablePanel(new BorderLayout());
-		axiomView.add(
-				new MagnifiableLabel("Axiom: ", JFLAPPreferences
-						.getDefaultTextSize()), BorderLayout.WEST);
-		axiomView.add(axiomField, BorderLayout.CENTER);
-		central.add(axiomView, BorderLayout.NORTH);
-		// Create the view for the grammar pane and the rest.
-		parameterTable = new ParameterTable(parameterModel);
-		MagnifiableScrollPane scroller = new MagnifiableScrollPane(
-				parameterTable);
-
-		Dimension bestSize = new Dimension(400, 200);
-		/*
-		 * parameterTable.setPreferredSize(bestSize);
-		 * productionInputPane.getTable().setPreferredSize(bestSize);
-		 */
-		// Create the grammar view that holds replacement productions.
-		Set<SymbolString> replacements = model
-				.getSymbolStringsWithReplacements();
-		Grammar g = new Grammar();
-		g.getTerminals().addAll(new CommandAlphabet());
-		ProductionSet prods = g.getProductionSet();
-
-		for (SymbolString s : replacements) {
-			SymbolString[] r = model.getReplacements(s);
-			for (int i = 0; i < r.length; i++) {
-				Production p = new Production(s, r[i]);
-				prods.add(p);
-			}
-		}
-
-		myProdTable = new ProductionTable(g, keeper, true, new ProductionTableModel(g, keeper, new LSystemDataHelper(g, keeper))) {
-			@Override
-			public TableCellRenderer getCellRenderer(int row, int column) {
-				if (column == 0)
-					return myRenderer;
-				return super.getCellRenderer(row, column);
-			}
-		};
-		myProdTable.setPreferredSize(bestSize);
-		
-
-		MagnifiableScrollPane prodScroller = new MagnifiableScrollPane(
-				myProdTable);
-		prodScroller.setPreferredSize(bestSize);
-		scroller.setPreferredSize(bestSize);
-		MagnifiableSplitPane split = new MagnifiableSplitPane(
-				JSplitPane.VERTICAL_SPLIT, prodScroller, scroller);
-		central.add(split, BorderLayout.CENTER);
-		// Finally, show the grid.
-		parameterTable.setShowGrid(true);
-		parameterTable.setGridColor(Color.lightGray);
-
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-		/*
-		 * final JComboBox box = new JComboBox ((String[])
-		 * Renderer.ASSIGN_WORDS.toArray(new String[0]));
-		 * box.setLightWeightPopupEnabled(false);
-		 * scroller.setCorner(JScrollPane.UPPER_RIGHT_CORNER, box);
-		 * box.addItemListener(new ItemListener() { public void
-		 * itemStateChanged(ItemEvent e) { if (e.getStateChange() != e.SELECTED)
-		 * return; String s = (String) e.getItem(); box.setSelectedIndex(-1); //
-		 * No selection! setEditing(s); } });
-		 */
-
-		final JPopupMenu menu = new JPopupMenu();
-		ActionListener listener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setEditing(e.getActionCommand());
-			}
-		};
-		String[] words = (String[]) Renderer.ASSIGN_WORDS
-				.toArray(new String[0]);
-		for (int i = 0; i < words.length; i++) {
-			menu.add(words[i]).addActionListener(listener);
-		}
-		JLabel c = new JLabel();
-		c.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				menu.show((Component) e.getSource(), e.getPoint().x,
-						e.getPoint().y);
-			}
-		});
-		c.setText(" P");
-		scroller.setCorner(JScrollPane.UPPER_RIGHT_CORNER, c);
-		initializeListener();
-		return central;
-	}
-
 	/**
-	 * The modified table cell renderer. Replaces square brackets with {},
-	 * renders empty sets as the Empty Set Symbol, and deals with highlighting
-	 * of table cells (notifying the header renderer when necessary).
+	 * The modified table cell renderer. If a production is context-sensitive,
+	 * the number will be hidden and the Symbol at that index will be bolded. As
+	 * it renders using HTML, it will also replace all special HTML symbols with
+	 * their HTML encoding.
+	 * 
 	 */
 	private class NumberBoldingRenderer extends DefaultTableCellRenderer {
 		public Component getTableCellRendererComponent(JTable table,
@@ -355,20 +379,22 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 			JLabel l = (JLabel) super.getTableCellRendererComponent(table,
 					value, isSelected, hasFocus, row, column);
 			if (l != null) {
-				String[] lhs = l.getText().trim().replaceAll("\\s+", " ").split(" ");
+				// Splits on whitespace.
+				String[] lhs = l.getText().trim().split("\\s+");
 				if (lhs.length > 1 && Character.isDigit(lhs[0].charAt(0))) {
 					int index = lhs[0].charAt(0) - '0' + 1;
+
 					if (index < lhs.length) {
 						StringBuilder left = new StringBuilder(), right = new StringBuilder();
-						for(int i=1; i < lhs.length; i++){
+						for (int i = 1; i < lhs.length; i++) {
 							lhs[i] = lhs[i].replaceAll("&", "&amp;");
 							lhs[i] = lhs[i].replaceAll("\"", "&quot;");
 							lhs[i] = lhs[i].replaceAll("<", "&lt;");
 							lhs[i] = lhs[i].replaceAll(">", "&gt;");
-							if(i < index)
-								left.append(lhs[i]+" ");
-							else if(i > index)
-								right.append(lhs[i]+" ");
+							if (i < index)
+								left.append(lhs[i] + " ");
+							else if (i > index)
+								right.append(lhs[i] + " ");
 						}
 						l.setText(String.format("<html>%s<b>%s</b>%s</html>",
 								left.toString(), lhs[index] + " ",
@@ -379,35 +405,44 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 			return l;
 		}
 	}
-	
-	private class LSystemDataHelper extends ProductionDataHelper{
+
+	/**
+	 * Modified ProductionDataHelper, specific to L-Systems to fix an issue that
+	 * arose with symbols that included Symbols already in the grammar not being parsed by the
+	 * Symbolizer correctly. Any symbol in the production table that contains a valid
+	 * command/terminal is added to the grammar prior to symbolizing.
+	 * 
+	 * @author Ian McMahon
+	 * 
+	 */
+	private class LSystemDataHelper extends ProductionDataHelper {
 
 		public LSystemDataHelper(Grammar model, UndoKeeper keeper) {
 			super(model, keeper);
 		}
-		
+
 		@Override
 		protected Production objectToProduction(Object[] input) {
 			if (isEmptyString((String) input[0]))
 				input[0] = "";
 			if (isEmptyString((String) input[2]))
 				input[2] = "";
-			String[] LHS = ((String) input[0]).trim().replaceAll(" +", " ").split(" "),
-					RHS = ((String) input[2]).trim().replaceAll(" +", " ").split(" ");
-			
-			for(String l : LHS)
-				if(isParenthesisCommand(l))
+			String[] LHS = ((String) input[0]).trim().split("\\s+"), RHS = ((String) input[2])
+					.trim().split("\\s+");
+
+			for (String l : LHS)
+				if (containsExistingSymbol(l))
 					myGrammar.getLanguageAlphabet().add(new Terminal(l));
-			for(String r : RHS)
-				if(isParenthesisCommand(r))
+			for (String r : RHS)
+				if (containsExistingSymbol(r))
 					myGrammar.getLanguageAlphabet().add(new Terminal(r));
 			return super.objectToProduction(input);
 		}
-		
-		private boolean isParenthesisCommand(String s){
-			CommandAlphabet alph = new CommandAlphabet();
-			for(Symbol symbol: alph.getParenCommands()){
-				if(s.endsWith(")") && s.startsWith(symbol.getString()+"("))
+
+		private boolean containsExistingSymbol(String s) {
+			
+			for (Symbol symbol : myGrammar.getTerminals()) {
+				if (s.contains(symbol.toString()))
 					return true;
 			}
 			return false;

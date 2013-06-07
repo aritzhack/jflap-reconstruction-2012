@@ -52,6 +52,7 @@ import model.pumping.reg.BkABnBAn;
 import model.pumping.reg.NaNb;
 import model.pumping.reg.Palindrome;
 import model.regex.RegularExpression;
+import model.symbols.symbolizer.SimpleSymbolizer;
 import file.xml.formaldef.automata.BlockTMTransducer;
 import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.automata.MealyMachineTransducer;
@@ -74,10 +75,19 @@ import file.xml.formaldef.components.states.ToStateTransducer;
 import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
 import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
+import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
+import file.xml.formaldef.lsystem.AxiomTransducer;
 import file.xml.formaldef.lsystem.LSystemTransducer;
-import file.xml.formaldef.lsystem.Parameter;
+import file.xml.formaldef.lsystem.ParameterMapTransducer;
+import file.xml.formaldef.lsystem.ParameterNameTransducer;
 import file.xml.formaldef.lsystem.ParameterTransducer;
+import file.xml.formaldef.lsystem.ParameterValueTransducer;
+import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
+import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 import file.xml.formaldef.regex.RegExTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;
@@ -128,6 +138,10 @@ public class TransducerFactory{
 		//LSystem
 		addMapping(LSystem.class, new LSystemTransducer());
 		addMapping(Parameter.class, new ParameterTransducer());
+		addMapping(ParameterMap.class, new ParameterMapTransducer());
+		addMapping(ParameterName.class, new ParameterNameTransducer());
+		addMapping(ParameterValue.class, new ParameterValueTransducer());
+		addMapping(Axiom.class, new AxiomTransducer());
 		
 		//Context-Free Pumping Lemma
 		addMapping(AiBjCk.class, new CFPumpingLemmaTransducer());

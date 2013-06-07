@@ -1,18 +1,26 @@
 package file.xml.formaldef.lsystem;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import file.xml.StructureTransducer;
-import file.xml.XMLHelper;
+import debug.JFLAPDebug;
 
-public class ParameterMapTransducer extends StructureTransducer<Map<String,String>>{
-	private static final String PARAMETER_MAP_TAG = "parameter_map";
+import file.xml.XMLHelper;
+import file.xml.XMLTransducer;
+import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
+
+/**
+ * Transducer specific to the Parameter Map of an LSystem.
+ * 
+ * @author Ian McMahon
+ *
+ */
+public class ParameterMapTransducer implements XMLTransducer<ParameterMap>{
 	private ParameterTransducer subTrans = new ParameterTransducer();
 	
 	
@@ -22,18 +30,18 @@ public class ParameterMapTransducer extends StructureTransducer<Map<String,Strin
 	}
 
 	@Override
-	public Map<String, String> fromStructureRoot(Element root) {
+	public ParameterMap fromStructureRoot(Element root) {
 		List<Element> list = XMLHelper.getChildrenWithTag(root, PARAMETER_TAG);
-		Map<String, String> parameters = new HashMap<String, String>();
-		
+		ParameterMap parameters = new ParameterMap();
+		JFLAPDebug.print(list.size());
 		for (int i = 0; i < list.size(); i++){
-			Parameter current = subTrans.fromStructureRoot((Element)list.get(i));
-			String name = current.getName();
-			String value = current.getValue();
+			Parameter current = subTrans.fromStructureRoot(list.get(i));
+			ParameterName name = current.getName();
+			ParameterValue value = current.getValue();
 			
-			if(name != null){
-				if(value == null)
-					value = "";
+			if(name != null && name.toString() != null){
+				if(value == null || value.toString() == null)
+					value = new ParameterValue("");
 				parameters.put(name, value);
 			}
 		}
@@ -41,13 +49,21 @@ public class ParameterMapTransducer extends StructureTransducer<Map<String,Strin
 	}
 
 	@Override
-	public Element appendComponentsToRoot(Document doc,
-			Map<String, String> structure, Element root) {
+	public Element toXMLTree(Document doc, ParameterMap structure) {
+		Element root = XMLHelper.createElement(doc, PARAMETER_MAP_TAG, null, null);
+		
 		for(String name : structure.keySet()){
-			Parameter param = new Parameter(name, structure.get(name));
+			String value = structure.get(name);
+			Parameter param = new Parameter(name, value);
+			
 			root.appendChild(subTrans.toXMLTree(doc, param));
 		}
 		return root;
+	}
+
+	@Override
+	public boolean matchesTag(String tag) {
+		return getTag().equals(tag);
 	}
 
 }

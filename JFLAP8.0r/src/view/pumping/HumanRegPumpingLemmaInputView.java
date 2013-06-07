@@ -36,7 +36,7 @@ import model.pumping.RegularPumpingLemma;
  * @see pumping.RegularPumpingLemma
  *
  */
-public class HumanRegPumpingLemmaInputPane extends HumanFirstPane
+public class HumanRegPumpingLemmaInputView extends HumanFirstView
 {
     /**
      * Message displayed if computer wins.
@@ -57,15 +57,17 @@ public class HumanRegPumpingLemmaInputPane extends HumanFirstPane
      *
      * @param l the <code>RegularPumpingLemma</code> we want to run
      */
-    public HumanRegPumpingLemmaInputPane(RegularPumpingLemma l)
+    public HumanRegPumpingLemmaInputView(RegularPumpingLemma l)
     {
-        super(l);        
+        super(l);       
+        setPreferredSize(REG_HUMAN_SIZE);
     }
 
     protected void addDecompPanelGameFeatures(JPanel n) 
     {
-    	n.setMaximumSize(new Dimension(MAX_SIZE.width, 3*MAX_SIZE.height/10));
-        n.setPreferredSize(new Dimension(MAX_SIZE.width, 3*MAX_SIZE.height/10));
+    	Dimension size = new Dimension(MAX_SIZE.width, 3*MAX_SIZE.height/10);
+    	n.setMaximumSize(size);
+        n.setPreferredSize(size);
         decompButtonTitle = new String("Set xyz");
         n.setBorder(BorderFactory.createTitledBorder("3. Select decomposition of w into xyz.")); 
     }

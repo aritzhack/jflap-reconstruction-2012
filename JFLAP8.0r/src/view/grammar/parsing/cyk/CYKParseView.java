@@ -1,5 +1,7 @@
 package view.grammar.parsing.cyk;
 
+import java.awt.Dimension;
+
 import model.algorithms.testinput.parse.Parser;
 import model.change.events.AdvancedChangeEvent;
 import universe.preferences.JFLAPPreferences;
@@ -16,6 +18,7 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
 	public CYKParseView(Parser alg) {
 		super(alg);
+		setPreferredSize(new Dimension(817, 725));
 	}
 
 	@Override

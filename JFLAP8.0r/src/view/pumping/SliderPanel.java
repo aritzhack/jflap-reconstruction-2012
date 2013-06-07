@@ -32,7 +32,7 @@ import javax.swing.event.*;
  * string segement as well as its length in text areas.
  * 
  * @author Jinghui Lim
- * @see gui.pumping.PumpingLemmaInputPane
+ * @see gui.pumping.PumpingLemmaInputView
  *
  */
 public class SliderPanel extends JPanel 
@@ -41,7 +41,7 @@ public class SliderPanel extends JPanel
     /**
      * The parent <code>PumpingLemmaInputPane</code> of this <code>SliderPanel</code>.
      */
-    private HumanFirstPane myPane;
+    private HumanFirstView myPane;
     /**
      * The text area that displays the string segment.
      */
@@ -77,7 +77,7 @@ public class SliderPanel extends JPanel
      * @param s the name of the string segment
      * @param p the parten <code>PumpingInputPane</code>
      */
-    public SliderPanel(String s, HumanFirstPane p) 
+    public SliderPanel(String s, HumanFirstView p) 
     {
         super(new BorderLayout());
         myPane = p;
@@ -87,6 +87,7 @@ public class SliderPanel extends JPanel
         myLengthDisplay = new JTextArea(1, 5);
         myLengthDisplay.setEditable(false);
         JPanel displayPanel = new JPanel();
+        
         displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.X_AXIS));
         displayPanel.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 7));
         displayPanel.add(new JLabel(s + ": "));
@@ -94,6 +95,7 @@ public class SliderPanel extends JPanel
         displayPanel.add(new JLabel("    |" + s + "|: "));
         displayPanel.add(myLengthDisplay);
         add(displayPanel, BorderLayout.CENTER);
+        
         mySlider = new JSlider(0, START_MAX);
         mySlider.setValue(0);
         mySlider.setPaintTicks(true);
@@ -160,7 +162,6 @@ public class SliderPanel extends JPanel
     {
         mySlider.setValue(i);
         refresh();
-//        getRootPane().repaint();
     }
     
     /**
@@ -193,11 +194,6 @@ public class SliderPanel extends JPanel
                 mySlider.setValue(myMin);
             myDisplay.setText(myText.substring(myMin, i));
             myLengthDisplay.setText("" + (mySlider.getValue() - myMin));
-//            myPane.stages[4].setVisible(false);
-//            myPane.stages[5].setVisible(false);
-//            myPane.updateLeftPanel();
-            
-//            getRootPane().repaint();
             repaint();
         }
         catch(StringIndexOutOfBoundsException e)
@@ -209,7 +205,6 @@ public class SliderPanel extends JPanel
              * exception is ignored. 
              */
         }
-//        getRootPane().repaint();
     }
     
     /**

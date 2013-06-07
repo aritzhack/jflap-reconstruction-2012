@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to decrement the polygon color
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class DecrementPColorCommand extends LSystemCommand {
 
 	public DecrementPColorCommand(String s) {

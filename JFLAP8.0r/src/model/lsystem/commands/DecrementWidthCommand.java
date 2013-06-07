@@ -1,5 +1,11 @@
 package model.lsystem.commands;
 
+/**
+ * Symbol for LSystem to decrement line width
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class DecrementWidthCommand extends LSystemCommand{
 
 	public DecrementWidthCommand(String s) {

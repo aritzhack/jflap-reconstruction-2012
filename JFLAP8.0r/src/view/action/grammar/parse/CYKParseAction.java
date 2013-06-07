@@ -33,8 +33,6 @@ public class CYKParseAction extends ParseAction<CYKParser> {
 					"The grammar must be in CNF form to be parsed!");
 		CYKParser parser = new CYKParser(g);
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
-		
-		env.setSize(JFLAPPreferences.CYK_WIDTH, JFLAPPreferences.CYK_HEIGHT);
 		return new CYKParseView(parser);
 	}
 
