@@ -1,16 +1,15 @@
 package view.menus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.awt.Component;
 
+import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import universe.preferences.JFLAPPreferences;
-import universe.preferences.PreferenceChangeListener;
-import view.action.file.OpenAction;
+import debug.JFLAPDebug;
+
 import view.action.file.ExitAction;
+import view.action.file.OpenAction;
 import view.action.file.SaveAction;
 import view.action.file.SaveAsAction;
 import view.action.file.imagesave.SaveGraphBMPAction;
@@ -21,11 +20,18 @@ import view.action.newactions.NewAction;
 import view.action.windows.CloseTabAction;
 import view.action.windows.CloseWindowAction;
 import view.environment.JFLAPEnvironment;
+import view.environment.TabChangeListener;
+import view.environment.TabChangedEvent;
 
-public class FileMenu extends JMenu{
-
+public class FileMenu extends JMenu implements TabChangeListener{
+	private JMenuItem closeTabItem, saveItem, saveAsItem;
+	private CloseTabAction closeTab;
+	private SaveAction save;
+	private SaveAsAction saveAs;
+	
 	public FileMenu(JFLAPEnvironment e) {
 		super("File");
+		e.addTabListener(this);
 
 		//New and Open options
 		add(createNewMenu());
@@ -34,13 +40,16 @@ public class FileMenu extends JMenu{
 		addSeparator();
 
 		//Close and Quite options
-		add(new CloseTabAction(e, false));
+		closeTabItem = new JMenuItem(closeTab = new CloseTabAction(e, false));
+		add(closeTabItem);
 		add(new CloseWindowAction(e));
 		addSeparator();
 
 		//Save options
-		add(new SaveAction(e));
-		add(new SaveAsAction(e));
+		saveItem = new JMenuItem (save = new SaveAction(e));
+		add(saveItem);
+		saveAsItem = new JMenuItem(saveAs = new SaveAsAction(e));
+		add(saveAsItem);
 		addSeparator();
 
 		add(constructImageSaveMenu());
@@ -48,7 +57,6 @@ public class FileMenu extends JMenu{
 
 		addSeparator();
 		add(new ExitAction());
-
 
 		//		new JMenuItem(new PrintAction()),
 
@@ -69,6 +77,17 @@ public class FileMenu extends JMenu{
 		saveImageMenu.add(new SaveGraphGIFAction());
 		saveImageMenu.add(new SaveGraphBMPAction());
 		return saveImageMenu;
+	}
+
+	@Override
+	public void tabChanged(TabChangedEvent e) {
+		update();
+	}
+	
+	private void update(){
+		closeTabItem.setEnabled(closeTab.isEnabled());
+		saveItem.setEnabled(save.isEnabled());
+		saveAsItem.setEnabled(saveAs.isEnabled());
 	}
 
 }

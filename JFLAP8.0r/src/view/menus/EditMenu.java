@@ -18,6 +18,8 @@ import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
+import view.pumping.PumpingLemmaChooserView;
+import view.pumping.PumpingLemmaInputView;
 import view.undoing.UndoRelatedMenuItem;
 import view.undoing.redo.MenuRedoAction;
 import view.undoing.redo.RedoAction;
@@ -47,11 +49,11 @@ public class EditMenu extends JMenu implements TabChangeListener {
 	private void update(Component view) {
 		this.removeAll();
 		UndoKeeper keeper = null;
-		if(view instanceof EditingPanel){
+		if (view instanceof EditingPanel
+				&& !(view instanceof PumpingLemmaInputView || view instanceof PumpingLemmaChooserView)) {
 			keeper = ((EditingPanel) view).getKeeper();
 			this.setVisible(true);
-		}
-		else{
+		} else {
 			this.setVisible(false);
 		}
 		if (keeper != null) {

@@ -14,7 +14,6 @@ import view.environment.JFLAPEnvironment;
 
 public class SaveAction extends EnvironmentAction {
 
-
 	public SaveAction(JFLAPEnvironment e) {
 		super("Save",e);
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, JFLAPConstants.MAIN_MENU_MASK));
@@ -26,5 +25,9 @@ public class SaveAction extends EnvironmentAction {
 		env.save(saveAs);
 	}
 	
+	@Override
+	public boolean isEnabled() {
+		return getMyEnvironment().getSavableObject() != null;
+	}
 
 }

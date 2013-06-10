@@ -25,4 +25,8 @@ public abstract class EnvironmentAction extends AbstractAction {
 
 	public abstract void actionPerformed(ActionEvent e, JFLAPEnvironment env);
 
+	public JFLAPEnvironment getMyEnvironment() {
+		return myEnvironment;
+	}
+
 }

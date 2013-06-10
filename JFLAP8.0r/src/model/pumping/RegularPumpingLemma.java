@@ -87,7 +87,7 @@ public abstract class RegularPumpingLemma extends PumpingLemma implements Serial
 			if (s[i].length() == 0)
 				s[i] = "" + JFLAPPreferences.getEmptyStringSymbol();;
 		
-		return "X = " + s[0] + ";   Y = " + s[1] + ";   Z = " + s[2];
+		return "X = " + s[0] + "; Y = " + s[1] + "; Z = " + s[2];
     }
     
     /**

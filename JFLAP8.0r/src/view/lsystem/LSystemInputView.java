@@ -22,37 +22,30 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import debug.JFLAPDebug;
-
+import model.change.events.AdvancedUndoableEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
-import model.grammar.ProductionSet;
 import model.grammar.Terminal;
-import model.lsystem.CommandAlphabet;
 import model.lsystem.LSystem;
 import model.lsystem.LSystemException;
 import model.symbols.Symbol;
-import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
@@ -65,6 +58,8 @@ import view.grammar.productions.ProductionDataHelper;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
 import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
+import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
+import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
 
 /**
  * The <CODE>LSystemInputPane</CODE> is a pane used to input and display the
@@ -74,9 +69,9 @@ import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
  */
 
 public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
-	
+
 	private static final Dimension LSYSTEM_INPUT_SIZE = new Dimension(500, 650);
-	
+
 	private MagnifiableTextField axiomField;
 	private ProductionTable myProdTable;
 	private ParameterTableModel parameterModel;
@@ -247,16 +242,29 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	 * Creates the listener to update the edited-ness.
 	 */
 	public void initializeListener() {
-		axiomField.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent e) {
-				fireAxiomInputEvent();
+		//Simulates pressing enter when axiom field is tabbed/clicked off of
+		axiomField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				super.focusLost(e);
+
+				Object obj = e.getSource();
+				if (obj.equals(axiomField))
+					axiomField.dispatchEvent(new KeyEvent(axiomField,
+							KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
+							0, KeyEvent.VK_ENTER, '0'));
 			}
 
-			public void removeUpdate(DocumentEvent e) {
-				fireAxiomInputEvent();
-			}
+		});
+		//The actual code to run on the axiomField
+		axiomField.addActionListener(new ActionListener() {
 
-			public void insertUpdate(DocumentEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String text = axiomField.getText();
+				text = text.trim();
+				text = text.replaceAll("\\s+", " ");
+				axiomField.setText(text);
 				fireAxiomInputEvent();
 			}
 		});
@@ -408,9 +416,10 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 
 	/**
 	 * Modified ProductionDataHelper, specific to L-Systems to fix an issue that
-	 * arose with symbols that included Symbols already in the grammar not being parsed by the
-	 * Symbolizer correctly. Any symbol in the production table that contains a valid
-	 * command/terminal is added to the grammar prior to symbolizing.
+	 * arose with symbols that included Symbols already in the grammar not being
+	 * parsed by the Symbolizer correctly. Any symbol in the production table
+	 * that contains a valid command/terminal is added to the grammar prior to
+	 * symbolizing.
 	 * 
 	 * @author Ian McMahon
 	 * 
@@ -440,7 +449,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 		}
 
 		private boolean containsExistingSymbol(String s) {
-			
+
 			for (Symbol symbol : myGrammar.getTerminals()) {
 				if (s.contains(symbol.toString()))
 					return true;

@@ -41,12 +41,7 @@ public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
 	public PumpingLemma fromStructureRoot(Element root) {
 		 ContextFreePumpingLemma pl = (ContextFreePumpingLemma)PumpingLemmaFactory.createPumpingLemma
 		            (CF_LEMMA_TAG, root.getElementsByTagName(LEMMA_NAME).item(0).getTextContent());
-		        /*
-		         * Decode m, w, & i.
-		         */
-		        pl.setM(Integer.parseInt(root.getElementsByTagName(M_NAME).item(0).getTextContent()));
-		        pl.setW(root.getElementsByTagName(W_NAME).item(0).getTextContent());
-		        pl.setI(Integer.parseInt(root.getElementsByTagName(I_NAME).item(0).getTextContent()));       
+		        setMWI(root, pl);       
 
 		        /*
 		         * Decode cases. 
@@ -72,11 +67,25 @@ public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
 		        int xLength = Integer.parseInt(root.getElementsByTagName(X_NAME).item(0).getTextContent());
 		        int yLength = Integer.parseInt(root.getElementsByTagName(Y_NAME).item(0).getTextContent());
 		        
-		        pl.setDecomposition(new int[]{uLength, vLength, xLength, yLength});
+		        if(!pl.setDecomposition(new int[]{uLength, vLength, xLength, yLength})){
+		        	pl.reset();
+		        	setMWI(root, pl);
+		        }
 		        
 		        //Return!
 		        return pl;
 	}
+
+	/**
+	 * Decode m, w, & i.
+	 */
+	private void setMWI(Element root, ContextFreePumpingLemma pl) {
+		pl.setM(Integer.parseInt(root.getElementsByTagName(M_NAME).item(0).getTextContent()));
+		pl.setW(root.getElementsByTagName(W_NAME).item(0).getTextContent());
+		pl.setI(Integer.parseInt(root.getElementsByTagName(I_NAME).item(0).getTextContent()));
+	}
+	
+	
 	
     private void readCases(Element root, ContextFreePumpingLemma pl)
     {
@@ -117,7 +126,7 @@ public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
             for(int i = 0; i < attempts.size(); i++)
                 root.appendChild(XMLHelper.createElement(doc, ATTEMPT, (String)attempts.get(i), null));
                 
-        //Encode the list of attempts.
+        //Encode the list of done cases.
         ArrayList<Case> cases = pl.getDoneCases();
         if(cases != null && cases.size() > 0)
             for(int i = 0; i < cases.size(); i++)

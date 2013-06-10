@@ -21,5 +21,10 @@ public class SaveAsAction extends EnvironmentAction {
 	public void actionPerformed(ActionEvent e, JFLAPEnvironment env) {
 		env.save(true);
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return getMyEnvironment().getSavableObject() != null;
+	}
 
 }
