@@ -93,7 +93,6 @@ public class JFLAPEnvironment extends JFrame {
 	}
 
 	private void setFile(File f) {
-		JFLAPDebug.print("Set File: " + f.getName());
 		myFile = f;
 		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
 				+ ")");
@@ -176,11 +175,10 @@ public class JFLAPEnvironment extends JFrame {
 
 	}
 
-	private Object getSavableObject() {
+	public Object getSavableObject() {
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
 			if (c != null) {
-				JFLAPDebug.print(c.getClass());
 				if (c instanceof FormalDefinitionView) {
 					return ((FormalDefinitionView) c).getDefinition();
 				} else if (c instanceof PumpingLemmaInputView) {
@@ -244,10 +242,23 @@ public class JFLAPEnvironment extends JFrame {
 	}
 
 	public void closeTab(int i) {
-		Component c = myTabbedPane.getTabComponentAt(i);
-		myTabbedPane.remove(i);
+		Component c = myTabbedPane.getComponent(i);
+		if (c instanceof PumpingLemmaInputView) {
+			int result = JOptionPane.showConfirmDialog(this,
+					"Save changes before closing?");
+			if (result == JOptionPane.CLOSED_OPTION
+					|| result == JOptionPane.CANCEL_OPTION) {
+				return;
+			}
+			if (result == JOptionPane.YES_OPTION) {
+				if (!this.save(false))
+					return;
+			}
+		}
+		
 		if (c instanceof EditingPanel)
 			amDirty = true;
+		myTabbedPane.remove(i);
 		distributeTabChangedEvent();
 		myTabbedPane.revalidate();
 		myTabbedPane.setSelectedIndex(myTabbedPane.getTabCount() - 1);
@@ -322,21 +333,26 @@ public class JFLAPEnvironment extends JFrame {
 		PumpingLemmaChooserView pane;
 
 		if (myPrimaryView instanceof CompCFPumpingLemmaInputView
-				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView)
+				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView){
 			plc = new CFPumpingLemmaChooser();
-		else
+			pane = new PumpingLemmaChooserView((CFPumpingLemmaChooser) plc);
+		}
+		else{
 			plc = new RegPumpingLemmaChooser();
-
-		pane = new PumpingLemmaChooserView(plc);
-
-		// As PumpingLemmaChooserPanes instatiate as Human First by default:
+			pane = new PumpingLemmaChooserView((RegPumpingLemmaChooser) plc);
+		}
+		
+		// As PumpingLemmaChooserView instatiates as Human First by default:
 		if (myPrimaryView instanceof ComputerFirstView)
 			pane.setComputerFirst();
 
-		// Place the PLCP under the active tab
-		myTabbedPane.add(pane, myTabbedPane.indexOfComponent(myPrimaryView));
-		distributeTabChangedEvent();
+		// Place the PLCV under the active tab
+		myTabbedPane.removeAll();
+		myTabbedPane.add(pane, 0);
+		myTabbedPane.add(myPrimaryView, 1);
+		myTabbedPane.setSelectedIndex(1);
+		myPrimaryView = pane;	//To follow the hierarchy as before, with the chooser as the "Primary View"
+		
 		myTabbedPane.revalidate();
-		update();
 	}
 }

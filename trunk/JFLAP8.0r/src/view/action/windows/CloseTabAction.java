@@ -56,7 +56,7 @@ public class CloseTabAction extends AbstractAction {
 	public CloseTabAction(JFLAPEnvironment e, boolean usingIcon) {
 		super("Dismiss Tab", getIcon(usingIcon));
 		putValue(ACCELERATOR_KEY, 
-				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, MenuConstants.getMainMenuMask()));
+				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, MenuConstants.getMainMenuMask()));
 		myEnvironment = e;
 	}
 

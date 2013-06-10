@@ -66,9 +66,7 @@ public abstract class FindFirstParserView<T extends RunningView> extends
 	 */
 	public void resetDropDownPanel() {
 		dropDownPanel.removeAllOptions();
-		JFLAPDebug.print(runningView.getPreferredSize());
 		dropDownPanel.addOption(runningView);
 		dropDownPanel.setSize(runningView.getPreferredSize());
-		JFLAPDebug.print(dropDownPanel.getSize());
 	}
 }

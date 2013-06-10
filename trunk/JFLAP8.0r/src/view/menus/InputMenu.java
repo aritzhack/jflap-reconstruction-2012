@@ -15,6 +15,8 @@ import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
 import view.lsystem.LSystemRenderView;
+import view.pumping.PumpingLemmaChooserView;
+import view.pumping.PumpingLemmaInputView;
 
 public class InputMenu extends JMenu implements TabChangeListener {
 	
@@ -42,7 +44,8 @@ public class InputMenu extends JMenu implements TabChangeListener {
 			LSystemInputView v = (LSystemInputView) view;
 			this.add(new LSystemRenderAction(v));	
 		}
-		if (view instanceof LSystemRenderView)
+		if (view instanceof LSystemRenderView || view instanceof PumpingLemmaChooserView
+				|| view instanceof PumpingLemmaInputView)
 			this.setVisible(false);
 	}
 

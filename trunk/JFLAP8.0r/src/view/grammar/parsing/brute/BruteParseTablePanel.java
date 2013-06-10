@@ -98,8 +98,10 @@ public class BruteParseTablePanel extends RunningView {
 							new Object[] { event.getArg(1), event.getArg(2) });
 				}
 			}
+			/**
+			 * For some reason, this call messes up the column widths.
+			 */
 			fireTableRowsInserted(myData.size()-1, myData.size()-1);
-			BruteParseTablePanel.this.repaint();
 		}
 	}
 
