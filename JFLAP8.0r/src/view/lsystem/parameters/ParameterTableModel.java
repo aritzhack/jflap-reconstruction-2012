@@ -18,13 +18,15 @@
 
 
 
-package view.lsystem;
+package view.lsystem.parameters;
 
-import java.util.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
-
+import model.lsystem.LSystem;
+import model.undo.UndoKeeper;
 import util.view.tables.GrowableTableModel;
+import view.lsystem.helperclasses.ParameterMap;
 
 /**
  * A mapping of parameters to values.
@@ -32,29 +34,23 @@ import util.view.tables.GrowableTableModel;
  * @author Thomas Finley, Ian McMahon
  */
 
-public class ParameterTableModel extends GrowableTableModel {
+public class ParameterTableModel extends GrowableTableModel implements ChangeListener{
 	
-	/**
-	 * Constructs an empty parameter table model.
-	 */
-	public ParameterTableModel() {
-		super(2);
-	}
-
 	/**
 	 * Constructs a parameter table model out of the map.
 	 * 
 	 * @param parameters
 	 *            the mapping of parameter names to parameter objects
 	 */
-	public ParameterTableModel(ParameterMap parameters) {
-		this();
-		int i=0;
-		for (String key : parameters.keySet()) {
-			setValueAt(key, i, 0);
-			setValueAt(parameters.get(key), i, 1);
-			i++;
-		}
+	public ParameterTableModel(LSystem model, UndoKeeper keeper){
+		super(2, new ParameterDataHelper(model, keeper));
+		((ParameterDataHelper) getData()).setListener(this);
+//		int i=0;
+//		for (String key : parameters.keySet()) {
+//			setValueAt(key, i, 0);
+//			setValueAt(parameters.get(key), i, 1);
+//			i++;
+//		}
 	}
 
 	@Override
@@ -107,5 +103,11 @@ public class ParameterTableModel extends GrowableTableModel {
 	 */
 	public String getColumnName(int column) {
 		return column == 0 ? "Name" : "Parameter";
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if(e.getSource().equals(getData()))
+			fireTableDataChanged();
 	}
 }

@@ -1,8 +1,8 @@
 package model.lsystem.formaldef;
 
+import view.lsystem.helperclasses.Axiom;
 import model.formaldef.components.FormalDefinitionComponent;
 import errors.BooleanWrapper;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
 
 public class FormalAxiom extends FormalDefinitionComponent {
 	private Axiom axiom;	

@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.Parameter;
+import view.lsystem.helperclasses.ParameterMap;
+import view.lsystem.helperclasses.ParameterName;
+import view.lsystem.helperclasses.ParameterValue;
+
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.StateSet;
@@ -83,11 +89,6 @@ import file.xml.formaldef.lsystem.ParameterMapTransducer;
 import file.xml.formaldef.lsystem.ParameterNameTransducer;
 import file.xml.formaldef.lsystem.ParameterTransducer;
 import file.xml.formaldef.lsystem.ParameterValueTransducer;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
-import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 import file.xml.formaldef.regex.RegExTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;

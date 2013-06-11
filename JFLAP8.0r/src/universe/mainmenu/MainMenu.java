@@ -1,12 +1,17 @@
 package universe.mainmenu;
 
 
+import java.awt.AWTKeyStroke;
 import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -14,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
@@ -45,7 +51,9 @@ public class MainMenu extends JFrame {
 		setResizable(false);
 		this.pack();
 		this.setLocation(50, 50);
-
+		
+		addNavigationKeys();
+		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
 				if (!JFLAPUniverse.isRegistryEmpty()) {
@@ -55,6 +63,22 @@ public class MainMenu extends JFrame {
 				}
 			}
 		});
+		
+	}
+
+	private void addNavigationKeys() {
+		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
+		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
+		
+		Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<AWTKeyStroke>(
+				getFocusTraversalKeys(forward)), backwardTraversalKeys = new HashSet<AWTKeyStroke>(
+				getFocusTraversalKeys(backward));
+		forwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
+				KeyEvent.VK_DOWN, KeyEvent.VK_UNDEFINED));
+		backwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
+				KeyEvent.VK_UP, KeyEvent.VK_UNDEFINED));		
+		setFocusTraversalKeys(forward, forwardTraversalKeys);
+		setFocusTraversalKeys(backward, backwardTraversalKeys);
 	}
 
 	private void initMenu() {

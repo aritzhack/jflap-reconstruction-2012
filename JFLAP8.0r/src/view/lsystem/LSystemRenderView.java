@@ -38,12 +38,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
 
 import model.lsystem.Expander;
 import model.lsystem.LSystem;
 import model.symbols.SymbolString;
 import view.help.ImageDisplayComponent;
+import view.lsystem.helperclasses.ParameterMap;
 
 /**
  * The view has the interface to render an L-system.

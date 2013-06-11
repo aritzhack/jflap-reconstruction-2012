@@ -5,9 +5,10 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import view.lsystem.helperclasses.ParameterValue;
+
 import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 
 /**
  * Transducer specific to the Parameter value of an LSystem.

@@ -20,27 +20,10 @@
 
 package oldnewstuff.main;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
-
-import debug.JFLAPDebug;
+import javax.swing.UIManager;
 
 import universe.JFLAPUniverse;
-
-
-
 import errors.ThrowableCatcher;
-import file.Codec;
 
 /**
  * This is the class that starts JFLAP.
@@ -96,7 +79,6 @@ public class Main {
 			// Eh, that shouldn't happen.
 		}
 		
-		
 		// Apple is stupid.
 		try {
 			// Well, Apple WAS stupid...
@@ -129,7 +111,10 @@ public class Main {
 //							+ e.getMessage());
 //				}
 			}
-		}		
+		}
+		//Makes it so that when a button is selected through tab or arrow keys,
+		//hitting enter will trigger that one and NOT the "default" button.
+		UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
 		loadPreferences();
 	}
 	

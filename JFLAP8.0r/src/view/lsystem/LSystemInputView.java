@@ -1,4 +1,4 @@
-/*
+ /*
  *  JFLAP - Formal Languages and Automata Package
  * 
  * 
@@ -39,6 +39,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import debug.JFLAPDebug;
+
 import model.change.events.AdvancedUndoableEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -57,9 +59,11 @@ import view.formaldef.BasicFormalDefinitionView;
 import view.grammar.productions.ProductionDataHelper;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
-import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.Parameter;
+import view.lsystem.helperclasses.ParameterMap;
+import view.lsystem.parameters.ParameterTable;
+import view.lsystem.parameters.ParameterTableModel;
 
 /**
  * The <CODE>LSystemInputPane</CODE> is a pane used to input and display the
@@ -107,7 +111,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	@Override
 	public JComponent createCentralPanel(LSystem model, UndoKeeper keeper,
 			boolean editable) {
-		initializeStructures(model);
+		initializeStructures(model, keeper);
 		MagnifiablePanel central = new MagnifiablePanel(new BorderLayout());
 
 		MagnifiablePanel axiomView = createAxiomView();
@@ -143,7 +147,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	 * @param lsystem
 	 *            the L-system to initialize the views on
 	 */
-	private void initializeStructures(LSystem lsystem) {
+	private void initializeStructures(LSystem lsystem, UndoKeeper keeper) {
 		// Create the axiom text field.
 		axiomField = new MagnifiableTextField(
 				JFLAPPreferences.getDefaultTextSize());
@@ -153,7 +157,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 						: axiom);
 
 		// Create the parameter table model.
-		parameterModel = new ParameterTableModel(lsystem.getParameters());
+		parameterModel = new ParameterTableModel(lsystem, keeper);
 		parameterTable = new ParameterTable(parameterModel);
 
 		// We may as well use this as our cached system.
@@ -261,10 +265,6 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String text = axiomField.getText();
-				text = text.trim();
-				text = text.replaceAll("\\s+", " ");
-				axiomField.setText(text);
 				fireAxiomInputEvent();
 			}
 		});
@@ -320,10 +320,17 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 	 * axiomField.
 	 */
 	private void fireAxiomInputEvent() {
-		LSystem system = getDefinition();
 		String text = axiomField.getText();
-
-		system.setAxiom(text);
+		text = text.trim();
+		text = text.replaceAll("\\s+", " ");
+//		axiomField.setText(text);
+		Axiom to = new Axiom(text);
+		
+		LSystem system = getDefinition();
+		Axiom from = system.getAxiom();
+//		system.setAxiom(to);
+		getKeeper().applyAndListen(new SetAxiomEvent(from, from, to));
+		
 		fireLSystemInputEvent();
 	}
 
@@ -451,10 +458,53 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 		private boolean containsExistingSymbol(String s) {
 
 			for (Symbol symbol : myGrammar.getTerminals()) {
-				if (s.contains(symbol.toString()))
+				if (s.contains(symbol.toString()) && !s.equals(symbol.toString()))
 					return true;
 			}
+			for (Symbol symbol : myGrammar.getVariables()) {
+				if (s.contains(symbol.toString()) && !s.equals(symbol.toString()))
+					return true;
+			}			
 			return false;
 		}
+	}
+
+	
+	private class SetAxiomEvent extends AdvancedUndoableEvent {
+
+		public SetAxiomEvent(Axiom source, Axiom from, Axiom to) {
+			super(source, ITEM_MODIFIED, from, to);
+		}
+
+		@Override
+		public boolean undo() {
+			axiomField.setText(getFrom().toString());
+			return getDefinition().setAxiom(getFrom());
+		}
+		
+		@Override
+		public boolean redo() {
+			axiomField.setText(getTo().toString());
+			return getDefinition().setAxiom(getTo());
+		}
+		
+		@Override
+		public Axiom getSource() {
+			return (Axiom) super.getSource();
+		}
+		
+		public Axiom getFrom(){
+			return (Axiom) getArg(0);
+		}
+		
+		public Axiom getTo(){
+			return (Axiom) getArg(1);
+		}
+
+		@Override
+		public String getName() {
+			return "Set " + getFrom() + " to " + getTo();
+		}
+
 	}
 }

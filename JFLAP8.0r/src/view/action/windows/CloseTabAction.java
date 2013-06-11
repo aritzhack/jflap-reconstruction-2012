@@ -27,9 +27,14 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import oldnewstuff.controller.menus.MenuConstants;
 import util.JFLAPConstants;
 import view.environment.JFLAPEnvironment;
+import view.environment.TabChangeListener;
+import view.environment.TabChangedEvent;
 
 
 
@@ -42,7 +47,9 @@ import view.environment.JFLAPEnvironment;
  * @author Thomas Finley
  */
 
-public class CloseTabAction extends AbstractAction {
+public class CloseTabAction extends AbstractAction implements TabChangeListener{
+	
+	public static final String SET_ENABLED = "enability";
 	
 	private JFLAPEnvironment myEnvironment;
 
@@ -58,6 +65,7 @@ public class CloseTabAction extends AbstractAction {
 		putValue(ACCELERATOR_KEY, 
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, MenuConstants.getMainMenuMask()));
 		myEnvironment = e;
+		e.addTabListener(this);
 	}
 
 
@@ -75,6 +83,11 @@ public class CloseTabAction extends AbstractAction {
 	public boolean isEnabled() {
 		return myEnvironment.getTabCount() > 1;
 	}
-	
+
+
+	@Override
+	public void tabChanged(TabChangedEvent e) {
+		firePropertyChange(SET_ENABLED, null, isEnabled());
+	}
 
 }

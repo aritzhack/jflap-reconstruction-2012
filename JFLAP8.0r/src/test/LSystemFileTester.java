@@ -2,6 +2,12 @@ package test;
 
 import java.io.File;
 
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.Parameter;
+import view.lsystem.helperclasses.ParameterMap;
+import view.lsystem.helperclasses.ParameterName;
+import view.lsystem.helperclasses.ParameterValue;
+
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.Terminal;
@@ -10,11 +16,6 @@ import model.lsystem.CommandAlphabet;
 import model.lsystem.LSystem;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
-import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 
 public class LSystemFileTester {
 

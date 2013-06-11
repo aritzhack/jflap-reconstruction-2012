@@ -7,10 +7,11 @@ import model.lsystem.LSystem;
 
 import org.w3c.dom.Element;
 
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.ParameterMap;
+
 import file.xml.MetaTransducer;
 import file.xml.XMLHelper;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
 
 /**
  * Transducer specific to LSystems. Doesn't extend FormalDefinitionTransducer
