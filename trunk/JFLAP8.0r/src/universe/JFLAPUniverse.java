@@ -1,6 +1,5 @@
 package universe;
 
-
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.WindowAdapter;
@@ -24,27 +23,23 @@ import oldnewstuff.main.JFLAP;
 
 import universe.mainmenu.MainMenu;
 import universe.preferences.JFLAPPreferences;
+import view.ViewFactory;
 import view.environment.JFLAPEnvironment;
-
-
-
-
-
-
+import view.pumping.PumpingLemmaChooserView;
 
 /**
- * The universe which holds all windows/Environments in the currently
- * running JFLAP program. This is a singleton class which can be called 
- * statically by anything in the program. Automatically handles
- * swing-based focus changes and window activations.
+ * The universe which holds all windows/Environments in the currently running
+ * JFLAP program. This is a singleton class which can be called statically by
+ * anything in the program. Automatically handles swing-based focus changes and
+ * window activations.
  * 
  * @author Julian Genkins
- *
+ * 
  */
-public class JFLAPUniverse{
+public class JFLAPUniverse {
 
 	/**
-	 * The collection of all Environments. 
+	 * The collection of all Environments.
 	 */
 	public static LinkedList<JFLAPEnvironment> REGISTRY;
 
@@ -53,9 +48,8 @@ public class JFLAPUniverse{
 	 */
 	private static MainMenu MAIN_MENU;
 
-
 	/**
-	 * Intializing static block - 
+	 * Intializing static block -
 	 */
 	static {
 		MAIN_MENU = new MainMenu();
@@ -63,11 +57,11 @@ public class JFLAPUniverse{
 		JFLAPPreferences.importFromFile();
 	}
 
-	public static Collection<JFLAPEnvironment> getRegistry(){
+	public static Collection<JFLAPEnvironment> getRegistry() {
 		return REGISTRY;
 	}
 
-	public static JFLAPEnvironment registerEnvironment(Component comp){
+	public static JFLAPEnvironment registerEnvironment(Component comp) {
 		JFLAPEnvironment env = new JFLAPEnvironment(comp, getNextUnusedID());
 		registerEnvironment(env);
 		return env;
@@ -80,7 +74,7 @@ public class JFLAPUniverse{
 
 	public static boolean registerEnvironment(File f) {
 		JFLAPEnvironment e = getEnvironment(f);
-		if (e != null){
+		if (e != null) {
 			e.requestFocus();
 			return false;
 		}
@@ -89,9 +83,14 @@ public class JFLAPUniverse{
 	}
 
 	private static JFLAPEnvironment getEnvironment(File f) {
-		for (JFLAPEnvironment e:REGISTRY){
-			if (e.getFileName().equals(f.getName()))
+		for (JFLAPEnvironment e : REGISTRY) {
+			if (e.getFileName().equals(f.getName())){
+				//check for empty PumpingLemma environments, instantiate the InputView if not there
+				if(e.getPrimaryView() instanceof PumpingLemmaChooserView && e.getSavableObject() == null)
+						e.addSelectedComponent(ViewFactory.createView(f));
 				return e;
+			}
+				
 		}
 		return null;
 	}
@@ -99,7 +98,7 @@ public class JFLAPUniverse{
 	private static int getNextUnusedID() {
 		boolean used = true;
 		int i = -1;
-		while(used){
+		while (used) {
 			i++;
 			used = getEnvironment(i) != null;
 		}
@@ -107,7 +106,7 @@ public class JFLAPUniverse{
 	}
 
 	public static JFLAPEnvironment getEnvironment(int i) {
-		for (JFLAPEnvironment e: REGISTRY){
+		for (JFLAPEnvironment e : REGISTRY) {
 			if (e.getID() == i)
 				return e;
 		}
@@ -130,7 +129,6 @@ public class JFLAPUniverse{
 		});
 	}
 
-
 	public static void deregisterEnvironment(JFLAPEnvironment env) {
 		REGISTRY.remove(env);
 		if (REGISTRY.isEmpty())
@@ -138,11 +136,11 @@ public class JFLAPUniverse{
 	}
 
 	public static void setActiveEnvironment(JFLAPEnvironment env) {
-		if (!REGISTRY.isEmpty() && getActiveEnvironment().equals(env)) return;
+		if (!REGISTRY.isEmpty() && getActiveEnvironment().equals(env))
+			return;
 		REGISTRY.remove(env);
 		REGISTRY.addFirst(env);
 	}
-
 
 	public static void hideMainMenu() {
 		MAIN_MENU.setVisible(false);
@@ -167,14 +165,13 @@ public class JFLAPUniverse{
 
 	public static void exit(boolean should_save) {
 		JFLAPEnvironment e;
-		while ((e = getActiveEnvironment()) != null){
-			if (!e.close(should_save)){
+		while ((e = getActiveEnvironment()) != null) {
+			if (!e.close(should_save)) {
 				return;
 			}
 			deregisterEnvironment(e);
 		}
 		System.exit(0);
 	}
-
 
 }

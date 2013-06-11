@@ -1,23 +1,26 @@
 package view.environment;
 
+import java.awt.AWTKeyStroke;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import oldnewstuff.main.JFLAP;
+import debug.JFLAPDebug;
 
-import model.pumping.PumpingLemma;
-
-import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
@@ -31,7 +34,6 @@ import view.pumping.PumpingLemmaChooser;
 import view.pumping.PumpingLemmaChooserView;
 import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
-import debug.JFLAPDebug;
 import file.SavingException;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
@@ -84,7 +86,7 @@ public class JFLAPEnvironment extends JFrame {
 		});
 		this.pack();
 		this.setVisible(true);
-//		setSize(component.getPreferredSize());
+		
 		setVisible(true);
 	}
 
@@ -112,8 +114,7 @@ public class JFLAPEnvironment extends JFrame {
 	public boolean close(boolean save) {
 		// Should check if there's any actual information to save
 		if (save && this.isDirty() && getSavableObject() != null) {
-			int result = JOptionPane.showConfirmDialog(this,
-					"Save changes before closing?");
+			int result = showConfirmDialog("Save changes before closing?");
 			if (result == JOptionPane.CLOSED_OPTION
 					|| result == JOptionPane.CANCEL_OPTION) {
 				return false;
@@ -153,8 +154,7 @@ public class JFLAPEnvironment extends JFrame {
 
 		// If file exists, ask about overwriting
 		if (myFile.exists()) {
-			int n = JOptionPane.showConfirmDialog(this,
-					"File already exists. Overwrite file?");
+			int n = showConfirmDialog("File already exists. Overwrite file?");
 			if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION
 					|| n == JOptionPane.CLOSED_OPTION) {
 				myFile = temp;
@@ -175,16 +175,22 @@ public class JFLAPEnvironment extends JFrame {
 
 	}
 
+	/**
+	 * Helper function to see whether or not there is anything to save/what
+	 * object to save.
+	 * 
+	 * @return A formal definition or pumping lemma to save.
+	 */
 	public Object getSavableObject() {
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
-			if (c != null) {
-				if (c instanceof FormalDefinitionView) {
-					return ((FormalDefinitionView) c).getDefinition();
-				} else if (c instanceof PumpingLemmaInputView) {
-					return ((PumpingLemmaInputView) c).getLemma();
-				}
+
+			if (c instanceof FormalDefinitionView) {
+				return ((FormalDefinitionView) c).getDefinition();
+			} else if (c instanceof PumpingLemmaInputView) {
+				return ((PumpingLemmaInputView) c).getLemma();
 			}
+
 		}
 		return null;
 	}
@@ -244,8 +250,7 @@ public class JFLAPEnvironment extends JFrame {
 	public void closeTab(int i) {
 		Component c = myTabbedPane.getComponent(i);
 		if (c instanceof PumpingLemmaInputView) {
-			int result = JOptionPane.showConfirmDialog(this,
-					"Save changes before closing?");
+			int result = showConfirmDialog("Save changes before closing?");
 			if (result == JOptionPane.CLOSED_OPTION
 					|| result == JOptionPane.CANCEL_OPTION) {
 				return;
@@ -255,7 +260,7 @@ public class JFLAPEnvironment extends JFrame {
 					return;
 			}
 		}
-		
+
 		if (c instanceof EditingPanel)
 			amDirty = true;
 		myTabbedPane.remove(i);
@@ -297,7 +302,7 @@ public class JFLAPEnvironment extends JFrame {
 		public void setSelectedIndex(int index) {
 			super.setSelectedIndex(index);
 			Dimension newSize = this.getComponentAt(index).getPreferredSize();
-			
+
 			JFLAPEnvironment.this.setPreferredSize(newSize);
 			JFLAPEnvironment.this.setSize(newSize);
 			JFLAPEnvironment.this.update();
@@ -333,15 +338,14 @@ public class JFLAPEnvironment extends JFrame {
 		PumpingLemmaChooserView pane;
 
 		if (myPrimaryView instanceof CompCFPumpingLemmaInputView
-				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView){
+				|| myPrimaryView instanceof HumanCFPumpingLemmaInputView) {
 			plc = new CFPumpingLemmaChooser();
 			pane = new PumpingLemmaChooserView((CFPumpingLemmaChooser) plc);
-		}
-		else{
+		} else {
 			plc = new RegPumpingLemmaChooser();
 			pane = new PumpingLemmaChooserView((RegPumpingLemmaChooser) plc);
 		}
-		
+
 		// As PumpingLemmaChooserView instatiates as Human First by default:
 		if (myPrimaryView instanceof ComputerFirstView)
 			pane.setComputerFirst();
@@ -351,8 +355,48 @@ public class JFLAPEnvironment extends JFrame {
 		myTabbedPane.add(pane, 0);
 		myTabbedPane.add(myPrimaryView, 1);
 		myTabbedPane.setSelectedIndex(1);
-		myPrimaryView = pane;	//To follow the hierarchy as before, with the chooser as the "Primary View"
-		
+		myPrimaryView = pane; // To follow the hierarchy as before, with the
+								// chooser as the "Primary View"
+
 		myTabbedPane.revalidate();
+	}
+
+	/**
+	 * Special rewrite of the static JOptionPane.showConfirmDialog method such that the
+	 * dialog can be navigated by using the right and left arrow keys along with tab
+	 * and shift-tab.
+	 * 
+	 * @param message The message to be displayed to the user for confirmation.
+	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's selection.
+	 */
+	public int showConfirmDialog(Object message) {
+		JOptionPane pane = new JOptionPane(message,
+				JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
+				null, null, null);
+		pane.setComponentOrientation(this.getComponentOrientation());
+
+		JDialog dialog = pane.createDialog(this, "Select an Option");
+
+		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
+		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
+
+		Set<AWTKeyStroke> 	forwardTraversalKeys = new HashSet<AWTKeyStroke>(
+				dialog.getFocusTraversalKeys(forward)), 
+							backwardTraversalKeys = new HashSet<AWTKeyStroke>(
+				dialog.getFocusTraversalKeys(backward));
+		
+		forwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
+				KeyEvent.VK_RIGHT, KeyEvent.VK_UNDEFINED));
+		backwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
+				KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED));	
+		
+		dialog.setFocusTraversalKeys(forward, forwardTraversalKeys);
+		dialog.setFocusTraversalKeys(backward, backwardTraversalKeys);
+		dialog.setVisible(true);
+		dialog.dispose();
+
+		if (pane.getValue() instanceof Integer)
+			return ((Integer) pane.getValue()).intValue();
+		return -1;
 	}
 }

@@ -5,15 +5,16 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import view.lsystem.helperclasses.Parameter;
+import view.lsystem.helperclasses.ParameterName;
+import view.lsystem.helperclasses.ParameterValue;
+
 import debug.JFLAPDebug;
 
 import file.xml.BasicTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;
 import file.xml.XMLTransducer;
-import file.xml.formaldef.lsystem.wrapperclasses.Parameter;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterName;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterValue;
 
 /**
  * Transducer specific to a Parameter of an LSystem.

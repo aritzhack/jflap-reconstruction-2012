@@ -1,4 +1,4 @@
-package view.lsystem;
+package view.lsystem.parameters;
 
 import java.awt.Font;
 

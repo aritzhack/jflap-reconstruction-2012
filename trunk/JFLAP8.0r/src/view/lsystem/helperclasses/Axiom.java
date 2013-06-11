@@ -1,4 +1,4 @@
-package file.xml.formaldef.lsystem.wrapperclasses;
+package view.lsystem.helperclasses;
 
 import universe.preferences.JFLAPPreferences;
 import debug.JFLAPDebug;
@@ -54,6 +54,9 @@ public class Axiom extends SymbolString {
 
 	@Override
 	public String toString() {
-		return super.toString();
+		String superString = super.toString();
+		if(superString.equals(JFLAPPreferences.getEmptyStringSymbol()))
+			superString = "";
+		return superString;
 	}
 }

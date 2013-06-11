@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.ParameterMap;
+
 import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
@@ -14,13 +17,12 @@ import model.grammar.Production;
 import model.grammar.ProductionSet;
 import model.grammar.TerminalAlphabet;
 import model.grammar.Variable;
+import model.grammar.VariableAlphabet;
 import model.lsystem.formaldef.FormalAlph;
 import model.lsystem.formaldef.FormalAxiom;
 import model.lsystem.formaldef.FormalRewritingRules;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
-import file.xml.formaldef.lsystem.wrapperclasses.Axiom;
-import file.xml.formaldef.lsystem.wrapperclasses.ParameterMap;
 
 /**
  * The <CODE>LSystem</CODE> class represents L-systems. This does not do any
@@ -153,17 +155,6 @@ public class LSystem extends FormalDefinition {
 	}
 
 	/**
-	 * Sets the L-System's axiom to the given string, which will be converted to
-	 * an <CODE>Axiom</CODE>.
-	 * 
-	 * @param axiom
-	 *            The String to be set as the new Axiom.
-	 */
-	public void setAxiom(String axiom) {
-		setAxiom(new Axiom(axiom));
-	}
-
-	/**
 	 * @return The underlying Grammar of the L-System.
 	 */
 	public Grammar getGrammar() {
@@ -185,11 +176,16 @@ public class LSystem extends FormalDefinition {
 	private void addAxiomToAlphabet() {
 		if (myAxiom != null && !myAxiom.isEmpty()) {
 
+			VariableAlphabet vars = myGrammar.getVariables();
+			TerminalAlphabet terms = myGrammar.getTerminals();
+
 			for (Symbol s : myAxiom) {
-				if (s instanceof Variable)
-					myGrammar.getVariables().add(s);
-				else
-					myGrammar.getTerminals().add(s);
+				if (!(vars.contains(s) || terms.contains(s))) {
+					if (s instanceof Variable)
+						myGrammar.getVariables().add(s);
+					else
+						myGrammar.getTerminals().add(s);
+				}
 			}
 		}
 	}
@@ -210,14 +206,29 @@ public class LSystem extends FormalDefinition {
 			myReplacements.get(lhs).add(rhs);
 		}
 	}
+	
+	/**
+	 * Sets the L-System's axiom to the given string, which will be converted to
+	 * an <CODE>Axiom</CODE>.
+	 * 
+	 * @param axiom
+	 *            The String to be set as the new Axiom.
+	 */
+	public boolean setAxiom(String axiom) {
+		return setAxiom(new Axiom(axiom));
+	}
 
 	/**
 	 * Sets the L-System's axiom to the given Axiom and adds it to the Grammar.
 	 * 
 	 * @param axiom
 	 */
-	public void setAxiom(Axiom axiom) {
+	public boolean setAxiom(Axiom axiom) {
+		if(myAxiom.equals(axiom))
+			return false;
+		
 		myAxiom = axiom;
 		addAxiomToAlphabet();
+		return true;
 	}
 }

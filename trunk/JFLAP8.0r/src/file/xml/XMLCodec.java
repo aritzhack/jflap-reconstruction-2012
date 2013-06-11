@@ -201,12 +201,12 @@ public class XMLCodec extends Codec {
 
 			@Override
 			public String getDescription() {
-				return "A filter for JFLAP "+ JFLAPConstants.VERSION + " files.";
+				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFF_SUFFIX+")";
 			}
 
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith(JFLAPConstants.JFF_SUFFIX);
+				return f.getName().endsWith(JFLAPConstants.JFF_SUFFIX) || f.isDirectory();
 
 			}
 		};

@@ -1,4 +1,4 @@
-package file.xml.formaldef.lsystem.wrapperclasses;
+package view.lsystem.helperclasses;
 
 /**
  * Special implementation of a <String, String> key value pair to allow for TransducerFactory to
@@ -30,5 +30,25 @@ public class Parameter {
 	
 	public String toString(){
 		return name.toString() + ": " + value.toString();
+	}
+	
+	public boolean isEmpty(){
+		return name.isEmpty() && value.isEmpty();
+	}
+
+	public Object[] toArray() {
+		return new Object[]{name.toString(), value.toString()};
+	}
+
+	public boolean setTo(Parameter to) {
+		if (to.name == null || to.value == null)
+			return false;
+		this.name = to.name;
+		this.value = to.value;
+		return true;
+	}
+
+	public Parameter copy() {
+		return new Parameter(name, value);
 	}
 }

@@ -1,4 +1,4 @@
-package file.xml.formaldef.lsystem.wrapperclasses;
+package view.lsystem.helperclasses;
 
 /**
  * Special implementation of a String to allow for TransducerFactory to work
@@ -18,6 +18,10 @@ public class ParameterName {
 
 	public String toString() {
 		return name;
+	}
+
+	public boolean isEmpty() {
+		return name.length() == 0;
 	}
 
 }

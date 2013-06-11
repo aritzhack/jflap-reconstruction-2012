@@ -1,6 +1,8 @@
 package view.menus;
 
 import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -23,15 +25,10 @@ import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
 
-public class FileMenu extends JMenu implements TabChangeListener{
-	private JMenuItem closeTabItem, saveItem, saveAsItem;
-	private CloseTabAction closeTab;
-	private SaveAction save;
-	private SaveAsAction saveAs;
+public class FileMenu extends JMenu{
 	
 	public FileMenu(JFLAPEnvironment e) {
 		super("File");
-		e.addTabListener(this);
 
 		//New and Open options
 		add(createNewMenu());
@@ -40,16 +37,13 @@ public class FileMenu extends JMenu implements TabChangeListener{
 		addSeparator();
 
 		//Close and Quite options
-		closeTabItem = new JMenuItem(closeTab = new CloseTabAction(e, false));
-		add(closeTabItem);
+		add(new CloseTabButton(new CloseTabAction(e, false)));
 		add(new CloseWindowAction(e));
 		addSeparator();
 
 		//Save options
-		saveItem = new JMenuItem (save = new SaveAction(e));
-		add(saveItem);
-		saveAsItem = new JMenuItem(saveAs = new SaveAsAction(e));
-		add(saveAsItem);
+		add(new SaveButton(new SaveAction(e)));
+		add(new SaveAsButton(new SaveAsAction(e)));
 		addSeparator();
 
 		add(constructImageSaveMenu());
@@ -78,16 +72,55 @@ public class FileMenu extends JMenu implements TabChangeListener{
 		saveImageMenu.add(new SaveGraphBMPAction());
 		return saveImageMenu;
 	}
-
-	@Override
-	public void tabChanged(TabChangedEvent e) {
-		update();
+	
+	
+	private class CloseTabButton extends JMenuItem implements PropertyChangeListener{
+		private CloseTabAction myAction;
+		
+		public CloseTabButton(CloseTabAction a){
+			super(a);
+			myAction = a;
+			a.addPropertyChangeListener(this);
+		}
+		
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if(evt.getSource().equals(myAction) && evt.getPropertyName().equals(CloseTabAction.SET_ENABLED))
+				setEnabled((Boolean) evt.getNewValue());
+		}
+		
 	}
 	
-	private void update(){
-		closeTabItem.setEnabled(closeTab.isEnabled());
-		saveItem.setEnabled(save.isEnabled());
-		saveAsItem.setEnabled(saveAs.isEnabled());
+	private class SaveButton extends JMenuItem implements PropertyChangeListener{
+		private SaveAction myAction;
+		
+		public SaveButton(SaveAction a){
+			super(a);
+			myAction = a;
+			a.addPropertyChangeListener(this);
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if(evt.getSource().equals(myAction) && evt.getPropertyName().equals(SaveAction.SAVE))
+				setEnabled((Boolean) evt.getNewValue());
+		}
+	}
+	
+	private class SaveAsButton extends JMenuItem implements PropertyChangeListener{
+		private SaveAsAction myAction;
+		
+		public SaveAsButton(SaveAsAction a){
+			super(a);
+			myAction = a;
+			a.addPropertyChangeListener(this);
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if(evt.getSource().equals(myAction) && evt.getPropertyName().equals(SaveAsAction.SAVE_AS))
+				setEnabled((Boolean) evt.getNewValue());
+		}
 	}
 
 }
