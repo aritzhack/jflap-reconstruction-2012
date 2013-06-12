@@ -31,7 +31,6 @@ public abstract class ParseAction<S extends Parser> extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Grammar g = myView.getDefinition();
-		
 		if (g == null)
 			return;
 		

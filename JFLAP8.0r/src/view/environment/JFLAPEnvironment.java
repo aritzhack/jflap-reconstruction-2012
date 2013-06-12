@@ -3,21 +3,29 @@ package view.environment;
 import java.awt.AWTKeyStroke;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 
 import debug.JFLAPDebug;
 
@@ -34,7 +42,7 @@ import view.pumping.PumpingLemmaChooser;
 import view.pumping.PumpingLemmaChooserView;
 import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
-import file.SavingException;
+import file.FileJFLAPException;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
 
@@ -86,7 +94,7 @@ public class JFLAPEnvironment extends JFrame {
 		});
 		this.pack();
 		this.setVisible(true);
-		
+
 		setVisible(true);
 	}
 
@@ -135,7 +143,7 @@ public class JFLAPEnvironment extends JFrame {
 		// The getSavableObject() may need to be modified
 		Object obj = getSavableObject();
 		if (obj == null) {
-			throw new SavingException("No data to save");
+			throw new FileJFLAPException("No data to save");
 		}
 
 		if (saveAs || myFile == null) {
@@ -362,24 +370,27 @@ public class JFLAPEnvironment extends JFrame {
 	}
 
 	/**
-	 * Special rewrite of the static JOptionPane.showConfirmDialog method such that the
-	 * dialog can be navigated by using the right and left arrow keys along with tab
-	 * and shift-tab.
+	 * Special rewrite of the static JOptionPane.showConfirmDialog method such
+	 * that the dialog can be navigated by using the right and left arrow keys
+	 * along with tab and shift-tab.
 	 * 
-	 * @param message The message to be displayed to the user for confirmation.
-	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's selection.
+	 * @param message
+	 *            The message to be displayed to the user for confirmation.
+	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's
+	 *         selection.
 	 */
-	public int showConfirmDialog(Object message) {
+	public int showConfirmDialog(Object message) {		
 		JOptionPane pane = new JOptionPane(message,
 				JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
 				null, null, null);
-		pane.setComponentOrientation(this.getComponentOrientation());
 
 		JDialog dialog = pane.createDialog(this, "Select an Option");
+		AltlessMnemonic mnem = new AltlessMnemonic(pane);
 
 		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
 		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
-
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(mnem);
+		
 		Set<AWTKeyStroke> 	forwardTraversalKeys = new HashSet<AWTKeyStroke>(
 				dialog.getFocusTraversalKeys(forward)), 
 							backwardTraversalKeys = new HashSet<AWTKeyStroke>(
@@ -394,9 +405,42 @@ public class JFLAPEnvironment extends JFrame {
 		dialog.setFocusTraversalKeys(backward, backwardTraversalKeys);
 		dialog.setVisible(true);
 		dialog.dispose();
-
+		
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(mnem);
+		
 		if (pane.getValue() instanceof Integer)
 			return ((Integer) pane.getValue()).intValue();
 		return -1;
+	}
+
+	private class AltlessMnemonic implements KeyEventDispatcher {
+		private JButton yes;
+		private JButton no;
+		private JButton cancel;
+
+		public AltlessMnemonic(JOptionPane option) {
+			JPanel buttonArea = (JPanel) option.getComponent(1);
+			yes = (JButton) buttonArea.getComponent(0);
+			no = (JButton) buttonArea.getComponent(1);
+			cancel = (JButton) buttonArea.getComponent(2);
+		}
+
+		@Override
+		public boolean dispatchKeyEvent(KeyEvent e) {
+			boolean keyHandled = false;
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+				if (e.getKeyCode() == KeyEvent.VK_Y) {
+					yes.doClick();
+					keyHandled = true;
+				} else if (e.getKeyCode() == KeyEvent.VK_N) {
+					no.doClick();
+					keyHandled = true;
+				} else if (e.getKeyCode() == KeyEvent.VK_C) {
+					cancel.doClick();
+					keyHandled = true;
+				}
+			}
+			return keyHandled;
+		}
 	}
 }

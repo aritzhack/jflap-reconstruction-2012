@@ -20,6 +20,8 @@
 
 package oldnewstuff.main;
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.UIManager;
 
 import universe.JFLAPUniverse;
@@ -115,6 +117,7 @@ public class Main {
 		//Makes it so that when a button is selected through tab or arrow keys,
 		//hitting enter will trigger that one and NOT the "default" button.
 		UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
+		UIManager.put("OptionPane.cancelButtonMnemonic", "" + KeyEvent.VK_C);
 		loadPreferences();
 	}
 	

@@ -63,7 +63,7 @@ public abstract class SpecialSymbol extends FormalDefinitionComponent implements
 
 	@Override
 	public BooleanWrapper isComplete() {
-		return new BooleanWrapper(mySymbol != null,
+		return new BooleanWrapper(mySymbol != null && mySymbol.toString() != null,
 				"The " + this.getDescriptionName() + " must be set before you can continue");
 	}
 

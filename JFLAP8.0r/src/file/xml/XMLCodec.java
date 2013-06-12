@@ -41,6 +41,7 @@ import debug.JFLAPDebug;
 import file.Codec;
 import file.DataException;
 import file.EncodeException;
+import file.FileJFLAPException;
 import file.FileParseException;
 import file.xml.*;
 
@@ -87,10 +88,12 @@ public class XMLCodec extends Codec {
 			Document doc = XMLHelper.parse(file);
 			XMLTransducer transducer = getRootTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
-		} catch (IOException e) {
-			throw new FileParseException("Could not open file to read!");
-		} catch (org.xml.sax.SAXException e) {
-			throw new FileParseException("Could not parse XML!\n" + e.getMessage());
+		} catch (Exception e) {
+			if(e instanceof IOException)
+				throw new FileJFLAPException("Could not open file to read!");
+			if(e instanceof NullPointerException)
+				throw new FileJFLAPException("File is missing necessary values!");
+			throw new FileJFLAPException("Could not parse XML!\n" + e.getMessage());
 		} catch (ExceptionInInitializerError e) {
 			// Hmm. That shouldn't be.
 			System.err.println("STATIC INIT:");

@@ -35,7 +35,7 @@ public class SortProductionsAction extends UndoingAction implements IUndoRedo{
 		return this;
 	}
 
-	private Comparator<? super Production> createComparator() {
+	public Comparator<? super Production> createComparator() {
 		return new Comparator<Production>() {
 			@Override
 			public int compare(Production o1, Production o2) {

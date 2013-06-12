@@ -2,6 +2,7 @@ package view.grammar.parsing.cyk;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -44,18 +45,6 @@ import view.grammar.parsing.RunningView;
  * @author Ian McMahon
  * 
  */
-// JZG - Organize your methods in the class. Put all inner-classes at the bottom
-// in a block together,
-// put private methods together, put inherited methods together, and put public
-// methods together.
-// I tend to order my classes:
-// Constants
-// Fields
-// Constructors
-// Overridden Methods
-// Public Methods
-// Private Methods
-// Inner classes
 @SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
@@ -81,7 +70,8 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		myHeadRenderer = new HighlightTableHeaderRenderer();
 
 		myHighlightData = new HashMap<Integer, Color>();
-
+		setPreferredSize(new Dimension(300, 200));
+		
 	}
 
 	@Override
@@ -232,8 +222,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	}
 
 	/**
-	 * Converts a row and column index to an index. //JZG - Huh? The comment
-	 * could be clearer
+	 * Converts a row and column index to a single index to be used as a key in HiglightData map. 
 	 */
 	private int singleIndex(int row, int column) {
 		return row + (column << 22);
@@ -268,23 +257,6 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	 * - the row (wrapping around the input's length)
 	 */
 	private int getRowFromTable(int row, int column) {
-		// JZG - so lets say I am someone trying to use JFLAP to build soemthing
-		// cool.
-		// I am familiar with the interface, and I love how you can toggle
-		// between
-		// the diagonal rows vs. normal rows in the CYK parse table. It is my
-		// dream to
-		// make a program that prints out a CYK parse table in a loop,
-		// alternating between diagonal and non-diagonal. But LO I cannot
-		// because this
-		// is only functionality present in the view. I am a sad panda :(
-		// TL;DR, I think you should put the diagonal boolean in the model
-		// component
-		// and make it do all the hard work translating when I say
-		// getValue(row,column)
-		// That way you dont have to do all this weird and repetitive
-		// getRow/ColumnFromTable/Parser
-
 		if (diagonal)
 			return row;
 		int newRow = column - row;
@@ -359,7 +331,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 			int newRow = getRowFromParser(rowIndex, columnIndex);
 
 			boolean inserted = myParser.insertSet(newRow, newColumn,
-					attemptSet); // JZG - I refactored this to save you time.
+					attemptSet);
 
 			setCellColor(rowIndex, columnIndex, inserted ? Color.WHITE
 					: RED_HIGHLIGHT);
@@ -505,7 +477,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 				if (k >= column) {
 					animationTimer.stop();
 					dehighlightHeaders();
-					// Get rid of this listener, no longer needed.
+					
 					try {
 						this.finalize();
 					} catch (Throwable e) {

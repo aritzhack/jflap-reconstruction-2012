@@ -7,9 +7,12 @@ import model.lsystem.LSystem;
 
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import view.lsystem.helperclasses.Axiom;
 import view.lsystem.helperclasses.ParameterMap;
 
+import file.FileJFLAPException;
 import file.xml.MetaTransducer;
 import file.xml.XMLHelper;
 
@@ -24,7 +27,7 @@ public class LSystemTransducer extends MetaTransducer<LSystem> {
 	private static final String LSYSTEM_TAG = "lsystem";
 	private AxiomTransducer axTrans = new AxiomTransducer();
 	private ParameterMapTransducer mapTrans = new ParameterMapTransducer();
-	
+
 	@Override
 	public String getTag() {
 		return LSYSTEM_TAG;
@@ -37,11 +40,13 @@ public class LSystemTransducer extends MetaTransducer<LSystem> {
 		Axiom axiom = axTrans.fromStructureRoot(root);
 		if (axiom != null)
 			system.setAxiom(axiom);
-		
-		List<Element> paramMap = XMLHelper.getChildrenWithTag(root, PARAMETER_MAP_TAG);
-		
-		if(paramMap != null && !paramMap.isEmpty()){
-			ParameterMap parameters = mapTrans.fromStructureRoot(paramMap.get(0));
+
+		List<Element> paramMap = XMLHelper.getChildrenWithTag(root,
+				PARAMETER_MAP_TAG);
+
+		if (paramMap != null && !paramMap.isEmpty()) {
+			ParameterMap parameters = mapTrans.fromStructureRoot(paramMap
+					.get(0));
 			if (parameters != null)
 				system.setParameters(parameters);
 		}
@@ -52,12 +57,7 @@ public class LSystemTransducer extends MetaTransducer<LSystem> {
 	@Override
 	public LSystem buildStructure(Object[] subComp) {
 		Grammar g = retrieveTarget(Grammar.class, subComp);
-		if (g == null)
-			g = new Grammar();
-		ParameterMap params = retrieveTarget(ParameterMap.class, subComp);
-		if (params == null)
-			params = new ParameterMap();
-		return new LSystem(new Axiom(), g, params);
+		return new LSystem(new Axiom(), g, new ParameterMap());
 	}
 
 	@Override

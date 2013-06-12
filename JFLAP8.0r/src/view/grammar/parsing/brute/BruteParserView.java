@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.change.events.AdvancedChangeEvent;
+import universe.JFLAPUniverse;
 import view.algorithms.toolbar.SteppableToolbar;
 import view.grammar.parsing.FindFirstParserView;
 
@@ -46,15 +47,12 @@ public class BruteParserView extends FindFirstParserView<BruteParseTablePanel> {
 	 */
 	private boolean promptForIncreaseCapacity(int nodeNum, AdvancedChangeEvent e) {
 
-		int n = JOptionPane
+		int n = JFLAPUniverse.getActiveEnvironment()
 				.showConfirmDialog(
-						this,
 						"Warning: The parser may slow down drastically and cause JFLAP to freeze if you continue."
 								+ "\nNumber of nodes generated: "
 								+ nodeNum
-								+ " Would you like to continue?",
-						"Node Warning", JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
+								+ " Would you like to continue?");
 
 		return n == JOptionPane.YES_OPTION;
 	}
