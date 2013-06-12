@@ -22,6 +22,7 @@ package view.grammar.productions;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -36,6 +37,7 @@ import javax.swing.event.TableModelListener;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.tables.GrowableTableModel;
+import view.action.grammar.SortProductionsAction;
 
 import model.grammar.Grammar;
 import model.grammar.Production;
@@ -81,14 +83,16 @@ implements JFLAPConstants{
 		//		});
 	}
 	
-	public Grammar getGrammar(){
-		return myGrammar;
-	}
-	
 	public ProductionTableModel(Grammar g, UndoKeeper keeper, ProductionDataHelper helper){
 		super(3, helper);
 		myGrammar = g;
-		
+		Production[] prods = getOrderedProductions();
+		Arrays.sort(prods, new SortProductionsAction(keeper, this).createComparator());
+		applyOrdering(prods);
+	}
+	
+	public Grammar getGrammar(){
+		return myGrammar;
 	}
 
 	/**

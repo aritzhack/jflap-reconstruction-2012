@@ -96,12 +96,9 @@ public class BruteParseTablePanel extends RunningView {
 				if (event.getType() == UnrestrictedBruteParser.LEVEL_CHANGED) {
 					myData.put((Integer) event.getArg(0),
 							new Object[] { event.getArg(1), event.getArg(2) });
+					fireTableRowsInserted(myData.size()-1, myData.size()-1);
 				}
 			}
-			/**
-			 * For some reason, this call messes up the column widths.
-			 */
-			fireTableRowsInserted(myData.size()-1, myData.size()-1);
 		}
 	}
 

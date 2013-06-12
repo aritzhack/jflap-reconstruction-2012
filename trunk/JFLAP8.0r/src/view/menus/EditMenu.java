@@ -16,6 +16,8 @@ import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
+import view.grammar.LanguageGeneratorView;
+import view.grammar.parsing.ParserView;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
 import view.pumping.PumpingLemmaChooserView;
@@ -49,8 +51,9 @@ public class EditMenu extends JMenu implements TabChangeListener {
 	private void update(Component view) {
 		this.removeAll();
 		UndoKeeper keeper = null;
+		
 		if (view instanceof EditingPanel
-				&& !(view instanceof PumpingLemmaInputView || view instanceof PumpingLemmaChooserView)) {
+				&& isValidEditingPanel(view)) {
 			keeper = ((EditingPanel) view).getKeeper();
 			this.setVisible(true);
 		} else {
@@ -69,6 +72,12 @@ public class EditMenu extends JMenu implements TabChangeListener {
 					(ProductionTableModel) table.getModel()));
 		}
 
+	}
+	
+	private boolean isValidEditingPanel(Component view){
+		return !(view instanceof PumpingLemmaInputView || view instanceof PumpingLemmaChooserView)
+		&& !(view instanceof ParserView)
+		&& !(view instanceof LanguageGeneratorView);
 	}
 
 }

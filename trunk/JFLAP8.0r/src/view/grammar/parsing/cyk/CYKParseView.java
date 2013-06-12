@@ -16,9 +16,11 @@ import view.grammar.parsing.FindFirstParserView;
  */
 public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 
+	private static final Dimension CKY_SIZE = new Dimension(817, 725);
+
 	public CYKParseView(Parser alg) {
 		super(alg);
-		setPreferredSize(new Dimension(817, 725));
+		setPreferredSize(CKY_SIZE);
 	}
 
 	@Override

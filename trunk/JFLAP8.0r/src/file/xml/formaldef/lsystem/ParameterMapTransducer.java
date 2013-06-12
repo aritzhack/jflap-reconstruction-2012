@@ -34,7 +34,7 @@ public class ParameterMapTransducer implements XMLTransducer<ParameterMap>{
 	public ParameterMap fromStructureRoot(Element root) {
 		List<Element> list = XMLHelper.getChildrenWithTag(root, PARAMETER_TAG);
 		ParameterMap parameters = new ParameterMap();
-		JFLAPDebug.print(list.size());
+		
 		for (int i = 0; i < list.size(); i++){
 			Parameter current = subTrans.fromStructureRoot(list.get(i));
 			ParameterName name = current.getName();

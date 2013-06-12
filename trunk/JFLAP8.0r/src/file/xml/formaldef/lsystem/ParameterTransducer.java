@@ -9,8 +9,6 @@ import view.lsystem.helperclasses.Parameter;
 import view.lsystem.helperclasses.ParameterName;
 import view.lsystem.helperclasses.ParameterValue;
 
-import debug.JFLAPDebug;
-
 import file.xml.BasicTransducer;
 import file.xml.TransducerFactory;
 import file.xml.XMLHelper;

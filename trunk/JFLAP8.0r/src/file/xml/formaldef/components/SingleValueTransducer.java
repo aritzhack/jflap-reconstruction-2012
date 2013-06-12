@@ -18,7 +18,9 @@ public abstract class SingleValueTransducer<T> extends StructureTransducer<T> {
 	@Override
 	public T fromStructureRoot(Element root) {
 		List<Element> list = XMLHelper.getChildrenWithTag(root, VALUE_TAG);
-		String s = XMLHelper.containedText(list.get(0));
+		String s = null;
+		if(list.size() > 0)
+			s = XMLHelper.containedText(list.get(0));
 		return this.createInstance(s);
 	}
 
