@@ -16,10 +16,10 @@ import view.action.file.OpenAction;
 import view.action.file.ExitAction;
 import view.action.file.SaveAction;
 import view.action.file.SaveAsAction;
-import view.action.file.imagesave.SaveGraphBMPAction;
-import view.action.file.imagesave.SaveGraphGIFAction;
-import view.action.file.imagesave.SaveGraphJPGAction;
-import view.action.file.imagesave.SaveGraphPNGAction;
+import view.action.file.imagesave.SaveBMPAction;
+import view.action.file.imagesave.SaveGIFAction;
+import view.action.file.imagesave.SaveJPGAction;
+import view.action.file.imagesave.SavePNGAction;
 import view.action.newactions.NewAction;
 import view.action.windows.CloseButton;
 import view.action.windows.CloseTabAction;
@@ -77,12 +77,12 @@ public class JFLAPMenuBar extends JMenuBar implements TabChangeListener {
 		return list;
 	}
 
-	protected JMenuItem constructImageSaveMenu() {
+	protected JMenuItem constructImageSaveMenu(JFLAPEnvironment e) {
 		JMenu saveImageMenu = new JMenu("Save Image As...");
-		saveImageMenu.add(new SaveGraphJPGAction());
-		saveImageMenu.add(new SaveGraphPNGAction());
-		saveImageMenu.add(new SaveGraphGIFAction());
-		saveImageMenu.add(new SaveGraphBMPAction());
+		saveImageMenu.add(new SaveJPGAction(e));
+		saveImageMenu.add(new SavePNGAction(e));
+		saveImageMenu.add(new SaveGIFAction(e));
+		saveImageMenu.add(new SaveBMPAction(e));
 		return saveImageMenu;
 	}
 

@@ -29,6 +29,7 @@ import javax.swing.UIManager;
 
 import debug.JFLAPDebug;
 
+import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
@@ -142,45 +143,47 @@ public class JFLAPEnvironment extends JFrame {
 
 		// The getSavableObject() may need to be modified
 		Object obj = getSavableObject();
-		if (obj == null) {
-			throw new FileJFLAPException("No data to save");
-		}
+		
+		XMLFileChooser chooser = new XMLFileChooser();
+		chooser.setSelectedFile(myFile);
+		int n = JFileChooser.APPROVE_OPTION;
 
-		if (saveAs || myFile == null) {
-			XMLFileChooser chooser = new XMLFileChooser();
-			int n = chooser.showSaveDialog(this);
-			if (n == JFileChooser.CANCEL_OPTION
-					|| n == JFileChooser.ERROR_OPTION)
-				return false;
+		if (saveAs || myFile == null)
+			n = chooser.showSaveDialog(this);
+
+		// Loop until save works or is cancelled.
+		while (n == JFileChooser.APPROVE_OPTION) {
 			myFile = chooser.getSelectedFile();
-		}
 
-		// This may need to change based on directories/batches or if
-		// getParent() returns null
-		if (!myFile.getName().endsWith(".jff"))
-			myFile = new File(myFile.getParent(), myFile.getName() + ".jff");
+			if (!chooser.accept(myFile))
+				myFile = new File(myFile.getAbsolutePath() + ".jff");
 
-		// If file exists, ask about overwriting
-		if (myFile.exists()) {
-			int n = showConfirmDialog("File already exists. Overwrite file?");
-			if (n == JOptionPane.CANCEL_OPTION || n == JOptionPane.NO_OPTION
-					|| n == JOptionPane.CLOSED_OPTION) {
-				myFile = temp;
-				return false;
+			if (myFile.exists()) {
+				int confirm = showConfirmDialog("File exists. Overwrite file?");
+
+				if (confirm == JOptionPane.CANCEL_OPTION
+						|| confirm == JOptionPane.CLOSED_OPTION) {
+					myFile = temp;
+					return false;
+				}
+				if (confirm == JOptionPane.NO_OPTION) {
+					n = chooser.showSaveDialog(this);
+					continue;
+				}
 			}
+			// Either file is new or user chose to overwrite existing file
+			setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
+					+ ")");
+			XMLCodec codec = new XMLCodec();
+
+			codec.encode(obj, myFile, null);
+			amDirty = false;
+			for (EditingPanel ep : getEditingPanels()) {
+				ep.setDirty(false);
+			}
+			return true;
 		}
-		this.setTitle(JFLAPConstants.VERSION_STRING + "(" + myFile.getName()
-				+ ")");
-		XMLCodec codec = new XMLCodec();
-
-		codec.encode(obj, myFile, null);
-		amDirty = false;
-		for (EditingPanel ep : getEditingPanels()) {
-			ep.setDirty(false);
-		}
-
-		return true;
-
+		return false;
 	}
 
 	/**
@@ -379,7 +382,7 @@ public class JFLAPEnvironment extends JFrame {
 	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's
 	 *         selection.
 	 */
-	public int showConfirmDialog(Object message) {		
+	public int showConfirmDialog(Object message) {
 		JOptionPane pane = new JOptionPane(message,
 				JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
 				null, null, null);
@@ -389,25 +392,26 @@ public class JFLAPEnvironment extends JFrame {
 
 		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
 		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(mnem);
-		
-		Set<AWTKeyStroke> 	forwardTraversalKeys = new HashSet<AWTKeyStroke>(
-				dialog.getFocusTraversalKeys(forward)), 
-							backwardTraversalKeys = new HashSet<AWTKeyStroke>(
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(mnem);
+
+		Set<AWTKeyStroke> forwardTraversalKeys = new HashSet<AWTKeyStroke>(
+				dialog.getFocusTraversalKeys(forward)), backwardTraversalKeys = new HashSet<AWTKeyStroke>(
 				dialog.getFocusTraversalKeys(backward));
-		
+
 		forwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
 				KeyEvent.VK_RIGHT, KeyEvent.VK_UNDEFINED));
 		backwardTraversalKeys.add(AWTKeyStroke.getAWTKeyStroke(
-				KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED));	
-		
+				KeyEvent.VK_LEFT, KeyEvent.VK_UNDEFINED));
+
 		dialog.setFocusTraversalKeys(forward, forwardTraversalKeys);
 		dialog.setFocusTraversalKeys(backward, backwardTraversalKeys);
 		dialog.setVisible(true);
 		dialog.dispose();
-		
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(mnem);
-		
+
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.removeKeyEventDispatcher(mnem);
+
 		if (pane.getValue() instanceof Integer)
 			return ((Integer) pane.getValue()).intValue();
 		return -1;

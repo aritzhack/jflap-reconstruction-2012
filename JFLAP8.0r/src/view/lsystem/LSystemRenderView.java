@@ -112,6 +112,10 @@ public class LSystemRenderView extends JPanel {
 	public String getName() {
 		return "L-S Render";
 	}
+	
+	public ImageDisplayComponent getDisplayComponent(){
+		return imageDisplay;
+	}
 
 	/**
 	 * Initializes the private fields of the view.
