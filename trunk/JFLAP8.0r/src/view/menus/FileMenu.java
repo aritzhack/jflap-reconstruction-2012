@@ -14,10 +14,10 @@ import view.action.file.ExitAction;
 import view.action.file.OpenAction;
 import view.action.file.SaveAction;
 import view.action.file.SaveAsAction;
-import view.action.file.imagesave.SaveGraphBMPAction;
-import view.action.file.imagesave.SaveGraphGIFAction;
-import view.action.file.imagesave.SaveGraphJPGAction;
-import view.action.file.imagesave.SaveGraphPNGAction;
+import view.action.file.imagesave.SaveBMPAction;
+import view.action.file.imagesave.SaveGIFAction;
+import view.action.file.imagesave.SaveJPGAction;
+import view.action.file.imagesave.SavePNGAction;
 import view.action.newactions.NewAction;
 import view.action.windows.CloseTabAction;
 import view.action.windows.CloseWindowAction;
@@ -33,10 +33,10 @@ public class FileMenu extends JMenu{
 		//New and Open options
 		add(createNewMenu());
 		add(new OpenAction()); 
-		add(new RecentlyOpenendMenu());
+		add(new RecentlyOpenedMenu());
 		addSeparator();
 
-		//Close and Quite options
+		//Close and Quit options
 		add(new CloseTabButton(new CloseTabAction(e, false)));
 		add(new CloseWindowAction(e));
 		addSeparator();
@@ -46,7 +46,7 @@ public class FileMenu extends JMenu{
 		add(new SaveAsButton(new SaveAsAction(e)));
 		addSeparator();
 
-		add(constructImageSaveMenu());
+		add(constructImageSaveMenu(e));
 	
 
 		addSeparator();
@@ -64,12 +64,12 @@ public class FileMenu extends JMenu{
 	}
 
 
-	private JMenuItem constructImageSaveMenu() {
+	private JMenuItem constructImageSaveMenu(JFLAPEnvironment e) {
 		JMenu saveImageMenu = new JMenu("Save Image As...");
-		saveImageMenu.add(new SaveGraphJPGAction());
-		saveImageMenu.add(new SaveGraphPNGAction());
-		saveImageMenu.add(new SaveGraphGIFAction());
-		saveImageMenu.add(new SaveGraphBMPAction());
+		saveImageMenu.add(new SaveJPGAction(e));
+		saveImageMenu.add(new SavePNGAction(e));
+		saveImageMenu.add(new SaveGIFAction(e));
+		saveImageMenu.add(new SaveBMPAction(e));
 		return saveImageMenu;
 	}
 	

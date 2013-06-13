@@ -14,27 +14,39 @@
  *
  */
 
-
-
-
-
 package view.help;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.net.URL;
-import javax.swing.*;
+
+import javax.swing.JComponent;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+
+import util.JFLAPConstants;
+
+import debug.JFLAPDebug;
 
 /**
- * The <CODE>ImageDisplayComponent</CODE> is a single component that displays
- * an image within itself, and sets its size to match that of the image.
+ * The <CODE>ImageDisplayComponent</CODE> is a single component that displays an
+ * image within itself, and sets its size to match that of the image.
  * 
  * @author Thomas Finley
  */
 
-public class ImageDisplayComponent extends JComponent implements Scrollable {
+public class ImageDisplayComponent extends JComponent implements Scrollable,
+		JFLAPConstants {
 	/**
-	 * Instantiates a new <CODE>ImageDisplayComponent</CODE> without an image
-	 * at this time.
+	 * Instantiates a new <CODE>ImageDisplayComponent</CODE> without an image at
+	 * this time.
 	 */
 	public ImageDisplayComponent() {
 		this((Image) null);
@@ -131,8 +143,8 @@ public class ImageDisplayComponent extends JComponent implements Scrollable {
 	 * 
 	 * @param image
 	 *            the image to make sure is loaded
-	 * @return <TT>true</TT> if the tracking succeeded, <TT>false</TT> if it
-	 *         was interrupted
+	 * @return <TT>true</TT> if the tracking succeeded, <TT>false</TT> if it was
+	 *         interrupted
 	 */
 	private boolean trackImage(Image image) {
 		if (image == null)
@@ -177,6 +189,16 @@ public class ImageDisplayComponent extends JComponent implements Scrollable {
 		g.drawImage(myImage, r.x + offsetx, r.y + offsety, r.x + r.width
 				+ offsetx, r.y + r.height + offsety, r.x, r.y, r.x + r.width,
 				r.y + r.height, this);
+	}
+
+	public void paintImage(Graphics2D g2) {
+		g2.setColor(DEFAULT_SWING_BG);
+		g2.fillRect(0, 0, getWidth(), getHeight());
+
+		if (myImage != null)
+			g2.drawImage(myImage, null, null);
+		paintBorder(g2);
+		paintChildren(g2);
 	}
 
 	public Dimension getPreferredScrollableViewportSize() {

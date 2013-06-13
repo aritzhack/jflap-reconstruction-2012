@@ -9,9 +9,9 @@ import universe.preferences.JFLAPPreferences;
 import universe.preferences.PreferenceChangeListener;
 import view.action.QuickOpenAction;
 
-public class RecentlyOpenendMenu extends JMenu implements PreferenceChangeListener{
+public class RecentlyOpenedMenu extends JMenu implements PreferenceChangeListener{
 
-	public RecentlyOpenendMenu(){
+	public RecentlyOpenedMenu(){
 		super("Open recent...");
 		JFLAPPreferences.addChangeListener(this);
 		updateToFiles(JFLAPPreferences.getRecentlyOpenedFiles());
