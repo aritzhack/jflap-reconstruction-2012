@@ -77,7 +77,7 @@ public class AlphabetBar<T extends Alphabet> extends DefinitionComponentPanel<T>
 	}
 	
 	public Color getHighlightColor(){
-		return DEFAULT_SWING_BG;
+		return JFLAPPreferences.getBackgroundColor();
 	}
 	
 	private void setUpFocusManager() {

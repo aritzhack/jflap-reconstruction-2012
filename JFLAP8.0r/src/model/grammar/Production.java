@@ -244,7 +244,7 @@ public class Production extends LanguageFunction<Production> implements JFLAPCon
 	public Object[] toArray() {
 		return new Object[]{
 				this.myLHS.toString(),
-				ARROW,
+				PRODUCTION_ARROW,
 				this.myRHS.toString()};
 	}
 

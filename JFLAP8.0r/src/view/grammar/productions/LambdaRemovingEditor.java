@@ -31,7 +31,7 @@ public class LambdaRemovingEditor extends SelectingEditor {
 		public LambdaRemoveRunnable(JTextComponent jtc){
 			myJTC = jtc;
 			String s = jtc.getText();
-			if (s.equals(JFLAPPreferences.getEmptyStringSymbol())){
+			if (s.equals(JFLAPPreferences.getEmptyString())){
 				jtc.setText("");
 			}
 		}

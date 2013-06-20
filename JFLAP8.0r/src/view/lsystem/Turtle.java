@@ -54,11 +54,11 @@ class Turtle implements Copyable{
 	public Turtle() {
 		parametersToNumbers = new HashMap<String, Number>();
 
-		setDistance(JFLAPPreferences.DEFAULT_LS_DISTANCE);
-		setAngleChange(JFLAPPreferences.DEFAULT_LS_ANGLE);
-		setHueChange(JFLAPPreferences.DEFAULT_LS_HUE);
-		setLineWidth(JFLAPPreferences.DEFAULT_LS_WIDTH);
-		setLineIncrement(JFLAPPreferences.DEFAULT_LS_LINCREMENT);
+		setDistance(JFLAPPreferences.getLSDistance());
+		setAngleChange(JFLAPPreferences.getLSAngle());
+		setHueChange(JFLAPPreferences.getLSHue());
+		setLineWidth(JFLAPPreferences.getLSWidth());
+		setLineIncrement(JFLAPPreferences.getLSIncrement());
 
 		updateBounds();
 	}

@@ -142,6 +142,7 @@ public class Renderer {
 
 			// Set the initial drawing state.
 			g.setColor(currentTurtle.getColor());
+			g.setStroke(currentTurtle.getStroke());
 			capLinePath();
 
 			handleAllSymbols(symbols);

@@ -41,7 +41,7 @@ public class Axiom extends SymbolString {
 	 * @return Array of Symbols representing the input text.
 	 */
 	private static Symbol[] parseSimpleText(String text) {
-		if(text.equals(JFLAPPreferences.getEmptyStringSymbol()) || text.equals(""))
+		if(text.equals(JFLAPPreferences.getEmptyString()) || text.length() == 0)
 			return new Symbol[0];
 		text = text.trim();
 		String[] splitString = text.split("\\s+");
@@ -55,7 +55,7 @@ public class Axiom extends SymbolString {
 	@Override
 	public String toString() {
 		String superString = super.toString();
-		if(superString.equals(JFLAPPreferences.getEmptyStringSymbol()))
+		if(superString.equals(JFLAPPreferences.getEmptyString()))
 			superString = "";
 		return superString;
 	}

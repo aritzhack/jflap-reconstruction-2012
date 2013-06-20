@@ -91,7 +91,7 @@ public class ConfigurationFactory {
 	private static SymbolString createBlankString() {
 		SymbolString tape = new SymbolString();
 		for (int n = 0; n < MAX_TAPE_SIZE; n++){
-			tape.addLast(new Symbol("" + JFLAPPreferences.getTMBlankSymbol()));
+			tape.addLast(JFLAPPreferences.getTMBlankSymbol());
 		}
 		return tape;
 	}

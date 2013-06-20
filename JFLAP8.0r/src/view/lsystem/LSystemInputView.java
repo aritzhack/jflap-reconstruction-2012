@@ -49,6 +49,7 @@ import model.lsystem.LSystem;
 import model.lsystem.LSystemException;
 import model.symbols.Symbol;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
 import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
@@ -153,7 +154,7 @@ public class LSystemInputView extends BasicFormalDefinitionView<LSystem> {
 				JFLAPPreferences.getDefaultTextSize());
 		String axiom = lsystem.getAxiom().toString();
 		axiomField
-				.setText(axiom == JFLAPPreferences.getEmptyStringSymbol() ? ""
+				.setText(axiom == JFLAPPreferences.getEmptyString() ? ""
 						: axiom);
 
 		// Create the parameter table model.

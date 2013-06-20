@@ -31,7 +31,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 									implements JFLAPConstants{
 
 	private static final Object[] EMPTY = new Object[]{"",
-		ARROW,
+		PRODUCTION_ARROW,
 	""};
 	private LinkedList<BooleanWrapper> myWrappers;
 	private ArrayList<Production> myOrderedProductions;
@@ -151,7 +151,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 	}
 
 	protected boolean isEmptyString(String object) {
-		return object.equals(JFLAPPreferences.getEmptyStringSymbol());
+		return object.equals(JFLAPPreferences.getEmptyString());
 	}
 
 

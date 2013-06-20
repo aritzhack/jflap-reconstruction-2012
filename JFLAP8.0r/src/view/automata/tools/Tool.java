@@ -35,6 +35,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
+import util.JFLAPConstants;
+
+import debug.JFLAPDebug;
+
 
 
 /**
@@ -74,8 +78,8 @@ public abstract class Tool extends MouseAdapter {
 	 * @return the default tool icon
 	 */
 	public Image getImage() {
-		URL url = getClass().getResource(getImageURLString());
-		return  Toolkit.getDefaultToolkit().createImage(url);
+		String filename = JFLAPConstants.RESOURCE_ROOT+getImageURLString();
+		return  Toolkit.getDefaultToolkit().getImage(filename);
 	}
 	
 	public Icon getIcon(){

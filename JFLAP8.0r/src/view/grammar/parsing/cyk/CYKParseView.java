@@ -41,7 +41,6 @@ public class CYKParseView extends FindFirstParserView <CYKParseTablePanel>{
 			setStatus("Fill in the next row of the parse table! Enter a space for empty sets.");
 		}
 		super.updateStatus(e);
-		
 	}
 
 }

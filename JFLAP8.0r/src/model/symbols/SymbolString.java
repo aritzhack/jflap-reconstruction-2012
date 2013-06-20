@@ -136,7 +136,7 @@ Settable<SymbolString>{
 
 	public String toString(){
 		if (this.isEmpty()) 
-			return JFLAPPreferences.getEmptyStringSymbol();
+			return JFLAPPreferences.getEmptyString();
 		return UtilFunctions.createDelimitedString(this, 
 				JFLAPPreferences.getSymbolStringDelimiter());
 	}
@@ -343,7 +343,7 @@ Settable<SymbolString>{
 	}
 
 	public static boolean isEmpty(String input) {
-		return input.length() == 0 || input.equals(JFLAPPreferences.getEmptyStringSymbol());
+		return input.length() == 0 || input.equals(JFLAPPreferences.getEmptyString());
 	}
 
 	public SymbolString replace(int i, Symbol ... replaceWith) {

@@ -23,6 +23,8 @@ package view.help;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import debug.JFLAPDebug;
+
 import util.JFLAPConstants;
 
 
@@ -84,6 +86,7 @@ public class AboutBox extends JWindow {
 	 * Displays this about box, and plays the clip.
 	 */
 	public void displayBox() {
+		JFLAPDebug.print("You should change this image...");
 		boolean toPlay = !isVisible();
 		pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
