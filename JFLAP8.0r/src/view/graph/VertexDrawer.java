@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+import debug.JFLAPDebug;
+
 
 import universe.preferences.JFLAPPreferences;
 import util.ColoredStroke;

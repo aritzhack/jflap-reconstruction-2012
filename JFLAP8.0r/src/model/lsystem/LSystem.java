@@ -161,15 +161,6 @@ public class LSystem extends FormalDefinition {
 		return myGrammar;
 	}
 
-	@Override
-	public String toString() {
-		String out = "L-System = (A, G, P)\n";
-		out += "\t" + myAxiom.toString() + "\n";
-		out += "\t" + myGrammar.toString() + "\n";
-		out += "\t" + myParameters.toString();
-		return out;
-	}
-
 	/**
 	 * Adds all Symbols in the Axiom to the proper alphabet in the Grammar.
 	 */

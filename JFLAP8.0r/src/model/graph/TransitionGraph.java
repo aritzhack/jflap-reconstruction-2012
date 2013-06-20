@@ -210,6 +210,10 @@ implements ChangeListener {
 	public boolean setSelected(Object o, boolean select){
 		return select ? mySelected.add(o) : mySelected.remove(o);
 	}
+	
+	public boolean isSelected(Object o){
+		return mySelected.contains(o);
+	}
 
 	public List<T> getOrderedTransitions(State from, State to) {
 		return myOrderedTransitions.get(getID(from, to));
@@ -222,5 +226,4 @@ implements ChangeListener {
 	public void clearSelection() {
 		mySelected.clear();
 	}
-
 }

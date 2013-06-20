@@ -29,8 +29,20 @@ import view.graph.VertexDrawer;
 
 public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State> {
 
-	public AutomatonDrawer(StateDrawer vDraw) {
+	private SelectedStateDrawer mySelectedDrawer;
+
+
+	public AutomatonDrawer(StateDrawer vDraw, SelectedStateDrawer sVDraw) {
 		super(vDraw);
+		mySelectedDrawer = sVDraw;
+	}
+	
+	@Override
+	public void drawVertex(State v, Graph<State> obj, Graphics g) {
+		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
+		if(graph.isSelected(v))
+			mySelectedDrawer.draw(obj.pointForVertex(v), v, g);
+		else super.drawVertex(v, obj, g);
 	}
 
 	@Override

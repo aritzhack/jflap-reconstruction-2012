@@ -22,6 +22,7 @@ import model.automata.Transition;
 import model.change.events.AddEvent;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
+import util.JFLAPConstants;
 import util.arrows.GeometryHelper;
 import view.EditingPanel;
 import view.automata.tools.Tool;
@@ -43,7 +44,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myGraph = new TransitionGraph<S>(m);
 		myGraph.addListener(this);
 		StateDrawer vDraw = new StateDrawer();
-		myDrawer = new AutomatonDrawer<S>(vDraw);
+		SelectedStateDrawer sVDraw = new SelectedStateDrawer();
+		myDrawer = new AutomatonDrawer<S>(vDraw, sVDraw);
 		transform = new AffineTransform();
 	}
 
@@ -65,10 +67,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	public void selectObject(Object o) {
 		myGraph.setSelected(o, true);
+		repaint();
 	}
 
 	public void clearSelection() {
 		myGraph.clearSelection();
+		repaint();
 	}
 
 	public void showMenu(Point2D p) {
@@ -97,12 +101,16 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	private S transitionAtPoint(Point2D p) {
-		// TODO Auto-generated method stub
+//		for(Transition t : myAutomaton.getTransitions())
+//			if()
 		return null;
 	}
 
 	private State stateAtPoint(Point2D p) {
-		// TODO Auto-generated method stub
+		for(Point2D vertex : myGraph.points()){
+			if(p.distance(vertex) <= JFLAPConstants.STATE_RADIUS)
+				return myGraph.vertexForPoint(vertex);
+		}
 		return null;
 	}
 
@@ -137,7 +145,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		
 		if (myTool != null)
 			myTool.draw(g);
-		
 //		I believe all transformations have to do with the slider (ie. setting a different scale)
 //		Graphics2D g2 = (Graphics2D) g;
 //		double newXScale = 1.0/transform.getScaleX();
