@@ -7,10 +7,13 @@ import java.awt.Dimension;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
 import util.view.magnify.MagnifiablePanel;
+import view.automata.tools.ArrowTool;
 import view.automata.tools.RedoTool;
 import view.automata.tools.StateTool;
 import view.automata.tools.ToolBar;
@@ -33,27 +36,35 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	@Override
 	public JComponent createCentralPanel(T model, UndoKeeper keeper,
 			boolean editable) {
-		//TODO: all this
+		// TODO: all this
 		return new AutomatonEditorPanel<T, S>(model, keeper, editable);
-	
+
 	}
 
 	@Override
 	public String getName() {
 		return "Automaton Editor";
 	}
-	
+
+	@Override
+	public void repaint() {
+		if (getScroller() != null)
+			getScroller().revalidate();
+		super.repaint();
+	}
+
 	@Override
 	public Component createToolbar(T definition, UndoKeeper keeper) {
 		// TODO: figure this out :p
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
-		
+
 		StateTool<T, S> state = new StateTool<T, S>(panel);
 		UndoTool undo = new UndoTool(keeper);
 		RedoTool redo = new RedoTool(keeper);
-		
-		panel.setTool(state);
-		ToolBar bar = new ToolBar(state, undo, redo);
+		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel);
+
+		panel.setTool(arrow);
+		ToolBar bar = new ToolBar(arrow, state, undo, redo);
 		bar.addToolListener(panel);
 		return bar;
 	}

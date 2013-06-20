@@ -79,7 +79,6 @@ public class GraphDrawer<T> implements JFLAPConstants {
 		curve.setCurve(from, ctrl, to);
 		curve.draw(g);
 		
-		
 	}
 
 		

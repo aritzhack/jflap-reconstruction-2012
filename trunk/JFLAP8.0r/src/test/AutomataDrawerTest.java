@@ -5,32 +5,26 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.File;
-import java.util.TreeSet;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import debug.JFLAPDebug;
+
+import model.automata.Automaton;
+import model.automata.State;
+import model.automata.StateSet;
+import model.automata.Transition;
+import model.graph.TransitionGraph;
+import model.undo.UndoKeeper;
 import util.JFLAPConstants;
 import view.automata.AutomataView;
 import view.automata.AutomatonDrawer;
+import view.automata.AutomatonEditorPanel;
+import view.automata.SelectedStateDrawer;
 import view.automata.StateDrawer;
 import view.graph.GraphDrawer;
-import view.graph.VertexDrawer;
-
 import file.xml.XMLCodec;
-import model.automata.Automaton;
-import model.automata.State;
-import model.automata.Transition;
-import model.automata.acceptors.fsa.FSATransition;
-import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.turing.TuringMachine;
-import model.automata.turing.universal.UniversalTuringMachine;
-import model.graph.LayoutAlgorithm;
-import model.graph.LayoutAlgorithmFactory;
-import model.graph.TransitionGraph;
-import model.regex.GeneralizedTransitionGraph;
-import model.undo.UndoKeeper;
 
 public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 
@@ -42,7 +36,8 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 		Automaton a = XMLCodec.decode(f, Automaton.class);
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
-		JPanel panel = new AutomataView(a, new UndoKeeper(), true);
+		AutomataView panel = new AutomataView(a, new UndoKeeper(), true);
+		
 		panel.setOpaque(true);
 		frame.add(panel);
 		frame.pack();
@@ -72,10 +67,11 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 			super.paintComponent(g);
 			this.setBackground(Color.white);
 			StateDrawer vDraw = new StateDrawer();
+			SelectedStateDrawer sVDraw = new SelectedStateDrawer();
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			GraphDrawer<State> drawer = 
-					new AutomatonDrawer(vDraw);
+					new AutomatonDrawer(vDraw, sVDraw);
 
 			drawer.draw(myGraph, g);
 		}

@@ -36,7 +36,7 @@ public class FormalAlph extends FormalDefinitionComponent {
 	@Override
 	public Character getCharacterAbbr() {
 		// TODO Auto-generated method stub
-		return 'Σ';
+		return '\u03A3';
 	}
 
 	@Override
