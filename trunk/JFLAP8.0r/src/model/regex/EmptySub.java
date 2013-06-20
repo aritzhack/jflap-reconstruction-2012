@@ -12,7 +12,7 @@ public class EmptySub extends Terminal {
 	
 	@Override
 	public String toString() {
-		return JFLAPPreferences.getEmptyStringSymbol();
+		return JFLAPPreferences.getEmptyString();
 	}
 
 }

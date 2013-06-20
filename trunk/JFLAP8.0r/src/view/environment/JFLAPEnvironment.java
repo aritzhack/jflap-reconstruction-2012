@@ -5,14 +5,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,19 +18,25 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
 
 import debug.JFLAPDebug;
 
-import universe.JFLAPUniverse;
+import model.formaldef.FormalDefinition;
+import universe.preferences.JFLAPMode;
+import universe.preferences.JFLAPPreferences;
+import universe.preferences.PreferenceChangeListener;
+import universe.preferences.JFLAPPreferences.PREF_CHANGE;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
+import view.formaldef.BasicFormalDefinitionView;
 import view.formaldef.FormalDefinitionView;
+import view.grammar.parsing.cyk.CYKParseTablePanel;
+import view.grammar.parsing.cyk.CYKParseView;
+import view.lsystem.LSystemRenderView;
 import view.menus.JFLAPMenuBar;
 import view.pumping.CFPumpingLemmaChooser;
 import view.pumping.CompCFPumpingLemmaInputView;
@@ -43,11 +46,10 @@ import view.pumping.PumpingLemmaChooser;
 import view.pumping.PumpingLemmaChooserView;
 import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
-import file.FileJFLAPException;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
 
-public class JFLAPEnvironment extends JFrame {
+public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener{
 
 	private File myFile;
 	private JTabbedPane myTabbedPane;
@@ -388,7 +390,7 @@ public class JFLAPEnvironment extends JFrame {
 				null, null, null);
 
 		JDialog dialog = pane.createDialog(this, "Select an Option");
-		AltlessMnemonic mnem = new AltlessMnemonic(pane);
+		NoAltMnemonicDispatcher mnem = new NoAltMnemonicDispatcher(pane);
 
 		int forward = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS;
 		int backward = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS;
@@ -417,12 +419,12 @@ public class JFLAPEnvironment extends JFrame {
 		return -1;
 	}
 
-	private class AltlessMnemonic implements KeyEventDispatcher {
+	private class NoAltMnemonicDispatcher implements KeyEventDispatcher {
 		private JButton yes;
 		private JButton no;
 		private JButton cancel;
 
-		public AltlessMnemonic(JOptionPane option) {
+		public NoAltMnemonicDispatcher(JOptionPane option) {
 			JPanel buttonArea = (JPanel) option.getComponent(1);
 			yes = (JButton) buttonArea.getComponent(0);
 			no = (JButton) buttonArea.getComponent(1);
@@ -446,5 +448,27 @@ public class JFLAPEnvironment extends JFrame {
 			}
 			return keyHandled;
 		}
+	}
+
+	@Override
+	public void preferenceChanged(String pref, Object val) {
+		Component current = getCurrentView();
+		
+		if(current instanceof LSystemRenderView && isRenderChange(pref))
+			((LSystemRenderView) current).updateDisplay();
+		else if(pref.equals(PREF_CHANGE.CYK_direction_change.toString()) && current instanceof CYKParseView){
+			((CYKParseView) current).getRunningView().changeDiagonal((Boolean) val);
+		}
+		revalidate();
+		repaint();
+	}
+	
+	public boolean isRenderChange(String pref){
+		PREF_CHANGE[] renderNeeded = new PREF_CHANGE[]{PREF_CHANGE.lambda_change, PREF_CHANGE.LSangle_change, PREF_CHANGE.LSdistance_change,
+				PREF_CHANGE.LShue_change, PREF_CHANGE.LSincrement_change, PREF_CHANGE.LSwidth_change};
+		for(PREF_CHANGE c : renderNeeded)
+			if (c.toString().equals(pref))
+				return true;
+		return false;
 	}
 }

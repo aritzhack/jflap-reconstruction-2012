@@ -148,7 +148,7 @@ implements JFLAPConstants{
 	 */
 	@Override
 	protected Object[] createEmptyRow() {
-		Object[] newRow = { "", JFLAPConstants.ARROW, "" };
+		Object[] newRow = { "", JFLAPConstants.PRODUCTION_ARROW, "" };
 		return newRow;
 	}
 
@@ -185,7 +185,7 @@ implements JFLAPConstants{
 		}
 		String s = (String) super.getValueAt(row, column);
 
-		return s == JFLAPPreferences.getEmptyStringSymbol() && 
+		return s == JFLAPPreferences.getEmptyString() && 
 				(column == 0 || row == this.getRowCount()) ? "" : s ;
 	}
 
@@ -193,7 +193,7 @@ implements JFLAPConstants{
 	public boolean checkEmpty(int row) {
 		return this.getValueAt(row, 0).toString().length() == 0 &&
 				(this.getValueAt(row, 2).toString().length() == 0 ||
-				this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyStringSymbol());
+				this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyString());
 	}
 
 

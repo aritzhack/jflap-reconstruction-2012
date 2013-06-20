@@ -5,12 +5,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.grammar.Grammar;
 import model.lsystem.LSystem;
 import model.pumping.ContextFreePumpingLemma;
 import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
 import universe.JFLAPUniverse;
+import view.automata.AutomataView;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;

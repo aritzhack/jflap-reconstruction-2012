@@ -1,5 +1,6 @@
 package model.regex;
 
+import universe.preferences.JFLAPPreferences;
 import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -20,7 +21,7 @@ public class GeneralizedTransitionGraph extends FiniteStateAcceptor {
 		myRegEx = regex;
 		this.getInputAlphabet().addAll(myRegEx.getInputAlphabet());
 		this.getInputAlphabet().addAll(myRegEx.getOperators());
-		this.getInputAlphabet().add(EMPTY_SET_SYMBOL);
+		this.getInputAlphabet().add(JFLAPPreferences.getEmptySetSymbol());
 		State start = this.getStates().createAndAddState();
 		State end = this.getStates().createAndAddState();
 

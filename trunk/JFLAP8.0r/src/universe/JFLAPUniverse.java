@@ -68,6 +68,7 @@ public class JFLAPUniverse {
 	}
 
 	public static void registerEnvironment(JFLAPEnvironment env) {
+		JFLAPPreferences.addChangeListener(env);
 		setUpWindowListener(env);
 		setActiveEnvironment(env);
 	}
@@ -131,6 +132,7 @@ public class JFLAPUniverse {
 
 	public static void deregisterEnvironment(JFLAPEnvironment env) {
 		REGISTRY.remove(env);
+		JFLAPPreferences.removeChangeListener(env);
 		if (REGISTRY.isEmpty())
 			showMainMenu();
 	}

@@ -34,23 +34,15 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 	}
 
 	@Override
-	public void drawVertex(State v, Graph<State> obj, Graphics g) {
-		super.drawVertex(v, obj, g);
+	public void drawLabel(State from, State to, Graph<State> obj, Graphics g) {
 		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
-	}
-
-	@Override
-	public void drawEdge(State from, State to, Graph<State> obj, Graphics g) {
-		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
-		Point2D ctrl = graph.getControlPt(from, to);
+		List<T> transitions = graph.getOrderedTransitions(from, to);
 		Point2D pFrom = graph.pointForVertex(from);
 		Point2D pTo = graph.pointForVertex(to);
+		Point2D ctrl = graph.getControlPt(from, to);
 		
-		
-		drawArrow(g, ctrl, pFrom, pTo,from.equals(to));
-		
-		List<T> transitions = graph.getOrderedTransitions(from, to);
 		drawLabels(transitions, g, graph, pFrom, pTo);
+		drawPoint(g, ctrl);
 	}
 
 	private void drawLabels(List<T> transitions, Graphics g,
@@ -72,22 +64,6 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 			//drawLabel
 			drawLabel(g2d, t, center);
 		}
-	}
-
-	private void drawArrow(Graphics g, Point2D ctrl, Point2D pFrom, Point2D pTo, boolean isLoop) {
-		double rad = getVertexDrawer().getVertexRadius();
-		double theta1 = GeometryHelper.calculateAngle(pFrom, pTo),
-				theta2=GeometryHelper.calculateAngle(pTo, pFrom);
-		if (isLoop){
-			theta1=-3*Math.PI/4;
-			theta2=-Math.PI/4;
-		}
-			
-		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);
-		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,theta2);
-		CurvedArrow arrow = new CurvedArrow(edgeFrom, ctrl, edgeTo, ARROW_LENGTH, ARROW_ANGLE);
-		arrow.draw(g);
-		drawPoint(g, ctrl);
 	}
 
 	private void drawPoint(Graphics g, Point2D p) {

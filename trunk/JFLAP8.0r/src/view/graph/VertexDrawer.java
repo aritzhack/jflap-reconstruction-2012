@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
 
+import universe.preferences.JFLAPPreferences;
 import util.ColoredStroke;
 import util.JFLAPConstants;
 
@@ -21,7 +22,7 @@ public class VertexDrawer<T>{
 	public VertexDrawer(){
 		myOutlineStroke = new ColoredStroke(1, Color.black);
 		setRadius(JFLAPConstants.STATE_RADIUS);
-		setInnerColor(JFLAPConstants.DEFAULT_STATE_COLOR);
+		setInnerColor(JFLAPPreferences.getStateColor());
 		setBorderColor(Color.black);
 		setBorderWidth(1);
 	}

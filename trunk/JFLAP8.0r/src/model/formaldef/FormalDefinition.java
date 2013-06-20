@@ -129,7 +129,7 @@ Copyable{
 	 * @return
 	 */
 	public ArrayList<Character> getDisallowedCharacters() {
-		return new ArrayList<Character>(Arrays.asList(new Character[]{' ', JFLAPPreferences.getEmptyStringSymbol().charAt(0)}));
+		return new ArrayList<Character>(Arrays.asList(new Character[]{' ', JFLAPPreferences.getEmptyString().charAt(0)}));
 	}
 
 	public Alphabet[] getAlphabets() {

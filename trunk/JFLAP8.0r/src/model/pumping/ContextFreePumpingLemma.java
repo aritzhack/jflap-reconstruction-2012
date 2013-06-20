@@ -105,7 +105,7 @@ public abstract class ContextFreePumpingLemma extends PumpingLemma implements Se
 		
 		for (int i=0; i<s.length; i++)
 			if (s[i].length() == 0)
-				s[i] = JFLAPPreferences.getEmptyStringSymbol();    //lower case lambda
+				s[i] = JFLAPPreferences.getEmptyString();    //lower case lambda
 		
 		
 		return "U = " + s[0] + "; V = " + s[1] + "; X = " + s[2] + 

@@ -30,6 +30,7 @@ import view.action.file.ExitAction;
 import view.action.newactions.NewAction;
 import view.help.AboutAction;
 import view.help.MainMenuHelpAction;
+import view.help.PreferenceAction;
 
 
 
@@ -85,9 +86,8 @@ public class MainMenu extends JFrame {
 		// Mini menu!
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(this.createMenu("File", new OpenAction(), new ExitAction()));
-		menuBar.add(this.createMenu("Help", new MainMenuHelpAction(), new AboutAction()));
+		menuBar.add(this.createMenu("Help", new MainMenuHelpAction(), new AboutAction(), new PreferenceAction()));
 		menuBar.add(this.createMenu("Batch", new BatchTestAction()));
-		menuBar.add(JFLAPPreferences.getPreferenceMenu());
 		setJMenuBar(menuBar);
 	}
 

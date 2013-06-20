@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import util.JFLAPConstants;
+import view.automata.AutomataView;
 import view.automata.AutomatonDrawer;
 import view.automata.StateDrawer;
 import view.graph.GraphDrawer;
@@ -29,6 +30,7 @@ import model.graph.LayoutAlgorithm;
 import model.graph.LayoutAlgorithmFactory;
 import model.graph.TransitionGraph;
 import model.regex.GeneralizedTransitionGraph;
+import model.undo.UndoKeeper;
 
 public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 
@@ -40,7 +42,7 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 		Automaton a = XMLCodec.decode(f, Automaton.class);
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
-		JPanel panel = new DrawPanel(a);
+		JPanel panel = new AutomataView(a, new UndoKeeper(), true);
 		panel.setOpaque(true);
 		frame.add(panel);
 		frame.pack();

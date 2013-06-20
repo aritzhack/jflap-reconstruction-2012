@@ -40,7 +40,7 @@ public class Powerset extends SetOperation {
 	@SuppressWarnings("unchecked")
 	private String getSetToString (Set<Element> set) {
 		if (set.size() == 0)
-			return JFLAPPreferences.EMPTY_SET;
+			return JFLAPPreferences.getEmptySetString();
 		StringBuilder sb = new StringBuilder();
 		ArrayList<Element> list = new ArrayList<Element>(set);
 		Collections.sort(list);

@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 
 import debug.JFLAPDebug;
@@ -192,7 +193,7 @@ public class ImageDisplayComponent extends JComponent implements Scrollable,
 	}
 
 	public void paintImage(Graphics2D g2) {
-		g2.setColor(DEFAULT_SWING_BG);
+		g2.setColor(JFLAPPreferences.getBackgroundColor());
 		g2.fillRect(0, 0, getWidth(), getHeight());
 
 		if (myImage != null)

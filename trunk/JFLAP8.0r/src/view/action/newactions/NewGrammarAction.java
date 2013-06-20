@@ -15,10 +15,7 @@ public class NewGrammarAction extends NewFormalDefinitionAction<Grammar> {
 
 	@Override
 	public Grammar createDefinition() {
-		Grammar g = new Grammar();
-		if (JFLAPPreferences.getDefaultMode() == JFLAPMode.CUSTOM)
-			g.setVariableGrouping(JFLAPPreferences.getDefaultGrouping());
-		return g;
+		return new Grammar();
 	}
 
 

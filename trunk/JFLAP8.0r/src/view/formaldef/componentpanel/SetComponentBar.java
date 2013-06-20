@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.text.JTextComponent;
 
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.thinscroller.ThinScrollBarScrollPane;
 
@@ -106,7 +107,7 @@ public abstract class SetComponentBar<T> extends ThinScrollBarScrollPane impleme
 		}
 		
 		public void dehighlight() {
-			this.setBackground(DEFAULT_SWING_BG);
+			this.setBackground(JFLAPPreferences.getBackgroundColor());
 		}
 
 		public void highlight(){

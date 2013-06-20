@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import universe.preferences.JFLAPPreferences;
+
 import debug.JFLAPDebug;
 
 import errors.BooleanWrapper;
@@ -168,7 +170,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 				if(transSet.getTransitionsFromStateToState(from, to).isEmpty())
 					toAdd.add(new FSATransition(from, 
 							to, 
-							new SymbolString(EMPTY_SET_SYMBOL)));
+							new SymbolString(JFLAPPreferences.getEmptySetSymbol())));
 			}
 		}
 		return toAdd;
@@ -273,7 +275,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	private boolean isEmptySetTransition(SymbolString input) {
-		return input.contains(EMPTY_SET_SYMBOL);
+		return input.contains(JFLAPPreferences.getEmptySetSymbol());
 	}
 
 	/**

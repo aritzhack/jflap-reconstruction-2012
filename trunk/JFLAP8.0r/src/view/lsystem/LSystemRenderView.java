@@ -164,7 +164,7 @@ public class LSystemRenderView extends JPanel {
 	/**
 	 * Updates the display.Graphics2D;
 	 */
-	private void updateDisplay() {
+	public void updateDisplay() {
 		int recursionDepth = spinnerModel.getNumber().intValue();
 		final SymbolString expansion = expander
 				.expansionForLevel(recursionDepth);

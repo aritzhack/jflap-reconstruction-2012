@@ -23,6 +23,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.cyk.CYKParser;
@@ -30,6 +32,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.DoSelectable;
 import util.view.tables.SelectingEditor;
@@ -48,8 +51,8 @@ import view.grammar.parsing.RunningView;
 @SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
-	private static final Color YELLOW_HIGHLIGHT = new Color(255, 255, 66);
 	private static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
+	private static final int DIAGONAL_CHANGE = 0x0ff;
 
 	private SelectingEditor myEditor;
 	private Map<Integer, Color> myHighlightData;
@@ -57,13 +60,13 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	private HighlightTableHeaderRenderer myHeadRenderer;
 	private boolean diagonal;
 	private Timer animationTimer;
-
+	
 	public CYKParseTablePanel(Parser parser, boolean diagonal) {
 		super("CYK Parse Table", parser);
 		this.diagonal = diagonal;
 
 		JTable table = getTable();
-		table.setGridColor(JFLAPConstants.DEFAULT_SWING_BG);
+		table.setGridColor(JFLAPPreferences.getBackgroundColor());
 
 		myEditor = new SetCellEditor();
 		myRenderer = new EmptySetCellRenderer();
@@ -127,6 +130,18 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		table.clearSelection();
 		repaint();
 	}
+	
+	public void changeDiagonal(boolean diagonal){
+		if(this.diagonal != diagonal){
+			this.diagonal = diagonal;
+		}
+		JTable table = getTable();
+		CYKParseModel model = (CYKParseModel) table.getModel();
+		CYKParser parser = model.getParser();
+		
+		model.stateChanged(new AdvancedChangeEvent(parser, DIAGONAL_CHANGE, null));
+		repaint();
+	}
 
 	/**
 	 * Sets the background of the cell specified by (row, column)
@@ -149,7 +164,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	private void setCellBackground(int row, int column, JLabel l) {
 		if ((diagonal && row > column)
 				|| (!diagonal && row + column >= getTable().getColumnCount())) {
-			l.setBackground(JFLAPConstants.DEFAULT_SWING_BG);
+			l.setBackground(JFLAPPreferences.getBackgroundColor());
 			l.setBorder(BorderFactory.createEmptyBorder());
 			return;
 		}
@@ -192,7 +207,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		for (int i = newRow; i <= newColumn; i++) {
 			HighlightHeader header = (HighlightHeader) columnModel.getColumn(i)
 					.getHeaderValue();
-			header.setHightlight(YELLOW_HIGHLIGHT);
+			header.setHightlight(JFLAPPreferences.getCYKHighlight());
 		}
 	}
 
@@ -206,7 +221,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			HighlightHeader header = (HighlightHeader) columnModel.getColumn(i)
 					.getHeaderValue();
-			header.setHightlight(JFLAPConstants.DEFAULT_SWING_BG);
+			header.setHightlight(JFLAPPreferences.getBackgroundColor());
 		}
 	}
 
@@ -362,6 +377,8 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 							setCellColor(i, j, Color.WHITE);
 					}
 				}
+				getTable().clearSelection();
+				dehighlightHeaders();
 			}
 		}
 
@@ -379,7 +396,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 			myHeaders = new HighlightHeader[input.size()];
 			for (int i = 0; i < myHeaders.length; i++) {
 				myHeaders[i] = new HighlightHeader(input.get(i));
-				myHeaders[i].setHightlight(JFLAPConstants.DEFAULT_SWING_BG);
+				myHeaders[i].setHightlight(JFLAPPreferences.getBackgroundColor());
 			}
 		}
 
@@ -448,7 +465,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 				replaceSetCharacters(l);
 				return l;
 			}
-			l.setText(JFLAPConstants.EMPTY_SET_SYMBOL.getString());
+			l.setText(JFLAPPreferences.getEmptySetString());
 			return l;
 		}
 	}
@@ -487,9 +504,9 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 				}
 			}
 			setCellColor(getRowFromTable(row, k), getColumnFromTable(row, k),
-					YELLOW_HIGHLIGHT);
+					JFLAPPreferences.getCYKHighlight());
 			setCellColor(getRowFromTable(k + 1, column),
-					getColumnFromTable(k + 1, column), YELLOW_HIGHLIGHT);
+					getColumnFromTable(k + 1, column), JFLAPPreferences.getCYKHighlight());
 			CYKParseTablePanel.this.repaint();
 			k++;
 		}

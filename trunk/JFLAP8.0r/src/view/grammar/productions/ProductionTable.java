@@ -102,7 +102,7 @@ public class ProductionTable extends HighlightTable
 			public boolean isCellEditable(EventObject e) {
 				if (e instanceof KeyEvent){
 					int mod = ((KeyEvent) e).getModifiers();
-					if (mod == JFLAPPreferences.getMainMenuMask())
+					if (mod == JFLAPConstants.MAIN_MENU_MASK)
 						return false;
 				}
 				return super.isCellEditable(e);
