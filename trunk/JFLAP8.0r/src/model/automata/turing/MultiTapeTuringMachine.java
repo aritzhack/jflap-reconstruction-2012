@@ -4,6 +4,7 @@ import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfigur
 import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
+import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
@@ -91,5 +92,10 @@ public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>
 							this.getStartState(), 
 							positions, 
 							inputArray);
+	}
+
+	@Override
+	public MultiTapeTMTransition createBlankTransition(State from, State to) {
+		return new MultiTapeTMTransition(from, to);
 	}
 }

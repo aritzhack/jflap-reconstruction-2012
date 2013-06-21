@@ -34,7 +34,7 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 
 	@Override
 	public Character getCharacterAbbr() {
-		return "\u03B4".charAt(0);
+		return '\u03B4';
 	}
 
 	@Override
@@ -169,9 +169,9 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 		return states;
 	}
 	
-	public T createBlankTransition(State from, State to){
+	public T createBlankTransition(Class<T> clazz, State from, State to){
 		try {
-			return (T) UtilFunctions.getGenericParam(this,0).getConstructor(from.getClass(),to.getClass()).newInstance(from,to);
+			return clazz.getConstructor(from.getClass(),to.getClass()).newInstance(from,to);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

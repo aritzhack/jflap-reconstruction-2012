@@ -35,13 +35,17 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 	@Override
 	public void mousePressed(MouseEvent e) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
+		//Left click, create a state
 		if (e.getButton() == MouseEvent.BUTTON1)
 			myState = panel.createState(e.getPoint());
+		//Right click, allow for dragging other states
 		else if (e.getButton() == MouseEvent.BUTTON3) {
 			Object atPoint = panel.objectAtPoint(e.getPoint());
 			if (atPoint instanceof State)
 				myState = (State) atPoint;
 		}
+		if(myState != null)
+			getPanel().selectObject(myState);
 	}
 
 	@Override
@@ -52,6 +56,8 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if(myState != null)
+			getPanel().clearSelection();
 		myState = null;
 	}
 }

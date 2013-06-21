@@ -42,6 +42,11 @@ public class MooreMachine extends Transducer<MooreOutputFunction> {
 		return null;
 	}
 
+	@Override
+	public FSATransition createBlankTransition(State from, State to) {
+		return new FSATransition(from, to);
+	}
+
 
 
 }

@@ -64,6 +64,7 @@ public abstract class Graph<T> extends ChangingObject {
 		// issue with geometry when the points are the
 		// same and with drawing the points when being updated by the "from"
 		// vertex. Still needs to be here due to override in AutomatonDrawer.
+		distributeChanged();
 	}
 
 	private void applyAutoBend(Point2D ctrl, Point2D pFrom, Point2D pTo) {
@@ -156,7 +157,7 @@ public abstract class Graph<T> extends ChangingObject {
 		Point2D pFrom = this.pointForVertex(vertex1), pTo = this
 				.pointForVertex(vertex2);
 		int newID = getNextEdgeID();
-
+		
 		// add control point so that autobend can be applied downstream
 		ControlPoint ctrl = getDefaultControlPoint(vertex1, vertex2);
 		myCtrlPoints.put(newID, ctrl);
@@ -232,16 +233,19 @@ public abstract class Graph<T> extends ChangingObject {
 
 	/** Moves a vertex to a new point. */
 	public void moveVertex(T vertex, Point2D point) {
+		Point2D old = pointForVertex(vertex);
+		double oldx = old.getX(), oldy = old.getY();
+		
 		this.pointForVertex(vertex).setLocation(point);
 		ControlPoint ctrl;
 		double x = point.getX(), y = point.getY();
 
 		for (Entry<T, Integer> e : myEdgeIDs.get(vertex).entrySet()) {
 			ctrl = myCtrlPoints.get(e.getValue());
-			if (vertex.equals(e.getKey())) {
+			if (vertex.equals(e.getKey())){
+				double dx = x - oldx, dy = y - oldy;
 				ctrl.setAll(x, y);
-				GeometryHelper.translate(ctrl, Math.PI / 2,
-						-JFLAPConstants.INITAL_LOOP_HEIGHT);
+				ctrl.setLocation(ctrl.getX() + dx, ctrl.getY() + dy);
 
 			} else
 				ctrl.setFrom(x, y);

@@ -88,11 +88,6 @@ public class UtilFunctions {
 			if (o.equals(s)) return true;
 		return false;
 	}
-	
-	public static Class getGenericParam(Object o, int i){
-		return (Class) ((ParameterizedType) o.getClass().getGenericSuperclass()).getActualTypeArguments()[i];
-	}
-
 
 	public static boolean isAllUpperCase(String sym) {
 		for (Character c: sym.toCharArray())

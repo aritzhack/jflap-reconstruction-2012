@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
+import model.graph.ControlPoint;
 import view.automata.AutomatonEditorPanel;
 
 public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends EditingTool<T, S> {
@@ -53,8 +54,12 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if(myObject != null){
+			AutomatonEditorPanel<T, S> panel = getPanel();
+			
 			if(myObject instanceof State)
-				getPanel().moveState((State) myObject, e.getPoint());
+				panel.moveState((State) myObject, e.getPoint());
+			if(myObject instanceof Transition<?>)
+				panel.moveCtrlPoint((S) myObject, e.getPoint());
 		}
 	}
 }
