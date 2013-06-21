@@ -93,11 +93,6 @@ implements ChangeListener {
 		}
 	}
 
-	@Override
-	public boolean addEdge(State from, State to) {
-		return myAutomaton.createAndAddTransiton(from, to);
-	}
-
 	private void removeTransition(T t) {
 		State from = t.getFromState();
 		State to = t.getToState();
@@ -132,10 +127,21 @@ implements ChangeListener {
 		updateLabelCenters(from,to);
 	}
 	
+	
+	
 	@Override
 	public boolean removeEdge(State from, State to) {
 		myOrderedTransitions.remove(getID(from,to));
 		return super.removeEdge(from, to);
+	}
+	
+
+	@Override
+	public boolean addEdge(State from, State to) {
+		 T trans = myAutomaton.createAndAddTransiton(from, to);
+		 if(trans != null)
+			 addTransition(trans);
+		 return true;
 	}
 
 	private void addTransition(T t) {
@@ -211,8 +217,11 @@ implements ChangeListener {
 		return select ? mySelected.add(o) : mySelected.remove(o);
 	}
 	
-	public boolean isSelected(Object o){
-		return mySelected.contains(o);
+	public boolean isSelected(Object o){	
+		for(Object sel : mySelected)
+			if(sel.equals(o))
+				return true;
+		return false;
 	}
 
 	public List<T> getOrderedTransitions(State from, State to) {

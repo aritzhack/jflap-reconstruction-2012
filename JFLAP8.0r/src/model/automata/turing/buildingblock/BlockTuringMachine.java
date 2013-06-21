@@ -80,4 +80,9 @@ public class BlockTuringMachine extends TuringMachine<BlockTransition> {
 				new FinalStateSet());
 	}
 
+	@Override
+	public BlockTransition createBlankTransition(State from, State to) {
+		return new BlockTransition((Block) from, (Block) to);
+	}
+
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
+import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
@@ -95,6 +96,11 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 				new StartState(this.getStartState().copy()), 
 				new BottomOfStackSymbol(this.getBottomOfStackSymbol()), 
 				this.getFinalStateSet().copy());
+	}
+
+	@Override
+	public PDATransition createBlankTransition(State from, State to) {
+		return new PDATransition(from, to);
 	}
 	
 	

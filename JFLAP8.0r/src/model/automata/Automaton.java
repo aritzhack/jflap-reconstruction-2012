@@ -70,15 +70,19 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 		super.componentChanged(event);
 	}
 
-	public boolean createAndAddTransiton(State from, State to){
+	public T createAndAddTransiton(State from, State to){
 		StateSet states = this.getStates();
 		TransitionSet<T> transitions = this.getTransitions();
 		
-		if (!(states.contains(from)&&states.contains(to))) return false;
-		T newTrans = transitions.createBlankTransition(from, to);
-		return transitions.add(newTrans);
+		if (!(states.contains(from)&&states.contains(to)))
+			return null;
+		T newTrans = createBlankTransition(from, to);
+		if(!transitions.add(newTrans))
+			return null;
+		return newTrans;
 	}
 	
+	public abstract T createBlankTransition(State from, State to);
 
 	@Override
 	public InputAlphabet getLanguageAlphabet() {

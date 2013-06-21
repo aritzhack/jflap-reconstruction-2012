@@ -74,7 +74,9 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 
 	@Override
 	public boolean equals(Object o){
-		return this.compareTo((State) o) == 0;
+		if(o instanceof State)
+			return this.compareTo((State) o) == 0;
+		return false;
 	}
 
 	@Override

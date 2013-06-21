@@ -50,7 +50,6 @@ public class ControlPoint extends java.awt.geom.Point2D {
 	public void setAll(double x, double y){
 		myFrom.setLocation(x, y);
 		myTo.setLocation(x, y);
-		setLocation(x, y);
 	}
 
 	private void updateConstants() {

@@ -2,6 +2,7 @@ package model.automata.acceptors.fsa;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
+import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
@@ -63,6 +64,12 @@ public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 				new StartState(this.getStartState().copy()),
 				this.getFinalStateSet().copy());
 	}
+
+	@Override
+	public FSATransition createBlankTransition(State from, State to) {
+		return new FSATransition(from, to);
+	}
+
 	
 
 }
