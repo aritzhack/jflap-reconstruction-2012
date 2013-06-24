@@ -49,7 +49,6 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 
 	@Override
 	public void componentChanged(AdvancedChangeEvent event) {
-
 		if (event.comesFrom(this.getStates()) && event.getType() == ITEM_REMOVED){
 			TransitionSet<T> transSet = this.getTransitions();
 			Collection<State> s = (Collection<State>) event.getArg(0);
@@ -68,6 +67,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 			this.getStates().addAll(used);
 		}
 		super.componentChanged(event);
+		distributeChange(event);
 	}
 
 	public T createAndAddTransiton(State from, State to){

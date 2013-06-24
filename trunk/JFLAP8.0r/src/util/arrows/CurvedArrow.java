@@ -93,6 +93,17 @@ public class CurvedArrow extends QuadCurve2D.Double {
 	public double getXDisplacement() {
 		return GeometryHelper.getXDisplacement(this);
 	}
+	
+	public static boolean intersects(Point2D point, int fudge, QuadCurve2D.Double c) {
+		if (!c.intersects(point.getX() - fudge, point.getY() - fudge, fudge << 1,
+				fudge << 1))
+			return false;
+		if (c.getFlatness() < fudge)
+			return true;
+		QuadCurve2D.Double f1 = new QuadCurve2D.Double(), f2 = new QuadCurve2D.Double();
+		c.subdivide(f1, f2);
+		return intersects(point, fudge, f1) || intersects(point, fudge, f2);
+	}
 
 
 }

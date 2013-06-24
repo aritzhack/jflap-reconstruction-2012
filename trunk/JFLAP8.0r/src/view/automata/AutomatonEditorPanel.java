@@ -7,8 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -23,11 +28,13 @@ import model.change.events.AddEvent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
-import util.JFLAPConstants;
+import util.arrows.CurvedArrow;
 import util.arrows.GeometryHelper;
 import view.EditingPanel;
 import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
+import view.automata.transitiontable.TransitionTable;
+import view.automata.transitiontable.TransitionTableFactory;
 
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
@@ -97,15 +104,22 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	private State[] arrowAtPoint(Point2D p) {
+		for (S trans : myAutomaton.getTransitions()) {
+			State from = trans.getFromState(), to = trans.getToState();
+
+			CurvedArrow arrow = myDrawer.getArrow(from, to, myGraph);
+			if (CurvedArrow.intersects(p, 2, arrow))
+				return new State[] { from, to };
+		}
 		return null;
 	}
 
 	private S transitionAtPoint(Point2D p) {
+		// I think this is actually supposed to be the specific label, not the
+		// arrow.
 		for (S trans : myAutomaton.getTransitions()) {
-			State from = trans.getFromState(), to = trans.getToState();
-			ControlPoint ctrl = myGraph.getControlPt(from, to);
-
-			if (p.distance(ctrl) <= JFLAPConstants.CONTROL_POINT_RADIUS)
+			LabelBounds bounds = getLabelBounds(trans, getGraphics());
+			if (bounds.contains(p))
 				return trans;
 		}
 		return null;
@@ -134,7 +148,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		int x = (int) (center.getX() - w / 2);
 		int y = (int) (center.getY() - h / 2);
 
-		return new LabelBounds(angle, new Rectangle(x, y, w, h));
+		return new LabelBounds(-angle, new Rectangle(x, y, w, h));
 	}
 
 	@Override
@@ -196,10 +210,14 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		for (S trans : myAutomaton.getTransitions()) {
 			LabelBounds label = getLabelBounds(trans, g);
 			double minx = label.getMinX(), miny = label.getMinY();
+
 			State from = trans.getFromState(), to = trans.getToState();
 			ControlPoint ctrl = myGraph.getControlPt(from, to);
+			CurvedArrow arrow = myDrawer.getArrow(from, to, myGraph);
+			Rectangle2D aBounds = arrow.getBounds();
 
-			if (minx < 0 || miny < 0 || ctrl.getX() < 0 || ctrl.getY() < 0) {
+			if (minx < 0 || miny < 0 || aBounds.getMinX() < 0
+					|| aBounds.getMinY() < 0) {
 
 				Point2D current = myGraph.pointForVertex(from);
 				Point2D bounds = checkMoveBounds(from);
@@ -208,7 +226,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 				// move the state, keep the ctrl point the same.
 				moveState(from, new Point2D.Double(x, y));
-				moveCtrlPoint(trans, ctrl);
+				moveCtrlPoint(from, to, ctrl);
 			}
 		}
 	}
@@ -217,7 +235,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void setMagnification(double mag) {
 		// TODO: Resize automata & notes, may actually want separate slider for
 		// automaton. Issue with changing magnification and points.
-		transform.setToScale(mag * 2, mag * 2);
+		// transform.setToScale(mag * 2, mag * 2);
 		super.setMagnification(mag);
 		repaint();
 	}
@@ -225,22 +243,58 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public State createState(Point point) {
 		StateSet states = myAutomaton.getStates();
 		State vertex = states.createAndAddState();
-
-		myGraph.addVertex(vertex, point);
+		
 		getKeeper().applyAndListen(new AddEvent<State>(states, vertex));
 		return vertex;
 	}
-	
-	public void createTransition(State from, State to){
-		myGraph.addEdge(from, to);
-		//TODO: UndoKeeping
+
+	public S createTransition(State from, State to) {
+		return myAutomaton.createAndAddTransiton(from, to);
+
 	}
 
-	public void moveCtrlPoint(S trans, Point2D point) {
-		State from = trans.getFromState(), to = trans.getToState();
+	public void editTransition(S trans) {
+		TransitionTable table = TransitionTableFactory.createTable(trans,
+				myAutomaton, this);
+		table.setCellSelectionEnabled(true);
+		table.changeSelection(0, 0, false, false);
+		table.requestFocus();
+		revalidate();
+		repaint();
+
+		final Dimension tableSize = table.getSize();
+		Point2D center = myGraph.getLabelCenter(trans);
+		final Point tablePoint = new Point((int) center.getX()
+				- tableSize.width / 2, (int) center.getY() - tableSize.height
+				/ 2);
+
+		table.setSize(tableSize);
+		table.setLocation(tablePoint);
+
+		table.addComponentListener(new ComponentListener() {
+			public void componentHidden(ComponentEvent e) {
+			}
+
+			public void componentMoved(ComponentEvent e) {
+				e.getComponent().setLocation(tablePoint);
+			}
+
+			public void componentResized(ComponentEvent e) {
+				e.getComponent().setSize(tableSize);
+			}
+
+			public void componentShown(ComponentEvent e) {
+			}
+		});
+
+		repaint();
+	}
+
+	public void moveCtrlPoint(State from, State to, Point2D point) {
 		ControlPoint ctrl = myGraph.getControlPt(from, to);
 		ctrl.setLocation(point);
-		myGraph.setControlPt(ctrl, trans);
+		for (S trans : myGraph.getOrderedTransitions(from, to))
+			myGraph.setControlPt(ctrl, trans);
 	}
 
 	public void moveState(State s, Point2D p) {
@@ -254,36 +308,27 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		double xBounds = getStateRadius() + 5;
 		double yBounds = xBounds;
 		Point2D statePoint = myGraph.pointForVertex(s);
+		State start = myAutomaton.getStartState();
 
-		if (myAutomaton.getStartState().equals(s))
+		if (start != null && start.equals(s))
 			xBounds += getStateRadius();
 
-		for (S trans : myAutomaton.getTransitions())
-			if (trans.getFromState().equals(s) || trans.getToState().equals(s)) {
-				ControlPoint ctrl = myGraph.getControlPt(trans.getFromState(),
-						trans.getToState());
-				LabelBounds label = getLabelBounds(trans, getGraphics());
-				Rectangle r = label.getBounds();
+		for (S trans : myAutomaton.getTransitions()) {
+			State from = trans.getFromState(), to = trans.getToState();
 
-				// Update bounds if ctrl point or labels would be are off screen
-				if (ctrl.getX() <= JFLAPConstants.CONTROL_POINT_RADIUS + 5)
-					xBounds = Math
-							.max(xBounds,
-									statePoint.getX()
-											- (ctrl.getX() - JFLAPConstants.CONTROL_POINT_RADIUS)
-											+ 5);
-				if (ctrl.getY() <= JFLAPConstants.CONTROL_POINT_RADIUS + 5)
-					yBounds = Math
-							.max(yBounds,
-									statePoint.getY()
-											- (ctrl.getY() - JFLAPConstants.CONTROL_POINT_RADIUS)
-											+ 5);
-				if (r.getMinX() <= 5)
-					xBounds = Math.max(xBounds, r.getWidth() / 2);
-				if (r.getMinY() <= 5)
-					yBounds = Math
-							.max(yBounds, statePoint.getY() - r.getMinY());
+			if (from.equals(s) || to.equals(s)) {
+				ControlPoint ctrl = myGraph.getControlPt(from, to);
+				LabelBounds label = getLabelBounds(trans, getGraphics());
+				Rectangle lBounds = label.getBounds();
+
+				// Update bounds if labels would be off screen
+				if (lBounds.getMinX() <= 5)
+					xBounds = Math.max(xBounds, lBounds.getWidth() / 2);
+				if (lBounds.getMinY() <= 5)
+					yBounds = Math.max(yBounds,
+							statePoint.getY() - lBounds.getMinY());
 			}
+		}
 		return new Point2D.Double(xBounds, yBounds);
 	}
 
@@ -298,11 +343,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
+//		JFLAPDebug.print(arg0.getSource());
 		revalidate();
 		repaint();
 	}
-	
-	public TransitionGraph<S> getGraph() {
-		return myGraph;
+
+	public Point2D getPointForVertex(State vertex) {
+		return myGraph.pointForVertex(vertex);
 	}
 }

@@ -26,6 +26,10 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		extends BasicFormalDefinitionView<T> {
 	private static final Dimension AUTOMATON_SIZE = new Dimension(500, 600);
 
+	public AutomataView(T model) {
+		this(model, new UndoKeeper(), true);
+	}
+	
 	public AutomataView(T model, UndoKeeper keeper, boolean editable) {
 		super(model, keeper, editable);
 		setPreferredSize(AUTOMATON_SIZE);

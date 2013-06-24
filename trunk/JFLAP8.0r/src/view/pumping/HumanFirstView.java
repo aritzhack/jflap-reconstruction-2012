@@ -64,7 +64,7 @@ public abstract class HumanFirstView extends PumpingLemmaInputView {
     /**
      * The description that explains the selection of <i>i</i>.
      */
-	private static String DESCRIBE_I = "I have selected i to give a contradition. It is displayed in Box 4.";
+	private static String DESCRIBE_I = "I have selected i to give a contradiction. It is displayed in Box 4.";
 	
 	protected static final Dimension REG_HUMAN_SIZE = new Dimension(750, 715);
 	

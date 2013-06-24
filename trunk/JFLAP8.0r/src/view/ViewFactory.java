@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.grammar.Grammar;
 import model.lsystem.LSystem;
@@ -13,6 +14,7 @@ import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
 import universe.JFLAPUniverse;
 import view.automata.AutomataView;
+import view.automata.FSAView;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
@@ -38,6 +40,7 @@ public class ViewFactory {
 		myClassToComponent.put(CFPumpingLemmaChooser.class, PumpingLemmaChooserView.class);
 		myClassToComponent.put(RegPumpingLemmaChooser.class, PumpingLemmaChooserView.class);
 		myClassToComponent.put(LSystem.class, LSystemInputView.class);
+		myClassToComponent.put(FiniteStateAcceptor.class, FSAView.class);
 //		myClassToComponent.put(SetsManager.class, SetsView.class);
 
 	}
@@ -52,7 +55,7 @@ public class ViewFactory {
 		
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
-		JFLAPDebug.print(argClass+" "+viewClass);
+		JFLAPDebug.print(argClass.getGenericSuperclass()+" "+viewClass);
 		try {
 			return viewClass.getConstructor(argClass).newInstance(decode);
 		} catch (Exception e) {

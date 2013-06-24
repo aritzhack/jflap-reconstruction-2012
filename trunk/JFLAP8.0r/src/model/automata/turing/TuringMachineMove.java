@@ -14,4 +14,17 @@ public enum TuringMachineMove {
 		int_move = move;
 	}
 	
+	public static TuringMachineMove getMove(String source){
+		if(source != null && source.length() == 1){
+			char move = source.charAt(0);
+			if(move == 'R')
+				return RIGHT;
+			if(move == 'L')
+				return LEFT;
+			if(move == 'S')
+				return STAY;
+		}
+		return null;
+	}
+	
 }
