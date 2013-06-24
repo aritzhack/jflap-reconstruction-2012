@@ -51,10 +51,10 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 		List<T> transitions = graph.getOrderedTransitions(from, to);
 		Point2D pFrom = graph.pointForVertex(from);
 		Point2D pTo = graph.pointForVertex(to);
-		Point2D ctrl = graph.getControlPt(from, to);
+//		Point2D ctrl = graph.getControlPt(from, to);
 		
 		drawLabels(transitions, g, graph, pFrom, pTo);
-		drawPoint(g, ctrl);
+//		drawPoint(g, ctrl);
 	}
 
 	private void drawLabels(List<T> transitions, Graphics g,

@@ -8,7 +8,8 @@ import model.automata.Transition;
 import model.graph.ControlPoint;
 import view.automata.AutomatonEditorPanel;
 
-public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends EditingTool<T, S> {
+public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
+		EditingTool<T, S> {
 
 	private Object myObject;
 
@@ -34,32 +35,38 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if(e.getButton() == MouseEvent.BUTTON1){
+		if (e.getButton() == MouseEvent.BUTTON1) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
 			panel.clearSelection();
 			myObject = panel.objectAtPoint(e.getPoint());
-			
-			if(myObject != null)
-				panel.selectObject(myObject);
+
+			if (myObject != null) {
+				if ((e.getClickCount() == 1 && myObject instanceof State))
+					panel.selectObject(myObject);
+				if ((e.getClickCount() == 2 && myObject instanceof Transition))
+					panel.editTransition((S) myObject);
+			}
 		}
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
-			if(myObject instanceof State)
-				getPanel().clearSelection();
-			myObject = null;
+		if (myObject instanceof State)
+			getPanel().clearSelection();
+		myObject = null;
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if(myObject != null){
+		if (myObject != null) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
-			
-			if(myObject instanceof State)
+
+			if (myObject instanceof State)
 				panel.moveState((State) myObject, e.getPoint());
-			if(myObject instanceof Transition<?>)
-				panel.moveCtrlPoint((S) myObject, e.getPoint());
+			if (myObject instanceof State[]) {
+				State from = ((State[]) myObject)[0], to = ((State[]) myObject)[1];
+				panel.moveCtrlPoint(from, to, e.getPoint());
+			}
 		}
 	}
 }

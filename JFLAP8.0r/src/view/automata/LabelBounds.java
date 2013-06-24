@@ -15,6 +15,8 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import debug.JFLAPDebug;
+
 import util.arrows.GeometryHelper;
 
 
@@ -135,6 +137,10 @@ public class LabelBounds implements Shape {
 						(int)corners[(i+1)%4].getY());
 			
 		}
+	}
+
+	public double getAngle() {
+		return myAngle;
 	}
 	
 }

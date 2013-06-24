@@ -54,6 +54,11 @@ public class GraphDrawer<T> implements JFLAPConstants {
 	}
 
 	public void drawEdge(T from, T to, Graph<T> obj, Graphics g) {
+		CurvedArrow curve = getArrow(from, to, obj);
+		curve.draw(g);
+	}
+	
+	public CurvedArrow getArrow(T from, T to, Graph<T> obj) {
 		Point2D pFrom = obj.pointForVertex(from);
 		Point2D pTo = obj.pointForVertex(to);
 		Point2D ctrl = obj.getControlPt(from,to);
@@ -68,17 +73,11 @@ public class GraphDrawer<T> implements JFLAPConstants {
 		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);
 		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,theta2);
 		
-		drawEdge((Graphics2D) g,edgeFrom,edgeTo,ctrl,obj.isDirected());
-	}
-	
-	public void drawEdge(Graphics2D g, Point2D from, Point2D to, Point2D ctrl,boolean directed) {
-
 		double arrowheadLen = 0;
-		if (directed) arrowheadLen=ARROW_LENGTH;
+		if (obj.isDirected()) arrowheadLen=ARROW_LENGTH;
 		CurvedArrow curve = new CurvedArrow(arrowheadLen, ARROW_ANGLE);
-		curve.setCurve(from, ctrl, to);
-		curve.draw(g);
-		
+		curve.setCurve(edgeFrom, ctrl, edgeTo);
+		return curve;
 	}
 
 		

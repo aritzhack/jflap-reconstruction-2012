@@ -45,10 +45,11 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 	public void mousePressed(MouseEvent e) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
 		Object obj = panel.objectAtPoint(e.getPoint());
+		
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (obj instanceof State) {
 				from = (State) obj;
-				pFrom = pCurrent = panel.getGraph().pointForVertex(from);
+				pFrom = pCurrent = panel.getPointForVertex(from);
 			}
 		}
 	}
@@ -68,9 +69,11 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 			Object obj = panel.objectAtPoint(e.getPoint());
 
 			if (obj instanceof State) {
-				panel.createTransition(from, (State) obj);
+				S trans = panel.createTransition(from, (State) obj);
+				panel.editTransition(trans);
 			}
 			from = null;
+			panel.repaint();
 		}
 	}
 
