@@ -13,20 +13,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-public class ToolBar extends JToolBar implements ActionListener{
-
+public class ToolBar extends JToolBar implements ActionListener {
 
 	private Tool myActiveTool;
 	private List<ToolButton> myButtons;
 	private List<ToolListener> myListeners;
 
-	public ToolBar(Tool ... tools){
+	public ToolBar(Tool... tools) {
 		myButtons = new ArrayList<ToolButton>();
 		myListeners = new ArrayList<ToolListener>();
 		this.addAll(tools);
@@ -38,11 +36,12 @@ public class ToolBar extends JToolBar implements ActionListener{
 		this.add(button);
 		button.setToolTipText(tool.getShortcutToolTip());
 		button.addActionListener(this);
-		if (myActiveTool == null)  this.setActiveTool(button);
+		if (myActiveTool == null)
+			this.setActiveTool(button);
 	}
 
-	public void addAll(Tool ... tools){
-		for (Tool t: tools)
+	public void addAll(Tool... tools) {
+		for (Tool t : tools)
 			this.add(t);
 	}
 
@@ -51,23 +50,24 @@ public class ToolBar extends JToolBar implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.setActiveTool((ToolButton)e.getSource());
+		if (e.getSource() instanceof ToolButton)
+			this.setActiveTool((ToolButton) e.getSource());
 	}
 
 	private void setActiveTool(ToolButton source) {
 		this.toggleAllOff();
-		source.setSelected(true);		
+		source.setSelected(true);
 		myActiveTool = source.getTool();
 		this.broadcastToolChange();
 	}
 
 	private void broadcastToolChange() {
-		for (ToolListener tcl: myListeners)
+		for (ToolListener tcl : myListeners)
 			tcl.toolActivated(myActiveTool);
 	}
 
 	private void toggleAllOff() {
-		for (ToolButton tb: myButtons)
+		for (ToolButton tb : myButtons)
 			tb.setSelected(false);
 	}
 
@@ -75,6 +75,5 @@ public class ToolBar extends JToolBar implements ActionListener{
 		myListeners.add(tcl);
 		tcl.toolActivated(myActiveTool);
 	}
-
 
 }

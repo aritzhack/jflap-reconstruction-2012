@@ -14,6 +14,7 @@ import model.automata.Transition;
 import model.undo.UndoKeeper;
 import util.view.magnify.MagnifiablePanel;
 import view.automata.tools.ArrowTool;
+import view.automata.tools.DeleteTool;
 import view.automata.tools.RedoTool;
 import view.automata.tools.StateTool;
 import view.automata.tools.ToolBar;
@@ -33,6 +34,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	public AutomataView(T model, UndoKeeper keeper, boolean editable) {
 		super(model, keeper, editable);
 		setPreferredSize(AUTOMATON_SIZE);
+		
 		JScrollPane pane = getScroller();
 		pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -55,6 +57,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public void repaint() {
+		//Needed for validating the bounds of the Automaton
 		if (getScroller() != null)
 			getScroller().revalidate();
 		super.repaint();
@@ -74,12 +77,12 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel);
 		StateTool<T, S> state = new StateTool<T, S>(panel);
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
-		UndoTool undo = new UndoTool(keeper);
-		RedoTool redo = new RedoTool(keeper);
+		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
 
 		panel.setTool(arrow);
-		ToolBar bar = new ToolBar(arrow, state, trans, undo, redo);
+		ToolBar bar = new ToolBar(arrow, state, trans, delete);
 		bar.addToolListener(panel);
+		bar.add(new UndoPanel(keeper));
 		return bar;
 	}
 

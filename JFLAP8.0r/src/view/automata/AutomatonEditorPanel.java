@@ -1,19 +1,22 @@
 package view.automata;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
+import java.util.List;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -24,13 +27,17 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
+import model.automata.TransitionSet;
 import model.change.events.AddEvent;
+import model.change.events.RemoveEvent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
+import util.JFLAPConstants;
 import util.arrows.CurvedArrow;
 import util.arrows.GeometryHelper;
 import view.EditingPanel;
+import view.automata.tools.DeleteTool;
 import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
 import view.automata.transitiontable.TransitionTable;
@@ -70,6 +77,18 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myTool = t;
 		this.addMouseListener(myTool);
 		this.addMouseMotionListener(myTool);
+		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+
+		if (myTool instanceof DeleteTool) {
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+			String del = JFLAPConstants.RESOURCE_ROOT
+					+ "/ICON/deletecursor.gif";
+			Image image = toolkit.getImage(del);
+			Point hotSpot = new Point(5, 5);
+			cursor = toolkit.createCustomCursor(image, hotSpot, "Delete");
+		}
+		setCursor(cursor);
 	}
 
 	public void selectObject(Object o) {
@@ -168,13 +187,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		if (myTool != null)
 			myTool.draw(g);
 		updateBounds(g);
-		// I believe all transformations have to do with the slider (ie. setting
-		// a different scale)
-		// Graphics2D g2 = (Graphics2D) g;
-		// double newXScale = 1.0/transform.getScaleX();
-		// double newYScale = 1.0/transform.getScaleY();
-		// g2.scale(newXScale, newYScale);
-		// g2.translate(-transform.getTranslateX(), -transform.getTranslateY());
 	}
 
 	private void updateBounds(Graphics g) {
@@ -243,17 +255,21 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public State createState(Point point) {
 		StateSet states = myAutomaton.getStates();
 		State vertex = states.createAndAddState();
-		
-		getKeeper().applyAndListen(new AddEvent<State>(states, vertex));
+
+		//TODO: replace AddEvent with an event that will remember the vertex's position
+		getKeeper().registerChange(new AddEvent<State>(states, vertex));
 		return vertex;
 	}
 
 	public S createTransition(State from, State to) {
-		return myAutomaton.createAndAddTransiton(from, to);
+		StateSet states = myAutomaton.getStates();
 
+		if (!(states.contains(from) && states.contains(to)))
+			return null;
+		return myAutomaton.createBlankTransition(from, to);
 	}
 
-	public void editTransition(S trans) {
+	public void editTransition(S trans, boolean isNew) {
 		TransitionTable table = TransitionTableFactory.createTable(trans,
 				myAutomaton, this);
 		table.setCellSelectionEnabled(true);
@@ -263,7 +279,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		repaint();
 
 		final Dimension tableSize = table.getSize();
-		Point2D center = myGraph.getLabelCenter(trans);
+		Point2D center = isNew ? calculateCenterPoint(trans) : myGraph
+				.getLabelCenter(trans);
+
 		final Point tablePoint = new Point((int) center.getX()
 				- tableSize.width / 2, (int) center.getY() - tableSize.height
 				/ 2);
@@ -343,12 +361,48 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-//		JFLAPDebug.print(arg0.getSource());
 		revalidate();
 		repaint();
 	}
 
 	public Point2D getPointForVertex(State vertex) {
 		return myGraph.pointForVertex(vertex);
+	}
+
+	public Point2D calculateCenterPoint(S trans) {
+		State from = trans.getFromState(), to = trans.getToState();
+
+		if (myGraph.hasEdge(from, to)) {
+			List<S> order = myGraph.getOrderedTransitions(from, to);
+			return myGraph.getCenterPoint(trans, order.size(), from, to);
+		}
+
+		Point2D pFrom = myGraph.pointForVertex(from), pTo = myGraph
+				.pointForVertex(to);
+		Point2D ctrl = myGraph.getDefaultControlPoint(from, to);
+		return GeometryHelper.getCurveCenter(pFrom, ctrl, pTo);
+
+	}
+
+	public void removeState(State vertex) {
+		StateSet s = myAutomaton.getStates();
+		s.remove(vertex);
+		//TODO: replace RemoveEvent with an event that will remember the vertex's position
+		getKeeper().registerChange(new RemoveEvent<State>(s, vertex));
+	}
+
+	public void removeTransition(S trans) {
+		TransitionSet<S> transitions = myAutomaton.getTransitions();
+		transitions.remove(trans);
+		getKeeper().registerChange(new RemoveEvent<S>(transitions, trans));
+	}
+
+	public void removeEdge(State from, State to) {
+		S[] temp = (S[]) myGraph.getOrderedTransitions(from, to).toArray(
+				new Transition[0]);
+
+		for (S trans : temp)
+			removeTransition(trans);
+		//TODO: create Compound Remove Action
 	}
 }

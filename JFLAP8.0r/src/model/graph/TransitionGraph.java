@@ -32,10 +32,14 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.change.events.AddEvent;
+import model.change.events.AdvancedChangeEvent;
+import model.change.events.ModifyEvent;
 import model.change.events.RemoveEvent;
 import model.graph.layout.GEMLayoutAlgorithm;
 import util.JFLAPConstants;
@@ -115,18 +119,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 		return super.removeEdge(from, to);
 	}
 
-	// public T addNewEdge(State from, State to){
-	//
-	// }
-
-	@Override
-	public boolean addEdge(State from, State to) {
-		T trans = myAutomaton.createAndAddTransiton(from, to);
-		if (trans != null)
-			addTransition(trans);
-		return true;
-	}
-
 	private void addTransition(T t) {
 		State from = t.getFromState();
 		State to = t.getToState();
@@ -139,9 +131,11 @@ public class TransitionGraph<T extends Transition<T>> extends
 		int edgeID = getID(from, to);
 		List<T> stack = myOrderedTransitions.get(edgeID);
 		stack.add(t);
-
+		
 		updateLabelCenter(t, stack.size() - 1, from, to);
 
+		if (hasEdge(to, from) && isAutoBent(to, from) && isAutoBent(from, to))
+			updateLabelCenters(to, from);
 	}
 
 	private void updateLabelCenters(State from, State to) {
@@ -152,6 +146,13 @@ public class TransitionGraph<T extends Transition<T>> extends
 	}
 
 	private void updateLabelCenter(T t, int lvl, State from, State to) {
+		Point2D center = getCenterPoint(t, lvl, from, to);
+		
+		myCenterMap.put(t, center);
+		distributeChanged();
+	}
+
+	public Point2D getCenterPoint(T t, int lvl, State from, State to) {
 		double d = -(lvl + 1) * JFLAPConstants.EDITOR_CELL_HEIGHT;
 		Point2D ctrl = getControlPt(from, to);
 		Point2D pFrom = this.pointForVertex(from), pTo = this
@@ -163,8 +164,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 			GeometryHelper.translate(center, Math.PI / 2, d - 5);
 		else
 			GeometryHelper.translatePerpendicular(center, d, pFrom, pTo);
-
-		myCenterMap.put(t, center);
+		return center;
 	}
 
 	private void updateLabelCenter(T t) {
@@ -181,20 +181,34 @@ public class TransitionGraph<T extends Transition<T>> extends
 			Collection col = ((AddEvent) event).getToAdd();
 			if (col == null || col.isEmpty())
 				return;
-			Iterator e = col.iterator();
-			while (e.hasNext()) {
-				Object o = e.next();
+
+			Iterator it = col.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
 				if (o instanceof State) {
 					addVertex((State) o, new Point());
 				} else if (o instanceof Transition)
 					addTransition((T) o);
 			}
 		} else if (event instanceof RemoveEvent) {
-			Object o = ((RemoveEvent) event).getToRemove();
-			if (o instanceof State) {
-				removeVertex((State) o);
-			} else if (o instanceof Transition)
-				removeTransition((T) o);
+			Collection col = ((RemoveEvent) event).getToRemove();
+			if (col == null || col.isEmpty())
+				return;
+
+			Iterator it = col.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				if (o instanceof State) {
+					removeVertex((State) o);
+				} else if (o instanceof Transition)
+					removeTransition((T) o);
+			}
+		} else if (event instanceof ModifyEvent) {
+			ModifyEvent e = (ModifyEvent) event;
+			Object to = e.getArg(1);
+			if (to instanceof Transition){				
+				updateLabelCenter((T) to);
+			}
 		}
 	}
 
