@@ -2,6 +2,8 @@ package view.automata.tools;
 
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -35,9 +37,11 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 	@Override
 	public void mousePressed(MouseEvent e) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
-		//Left click, create a state
-		if (e.getButton() == MouseEvent.BUTTON1)
+		//Left click, create a state, move it to mouse's location
+		if (SwingUtilities.isLeftMouseButton(e)){
 			myState = panel.createState(e.getPoint());
+			mouseDragged(e);
+		}
 		//Right click, allow for dragging other states
 		else if (e.getButton() == MouseEvent.BUTTON3) {
 			Object atPoint = panel.objectAtPoint(e.getPoint());

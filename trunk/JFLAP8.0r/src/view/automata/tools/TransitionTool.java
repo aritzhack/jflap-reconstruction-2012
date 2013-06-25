@@ -10,6 +10,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import util.JFLAPConstants;
+import util.arrows.GeometryHelper;
 import view.automata.AutomatonEditorPanel;
 
 public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
@@ -45,7 +46,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 	public void mousePressed(MouseEvent e) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
 		Object obj = panel.objectAtPoint(e.getPoint());
-		
+
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (obj instanceof State) {
 				from = (State) obj;
@@ -67,10 +68,10 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		if (from != null) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
 			Object obj = panel.objectAtPoint(e.getPoint());
-
+			
 			if (obj instanceof State) {
 				S trans = panel.createTransition(from, (State) obj);
-				panel.editTransition(trans);
+				panel.editTransition(trans, true);
 			}
 			from = null;
 			panel.repaint();

@@ -64,7 +64,9 @@ public class AutomatonDrawer<T extends Transition<T>> extends GraphDrawer<State>
 		AffineTransform oldTX = g2d.getTransform();
 		for(int i=0; i<transitions.size();i++){
 			T t = transitions.get(i);
-
+			//Don't draw labels for selected transactions, they are being edited.
+			if(graph.isSelected(t))
+				continue;
 			//set up transform
 			Point2D center = graph.getLabelCenter(t);
 			

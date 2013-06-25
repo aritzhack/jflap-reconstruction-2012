@@ -1,6 +1,7 @@
 package view.automata.transitiontable;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,16 +11,17 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import debug.JFLAPDebug;
 
-import view.automata.AutomatonEditorPanel;
-import view.grammar.productions.LambdaRemovingEditor;
-
 import model.automata.Automaton;
 import model.automata.Transition;
+import model.automata.TransitionSet;
+import model.change.events.AddEvent;
+import model.change.events.SetToEvent;
+import view.automata.AutomatonEditorPanel;
+import view.grammar.productions.LambdaRemovingEditor;
 
 public abstract class TransitionTable<T extends Automaton<S>, S extends Transition<S>>
 		extends JTable {
@@ -60,9 +62,11 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 			int condition, boolean pressed) {
 		if (ks.getKeyCode() == KeyEvent.VK_ENTER && !ks.isOnKeyRelease()) {
 			stopEditing(false);
+			
 			if (e.isShiftDown()) {
-				myPanel.createTransition(myTrans.getFromState(),
+				S trans = myPanel.createTransition(myTrans.getFromState(),
 						myTrans.getToState());
+				myPanel.editTransition(trans, true);
 			}
 			return true;
 		} else if (ks.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -79,15 +83,22 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		}
 
 		if (!cancel) {
-			TableModel oldModel = createModel();
 			S t = modifyTransition();
-			if (t != null)
+			if (t != null){
+				S temp = myTrans.copy();
 				myTrans.setTo(t);
+				
+				TransitionSet<S> transitions = myAutomaton.getTransitions();
+				if(!transitions.contains(myTrans)){
+					transitions.add(myTrans);
+					myPanel.getKeeper().registerChange(new AddEvent<S>(transitions, myTrans));
+				}
+				else
+					myPanel.getKeeper().registerChange(new SetToEvent<S>(myTrans, temp, t.copy()));
+			}
 		}
-		// if (this instanceof TMTransitionCreator) {
-		// TMTransitionCreator stop = (TMTransitionCreator) this;
-		// stop.setBlockTransition(false);
-		// }
+
+		myPanel.clearSelection();
 		myPanel.removeMouseListener(myListener);
 		myPanel.remove(this);
 		myPanel.validate();

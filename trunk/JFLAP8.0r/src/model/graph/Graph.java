@@ -74,8 +74,8 @@ public abstract class Graph<T> extends ChangingObject {
 
 	private void undoAutoBend(T from, T to) {
 		GeometryHelper.translatePerpendicular(getControlPt(from, to),
-				JFLAPConstants.AUTO_BEND_HEIGHT, pointForVertex(to),
-				pointForVertex(from));
+				JFLAPConstants.AUTO_BEND_HEIGHT, pointForVertex(from),
+				pointForVertex(to));
 	}
 
 	private boolean hasBeenBent(T to, T from) {
@@ -85,7 +85,7 @@ public abstract class Graph<T> extends ChangingObject {
 		return !ctrl.equals(center) && !isAutoBent(from, to);
 	}
 
-	private boolean isAutoBent(T from, T to) {
+	protected boolean isAutoBent(T from, T to) {
 		Point2D pFrom = this.pointForVertex(from), pTo = this
 				.pointForVertex(to), ctrl = this.getControlPt(from, to), test = GeometryHelper
 				.getCenterPoint(pFrom, pTo);
@@ -93,7 +93,7 @@ public abstract class Graph<T> extends ChangingObject {
 		return test.equals(ctrl);
 	}
 
-	private ControlPoint getDefaultControlPoint(T from, T to) {
+	public ControlPoint getDefaultControlPoint(T from, T to) {
 		Point2D pFrom = this.pointForVertex(from), pTo = this
 				.pointForVertex(to), center = GeometryHelper.getCenterPoint(
 				pFrom, pTo);
@@ -182,10 +182,10 @@ public abstract class Graph<T> extends ChangingObject {
 
 		if (!isDirected())
 			myEdgeIDs.get(vertex2).remove(vertex1);
-		else if (isAutoBent(vertex2, vertex1))
-			undoAutoBend(vertex1, vertex2);
-		myEdgeIDs.get(vertex1).remove(vertex2);
+		else if (hasEdge(vertex2, vertex1) && isAutoBent(vertex2, vertex1))
+			undoAutoBend(vertex2, vertex1);
 		myCtrlPoints.remove(getID(vertex1, vertex2));
+		myEdgeIDs.get(vertex1).remove(vertex2);
 
 		distributeChanged();
 		return true;
@@ -212,7 +212,7 @@ public abstract class Graph<T> extends ChangingObject {
 
 	/** Removes a vertex. */
 	public boolean removeVertex(T vertex) {
-		if (this.hasVertex(vertex))
+		if (!this.hasVertex(vertex))
 			return false;
 
 		for (Object to : myEdgeIDs.get(vertex).keySet().toArray(new Object[0]))
@@ -228,6 +228,7 @@ public abstract class Graph<T> extends ChangingObject {
 		myEdgeIDs.remove(vertex);
 		verticesToNeighbors.remove(vertex);
 		verticesToPoints.remove(vertex);
+		distributeChanged();
 		return true;
 	}
 
