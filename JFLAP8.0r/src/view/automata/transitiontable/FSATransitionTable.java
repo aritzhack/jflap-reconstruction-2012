@@ -11,6 +11,10 @@ import model.symbols.symbolizer.Symbolizers;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 
+/** TransitionTable specific to FiniteStateAcceptors.
+ * 
+ * @author Ian McMahon
+ */
 public class FSATransitionTable extends TransitionTable<FiniteStateAcceptor, FSATransition>{
 
 	public FSATransitionTable(FSATransition trans, FiniteStateAcceptor automaton, 
@@ -54,6 +58,7 @@ public class FSATransitionTable extends TransitionTable<FiniteStateAcceptor, FSA
 		String s = (String) getModel().getValueAt(0, 0);
 		if(s == null || s.equals(JFLAPPreferences.getEmptyString()))
 			s = "";
+		
 		FSATransition trans = getTransition();
 		State from = trans.getFromState(), to = trans.getToState();
 		SymbolString symbols = Symbolizers.symbolize(s, getAutomaton());

@@ -15,8 +15,9 @@ import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,6 +33,8 @@ import model.change.events.AddEvent;
 import model.change.events.RemoveEvent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
+import model.undo.CompoundUndoRedo;
+import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
 import util.arrows.CurvedArrow;
@@ -64,7 +67,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	public void stopAllEditing() {
-
+		//TODO: needs to be implemented so undo/redo doesn't create crazy graphics with the TransitionTables
+		//Also so you don't break things (like undoing a creation while you still have the state selected)
+			
 	}
 
 	public void editNote(Note n) {
@@ -134,8 +139,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	private S transitionAtPoint(Point2D p) {
-		// I think this is actually supposed to be the specific label, not the
-		// arrow.
 		for (S trans : myAutomaton.getTransitions()) {
 			LabelBounds bounds = getLabelBounds(trans, getGraphics());
 			if (bounds.contains(p))
@@ -255,9 +258,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public State createState(Point point) {
 		StateSet states = myAutomaton.getStates();
 		State vertex = states.createAndAddState();
-
-		//TODO: replace AddEvent with an event that will remember the vertex's position
-		getKeeper().registerChange(new AddEvent<State>(states, vertex));
+		myGraph.moveVertex(vertex, point);
 		return vertex;
 	}
 
@@ -311,8 +312,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void moveCtrlPoint(State from, State to, Point2D point) {
 		ControlPoint ctrl = myGraph.getControlPt(from, to);
 		ctrl.setLocation(point);
-		for (S trans : myGraph.getOrderedTransitions(from, to))
-			myGraph.setControlPt(ctrl, trans);
+		myGraph.setControlPt(ctrl, from, to);
 	}
 
 	public void moveState(State s, Point2D p) {
@@ -335,7 +335,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			State from = trans.getFromState(), to = trans.getToState();
 
 			if (from.equals(s) || to.equals(s)) {
-				ControlPoint ctrl = myGraph.getControlPt(from, to);
 				LabelBounds label = getLabelBounds(trans, getGraphics());
 				Rectangle lBounds = label.getBounds();
 
@@ -374,7 +373,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		if (myGraph.hasEdge(from, to)) {
 			List<S> order = myGraph.getOrderedTransitions(from, to);
-			return myGraph.getCenterPoint(trans, order.size(), from, to);
+			return myGraph.getLabelCenterPoint(trans, order.size(), from, to);
 		}
 
 		Point2D pFrom = myGraph.pointForVertex(from), pTo = myGraph
@@ -385,10 +384,15 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	public void removeState(State vertex) {
+		Point2D p = (Point2D) getPointForVertex(vertex).clone();
+		TransitionSet<S> transitions = myAutomaton.getTransitions();
+		Set<S> transFromOrTo = transitions.getTransitionsFromState(vertex);
+		transFromOrTo.addAll(transitions.getTransitionsToState(vertex));
+
 		StateSet s = myAutomaton.getStates();
 		s.remove(vertex);
-		//TODO: replace RemoveEvent with an event that will remember the vertex's position
-		getKeeper().registerChange(new RemoveEvent<State>(s, vertex));
+		getKeeper().registerChange(
+				new StateRemoveEvent(vertex, transFromOrTo, p));
 	}
 
 	public void removeTransition(S trans) {
@@ -400,9 +404,56 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void removeEdge(State from, State to) {
 		S[] temp = (S[]) myGraph.getOrderedTransitions(from, to).toArray(
 				new Transition[0]);
+	
+		getKeeper().applyAndListen(new RemoveEvent<S>(myAutomaton.getTransitions(), temp));
+	}
 
-		for (S trans : temp)
-			removeTransition(trans);
-		//TODO: create Compound Remove Action
+	private class StateRemoveEvent implements IUndoRedo {
+
+		private State myState;
+		private Point2D myPoint;
+		private List<IUndoRedo> myEvents;
+
+		public StateRemoveEvent(State state, Set<S> transitions, Point2D p) {
+			myState = state;
+			myPoint = p;
+			myEvents = new ArrayList<IUndoRedo>();
+
+			myEvents.add(new RemoveEvent<State>(myAutomaton.getStates(), state));
+			if (!transitions.isEmpty())
+				myEvents.add(new RemoveEvent<S>(myAutomaton.getTransitions(),
+						transitions));
+		}
+
+		@Override
+		public boolean undo() {
+			boolean allUndone = true;
+			for (IUndoRedo undo : myEvents) {
+				if (!undo.undo())
+					allUndone = false;
+			}
+			myGraph.moveVertex(myState, myPoint);
+			return allUndone;
+		}
+
+		@Override
+		public boolean redo() {
+			if(myGraph.isSelected(myState))
+				return false;
+			boolean allRedone = true;
+			for (int i = myEvents.size() - 1; i >= 0; i--)
+				if (!myEvents.get(i).redo())
+					allRedone = false;
+			return allRedone;
+		}
+
+		@Override
+		public String getName() {
+			return "Remove State and all transitions";
+		}
+	}
+
+	public Point2D getControlPoint(State[] states) {
+		return myGraph.getControlPt(states[0], states[1]).toBasicPoint();
 	}
 }

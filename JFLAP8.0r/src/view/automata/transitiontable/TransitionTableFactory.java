@@ -13,8 +13,9 @@ public class TransitionTableFactory {
 	public static TransitionTable createTable(Transition trans, Automaton automaton, AutomatonEditorPanel panel){
 		if(automaton instanceof FiniteStateAcceptor)
 			return new FSATransitionTable((FSATransition) trans, (FiniteStateAcceptor) automaton, panel);
-		if(automaton instanceof MultiTapeTuringMachine)
-			return new MultiTapeTMTransitionTable((MultiTapeTMTransition) trans, (MultiTapeTuringMachine) automaton, panel);
+//		NOT YET IMPLEMENTED FOR OTHERS
+//		if(automaton instanceof MultiTapeTuringMachine)
+//			return new MultiTapeTMTransitionTable((MultiTapeTMTransition) trans, (MultiTapeTuringMachine) automaton, panel);
 		return null;
 	}
 }
