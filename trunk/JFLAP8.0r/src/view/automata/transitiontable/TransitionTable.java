@@ -1,19 +1,14 @@
 package view.automata.transitiontable;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
-
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-
-import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -23,6 +18,12 @@ import model.change.events.SetToEvent;
 import view.automata.AutomatonEditorPanel;
 import view.grammar.productions.LambdaRemovingEditor;
 
+/**
+ * Table that will pop up to implement the editing of transitions in an
+ * automaton graph.
+ * 
+ * @author Ian McMahon
+ */
 public abstract class TransitionTable<T extends Automaton<S>, S extends Transition<S>>
 		extends JTable {
 
@@ -39,6 +40,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		myPanel = panel;
 		myPanel.add(this);
 
+		// Set the look and model
 		setModel(createModel());
 		setGridColor(Color.gray);
 		setBorder(new EtchedBorder());
@@ -48,6 +50,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 			getColumnModel().getColumn(i).setCellEditor(edit);
 		}
 
+		// Add mouse listener to the AutomatonEditorPanel to stop editing.
 		myListener = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -57,13 +60,18 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		myPanel.addMouseListener(myListener);
 	}
 
+	public abstract TableModel createModel();
+
+	public abstract S modifyTransition();
+
 	@Override
 	protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
 			int condition, boolean pressed) {
 		if (ks.getKeyCode() == KeyEvent.VK_ENTER && !ks.isOnKeyRelease()) {
 			stopEditing(false);
-			
+
 			if (e.isShiftDown()) {
+				// Keep creating transitions
 				S trans = myPanel.createTransition(myTrans.getFromState(),
 						myTrans.getToState());
 				myPanel.editTransition(trans, true);
@@ -76,7 +84,21 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		return super.processKeyBinding(ks, e, condition, pressed);
 	}
 
-	private void stopEditing(boolean cancel) {
+	/** Returns the table's transition. */
+	public S getTransition() {
+		return myTrans;
+	}
+
+	/** Returns the table's Automaton. */
+	public T getAutomaton() {
+		return myAutomaton;
+	}
+
+	/**
+	 * Stops editing the table and modifies the transition accordingly. Will add
+	 * events to the UndoKeeper if applicable.
+	 */
+	public void stopEditing(boolean cancel) {
 		try {
 			getCellEditor().stopCellEditing();
 		} catch (NullPointerException e) {
@@ -84,20 +106,30 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 
 		if (!cancel) {
 			S t = modifyTransition();
-			if (t != null){
-				S temp = myTrans.copy();
-				myTrans.setTo(t);
-				
+			if (t != null) {
 				TransitionSet<S> transitions = myAutomaton.getTransitions();
-				if(!transitions.contains(myTrans)){
+				S temp = myTrans.copy();
+
+				boolean wasInTransitions = transitions.contains(temp);
+				myTrans.setTo(t);
+
+				if (!transitions.contains(myTrans)) {
 					transitions.add(myTrans);
-					myPanel.getKeeper().registerChange(new AddEvent<S>(transitions, myTrans));
-				}
-				else
-					myPanel.getKeeper().registerChange(new SetToEvent<S>(myTrans, temp, t.copy()));
+					myPanel.getKeeper().registerChange(
+							new AddEvent<S>(transitions, myTrans));
+				} else if (isNotDuplicate(transitions, temp, wasInTransitions))
+					myPanel.getKeeper().registerChange(
+							new SetToEvent<S>(myTrans, temp, t.copy()));
 			}
 		}
+		removeSelf();
+	}
 
+	/**
+	 * Clears, revalidates, and notifies the AutomatonEditorPanel that this
+	 * Table is no longer needed.
+	 */
+	private void removeSelf() {
 		myPanel.clearSelection();
 		myPanel.removeMouseListener(myListener);
 		myPanel.remove(this);
@@ -106,16 +138,13 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		myPanel.requestFocus();
 	}
 
-	public S getTransition() {
-		return myTrans;
+	/**
+	 * Returns true if myTransition differs from what it was before modification
+	 * and there is no transition equal to it still in the TransitionSet.
+	 */
+	private boolean isNotDuplicate(TransitionSet<S> transitions, S temp,
+			boolean wasInTransitions) {
+		return !temp.equals(myTrans) && wasInTransitions
+				&& !transitions.contains(temp);
 	}
-
-	public T getAutomaton() {
-		return myAutomaton;
-	}
-
-	public abstract TableModel createModel();
-
-	public abstract S modifyTransition();
-
 }

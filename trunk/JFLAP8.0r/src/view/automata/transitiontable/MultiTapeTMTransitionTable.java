@@ -22,6 +22,11 @@ import model.symbols.Symbol;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 
+/**
+ * TransitionTable specific to non-Block Turing Machines
+ * @author Ian McMahon
+ *
+ */
 public class MultiTapeTMTransitionTable extends
 		TransitionTable<MultiTapeTuringMachine, MultiTapeTMTransition> {
 	private static String[] DIRECTIONS = new String[]{"R", "L", "S"};

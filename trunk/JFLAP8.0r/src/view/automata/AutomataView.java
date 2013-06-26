@@ -75,7 +75,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
 		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel);
-		StateTool<T, S> state = new StateTool<T, S>(panel);
+		StateTool<T, S> state = new StateTool<T, S>(panel, definition.getStates());
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
 		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
 
