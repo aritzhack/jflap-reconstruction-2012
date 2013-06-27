@@ -32,6 +32,8 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -54,7 +56,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 		DirectedGraph<State> implements ChangeListener {
 
 	private Map<Integer, List<T>> myOrderedTransitions;
-	private Set<Object> mySelected;
 	private Map<T, Point2D> myCenterMap;
 	private Automaton<T> myAutomaton;
 
@@ -64,7 +65,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 
 	public TransitionGraph(Automaton<T> a, LayoutAlgorithm alg) {
 		myOrderedTransitions = new HashMap<Integer, List<T>>();
-		mySelected = new TreeSet<Object>();
 		myCenterMap = new TreeMap<T, Point2D>();
 		myAutomaton = a;
 		myAutomaton.addListener(this);
@@ -98,7 +98,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 			it = col.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
-				if (o instanceof State) {
+				if (o instanceof State && event.getSource().equals(myAutomaton.getStates())) {
 					addVertex((State) o, new Point());
 				} else if (o instanceof Transition)
 					addTransition((T) o);
@@ -111,7 +111,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 			it = col.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
-				if (o instanceof State) {
+				if (o instanceof State && event.getSource().equals(myAutomaton.getStates())) {
 					removeVertex((State) o);
 				} else if (o instanceof Transition)
 					removeTransition((T) o);
@@ -123,6 +123,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 				updateLabelCenter((T) to);
 			}
 		}
+		distributeChange(event);
 	}
 
 	@Override
@@ -134,19 +135,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 	/** Helper function to simplify control point moving. */
 	public void setControlPt(Point2D ctrl, T trans) {
 		setControlPt(ctrl, trans.getFromState(), trans.getToState());
-	}
-
-	/** Selects or deselects the given object based on <CODE>select</CODE> */
-	public boolean setSelected(Object o, boolean select) {
-		return select ? mySelected.add(o) : mySelected.remove(o);
-	}
-
-	/** Returns true if the given Object is selected. */
-	public boolean isSelected(Object o) {
-		for (Object sel : mySelected)
-			if (sel.equals(o))
-				return true;
-		return false;
 	}
 
 	/**
@@ -165,11 +153,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 		return myCenterMap.get(t);
 	}
 
-	/** Deselects all objects. */
-	public void clearSelection() {
-		mySelected.clear();
-	}
-
 	/**
 	 * Returns the center point for the label specified by the transition based on when it was added (lvl).
 	 */
@@ -186,6 +169,10 @@ public class TransitionGraph<T extends Transition<T>> extends
 		else
 			GeometryHelper.translatePerpendicular(center, d, pFrom, pTo);
 		return center;
+	}
+	
+	public Automaton<T> getAutomaton (){
+		return myAutomaton;
 	}
 
 	/**
@@ -229,7 +216,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 		order.remove(t);
 
 		myCenterMap.remove(t);
-		mySelected.remove(t);
 
 		// if there are no more transition to/from these states
 		if (order.isEmpty()) {

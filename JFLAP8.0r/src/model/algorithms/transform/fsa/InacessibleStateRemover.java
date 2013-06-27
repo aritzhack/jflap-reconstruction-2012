@@ -15,7 +15,6 @@ import model.automata.StartState;
 import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.formaldef.FormalDefinition;
-import model.graph.GraphHelper;
 import model.graph.PathFinder;
 
 public class InacessibleStateRemover extends FormalDefinitionAlgorithm<Automaton> {

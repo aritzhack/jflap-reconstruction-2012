@@ -18,12 +18,12 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 		EditingTool<T, S> {
 
 	private State myState;
-	private StateSet myStateSet;
 	private Point2D myPoint;
+	private T myDef;
 
-	public StateTool(AutomatonEditorPanel<T, S> panel, StateSet s) {
+	public StateTool(AutomatonEditorPanel<T, S> panel, T def) {
 		super(panel);
-		myStateSet = s;
+		myDef = def;
 		this.myState = null;
 		myPoint = null;
 	}
@@ -76,9 +76,9 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 			panel.clearSelection();
 			
 			if(SwingUtilities.isLeftMouseButton(e))
-				panel.getKeeper().registerChange(new StateAddEvent(panel, myStateSet, myState, e.getPoint()));
+				panel.getKeeper().registerChange(new StateAddEvent(panel, myDef, myState, e.getPoint()));
 			else if(!myPoint.equals(e.getPoint()))
-				panel.getKeeper().registerChange(new StateMoveEvent(panel, myState, myPoint, e.getPoint()));
+				panel.getKeeper().registerChange(new StateMoveEvent(panel, myDef, myState, myPoint, e.getPoint()));
 		}
 		myState = null;
 		myPoint = null;

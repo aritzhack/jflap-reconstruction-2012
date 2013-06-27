@@ -7,6 +7,11 @@ import model.automata.State;
 import model.graph.ControlPoint;
 import model.undo.IUndoRedo;
 
+/**
+ * Undo event for moving the ControlPoint of an edge in a TransitionGraph.
+ * @author Ian McMahon
+ *
+ */
 public class ControlMoveEvent implements IUndoRedo{
 
 	private State myFrom;

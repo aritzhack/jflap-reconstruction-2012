@@ -21,7 +21,6 @@ import util.JFLAPConstants;
 import view.automata.AutomataView;
 import view.automata.AutomatonDrawer;
 import view.automata.AutomatonEditorPanel;
-import view.automata.SelectedStateDrawer;
 import view.automata.StateDrawer;
 import view.graph.GraphDrawer;
 import file.xml.XMLCodec;
@@ -67,11 +66,10 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 			super.paintComponent(g);
 			this.setBackground(Color.white);
 			StateDrawer vDraw = new StateDrawer();
-			SelectedStateDrawer sVDraw = new SelectedStateDrawer();
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			GraphDrawer<State> drawer = 
-					new AutomatonDrawer(vDraw, sVDraw);
+					new AutomatonDrawer(vDraw);
 
 			drawer.draw(myGraph, g);
 		}

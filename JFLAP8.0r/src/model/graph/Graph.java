@@ -25,6 +25,8 @@ import java.util.Map.Entry;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import debug.JFLAPDebug;
+
 import util.JFLAPConstants;
 import util.arrows.GeometryHelper;
 import model.change.ChangingObject;
@@ -314,15 +316,6 @@ public abstract class Graph<T> extends ChangingObject {
 				pointForVertex(to));
 	}
 
-	private void resetControlPoints() {
-		for (T from : myEdgeIDs.keySet()) {
-			for (T to : myEdgeIDs.get(from).keySet()) {
-				Point2D ctrl = getDefaultControlPoint(from, to);
-				setControlPt(ctrl, from, to);
-			}
-		}
-	}
-
 	/** Returns true if the edge has not been modified by the user or autobending. */
 	private boolean hasBeenBent(T from, T to) {
 		Point2D pFrom = this.pointForVertex(from), pTo = this
@@ -341,34 +334,5 @@ public abstract class Graph<T> extends ChangingObject {
 				.getCenterPoint(pFrom, pTo);
 		applyAutoBend(test, pFrom, pTo);
 		return test.equals(ctrl);
-	}
-
-	/** Reforms the points so they are enclosed within a certain frame. */
-	public void moveWithinFrame(Rectangle2D bounds) {
-		Object[] vertices = vertices().toArray();
-		if (vertices.length == 0)
-			return;
-		Point2D p = pointForVertex((T) vertices[0]);
-		double minx = p.getX(), miny = p.getY(), maxx = minx, maxy = miny;
-		for (int i = 1; i < vertices.length; i++) {
-			p = pointForVertex((T) vertices[i]);
-			minx = Math.min(minx, p.getX());
-			miny = Math.min(miny, p.getY());
-			maxx = Math.max(maxx, p.getX());
-			maxy = Math.max(maxy, p.getY());
-		}
-
-		minx -= JFLAPConstants.STATE_RADIUS + 5;
-		miny -= JFLAPConstants.STATE_RADIUS + 5;
-		maxx += JFLAPConstants.STATE_RADIUS + 5;
-		maxy += JFLAPConstants.STATE_RADIUS + 5;
-		// Now, scale them!
-		for (int i = 0; i < vertices.length; i++) {
-			p = pointForVertex((T) vertices[i]);
-			p = new Point2D.Double((p.getX() - minx) * bounds.getWidth()
-					/ (maxx - minx) + bounds.getX(), (p.getY() - miny)
-					* bounds.getHeight() / (maxy - miny) + bounds.getY());
-			moveVertex((T) vertices[i], p);
-		}
 	}
 }
