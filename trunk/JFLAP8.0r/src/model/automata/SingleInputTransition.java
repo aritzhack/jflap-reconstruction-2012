@@ -12,7 +12,6 @@ import util.Copyable;
 
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.function.LanguageFunction;
-import model.graph.GraphHelper;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 

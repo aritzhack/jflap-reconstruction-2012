@@ -1,25 +1,19 @@
 package view.automata;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
-import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
-import util.view.magnify.MagnifiablePanel;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.DeleteTool;
-import view.automata.tools.RedoTool;
 import view.automata.tools.StateTool;
 import view.automata.tools.ToolBar;
 import view.automata.tools.TransitionTool;
-import view.automata.tools.UndoTool;
 import view.formaldef.BasicFormalDefinitionView;
 import view.undoing.UndoPanel;
 
@@ -72,10 +66,14 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	@Override
 	public Component createToolbar(T definition, UndoKeeper keeper) {
 		// TODO: figure this out :p
+		return createDefaultToolbar(definition, keeper);
+	}
+	
+	private Component createDefaultToolbar(T definition, UndoKeeper keeper) {
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
-		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel);
-		StateTool<T, S> state = new StateTool<T, S>(panel, definition.getStates());
+		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel, definition);
+		StateTool<T, S> state = new StateTool<T, S>(panel, definition);
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
 		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
 

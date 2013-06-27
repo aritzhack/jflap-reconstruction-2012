@@ -1,21 +1,12 @@
 package view.automata;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import debug.JFLAPDebug;
 
 import util.arrows.GeometryHelper;
 

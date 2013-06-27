@@ -44,7 +44,7 @@ public abstract class Acceptor<T extends Transition<T>> extends Automaton<T> {
 				if (!states.contains(s))
 					states.add(s);
 			}
-			return;	
+//			return;	
 		}
 		else if (event.comesFrom(this.getStates()) &&
 				event.getType() == ITEM_REMOVED){

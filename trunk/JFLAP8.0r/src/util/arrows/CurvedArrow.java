@@ -94,6 +94,33 @@ public class CurvedArrow extends QuadCurve2D.Double {
 		return GeometryHelper.getXDisplacement(this);
 	}
 	
+	//Taken from http://stackoverflow.com/questions/3102939/get-real-bounds-of-quadcurve2d-in-java
+	/**
+	 * Calculates the ACTUAL bounds of this curve (as getBounds or getBounds2D are far too large).
+	 */
+	public Rectangle2D getCurveBounds() {
+	    double flatness = 0.01;
+	    PathIterator pit = getPathIterator(null, flatness);
+	    double[] coords = new double[2];
+	    double minX = java.lang.Double.MAX_VALUE, minY = minX;
+	    double maxX = java.lang.Double.MIN_VALUE, maxY = maxX;
+	    while(!pit.isDone()) {
+	        int type = pit.currentSegment(coords);
+	        switch(type) {
+	            case PathIterator.SEG_MOVETO:
+	                // fall through
+	            case PathIterator.SEG_LINETO:
+	                if(coords[0] < minX) minX = coords[0];
+	                if(coords[0] > maxX) maxX = coords[0];
+	                if(coords[1] < minY) minY = coords[1];
+	                if(coords[1] > maxY) maxY = coords[1];
+	                break;
+	        }
+	        pit.next();
+	    }
+	    return new Rectangle2D.Double(minX, minY, maxX-minX, maxY-minY);
+	}
+	
 	public static boolean intersects(Point2D point, int fudge, QuadCurve2D.Double c) {
 		if (!c.intersects(point.getX() - fudge, point.getY() - fudge, fudge << 1,
 				fudge << 1))
@@ -104,6 +131,4 @@ public class CurvedArrow extends QuadCurve2D.Double {
 		c.subdivide(f1, f2);
 		return intersects(point, fudge, f1) || intersects(point, fudge, f2);
 	}
-
-
 }
