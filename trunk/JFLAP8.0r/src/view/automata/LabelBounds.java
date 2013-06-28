@@ -1,12 +1,15 @@
 package view.automata;
 
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
+import debug.JFLAPDebug;
 
 import util.arrows.GeometryHelper;
 
@@ -93,6 +96,7 @@ public class LabelBounds implements Shape {
 	private Point2D rotatePoint(Point2D p) {
 		return GeometryHelper.rotatePoint(p,getCenter(),myAngle);
 	}
+	
 
 	@Override
 	public PathIterator getPathIterator(AffineTransform arg0) {
@@ -120,7 +124,7 @@ public class LabelBounds implements Shape {
 	}
 	
 	public void draw(Graphics g){
-		Point2D[] corners = this.getCorners();
+		Point2D[] corners = GeometryHelper.getCorners(myRectangle);
 		for (int i=0;i<4;i++){
 			g.drawLine((int)corners[i].getX(), 
 						(int)corners[i].getY(), 
@@ -129,9 +133,25 @@ public class LabelBounds implements Shape {
 			
 		}
 	}
+	
+	public void fill(Graphics g){
+		Point2D[] corners = GeometryHelper.getCorners(myRectangle);
+		int[] xs = new int[corners.length], ys = new int[corners.length];
+		
+		for(int i=0; i<corners.length; i++){
+			xs[i] = (int) corners[i].getX();
+			ys[i] = (int) corners[i].getY();
+		}
+		Polygon poly = new Polygon(xs, ys, xs.length);
+		g.drawPolygon(poly);
+		g.fillPolygon(poly);
+	}
 
 	public double getAngle() {
 		return myAngle;
 	}
 	
+	public Rectangle getRectangle() {
+		return myRectangle;
+	}
 }

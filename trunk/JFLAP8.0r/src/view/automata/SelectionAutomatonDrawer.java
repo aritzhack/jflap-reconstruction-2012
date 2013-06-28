@@ -1,8 +1,13 @@
 package view.automata;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,8 +17,12 @@ import model.graph.Graph;
 import model.graph.TransitionGraph;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
+import util.arrows.CurvedArrow;
+import util.view.GraphHelper;
 
-/** Automaton Drawer that allows for and keeps track of selection of States, Arrows, and Transitions and draws them accordingly.
+/**
+ * Automaton Drawer that allows for and keeps track of selection of States,
+ * Arrows, and Transitions and draws them accordingly.
  * 
  * @author Ian McMahon
  */
@@ -27,24 +36,48 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 	public SelectionAutomatonDrawer(StateDrawer vDraw) {
 		super(vDraw);
 		mySelectedStates = new TreeSet<State>();
-		mySelectedEdges = new TreeSet<State[]>();
+		mySelectedEdges = new HashSet<State[]>();
 		mySelectedTrans = new TreeSet<T>();
 	}
 
 	@Override
 	public void drawVertex(State v, Graph<State> obj, Graphics g) {
 		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
+		// This line will allow for color to change if preferences are modified.
+		getVertexDrawer().setInnerColor(JFLAPPreferences.getStateColor());
+
 		if (isSelected(v))
 			drawSelectedVertex(v, obj, g);
 		else
 			super.drawVertex(v, obj, g);
+
 	}
-	
+
 	@Override
-	public void drawLabel(Graphics2D g2d, T t, Point2D center) {
-		if(isSelected(t))
-			return;
-		super.drawLabel(g2d, t, center);
+	public void drawEdge(State from, State to, Graph<State> obj, Graphics g) {
+		Color current = g.getColor();
+		g.setColor(JFLAPPreferences.getTransitionColor());
+
+		if (isSelected(new State[] { from, to }))
+			drawSelectedEdge(from, to, obj, g);
+		else
+			super.drawEdge(from, to, obj, g);
+		g.setColor(current);
+	}
+
+	@Override
+	public void drawLabel(Graphics2D g2d, T t, TransitionGraph<T> graph,
+			Point2D center) {
+		if (isSelected(t)) {
+			Color oldColor = g2d.getColor();
+			g2d.setColor(JFLAPPreferences.getSelectedTransitionColor());
+			
+			LabelBounds bounds = GraphHelper.getLabelBounds(graph, t, g2d);
+			bounds.fill(g2d);
+			
+			g2d.setColor(oldColor);
+		} else
+			super.drawLabel(g2d, t, graph, center);
 	}
 
 	/** Selects or deselects the given object based on <CODE>select</CODE> */
@@ -65,9 +98,12 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 	public boolean isSelected(Object o) {
 		if (o instanceof State)
 			return mySelectedStates.contains((State) o);
-		else if (o instanceof State[])
-			return mySelectedEdges.contains((State[]) o);
-		else if (o instanceof Transition)
+		else if (o instanceof State[]) {
+			for (State[] array : mySelectedEdges)
+				if (array[0].equals(((State[]) o)[0])
+						&& array[1].equals(((State[]) o)[1]))
+					return true;
+		} else if (o instanceof Transition)
 			return mySelectedTrans.contains((T) o);
 		return false;
 	}
@@ -78,6 +114,14 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		mySelectedEdges.clear();
 		mySelectedTrans.clear();
 	}
+	
+	public Set<State> getSelectedStates(){
+		return mySelectedStates;
+	}
+	
+	public Set<T> getSelectedTransitions(){
+		return mySelectedTrans;
+	}
 
 	/** Draws the vertex as the selected state color, as set in Preferences. */
 	private void drawSelectedVertex(State v, Graph<State> obj, Graphics g) {
@@ -85,6 +129,16 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		vDraw.setInnerColor(JFLAPPreferences.getSelectedStateColor());
 		super.drawVertex(v, obj, g);
 		vDraw.setInnerColor(JFLAPPreferences.getStateColor());
+	}
+
+	private void drawSelectedEdge(State from, State to, Graph<State> obj,
+			Graphics g) {
+		Graphics2D g2 = (Graphics2D) g.create();
+		g2.setStroke(new BasicStroke(6.0f));
+		g2.setColor(JFLAPPreferences.getSelectedTransitionColor());
+		CurvedArrow arrow = getArrow(from, to, obj);
+		arrow.draw(g2);
+		g2.dispose();
 	}
 
 	/** Draws the control point p. */

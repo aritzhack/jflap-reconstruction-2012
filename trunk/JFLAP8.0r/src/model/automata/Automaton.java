@@ -89,4 +89,7 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 		return getInputAlphabet();
 	}
 
+	public static boolean isStartState(Automaton a, State s){
+		return s.equals(a.getStartState());
+	}
 }

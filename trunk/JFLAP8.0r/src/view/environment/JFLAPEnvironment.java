@@ -24,6 +24,7 @@ import javax.swing.JTabbedPane;
 
 import debug.JFLAPDebug;
 
+import model.automata.Automaton;
 import model.formaldef.FormalDefinition;
 import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
@@ -32,6 +33,8 @@ import universe.preferences.JFLAPPreferences.PREF_CHANGE;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
+import view.automata.AutomataView;
+import view.automata.AutomatonEditorPanel;
 import view.formaldef.BasicFormalDefinitionView;
 import view.formaldef.FormalDefinitionView;
 import view.grammar.parsing.cyk.CYKParseTablePanel;
@@ -49,7 +52,8 @@ import view.pumping.RegPumpingLemmaChooser;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
 
-public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener{
+public class JFLAPEnvironment extends JFrame implements
+		PreferenceChangeListener {
 
 	private File myFile;
 	private JTabbedPane myTabbedPane;
@@ -145,7 +149,7 @@ public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener
 
 		// The getSavableObject() may need to be modified
 		Object obj = getSavableObject();
-		
+
 		XMLFileChooser chooser = new XMLFileChooser();
 		chooser.setSelectedFile(myFile);
 		int n = JFileChooser.APPROVE_OPTION;
@@ -453,20 +457,24 @@ public class JFLAPEnvironment extends JFrame implements PreferenceChangeListener
 	@Override
 	public void preferenceChanged(String pref, Object val) {
 		Component current = getCurrentView();
-		
-		if(current instanceof LSystemRenderView && isRenderChange(pref))
+
+		if (current instanceof LSystemRenderView && isRenderChange(pref))
 			((LSystemRenderView) current).updateDisplay();
-		else if(pref.equals(PREF_CHANGE.CYK_direction_change.toString()) && current instanceof CYKParseView){
-			((CYKParseView) current).getRunningView().changeDiagonal((Boolean) val);
-		}
+		else if (pref.equals(PREF_CHANGE.CYK_direction_change.toString())
+				&& current instanceof CYKParseView) {
+			((CYKParseView) current).getRunningView().changeDiagonal(
+					(Boolean) val);
+		} 
 		revalidate();
 		repaint();
 	}
-	
-	public boolean isRenderChange(String pref){
-		PREF_CHANGE[] renderNeeded = new PREF_CHANGE[]{PREF_CHANGE.lambda_change, PREF_CHANGE.LSangle_change, PREF_CHANGE.LSdistance_change,
-				PREF_CHANGE.LShue_change, PREF_CHANGE.LSincrement_change, PREF_CHANGE.LSwidth_change};
-		for(PREF_CHANGE c : renderNeeded)
+
+	public boolean isRenderChange(String pref) {
+		PREF_CHANGE[] renderNeeded = new PREF_CHANGE[] {
+				PREF_CHANGE.lambda_change, PREF_CHANGE.LSangle_change,
+				PREF_CHANGE.LSdistance_change, PREF_CHANGE.LShue_change,
+				PREF_CHANGE.LSincrement_change, PREF_CHANGE.LSwidth_change };
+		for (PREF_CHANGE c : renderNeeded)
 			if (c.toString().equals(pref))
 				return true;
 		return false;

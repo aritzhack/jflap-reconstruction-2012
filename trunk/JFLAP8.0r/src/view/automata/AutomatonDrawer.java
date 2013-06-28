@@ -51,7 +51,7 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 		// drawPoint(g, ctrl);
 	}
 
-	public void drawLabel(Graphics2D g2d, T t, Point2D center) {
+	public void drawLabel(Graphics2D g2d, T t, TransitionGraph<T> obj, Point2D center) {
 		String label = t.getLabelText();
 		FontMetrics metrics = g2d.getFontMetrics();
 		int w = metrics.stringWidth(label);
@@ -82,7 +82,7 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 				g2d.transform(tx);
 			}
 			// drawLabel
-			drawLabel(g2d, t, center);
+			drawLabel(g2d, t, graph, center);
 		}
 	}
 

@@ -489,14 +489,16 @@ public class PreferenceDialog extends JDialog {
 		final JRadioButton state = new JRadioButton("State Color"),
 		selected = new JRadioButton("Selected State Color"),
 		background = new JRadioButton("Background Color"), 
-		cyk = new JRadioButton("CYK Highlight Color");
-//		buttonPanel.add(new JRadioButton("Transition Color"));
-//		buttonPanel.add(new JRadioButton("Selected Transition Color"));
+		cyk = new JRadioButton("CYK Highlight Color"),
+		trans = new JRadioButton("Transition Color"),
+		selTrans = new JRadioButton("Selected Transition Color");
 		
 		buttonPanel.add(state);
 		buttonPanel.add(selected);
 		buttonPanel.add(cyk);
 		buttonPanel.add(background);
+		buttonPanel.add(trans);
+		buttonPanel.add(selTrans);
 		
 		JButton setColor = new JButton("Set Colors");
 		setColor.addActionListener(new ActionListener() {
@@ -512,6 +514,10 @@ public class PreferenceDialog extends JDialog {
 					JFLAPPreferences.setBackgroundColor(c);
 				if(cyk.isSelected())
 					JFLAPPreferences.setCYKHighlight(c);
+				if(trans.isSelected())
+					JFLAPPreferences.setTransitionColor(c);
+				if(selTrans.isSelected())
+					JFLAPPreferences.setSelectedTransitionColor(c);
 			}
 		});
 		buttonPanel.add(setColor);		
