@@ -51,7 +51,6 @@ import view.grammar.parsing.RunningView;
 @SuppressWarnings("serial")
 public class CYKParseTablePanel extends RunningView implements DoSelectable {
 
-	private static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
 	private static final int DIAGONAL_CHANGE = 0x0ff;
 
 	private SelectingEditor myEditor;
@@ -349,7 +348,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 					attemptSet);
 
 			setCellColor(rowIndex, columnIndex, inserted ? Color.WHITE
-					: RED_HIGHLIGHT);
+					: JFLAPConstants.RED_HIGHLIGHT);
 		}
 		
 		@Override

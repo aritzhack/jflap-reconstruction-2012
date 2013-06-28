@@ -264,8 +264,8 @@ public abstract class Graph<T> extends ChangingObject {
 	 * point.
 	 */
 	public void setControlPt(Point2D ctrl, T from, T to) {
-		int edgeID = getID(from, to);
-		myCtrlPoints.get(edgeID).setLocation(ctrl);
+//		int edgeID = getID(from, to);
+//		myCtrlPoints.get(edgeID).setLocation(ctrl);
 		distributeChanged();
 	}
 

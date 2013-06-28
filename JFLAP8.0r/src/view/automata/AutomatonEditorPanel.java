@@ -10,24 +10,37 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
+import model.automata.AutomatonException;
+import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
 import model.automata.TransitionSet;
+import model.automata.acceptors.Acceptor;
 import model.change.events.RemoveEvent;
+import model.change.events.StartStateSetEvent;
+import model.formaldef.components.SetComponent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
+import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
@@ -57,6 +70,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		StateDrawer vDraw = new StateDrawer();
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
+		addKeyListener(new DeleteKeyListener());
 	}
 
 	@Override
@@ -95,6 +109,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void stateChanged(ChangeEvent arg0) {
 		revalidate();
 		repaint();
+		requestFocus();
 	}
 
 	public void stopAllEditing() {
@@ -102,7 +117,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		// graphics with the TransitionTables
 		// Also so you don't break things (like undoing a creation while you
 		// still have the state selected)
-
+		JFLAPDebug.print("NEEDS TO BE IMPLEMENTED!");
 	}
 
 	/**
@@ -190,10 +205,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		Set<S> transFromOrTo = transitions.getTransitionsFromState(vertex);
 		transFromOrTo.addAll(transitions.getTransitionsToState(vertex));
 
-		StateSet s = myAutomaton.getStates();
-		s.remove(vertex);
-		getKeeper().registerChange(
-				new StateRemoveEvent(vertex, transFromOrTo, p));
+		getKeeper().applyAndListen(
+				new StateAndTransRemoveEvent(new State[] { vertex },
+						transFromOrTo, new Point2D[] { p }));
 	}
 
 	/** Returns a the location of vertex in the TransitionGraph. */
@@ -251,15 +265,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			public void componentShown(ComponentEvent e) {
 			}
 		});
-
-		// repaint();
 	}
 
 	/** Removes the transition from the Automaton and notifies the UndoKeeper. */
 	public void removeTransition(S trans) {
-		TransitionSet<S> transitions = myAutomaton.getTransitions();
-		transitions.remove(trans);
-		getKeeper().registerChange(new RemoveEvent<S>(transitions, trans));
+		getKeeper().applyAndListen(new TransitionRemoveEvent(trans));
 	}
 
 	/**
@@ -289,7 +299,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				new Transition[0]);
 
 		getKeeper().applyAndListen(
-				new RemoveEvent<S>(myAutomaton.getTransitions(), temp));
+				new TransitionRemoveEvent(temp));
 	}
 
 	public void editNote(Note n) {
@@ -318,6 +328,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		for (S trans : myAutomaton.getTransitions()) {
 			LabelBounds bounds = GraphHelper.getLabelBounds(myGraph, trans,
 					getGraphics());
+			bounds = new LabelBounds(-bounds.getAngle(), bounds.getRectangle());
 			if (bounds.contains(p))
 				return trans;
 		}
@@ -394,7 +405,14 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		minx -= getStateBounds();
 		miny -= getStateBounds();
 
+		int x = (int) Math.ceil(maxx), y = (int) Math.ceil(maxy);
+		setPreferredSize(new Dimension(x, y));
+
 		if (minx < 0 || miny < 0) {
+			// Adjust so they get off the boundary
+			minx -= minx < 0 ? 1 : 0;
+			miny -= miny < 0 ? 1 : 0;
+
 			// We must adjust all the states so that everything is viewable.
 			for (State vert : myAutomaton.getStates()) {
 				Point2D current = myGraph.pointForVertex(vert);
@@ -411,8 +429,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				}
 			}
 		}
-		int x = (int) Math.ceil(maxx), y = (int) Math.ceil(maxy);
-		setPreferredSize(new Dimension(x, y));
 	}
 
 	/**
@@ -430,42 +446,98 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return getStateRadius() + 5;
 	}
 
-	/**
-	 * Event for undoing the deletion of a state so that all transitions related
-	 * to the state will be added or removed accordingly.
-	 */
-	private class StateRemoveEvent implements IUndoRedo {
+	private class DeleteKeyListener implements KeyListener {
 
-		private State myState;
-		private Point2D myPoint;
+		@Override
+		public void keyPressed(KeyEvent e) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			if (e.getKeyChar() == KeyEvent.VK_DELETE) {
+				stopAllEditing();
+				State[] states = myDrawer.getSelectedStates().toArray(
+						new State[0]);
+				Set<S> trans = new TreeSet<S>(myDrawer.getSelectedTransitions());
+				myDrawer.clearSelection();
+
+				TransitionSet<S> transitionSet = myAutomaton.getTransitions();
+				UndoKeeper keeper = getKeeper();
+
+				if (states.length > 0) {
+					Point2D[] points = new Point2D[states.length];
+					for (int i = 0; i < states.length; i++) {
+						points[i] = GraphHelper.getOnscreenPoint(
+								Automaton.isStartState(myAutomaton, states[i]),
+								myGraph.pointForVertex(states[i]));
+
+						trans.addAll(transitionSet
+								.getTransitionsFromState(states[i]));
+						trans.addAll(transitionSet
+								.getTransitionsToState(states[i]));
+					}
+					keeper.applyAndListen(new StateAndTransRemoveEvent(states,
+							trans, points));
+				} else
+					getKeeper().applyAndListen(
+							new TransitionRemoveEvent(trans));
+			}
+		}
+	}
+
+	/**
+	 * Event for undoing the deletion of a state and transitions.
+	 */
+	private class StateAndTransRemoveEvent implements IUndoRedo {
+
+		private State[] myStates;
+		private Point2D[] myPoints;
 		private List<IUndoRedo> myEvents;
 
-		public StateRemoveEvent(State state, Set<S> transitions, Point2D p) {
-			myState = state;
-			myPoint = p;
+		public StateAndTransRemoveEvent(State[] states, Set<S> transitions,
+				Point2D[] points) {
+			if (states.length != points.length) {
+				throw new AutomatonException("Error with State Deletion");
+			}
+			myStates = states;
+			myPoints = points;
 			myEvents = new ArrayList<IUndoRedo>();
 
-			myEvents.add(new RemoveEvent<State>(myAutomaton.getStates(), state));
+			myEvents.add(new RemoveEvent<State>(myAutomaton.getStates(), states));
+			for (State s : myStates) {
+				if (Automaton.isStartState(myAutomaton, s))
+					myEvents.add(new StartStateSetEvent(myAutomaton
+							.getComponentOfClass(StartState.class), s, null));
+				if (myAutomaton instanceof Acceptor
+						&& Acceptor.isFinalState((Acceptor) myAutomaton, s))
+					myEvents.add(new RemoveEvent<State>(
+							((Acceptor) myAutomaton).getFinalStateSet(), s));
+			}
 			if (!transitions.isEmpty())
-				myEvents.add(new RemoveEvent<S>(myAutomaton.getTransitions(),
-						transitions));
+				myEvents.add(new TransitionRemoveEvent(transitions));
 		}
 
 		@Override
 		public boolean undo() {
 			boolean allUndone = true;
-			for (IUndoRedo undo : myEvents) {
-				if (!undo.undo())
+			for (int i = 0; i < myEvents.size(); i++) {
+				if (!myEvents.get(i).undo())
 					allUndone = false;
+				// Move all vertexes to their original positions before messing
+				// with them.
+				if (i == 0)
+					for (int j = 0; j < myStates.length; j++)
+						myGraph.moveVertex(myStates[j], myPoints[j]);
 			}
-			myGraph.moveVertex(myState, myPoint);
 			return allUndone;
 		}
 
 		@Override
 		public boolean redo() {
-			if (myDrawer.isSelected(myState))
-				return false;
 			boolean allRedone = true;
 			for (int i = myEvents.size() - 1; i >= 0; i--)
 				if (!myEvents.get(i).redo())
@@ -476,6 +548,38 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		@Override
 		public String getName() {
 			return "Remove State and all transitions";
+		}
+	}
+
+	private class TransitionRemoveEvent extends RemoveEvent<S> {
+
+		Point2D[] myPoints;
+
+		public TransitionRemoveEvent(Collection<S> transitions) {
+			this((S[]) transitions.toArray(new Transition[0]));
+		}
+
+		public TransitionRemoveEvent(S... transitions) {
+			super(myAutomaton.getTransitions(), transitions);
+			myPoints = new Point2D[transitions.length];
+
+			for (int i = 0; i < transitions.length; i++) {
+				myPoints[i] = myGraph.getControlPt(
+						transitions[i].getFromState(),
+						transitions[i].getToState());
+			}
+		}
+
+		@Override
+		public boolean undo() {
+			boolean undo = super.undo();
+			int i = 0;
+			for (S trans : getToRemove()) {
+				moveCtrlPoint(trans.getFromState(), trans.getToState(),
+						myPoints[i]);
+				i++;
+			}
+			return undo;
 		}
 	}
 }

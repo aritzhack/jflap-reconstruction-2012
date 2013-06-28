@@ -78,7 +78,8 @@ public class JFLAPPreferences {
 			LSangle_change, LShue_change, LSwidth_change,
 			LSincrement_change, CYK_direction_change, CYK_color_change, TM_buffer_change,
 			regex_union_change, regex_open_change, regex_close_change, state_color_change, 
-			selected_color_change, background_color_change, grouping_change};
+			selected_color_change, background_color_change, transition_color_change,
+			selected_trans_color_change, grouping_change};
 			
 	public static JFLAPMode DEFAULT_MODE = JFLAPMode.DEFAULT;
 
@@ -102,6 +103,8 @@ public class JFLAPPreferences {
 	private static Color SELECTED_COLOR = JFLAPConstants.DEFAULT_SELECTED_COLOR;
 	private static Color CYK_COLOR = JFLAPConstants.DEFAULT_CYK_HIGHLIGHT_COLOR;
 	private static Color BACKGROUND_COLOR = JFLAPConstants.DEFAULT_SWING_BG;
+	private static Color TRANS_COLOR = JFLAPConstants.DEFAULT_TRANS_COLOR;
+	private static Color SELECTED_TRANS_COLOR = JFLAPConstants.RED_HIGHLIGHT;
 	
 	private static int DEFAULT_TEXT_SIZE = 50;
 	private static String FONT_NAME = "Dialog";
@@ -304,6 +307,28 @@ public class JFLAPPreferences {
 		}
 	}
 	
+	public static Color getTransitionColor() {
+		return TRANS_COLOR;
+	}
+	
+	public static void setTransitionColor(Color color) {
+		if(!TRANS_COLOR.equals(color)){
+			TRANS_COLOR = color;
+			distributeChange(PREF_CHANGE.transition_color_change, color);
+		}
+	}
+	
+	public static Color getSelectedTransitionColor() {
+		return SELECTED_TRANS_COLOR;
+	}
+	
+	public static void setSelectedTransitionColor(Color color) {
+		if(!SELECTED_TRANS_COLOR.equals(color)){
+			SELECTED_TRANS_COLOR = color;
+			distributeChange(PREF_CHANGE.selected_trans_color_change, color);
+		}
+	}
+	
 	public static Color getBackgroundColor() {
 		return BACKGROUND_COLOR;
 	}
@@ -483,6 +508,8 @@ public class JFLAPPreferences {
 		setCYKHighlight(JFLAPConstants.DEFAULT_CYK_HIGHLIGHT_COLOR);
 		setStateColor(JFLAPConstants.DEFAULT_STATE_COLOR);
 		setSelectedStateColor(JFLAPConstants.DEFAULT_SELECTED_COLOR);
+		setTransitionColor(JFLAPConstants.DEFAULT_TRANS_COLOR);
+		setSelectedTransitionColor(JFLAPConstants.RED_HIGHLIGHT);
 	}
 
 	public static void distributeChange(String s, Object o) {

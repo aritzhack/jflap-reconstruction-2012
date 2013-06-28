@@ -33,7 +33,7 @@ public class StateMoveEvent implements IUndoRedo {
 	@Override
 	public boolean undo() {
 		myFrom = GraphHelper.getOnscreenPoint(
-				myState.equals(myDefinition.getStartState()), myFrom);
+				Automaton.isStartState(myDefinition, myState), myFrom);
 		myPanel.moveState(myState, myFrom);
 		return true;
 	}

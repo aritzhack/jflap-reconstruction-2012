@@ -85,7 +85,7 @@ public class GraphHelper {
 		int x = (int) (center.getX() - w / 2);
 		int y = (int) (center.getY() - h / 2);
 
-		return new LabelBounds(-angle, new Rectangle(x, y, w, h));
+		return new LabelBounds(angle, new Rectangle(x, y, w, h));
 	}
 
 	/**

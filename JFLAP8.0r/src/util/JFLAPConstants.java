@@ -60,10 +60,12 @@ public interface JFLAPConstants {
 	public static final Color DEFAULT_STATE_COLOR = new Color(255, 255, 150);
 	public static final Color DEFAULT_SELECTED_COLOR = new Color(100, 200, 200);
 	public static final Color DEFAULT_CYK_HIGHLIGHT_COLOR = new Color(255, 255, 66);
+	public static final Color DEFAULT_TRANS_COLOR = Color.BLACK;
+	public static final Color RED_HIGHLIGHT = new Color(255, 150, 150);
 	public static final int EDITOR_CELL_WIDTH = 60;
 
 	public static final Stroke DEFAULT_TRANSITION_STROKE = new BasicStroke(2.4f);
-	public static final Color DEFAULT_TRANSITION_COLOR = new Color(.5f, .5f, .5f, .5f);
+	public static final Color DEFAULT_TRANS_TOOL_COLOR = new Color(.5f, .5f, .5f, .5f);
 	// public static final Note BASE_NOTE = new Note("Edit me");
 	public static final int EDITOR_CELL_HEIGHT = 13;
 	public static final int INITAL_LOOP_HEIGHT = 70;

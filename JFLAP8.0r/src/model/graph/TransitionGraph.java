@@ -220,8 +220,10 @@ public class TransitionGraph<T extends Transition<T>> extends
 		// if there are no more transition to/from these states
 		if (order.isEmpty()) {
 			removeEdge(from, to);
-		} else
+		} else{
+			updateLabelCenters(from, to);
 			super.distributeChanged();
+		}
 	}
 
 	/** Updates the label center for the given transition. */

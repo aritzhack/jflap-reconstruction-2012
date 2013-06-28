@@ -84,7 +84,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 			Graphics2D g2 = (Graphics2D) g;
 			Stroke s = g2.getStroke();
 			g2.setStroke(JFLAPConstants.DEFAULT_TRANSITION_STROKE);
-			g2.setColor(JFLAPConstants.DEFAULT_TRANSITION_COLOR);
+			g2.setColor(JFLAPConstants.DEFAULT_TRANS_TOOL_COLOR);
 			g2.drawLine((int) pFrom.getX(), (int) pFrom.getY(),
 					(int) pCurrent.getX(), (int) pCurrent.getY());
 			g2.setStroke(s);
