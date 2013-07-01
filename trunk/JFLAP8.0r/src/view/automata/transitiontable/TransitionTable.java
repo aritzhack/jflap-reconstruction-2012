@@ -98,6 +98,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 	 * Stops editing the table and modifies the transition accordingly. Will add
 	 * events to the UndoKeeper if applicable.
 	 */
+	@SuppressWarnings("unchecked")
 	public void stopEditing(boolean cancel) {
 		try {
 			getCellEditor().stopCellEditing();
@@ -116,10 +117,34 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 				if (!transitions.contains(myTrans)) {
 					transitions.add(myTrans);
 					myPanel.getKeeper().registerChange(
-							new AddEvent<S>(transitions, myTrans));
+							new AddEvent<S>(transitions, myTrans){
+								@Override
+								public boolean undo() {
+									myPanel.clearSelection();
+									return super.undo();
+								}
+								
+								@Override
+								public boolean redo() {
+									myPanel.clearSelection();
+									return super.redo();
+								}
+							});
 				} else if (isNotDuplicate(transitions, temp, wasInTransitions))
 					myPanel.getKeeper().registerChange(
-							new SetToEvent<S>(myTrans, temp, t.copy()));
+							new SetToEvent<S>(myTrans, temp, t.copy()){
+								@Override
+								public boolean undo() {
+									myPanel.clearSelection();
+									return super.undo();
+								}
+								
+								@Override
+								public boolean redo() {
+									myPanel.clearSelection();
+									return super.redo();
+								}
+							});
 			}
 		}
 		removeSelf();

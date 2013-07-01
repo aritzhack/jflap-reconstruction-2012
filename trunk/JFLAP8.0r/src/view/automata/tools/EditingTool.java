@@ -5,24 +5,39 @@ import model.automata.Transition;
 import model.undo.UndoKeeper;
 import view.automata.AutomatonEditorPanel;
 
-/**Superclass for all Tools that require access to the AutomatonEditorPanel that is using them.
+/**
+ * Superclass for all Tools that require access to the AutomatonEditorPanel that
+ * is using them.
+ * 
  * @author Ian McMahon
  */
-public abstract class EditingTool<T extends Automaton<S>, S extends Transition<S>> extends Tool {
+public abstract class EditingTool<T extends Automaton<S>, S extends Transition<S>>
+		extends Tool {
 
 	private AutomatonEditorPanel<T, S> myPanel;
 	private UndoKeeper myKeeper;
 
-	public EditingTool(AutomatonEditorPanel<T, S> panel){
+	public EditingTool(AutomatonEditorPanel<T, S> panel) {
 		this.myPanel = panel;
 		myKeeper = panel.getKeeper();
 	}
-	
-	public AutomatonEditorPanel<T, S> getPanel(){
+
+	public AutomatonEditorPanel<T, S> getPanel() {
 		return myPanel;
 	}
 
 	public UndoKeeper getKeeper() {
 		return myKeeper;
+	}
+
+	public void setActive(boolean active) {
+		if (active) {
+			myPanel.addMouseListener(this);
+			myPanel.addMouseMotionListener(this);
+		} else {
+			myPanel.removeMouseListener(this);
+			myPanel.removeMouseMotionListener(this);
+		}
+		myPanel.clearSelection();
 	}
 }

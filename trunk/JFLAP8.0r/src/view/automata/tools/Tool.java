@@ -132,6 +132,4 @@ public abstract class Tool extends MouseAdapter {
 	public void draw(Graphics g) {
 		
 	}
-
-
 }

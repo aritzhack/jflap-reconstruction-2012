@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -16,16 +17,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.AutomatonException;
@@ -37,10 +36,8 @@ import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.change.events.RemoveEvent;
 import model.change.events.StartStateSetEvent;
-import model.formaldef.components.SetComponent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
-import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
@@ -48,19 +45,22 @@ import util.arrows.CurvedArrow;
 import util.view.GraphHelper;
 import view.EditingPanel;
 import view.automata.tools.DeleteTool;
+import view.automata.tools.EditingTool;
 import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
 import view.automata.transitiontable.TransitionTable;
 import view.automata.transitiontable.TransitionTableFactory;
+import debug.JFLAPDebug;
 
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
 
-	private Tool myTool;
+	private EditingTool<T, S> myTool;
 	private T myAutomaton;
 	private TransitionGraph<S> myGraph;
 	private SelectionAutomatonDrawer<S> myDrawer;
 	private AffineTransform transform;
+	private List<Note> myNotes;
 
 	public AutomatonEditorPanel(T m, UndoKeeper keeper, boolean editable) {
 		super(keeper, editable);
@@ -70,6 +70,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		StateDrawer vDraw = new StateDrawer();
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
+		myNotes = new ArrayList<Note>();
 		addKeyListener(new DeleteKeyListener());
 	}
 
@@ -85,7 +86,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		Graphics2D g2 = (Graphics2D) g;
 		g2.transform(transform);
 		myDrawer.draw(myGraph, g2);
-		// Draw all notes?
+
+		for(Note n : myNotes)
+			n.draw(g2);
 
 		if (myTool != null)
 			myTool.draw(g2);
@@ -102,14 +105,13 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	@Override
 	public void toolActivated(Tool e) {
-		setTool(e);
+		setTool((EditingTool) e);
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
 		revalidate();
 		repaint();
-		requestFocus();
 	}
 
 	public void stopAllEditing() {
@@ -140,31 +142,53 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * motion events. Also will update the cursor (to an X if it is a delete
 	 * tool, or a simple arrow otherwise).
 	 */
-	public void setTool(Tool t) {
-		this.removeMouseListener(myTool);
-		this.removeMouseMotionListener(myTool);
+	public void setTool(EditingTool<T, S> t) {
+		if(myTool != null)
+			myTool.setActive(false);
 		myTool = t;
-		this.addMouseListener(myTool);
-		this.addMouseMotionListener(myTool);
-
-		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
-
-		if (myTool instanceof DeleteTool) {
-			Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-			String del = JFLAPConstants.RESOURCE_ROOT
-					+ "/ICON/deletecursor.gif";
-			Image image = toolkit.getImage(del);
-			Point hotSpot = new Point(5, 5);
-			cursor = toolkit.createCustomCursor(image, hotSpot, "Delete");
-		}
-		setCursor(cursor);
+		myTool.setActive(true);
 	}
 
 	/** Sets the given object as selected in the AutomatonDrawer. */
 	public void selectObject(Object o) {
 		myDrawer.setSelected(o, true);
 		repaint();
+	}
+	
+	public void selectAll(Collection<? extends Object> objs){
+		for(Object o : objs){
+			myDrawer.setSelected(o, true);
+		}
+		repaint();
+	}
+	
+	public List<Object> selectAllInBounds(Rectangle bounds){
+		Set<S> tranSet = new TreeSet<S>();
+		Set<State> stateSet = new TreeSet<State>();
+		Set<State[]> edgeSet = new HashSet<State[]>();
+		
+		for(State vertex : myAutomaton.getStates()){
+			Point2D current = myGraph.pointForVertex(vertex);
+			if(bounds.contains(current))
+				stateSet.add(vertex);
+		}
+		
+		for(S trans : myAutomaton.getTransitions()){
+			LabelBounds label = GraphHelper.getLabelBounds(myGraph, trans, getGraphics());
+			State from = trans.getFromState(), to = trans.getToState();
+			CurvedArrow arrow = myDrawer.getArrow(from, to, myGraph);
+			
+			if(bounds.intersects(label.getRectangle()) || bounds.contains(label.getRectangle()))
+				tranSet.add(trans);
+			if(arrow.intersects(bounds)){
+				tranSet.addAll(myGraph.getOrderedTransitions(from, to));
+				edgeSet.add(new State[]{from, to});
+			}
+		}
+		List<Object> list = new ArrayList<Object>(tranSet);
+		list.addAll(stateSet);
+		list.addAll(edgeSet);
+		return list;
 	}
 
 	/** Removes all selected objects in the AutomatonDrawer. */
@@ -238,7 +262,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				myAutomaton, this);
 		table.setCellSelectionEnabled(true);
 		table.changeSelection(0, 0, false, false);
-		table.requestFocus();
 
 		final Dimension tableSize = table.getSize();
 		Point2D center = isNew ? GraphHelper.calculateCenterPoint(myGraph,
@@ -265,6 +288,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			public void componentShown(ComponentEvent e) {
 			}
 		});
+		table.requestFocus();
 	}
 
 	/** Removes the transition from the Automaton and notifies the UndoKeeper. */
@@ -302,8 +326,16 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				new TransitionRemoveEvent(temp));
 	}
 
+
+	public void createAndAddNote(Point p) {
+		Note note = new Note(this, p, "need to figure this out!");
+		myNotes.add(note);
+		editNote(note);
+	}
+
 	public void editNote(Note n) {
-		// TODO: still have to implement notes.
+		//TODO: Notes?
+		repaint();
 	}
 
 	/**
@@ -533,6 +565,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 					for (int j = 0; j < myStates.length; j++)
 						myGraph.moveVertex(myStates[j], myPoints[j]);
 			}
+			clearSelection();
 			return allUndone;
 		}
 
@@ -542,6 +575,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			for (int i = myEvents.size() - 1; i >= 0; i--)
 				if (!myEvents.get(i).redo())
 					allRedone = false;
+			clearSelection();
 			return allRedone;
 		}
 
@@ -569,6 +603,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						transitions[i].getToState());
 			}
 		}
+		
+		@Override
+		public boolean redo() {
+			clearSelection();
+			return super.redo();
+		}
 
 		@Override
 		public boolean undo() {
@@ -579,6 +619,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						myPoints[i]);
 				i++;
 			}
+			clearSelection();
 			return undo;
 		}
 	}

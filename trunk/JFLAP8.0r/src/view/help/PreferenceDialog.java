@@ -252,7 +252,7 @@ public class PreferenceDialog extends JDialog {
 
 		JRadioButton square = new JRadioButton(new BlankPrefAction(
 				JFLAPConstants.BLANK));
-		JRadioButton b = new JRadioButton(new BlankPrefAction("b"));
+		JRadioButton b = new JRadioButton(new BlankPrefAction("B"));
 		JRadioButton zero = new JRadioButton(new BlankPrefAction("0"));
 		panel.add(square);
 		group.add(square);
@@ -265,7 +265,7 @@ public class PreferenceDialog extends JDialog {
 		String blank = JFLAPPreferences.getBlank();
 		if (blank.equals("0"))
 			zero.doClick();
-		else if (blank.equals("b"))
+		else if (blank.equals("B"))
 			b.doClick();
 		else
 			square.doClick();

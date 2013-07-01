@@ -34,20 +34,25 @@ public class StateMoveEvent implements IUndoRedo {
 	public boolean undo() {
 		myFrom = GraphHelper.getOnscreenPoint(
 				Automaton.isStartState(myDefinition, myState), myFrom);
-		myPanel.moveState(myState, myFrom);
-		return true;
+		return moveAndClear(myFrom);
 	}
 
 	@Override
 	public boolean redo() {
 		myTo = GraphHelper.getOnscreenPoint(
 				myState.equals(myDefinition.getStartState()), myTo);
-		myPanel.moveState(myState, myTo);
-		return true;
+		return moveAndClear(myTo);
 	}
 
 	@Override
 	public String getName() {
 		return "Move State";
+	}
+	
+	private boolean moveAndClear(Point2D to){
+		myPanel.moveState(myState, to);
+		myPanel.clearSelection();
+		myPanel.repaint();
+		return true;
 	}
 }
