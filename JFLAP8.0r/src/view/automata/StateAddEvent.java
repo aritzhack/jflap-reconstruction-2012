@@ -31,12 +31,18 @@ public class StateAddEvent extends AddEvent<State> {
 		myState = vertex;
 		myPoint = p;
 	}
+	
+	@Override
+	public boolean undo() {
+		myPanel.clearSelection();
+		return super.undo();
+	}
 
 	@Override
 	public boolean redo() {
 		boolean sup = super.redo();
 		myPoint = GraphHelper.getOnscreenPoint(myState.equals(myDefinition.getStartState()), myPoint);
-
+		myPanel.clearSelection();
 		myPanel.moveState(myState, myPoint);
 		return sup;
 	}

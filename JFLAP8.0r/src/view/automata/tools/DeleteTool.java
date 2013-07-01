@@ -1,5 +1,9 @@
 package view.automata.tools;
 
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
@@ -7,6 +11,7 @@ import javax.swing.SwingUtilities;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
+import util.JFLAPConstants;
 import view.automata.AutomatonEditorPanel;
 
 /**
@@ -51,5 +56,22 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 				panel.removeEdge(((State[]) o)[0], ((State[]) o)[1]);
 			panel.repaint();
 		}
+	}
+	
+	@Override
+	public void setActive(boolean active) {
+		super.setActive(active);
+		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+		
+		if(active){
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+			String del = JFLAPConstants.RESOURCE_ROOT
+					+ "/ICON/deletecursor.gif";
+			Image image = toolkit.getImage(del);
+			Point hotSpot = new Point(5, 5);
+			cursor = toolkit.createCustomCursor(image, hotSpot, "Delete");
+		}
+		getPanel().setCursor(cursor);
 	}
 }

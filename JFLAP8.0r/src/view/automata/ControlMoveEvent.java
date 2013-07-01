@@ -1,5 +1,6 @@
 package view.automata;
 
+import java.awt.Panel;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -30,12 +31,14 @@ public class ControlMoveEvent implements IUndoRedo{
 	
 	@Override
 	public boolean undo() {
+		myPanel.clearSelection();
 		setLocation(pFrom);
 		return true;
 	}
 
 	@Override
 	public boolean redo() {
+		myPanel.clearSelection();
 		setLocation(pTo);
 		return true;
 	}
