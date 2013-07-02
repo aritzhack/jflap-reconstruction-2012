@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.automata.Transition;
 import model.graph.Graph;
@@ -32,12 +34,14 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 	private Set<State> mySelectedStates;
 	private Set<State[]> mySelectedEdges;
 	private Set<T> mySelectedTrans;
+	private Set<Note> mySelectedNotes;
 
 	public SelectionAutomatonDrawer(StateDrawer vDraw) {
 		super(vDraw);
 		mySelectedStates = new TreeSet<State>();
 		mySelectedEdges = new HashSet<State[]>();
 		mySelectedTrans = new TreeSet<T>();
+		mySelectedNotes = new HashSet<Note>();
 	}
 
 	@Override
@@ -85,12 +89,19 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		if (o instanceof State)
 			return select ? mySelectedStates.add((State) o) : mySelectedStates
 					.remove((State) o);
-		else if (o instanceof State[])
-			return select ? mySelectedEdges.add((State[]) o) : mySelectedEdges
-					.remove((State[]) o);
+		else if (o instanceof State[]){
+			State[] edge = (State[]) o;
+			if(select) return mySelectedEdges.add(edge);
+			
+			for(State[] e : mySelectedEdges)
+				if(edge[0].equals(e[0]) && edge[1].equals(e[1]))
+					return mySelectedEdges.remove(e);
+		}
 		else if (o instanceof Transition)
 			return select ? mySelectedTrans.add((T) o) : mySelectedTrans
 					.remove((T) o);
+			else if (o instanceof Note)
+				return select ? mySelectedNotes.add((Note) o) : mySelectedNotes.remove((Note) o);
 		return false;
 	}
 
@@ -105,6 +116,8 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 					return true;
 		} else if (o instanceof Transition)
 			return mySelectedTrans.contains((T) o);
+		else if (o instanceof Note)
+			return mySelectedNotes.contains((Note) o);
 		return false;
 	}
 
@@ -113,6 +126,7 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		mySelectedStates.clear();
 		mySelectedEdges.clear();
 		mySelectedTrans.clear();
+		mySelectedNotes.clear();
 	}
 	
 	public Set<State> getSelectedStates(){
@@ -121,6 +135,14 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 	
 	public Set<T> getSelectedTransitions(){
 		return mySelectedTrans;
+	}
+	
+	public Set<State[]> getSelectedEdges(){
+		return mySelectedEdges;
+	}
+	
+	public Set<Note> getSelectedNotes() {
+		return mySelectedNotes;
 	}
 
 	/** Draws the vertex as the selected state color, as set in Preferences. */
@@ -141,11 +163,11 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		g2.dispose();
 	}
 
-	/** Draws the control point p. */
-	private void drawPoint(Graphics g, Point2D p) {
-		g.drawOval((int) p.getX() - JFLAPConstants.CONTROL_POINT_RADIUS,
-				(int) p.getY() - JFLAPConstants.CONTROL_POINT_RADIUS,
-				JFLAPConstants.CONTROL_POINT_RADIUS * 2,
-				JFLAPConstants.CONTROL_POINT_RADIUS * 2);
-	}
+//	/** Draws the control point p. */
+//	private void drawPoint(Graphics g, Point2D p) {
+//		g.drawOval((int) p.getX() - JFLAPConstants.CONTROL_POINT_RADIUS,
+//				(int) p.getY() - JFLAPConstants.CONTROL_POINT_RADIUS,
+//				JFLAPConstants.CONTROL_POINT_RADIUS * 2,
+//				JFLAPConstants.CONTROL_POINT_RADIUS * 2);
+//	}
 }
