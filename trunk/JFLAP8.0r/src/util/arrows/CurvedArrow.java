@@ -92,11 +92,14 @@ public class CurvedArrow extends QuadCurve2D.Double {
 		if(rect.contains(getP1()) || rect.contains(getP2()))
 			return true;
 		PathIterator pit = getPathIterator(null, 0.01);
-		double[] coords = new double[2];
+		double[] coords = new double[]{getP1().getX(), getP1().getY()};
 		
 		while(!pit.isDone()){
+			double tempx = coords[0], tempy = coords[1];
+			
 			pit.currentSegment(coords);
-			if(rect.contains(new Point2D.Double(coords[0], coords[1])))
+			if(rect.contains(new Point2D.Double(coords[0], coords[1])) ||
+					new Line2D.Double(tempx, tempy, coords[0], coords[1]).intersects(rect))
 					return true;
 			pit.next();
 		}

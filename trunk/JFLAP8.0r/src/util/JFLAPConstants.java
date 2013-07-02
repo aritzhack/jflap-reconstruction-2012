@@ -66,6 +66,7 @@ public interface JFLAPConstants {
 
 	public static final Stroke DEFAULT_TRANSITION_STROKE = new BasicStroke(2.4f);
 	public static final Color DEFAULT_TRANS_TOOL_COLOR = new Color(.5f, .5f, .5f, .5f);
+	public static final Color BACKGROUND_CARET_COLOR = new Color(255, 255, 150);
 	// public static final Note BASE_NOTE = new Note("Edit me");
 	public static final int EDITOR_CELL_HEIGHT = 13;
 	public static final int INITAL_LOOP_HEIGHT = 70;

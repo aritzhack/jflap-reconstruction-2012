@@ -13,6 +13,7 @@ import model.automata.State;
 import model.automata.Transition;
 import util.JFLAPConstants;
 import view.automata.AutomatonEditorPanel;
+import view.automata.Note;
 
 /**
  * Tool used in the deleting of States, Transitions, edges, and Notes in an
@@ -47,13 +48,16 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
 			Object o = panel.objectAtPoint(e.getPoint());
-
-			if (o instanceof State)
+			
+			if (e.getSource() instanceof Note)
+				panel.removeNote((Note) e.getSource());
+			else if (o instanceof State)
 				panel.removeState((State) o);
 			else if (o instanceof Transition)
 				panel.removeTransition((S) o);
 			else if (o instanceof State[])
 				panel.removeEdge(((State[]) o)[0], ((State[]) o)[1]);
+			
 			panel.repaint();
 		}
 	}

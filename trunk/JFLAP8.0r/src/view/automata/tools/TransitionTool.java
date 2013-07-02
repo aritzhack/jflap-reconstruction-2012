@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 import model.automata.Automaton;
@@ -83,8 +85,10 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		if (from != null) {
 			Graphics2D g2 = (Graphics2D) g;
 			Stroke s = g2.getStroke();
+			
 			g2.setStroke(JFLAPConstants.DEFAULT_TRANSITION_STROKE);
 			g2.setColor(JFLAPConstants.DEFAULT_TRANS_TOOL_COLOR);
+			
 			g2.drawLine((int) pFrom.getX(), (int) pFrom.getY(),
 					(int) pCurrent.getX(), (int) pCurrent.getY());
 			g2.setStroke(s);

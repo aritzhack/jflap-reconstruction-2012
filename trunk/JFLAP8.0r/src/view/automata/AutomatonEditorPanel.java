@@ -1,14 +1,12 @@
 package view.automata;
 
-import java.awt.Cursor;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
@@ -18,8 +16,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -40,11 +40,11 @@ import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.arrows.CurvedArrow;
 import util.view.GraphHelper;
 import view.EditingPanel;
-import view.automata.tools.DeleteTool;
 import view.automata.tools.EditingTool;
 import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
@@ -60,7 +60,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	private TransitionGraph<S> myGraph;
 	private SelectionAutomatonDrawer<S> myDrawer;
 	private AffineTransform transform;
-	private List<Note> myNotes;
+	private Map<State, Note> myStateLabels;
+	private Set<Note> myNotes;
 
 	public AutomatonEditorPanel(T m, UndoKeeper keeper, boolean editable) {
 		super(keeper, editable);
@@ -70,25 +71,37 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		StateDrawer vDraw = new StateDrawer();
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
-		myNotes = new ArrayList<Note>();
+		myStateLabels = new HashMap<State, Note>();
+		myNotes = new HashSet<Note>();
 		addKeyListener(new DeleteKeyListener());
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		updateBounds(g);
-
-		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		setBackground(java.awt.Color.white);
-
 		Graphics2D g2 = (Graphics2D) g;
+
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		setBackground(java.awt.Color.white);
 		g2.transform(transform);
+
+		updateBounds(g2);
+
 		myDrawer.draw(myGraph, g2);
 
-		for(Note n : myNotes)
-			n.draw(g2);
+		// TODO: draw notes/labels
+		for (Note n : myNotes) {
+			n.setDisabledTextColor(Color.black);
+			if(getSelection().contains(n))
+				n.setBackground(JFLAPPreferences.getSelectedStateColor());
+			else 
+				n.setBackground(JFLAPPreferences.getStateColor());
+			//Notes are weird
+			n.setLocation(n.getPoint());
+		}
 
 		if (myTool != null)
 			myTool.draw(g2);
@@ -119,6 +132,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		// graphics with the TransitionTables
 		// Also so you don't break things (like undoing a creation while you
 		// still have the state selected)
+		for(Note n : myNotes){
+			n.setEditable(false);
+			n.setEnabled(false);
+			n.setCaretColor(JFLAPConstants.BACKGROUND_CARET_COLOR);
+		}
 		JFLAPDebug.print("NEEDS TO BE IMPLEMENTED!");
 	}
 
@@ -143,10 +161,19 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * tool, or a simple arrow otherwise).
 	 */
 	public void setTool(EditingTool<T, S> t) {
-		if(myTool != null)
+		if (myTool != null){
 			myTool.setActive(false);
+			for(Note n : myNotes){
+				n.removeMouseListener(myTool);
+				n.removeMouseMotionListener(myTool);
+			}
+		}
 		myTool = t;
 		myTool.setActive(true);
+		for(Note n : myNotes){
+			n.addMouseListener(myTool);
+			n.addMouseMotionListener(myTool);
+		}
 	}
 
 	/** Sets the given object as selected in the AutomatonDrawer. */
@@ -154,40 +181,59 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myDrawer.setSelected(o, true);
 		repaint();
 	}
-	
-	public void selectAll(Collection<? extends Object> objs){
-		for(Object o : objs){
+
+	public void deselectObject(Object o) {
+		myDrawer.setSelected(o, false);
+		repaint();
+	}
+
+	public void selectAll(Collection<? extends Object> objs) {
+		for (Object o : objs) {
 			myDrawer.setSelected(o, true);
 		}
 		repaint();
 	}
-	
-	public List<Object> selectAllInBounds(Rectangle bounds){
+
+	public void selectAllInBounds(Rectangle bounds) {
 		Set<S> tranSet = new TreeSet<S>();
 		Set<State> stateSet = new TreeSet<State>();
 		Set<State[]> edgeSet = new HashSet<State[]>();
-		
-		for(State vertex : myAutomaton.getStates()){
+
+		for (State vertex : myAutomaton.getStates()) {
 			Point2D current = myGraph.pointForVertex(vertex);
-			if(bounds.contains(current))
+			if (bounds.contains(current))
 				stateSet.add(vertex);
 		}
-		
-		for(S trans : myAutomaton.getTransitions()){
-			LabelBounds label = GraphHelper.getLabelBounds(myGraph, trans, getGraphics());
+
+		for (S trans : myAutomaton.getTransitions()) {
+			LabelBounds label = GraphHelper.getLabelBounds(myGraph, trans,
+					getGraphics());
 			State from = trans.getFromState(), to = trans.getToState();
 			CurvedArrow arrow = myDrawer.getArrow(from, to, myGraph);
-			
-			if(bounds.intersects(label.getRectangle()) || bounds.contains(label.getRectangle()))
+
+			if (bounds.intersects(label.getRectangle())
+					|| bounds.contains(label.getRectangle()))
 				tranSet.add(trans);
-			if(arrow.intersects(bounds)){
+			if (arrow.intersects(bounds)) {
 				tranSet.addAll(myGraph.getOrderedTransitions(from, to));
-				edgeSet.add(new State[]{from, to});
+				edgeSet.add(new State[] { from, to });
 			}
 		}
 		List<Object> list = new ArrayList<Object>(tranSet);
 		list.addAll(stateSet);
 		list.addAll(edgeSet);
+
+		clearSelection();
+		selectAll(list);
+	}
+
+	public List<Object> getSelection() {
+		List<Object> list = new ArrayList<Object>();
+		list.addAll(myDrawer.getSelectedStates());
+		list.addAll(myDrawer.getSelectedTransitions());
+		list.addAll(myDrawer.getSelectedEdges());
+		list.addAll(myDrawer.getSelectedNotes());
+		
 		return list;
 	}
 
@@ -322,20 +368,39 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		S[] temp = (S[]) myGraph.getOrderedTransitions(from, to).toArray(
 				new Transition[0]);
 
-		getKeeper().applyAndListen(
-				new TransitionRemoveEvent(temp));
+		getKeeper().applyAndListen(new TransitionRemoveEvent(temp));
 	}
 
-
+	/** Creating of non-state-label notes. */
 	public void createAndAddNote(Point p) {
-		Note note = new Note(this, p, "need to figure this out!");
+		Note note = new Note(this, p);
 		myNotes.add(note);
+		note.addMouseListener(myTool);
+		note.addMouseMotionListener(myTool);
 		editNote(note);
 	}
 
 	public void editNote(Note n) {
-		//TODO: Notes?
+		n.setEnabled(true);
+		n.setEditable(true);
+		n.setCaretColor(null);
+		n.requestFocus();
+		revalidate();
 		repaint();
+	}
+	
+	public void moveNote(Note n, Point p){
+		n.setPoint(p);
+		revalidate();
+		repaint();
+	}
+	
+	public void removeNote(Note n) {
+		remove(n);
+		myNotes.remove(n);
+		n.removeMouseListener(myTool);
+		n.removeMouseMotionListener(myTool);
+		myDrawer.clearSelection();
 	}
 
 	/**
@@ -383,7 +448,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	private Note noteAtPoint(Point2D p) {
-		// TODO Notes need to be implemented
+		for(Note n : myNotes){
+			if(n.getBounds().contains(p)){
+				return n;
+			}
+		}
 		return null;
 	}
 
@@ -437,7 +506,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		minx -= getStateBounds();
 		miny -= getStateBounds();
 
-		int x = (int) Math.ceil(maxx), y = (int) Math.ceil(maxy);
+		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
 		setPreferredSize(new Dimension(x, y));
 
 		if (minx < 0 || miny < 0) {
@@ -515,8 +584,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 					keeper.applyAndListen(new StateAndTransRemoveEvent(states,
 							trans, points));
 				} else
-					getKeeper().applyAndListen(
-							new TransitionRemoveEvent(trans));
+					getKeeper()
+							.applyAndListen(new TransitionRemoveEvent(trans));
 			}
 		}
 	}
@@ -603,7 +672,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						transitions[i].getToState());
 			}
 		}
-		
+
 		@Override
 		public boolean redo() {
 			clearSelection();

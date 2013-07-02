@@ -1,54 +1,47 @@
 package view.automata;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
-import universe.preferences.JFLAPPreferences;
+import javax.swing.JTextArea;
 
-public class Note{
+public class Note extends JTextArea {
+
+	public static final String BLANK_TEXT = "insert_text";
 
 	private AutomatonEditorPanel myPanel;
+
 	private Point myPoint;
-	private String myString;
 
 	public Note(AutomatonEditorPanel panel, Point p) {
-		this(panel, p, null);
-	}
-	
-	public Note(AutomatonEditorPanel panel, String message){
-		this(panel, new Point(0,0), message);
+		this(panel, p, BLANK_TEXT);
 	}
 
 	public Note(AutomatonEditorPanel panel, Point p, String message) {
 		myPanel = panel;
+		setPoint(p);
+		setText(message);
+		panel.add(this);
+
+		setEnabled(true);
+		setEditable(true);
+		setCaretColor(null);
+		this.setSelectionStart(0);
+		this.requestFocus();
+	}
+	
+	public Point getPoint(){
+		return myPoint;
+	}
+	
+	public void setPoint(Point p) {
 		myPoint = p;
-		myString = message;
 	}
 	
-	public void setText(String text){
-		myString = text;
-		myPanel.repaint();
-	}
-	
-	public void setLocation(Point p){
-		myPoint = p;
-		myPanel.repaint();
-	}
-	
-	public void draw(Graphics2D g2d){
-		FontMetrics metrics = g2d.getFontMetrics();
-		int w = metrics.stringWidth(myString);
-		int h = metrics.getMaxAscent();
-		int x = myPoint.x - w / 2;
-		int y = myPoint.y + h / 2;
-		
-		Color current = g2d.getColor();
-		g2d.setColor(JFLAPPreferences.getStateColor());
-		g2d.fillRect(x-1, y-h, w+2, h+2);
-		g2d.setColor(current);
-		g2d.drawString(myString, x, y);
-		
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Note){
+			return myPoint.equals(((Note) obj).myPoint) && getText().equals(((Note) obj).getText());
+		}
+		return false;
 	}
 }
