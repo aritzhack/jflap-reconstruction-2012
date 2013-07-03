@@ -11,8 +11,8 @@ import model.automata.StateSet;
 import model.automata.Transition;
 import util.Point2DAdv;
 import view.automata.AutomatonEditorPanel;
-import view.automata.StateAddEvent;
-import view.automata.StateMoveEvent;
+import view.automata.undoing.StateAddEvent;
+import view.automata.undoing.StateMoveEvent;
 
 public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 		EditingTool<T, S> {

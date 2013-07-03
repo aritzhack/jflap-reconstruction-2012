@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -14,6 +16,7 @@ import model.automata.Transition;
 import util.JFLAPConstants;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.undoing.NoteRemoveEvent;
 
 /**
  * Tool used in the deleting of States, Transitions, edges, and Notes in an
@@ -45,12 +48,17 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		AutomatonEditorPanel<T, S> panel = getPanel();
+		panel.stopAllEditing();
+		
 		if (SwingUtilities.isLeftMouseButton(e)) {
-			AutomatonEditorPanel<T, S> panel = getPanel();
 			Object o = panel.objectAtPoint(e.getPoint());
 			
-			if (e.getSource() instanceof Note)
-				panel.removeNote((Note) e.getSource());
+			if (e.getSource() instanceof Note){
+				List<Note> notes = new ArrayList<Note>();
+				notes.add((Note) e.getSource());
+				panel.getKeeper().applyAndListen(new NoteRemoveEvent(panel, notes));
+			}
 			else if (o instanceof State)
 				panel.removeState((State) o);
 			else if (o instanceof Transition)

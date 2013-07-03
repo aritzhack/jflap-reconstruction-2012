@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.undoing;
 
 import java.awt.geom.Point2D;
 
@@ -7,6 +7,7 @@ import model.automata.State;
 import model.undo.IUndoRedo;
 import util.JFLAPConstants;
 import util.view.GraphHelper;
+import view.automata.AutomatonEditorPanel;
 
 /**
  * Undoing Event for moving a State from one specific point to another, such that
@@ -40,7 +41,7 @@ public class StateMoveEvent implements IUndoRedo {
 	@Override
 	public boolean redo() {
 		myTo = GraphHelper.getOnscreenPoint(
-				myState.equals(myDefinition.getStartState()), myTo);
+				Automaton.isStartState(myDefinition, myState), myTo);
 		return moveAndClear(myTo);
 	}
 

@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.undoing;
 
 import java.awt.geom.Point2D;
 
@@ -7,6 +7,7 @@ import model.automata.State;
 import model.change.events.AddEvent;
 import util.JFLAPConstants;
 import util.view.GraphHelper;
+import view.automata.AutomatonEditorPanel;
 
 /**
  * Undoing Event for creating a state at a specific point so that when undone

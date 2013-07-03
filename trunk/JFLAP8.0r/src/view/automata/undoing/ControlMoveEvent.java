@@ -1,8 +1,10 @@
-package view.automata;
+package view.automata.undoing;
 
 import java.awt.Panel;
 import java.awt.geom.Point2D;
 import java.util.List;
+
+import view.automata.AutomatonEditorPanel;
 
 import model.automata.State;
 import model.graph.ControlPoint;
