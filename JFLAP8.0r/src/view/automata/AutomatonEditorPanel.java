@@ -7,14 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +24,8 @@ import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.AutomatonException;
@@ -38,6 +39,7 @@ import model.change.events.RemoveEvent;
 import model.change.events.StartStateSetEvent;
 import model.graph.ControlPoint;
 import model.graph.TransitionGraph;
+import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
@@ -50,7 +52,12 @@ import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
 import view.automata.transitiontable.TransitionTable;
 import view.automata.transitiontable.TransitionTableFactory;
-import debug.JFLAPDebug;
+import view.automata.undoing.NoteAddEvent;
+import view.automata.undoing.NoteRemoveEvent;
+import view.automata.undoing.NoteRenameEvent;
+import view.automata.undoing.StateLabelAddEvent;
+import view.automata.undoing.StateLabelRemoveEvent;
+import view.automata.undoing.StateLabelRenameEvent;
 
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
@@ -61,10 +68,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	private SelectionAutomatonDrawer<S> myDrawer;
 	private AffineTransform transform;
 	private Map<State, Note> myStateLabels;
-	private Set<Note> myNotes;
+	private Map<Note, String> myNotes;
 
 	public AutomatonEditorPanel(T m, UndoKeeper keeper, boolean editable) {
 		super(keeper, editable);
+		setLayout(null); // Needed to deal with Notes and Tables
+
 		myAutomaton = m;
 		myGraph = new TransitionGraph<S>(m);
 		myGraph.addListener(this);
@@ -72,7 +81,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
 		myStateLabels = new HashMap<State, Note>();
-		myNotes = new HashSet<Note>();
+		myNotes = new HashMap<Note, String>();
 		addKeyListener(new DeleteKeyListener());
 	}
 
@@ -92,19 +101,28 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		myDrawer.draw(myGraph, g2);
 
-		// TODO: draw notes/labels
-		for (Note n : myNotes) {
-			n.setDisabledTextColor(Color.black);
-			if(getSelection().contains(n))
-				n.setBackground(JFLAPPreferences.getSelectedStateColor());
-			else 
-				n.setBackground(JFLAPPreferences.getStateColor());
-			//Notes are weird
-			n.setLocation(n.getPoint());
-		}
-
 		if (myTool != null)
 			myTool.draw(g2);
+	}
+
+	@Override
+	protected void paintChildren(Graphics g) {
+
+		super.paintChildren(g);
+		// TODO: draw notes/labels
+		for (Note n : myNotes.keySet()) {
+			if (getSelection().contains(n))
+				n.setBackground(JFLAPPreferences.getSelectedStateColor());
+			else
+				n.setBackground(JFLAPPreferences.getStateColor());
+		}
+
+		for (State s : myStateLabels.keySet()) {
+			Note label = myStateLabels.get(s);
+			Color bg = myDrawer.isSelected(s) ? JFLAPPreferences
+					.getSelectedStateColor() : JFLAPPreferences.getStateColor();
+			label.setBackground(bg);
+		}
 	}
 
 	@Override
@@ -123,7 +141,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		revalidate();
 		repaint();
 	}
 
@@ -132,12 +149,22 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		// graphics with the TransitionTables
 		// Also so you don't break things (like undoing a creation while you
 		// still have the state selected)
-		for(Note n : myNotes){
+		UndoKeeper keeper = getKeeper();
+		for (Note n : myNotes.keySet()) {
 			n.setEditable(false);
 			n.setEnabled(false);
 			n.setCaretColor(JFLAPConstants.BACKGROUND_CARET_COLOR);
+			String text = n.getText(), oldText = myNotes.get(n);
+
+			if (n.isEmpty()) {
+				n.setText(oldText);
+				keeper.applyAndListen(new NoteRemoveEvent(this, Arrays
+						.asList(new Note[] { n })));
+			} else if (!oldText.equals(text)) {
+				getKeeper().registerChange(new NoteRenameEvent(n, oldText));
+				myNotes.put(n, text);
+			}
 		}
-		JFLAPDebug.print("NEEDS TO BE IMPLEMENTED!");
 	}
 
 	/**
@@ -161,16 +188,17 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * tool, or a simple arrow otherwise).
 	 */
 	public void setTool(EditingTool<T, S> t) {
-		if (myTool != null){
+		stopAllEditing();
+		if (myTool != null) {
 			myTool.setActive(false);
-			for(Note n : myNotes){
+			for (Note n : myNotes.keySet()) {
 				n.removeMouseListener(myTool);
 				n.removeMouseMotionListener(myTool);
 			}
 		}
 		myTool = t;
 		myTool.setActive(true);
-		for(Note n : myNotes){
+		for (Note n : myNotes.keySet()) {
 			n.addMouseListener(myTool);
 			n.addMouseMotionListener(myTool);
 		}
@@ -198,6 +226,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		Set<S> tranSet = new TreeSet<S>();
 		Set<State> stateSet = new TreeSet<State>();
 		Set<State[]> edgeSet = new HashSet<State[]>();
+		Set<Note> noteSet = new HashSet<Note>();
 
 		for (State vertex : myAutomaton.getStates()) {
 			Point2D current = myGraph.pointForVertex(vertex);
@@ -219,9 +248,16 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				edgeSet.add(new State[] { from, to });
 			}
 		}
+
+		for (Note n : myNotes.keySet()) {
+			Rectangle noteBound = n.getRectangle();
+			if (bounds.intersects(noteBound) || bounds.contains(noteBound))
+				noteSet.add(n);
+		}
 		List<Object> list = new ArrayList<Object>(tranSet);
 		list.addAll(stateSet);
 		list.addAll(edgeSet);
+		list.addAll(noteSet);
 
 		clearSelection();
 		selectAll(list);
@@ -233,7 +269,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		list.addAll(myDrawer.getSelectedTransitions());
 		list.addAll(myDrawer.getSelectedEdges());
 		list.addAll(myDrawer.getSelectedNotes());
-		
+
 		return list;
 	}
 
@@ -242,10 +278,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myDrawer.clearSelection();
 		repaint();
 	}
-
-	// public void showMenu(Point2D p) {
-	// Object o = objectAtPoint(p);
-	// }
 
 	/**
 	 * Creates and adds a new, default-named state to the automaton, and sets
@@ -261,6 +293,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	/** Moves the state to the specified point. */
 	public void moveState(State s, Point2D p) {
 		myGraph.moveVertex(s, p);
+		if (myStateLabels.containsKey(s)) {
+			Note label = myStateLabels.get(s);
+
+			if (label != null)
+				moveStateLabel(s);
+		}
 	}
 
 	/**
@@ -276,8 +314,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		transFromOrTo.addAll(transitions.getTransitionsToState(vertex));
 
 		getKeeper().applyAndListen(
-				new StateAndTransRemoveEvent(new State[] { vertex },
-						transFromOrTo, new Point2D[] { p }));
+				new CompoundRemoveEvent(new State[] { vertex }, transFromOrTo,
+						new Point2D[] { p }));
 	}
 
 	/** Returns a the location of vertex in the TransitionGraph. */
@@ -304,37 +342,26 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * calculated based on default settings.
 	 */
 	public void editTransition(S trans, boolean isNew) {
-		TransitionTable<T, S> table = TransitionTableFactory.createTable(trans,
+		TransitionTable table = TransitionTableFactory.createTable(trans,
 				myAutomaton, this);
 		table.setCellSelectionEnabled(true);
 		table.changeSelection(0, 0, false, false);
 
-		final Dimension tableSize = table.getSize();
+		Dimension tableSize = table.getPreferredSize();
 		Point2D center = isNew ? GraphHelper.calculateCenterPoint(myGraph,
 				trans) : myGraph.getLabelCenter(trans);
-		final Point tablePoint = new Point((int) center.getX()
-				- tableSize.width / 2, (int) center.getY() - tableSize.height
-				/ 2);
+		Point tablePoint = new Point((int) center.getX() - tableSize.width / 2,
+				(int) center.getY() - tableSize.height / 2);
 
-		table.setSize(tableSize);
-		table.setLocation(tablePoint);
+		table.setBounds(new Rectangle(tablePoint, tableSize));
 
-		table.addComponentListener(new ComponentListener() {
-			public void componentHidden(ComponentEvent e) {
-			}
-
-			public void componentMoved(ComponentEvent e) {
-				e.getComponent().setLocation(tablePoint);
-			}
-
-			public void componentResized(ComponentEvent e) {
-				e.getComponent().setSize(tableSize);
-			}
-
-			public void componentShown(ComponentEvent e) {
-			}
-		});
 		table.requestFocus();
+	}
+
+	public void clearTableInfo() {
+		clearSelection();
+		repaint();
+		requestFocus();
 	}
 
 	/** Removes the transition from the Automaton and notifies the UndoKeeper. */
@@ -374,33 +401,98 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	/** Creating of non-state-label notes. */
 	public void createAndAddNote(Point p) {
 		Note note = new Note(this, p);
-		myNotes.add(note);
-		note.addMouseListener(myTool);
-		note.addMouseMotionListener(myTool);
-		editNote(note);
+		getKeeper().applyAndListen(new NoteAddEvent(this, note));
 	}
 
+	/** Adds a note to this panel. */
+	public void addNote(Note n) {
+		add(n);
+		Point p = n.getPoint();
+		n.setBounds(new Rectangle(p, n.getPreferredSize()));
+		myNotes.put(n, n.getText());
+		n.addMouseListener(myTool);
+		n.addMouseMotionListener(myTool);
+	}
+
+	/** Enables the note and requests focus. */
 	public void editNote(Note n) {
 		n.setEnabled(true);
 		n.setEditable(true);
 		n.setCaretColor(null);
 		n.requestFocus();
-		revalidate();
+		myNotes.put(n, n.getText());
 		repaint();
 	}
-	
-	public void moveNote(Note n, Point p){
+
+	/** Moves the note to the specified point. */
+	public void moveNote(Note n, Point p) {
 		n.setPoint(p);
-		revalidate();
 		repaint();
 	}
-	
+
+	/** Deletes the note and all traces of it. */
 	public void removeNote(Note n) {
 		remove(n);
 		myNotes.remove(n);
 		n.removeMouseListener(myTool);
 		n.removeMouseMotionListener(myTool);
 		myDrawer.clearSelection();
+		repaint();
+	}
+
+	public Note getStateLabel(State s) {
+		if (myStateLabels.containsKey(s))
+			return myStateLabels.get(s);
+		return null;
+	}
+
+	public void addStateLabel(State s, Note n, String label) {
+		add(n);
+		n.setText(label);
+
+		n.setEditable(false);
+		n.setEnabled(false);
+		n.setCaretColor(JFLAPConstants.BACKGROUND_CARET_COLOR);
+
+		myStateLabels.put(s, n);
+		moveStateLabel(s);
+	}
+
+	public void changeStateLabel(State s, String label) {
+		Note n;
+		UndoKeeper keeper = getKeeper();
+		boolean contained = myStateLabels.containsKey(s);
+
+		if (label == null) {
+			if (contained)
+				keeper.applyAndListen(new StateLabelRemoveEvent(this, s));
+			return;
+		}
+
+		if (!myStateLabels.containsKey(s) || (n = myStateLabels.get(s)) == null) {
+			keeper.applyAndListen(new StateLabelAddEvent(this, s, label));
+		} else if (!label.equals(n.getText())) {
+			String oldText = n.getText();
+			n.setText(label);
+			moveStateLabel(s);
+			keeper.registerChange(new StateLabelRenameEvent(this, s, oldText));
+		}
+		repaint();
+	}
+
+	public void moveStateLabel(State s) {
+		Point center = (Point) getPointForVertex(s);
+		Note n = myStateLabels.get(s);
+
+		int x = (int) (center.getX() - n.getBounds().width / 2);
+		int y = (int) (center.getY() + JFLAPConstants.STATE_LABEL_HEIGHT);
+		n.setPoint(new Point(x, y));
+	}
+
+	public void removeStateLabel(State s) {
+		remove(myStateLabels.get(s));
+		myStateLabels.remove(s);
+		repaint();
 	}
 
 	/**
@@ -448,8 +540,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	private Note noteAtPoint(Point2D p) {
-		for(Note n : myNotes){
-			if(n.getBounds().contains(p)){
+		for (Note n : myNotes.keySet()) {
+			if (n.getBounds().contains(p)) {
 				return n;
 			}
 		}
@@ -463,19 +555,32 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * knows to resize).
 	 */
 	private void updateBounds(Graphics g) {
-		double maxx = 0, maxy = 0, minx = getStateBounds(), miny = getStateBounds();
+		double maxx = 0, maxy = 0, minx = 0, miny = 0;
 
 		// Compare to State points
+		// TODO: Labels, when they're implemented
 		for (State vert : myAutomaton.getStates()) {
 			Point2D point = myGraph.pointForVertex(vert);
 			double x = point.getX(), y = point.getY();
 
-			maxx = Math.max(maxx, x);
-			maxy = Math.max(maxy, y);
-			miny = Math.min(miny, y);
-			if (vert.equals(myAutomaton.getStartState()))
+			maxx = Math.max(maxx, x + getStateBounds());
+			maxy = Math.max(maxy, y + getStateBounds());
+			miny = Math.min(miny, y - getStateBounds());
+			if (Automaton.isStartState(myAutomaton, vert))
 				x -= JFLAPConstants.STATE_RADIUS;
-			minx = Math.min(minx, x);
+			minx = Math.min(minx, x - getStateBounds());
+
+			if (myStateLabels.containsKey(vert)) {
+				Note sLabel = myStateLabels.get(vert);
+				if (sLabel != null) {
+					Rectangle lBounds = sLabel.getBounds();
+
+					maxx = Math.max(maxx, lBounds.getMaxX());
+					minx = Math.min(minx, lBounds.getMinX());
+					maxy = Math.max(maxy, lBounds.getMaxY());
+					miny = Math.min(miny, lBounds.getMinY());
+				}
+			}
 		}
 
 		// Compare to labels and arrow boundaries
@@ -499,15 +604,14 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			miny = Math.min(miny, arrowBounds.getMinY());
 		}
 
-		// TODO: Notes, when they're implemented
+		for (Note n : myNotes.keySet()) {
+			Rectangle r = n.getRectangle();
 
-		maxx += getStateBounds();
-		maxy += getStateBounds();
-		minx -= getStateBounds();
-		miny -= getStateBounds();
-
-		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
-		setPreferredSize(new Dimension(x, y));
+			maxx = Math.max(maxx, r.getMaxX());
+			minx = Math.min(minx, r.getMinX());
+			maxy = Math.max(maxy, r.getMaxY());
+			miny = Math.min(miny, r.getMinY());
+		}
 
 		if (minx < 0 || miny < 0) {
 			// Adjust so they get off the boundary
@@ -518,8 +622,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			for (State vert : myAutomaton.getStates()) {
 				Point2D current = myGraph.pointForVertex(vert);
 
-				myGraph.moveVertex(vert, new Point2D.Double(current.getX()
-						- minx, current.getY() - miny));
+				moveState(vert, new Point2D.Double(current.getX() - minx,
+						current.getY() - miny));
 
 				for (State adj : myGraph.adjacent(vert)) {
 					Point2D ctrl = myGraph.getControlPt(vert, adj);
@@ -529,7 +633,18 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 								- minx, ctrl.getY() - miny));
 				}
 			}
+			for (Note n : myNotes.keySet()) {
+				Point nPoint = n.getPoint();
+				nPoint = new Point((int) (nPoint.x - minx),
+						(int) (nPoint.y - miny));
+				n.setPoint(nPoint);
+			}
 		}
+
+		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
+		// TODO: may want to change when you actually set the size
+		setPreferredSize(new Dimension(x, y));
+		revalidate();
 	}
 
 	/**
@@ -564,10 +679,17 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				State[] states = myDrawer.getSelectedStates().toArray(
 						new State[0]);
 				Set<S> trans = new TreeSet<S>(myDrawer.getSelectedTransitions());
+				Set<Note> notes = new HashSet<Note>(myDrawer.getSelectedNotes());
+
 				myDrawer.clearSelection();
 
 				TransitionSet<S> transitionSet = myAutomaton.getTransitions();
 				UndoKeeper keeper = getKeeper();
+				NoteRemoveEvent noteRemove = null;
+
+				if (notes.size() > 0)
+					noteRemove = new NoteRemoveEvent(AutomatonEditorPanel.this,
+							notes);
 
 				if (states.length > 0) {
 					Point2D[] points = new Point2D[states.length];
@@ -581,25 +703,32 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						trans.addAll(transitionSet
 								.getTransitionsToState(states[i]));
 					}
-					keeper.applyAndListen(new StateAndTransRemoveEvent(states,
-							trans, points));
+					CompoundRemoveEvent remove = new CompoundRemoveEvent(
+							states, trans, points);
+					if (noteRemove != null)
+						remove.addEvent(noteRemove);
+					keeper.applyAndListen(remove);
+				} else if (noteRemove != null) {
+					CompoundUndoRedo comp = new CompoundUndoRedo(noteRemove);
+					if (!trans.isEmpty())
+						comp.add(new TransitionRemoveEvent(trans));
+					keeper.applyAndListen(comp);
 				} else
-					getKeeper()
-							.applyAndListen(new TransitionRemoveEvent(trans));
+					keeper.applyAndListen(new TransitionRemoveEvent(trans));
 			}
 		}
 	}
 
 	/**
-	 * Event for undoing the deletion of a state and transitions.
+	 * Compound Event for undoing the deletion of a state and transitions.
 	 */
-	private class StateAndTransRemoveEvent implements IUndoRedo {
+	private class CompoundRemoveEvent implements IUndoRedo {
 
 		private State[] myStates;
 		private Point2D[] myPoints;
 		private List<IUndoRedo> myEvents;
 
-		public StateAndTransRemoveEvent(State[] states, Set<S> transitions,
+		public CompoundRemoveEvent(State[] states, Set<S> transitions,
 				Point2D[] points) {
 			if (states.length != points.length) {
 				throw new AutomatonException("Error with State Deletion");
@@ -617,9 +746,17 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						&& Acceptor.isFinalState((Acceptor) myAutomaton, s))
 					myEvents.add(new RemoveEvent<State>(
 							((Acceptor) myAutomaton).getFinalStateSet(), s));
+				if (myStateLabels.containsKey(s)
+						&& myStateLabels.get(s) != null)
+					myEvents.add(new StateLabelRemoveEvent(
+							AutomatonEditorPanel.this, s));
 			}
 			if (!transitions.isEmpty())
 				myEvents.add(new TransitionRemoveEvent(transitions));
+		}
+
+		public void addEvent(IUndoRedo event) {
+			myEvents.add(event);
 		}
 
 		@Override

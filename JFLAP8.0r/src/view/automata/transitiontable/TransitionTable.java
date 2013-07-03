@@ -155,12 +155,9 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 	 * Table is no longer needed.
 	 */
 	private void removeSelf() {
-		myPanel.clearSelection();
 		myPanel.removeMouseListener(myListener);
 		myPanel.remove(this);
-		myPanel.validate();
-		myPanel.repaint();
-		myPanel.requestFocus();
+		myPanel.clearTableInfo();
 	}
 
 	/**

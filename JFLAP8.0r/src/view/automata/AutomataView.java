@@ -2,9 +2,14 @@ package view.automata;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+
+import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -39,9 +44,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	@Override
 	public JComponent createCentralPanel(T model, UndoKeeper keeper,
 			boolean editable) {
-		// TODO: all this
 		return new AutomatonEditorPanel<T, S>(model, keeper, editable);
-
 	}
 
 	@Override
@@ -52,8 +55,8 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	@Override
 	public void repaint() {
 		//Needed for validating the bounds of the Automaton
-		if (getScroller() != null)
-			getScroller().revalidate();
+//		if (getScroller() != null)
+//			getScroller().revalidate();
 		super.repaint();
 	}
 	

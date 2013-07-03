@@ -1,8 +1,15 @@
 package view.automata;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import debug.JFLAPDebug;
 
 public class Note extends JTextArea {
 
@@ -20,12 +27,27 @@ public class Note extends JTextArea {
 		myPanel = panel;
 		setPoint(p);
 		setText(message);
-		panel.add(this);
 
-		setEnabled(true);
-		setEditable(true);
-		setCaretColor(null);
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		setDisabledTextColor(Color.black);
 		this.setSelectionStart(0);
+		this.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				resetBounds();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				resetBounds();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				resetBounds();
+			}
+		});
 		this.requestFocus();
 	}
 	
@@ -33,8 +55,28 @@ public class Note extends JTextArea {
 		return myPoint;
 	}
 	
+	public Rectangle getRectangle() {
+		int x = myPoint.x;
+		int y = myPoint.y;
+		int w = getBounds().width;
+		int h = getBounds().height;
+		return new Rectangle(x, y, w, h);
+	}
+	
 	public void setPoint(Point p) {
 		myPoint = p;
+		setLocation(p);
+	}
+	
+	private void resetBounds() {
+		setBounds(new Rectangle(myPoint, getPreferredSize()));
+	}
+	
+	
+	
+	public boolean isEmpty() {
+		String text = getText();
+		return text == null || text.isEmpty();
 	}
 	
 	@Override

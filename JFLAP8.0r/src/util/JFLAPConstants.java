@@ -70,6 +70,7 @@ public interface JFLAPConstants {
 	// public static final Note BASE_NOTE = new Note("Edit me");
 	public static final int EDITOR_CELL_HEIGHT = 13;
 	public static final int INITAL_LOOP_HEIGHT = 70;
+	public static final int STATE_LABEL_HEIGHT = 17;
 
 	public static final int MAIN_MENU_MASK = (System.getProperty("os.name")
 			.lastIndexOf("Windows") != -1 || (System.getProperty("os.name")
