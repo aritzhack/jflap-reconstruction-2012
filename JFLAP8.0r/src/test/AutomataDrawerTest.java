@@ -18,10 +18,10 @@ import model.automata.Transition;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
-import view.automata.AutomataView;
 import view.automata.AutomatonDrawer;
 import view.automata.AutomatonEditorPanel;
 import view.automata.StateDrawer;
+import view.automata.views.AutomataView;
 import view.graph.GraphDrawer;
 import file.xml.XMLCodec;
 

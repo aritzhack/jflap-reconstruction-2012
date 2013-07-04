@@ -21,26 +21,10 @@
 package view.undoing.undo;
 
 
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.List;
-
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.KeyStroke;
-
-import debug.JFLAPDebug;
-
-import util.view.ActionLinkedButton;
-import view.undoing.UndoRelatedButton;
-
 import model.undo.UndoKeeper;
 import model.undo.UndoKeeperListener;
-
-import errors.BooleanWrapper;
-import errors.JFLAPError;
+import view.undoing.UndoRelatedAction;
+import view.undoing.UndoRelatedButton;
 
 
 
@@ -53,7 +37,11 @@ import errors.JFLAPError;
 public class UndoButton extends UndoRelatedButton implements UndoKeeperListener{
 
 	public UndoButton(UndoKeeper k, boolean useIcon) {
-		super(new UndoAction(k), useIcon);
+		this(new UndoAction(k), useIcon);
+	}
+	
+	public UndoButton(UndoRelatedAction action, boolean useIcon) {
+		super(action, useIcon);
 	}
 
 	@Override

@@ -8,14 +8,13 @@ import model.undo.IUndoRedo;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
 
-public class NoteRemoveEvent implements IUndoRedo {
+public class NoteRemoveEvent extends EditingEvent {
 
-	private AutomatonEditorPanel myPanel;
 	private Collection<Note> myNotes;
 	private List<String> myStrings;
 
 	public NoteRemoveEvent(AutomatonEditorPanel panel, Collection<Note> notes) {
-		myPanel = panel;
+		super(panel);
 		myNotes = notes;
 		myStrings = new ArrayList<String>();
 		
@@ -26,26 +25,27 @@ public class NoteRemoveEvent implements IUndoRedo {
 	@Override
 	public boolean undo() {
 		Note[] notes = myNotes.toArray(new Note[0]);
+		AutomatonEditorPanel panel = getPanel();
+		
 		for (int i = 0; i < notes.length; i++) {
 			Note n = notes[i];
-			myPanel.addNote(n);
+			panel.addNote(n);
 			n.setText(myStrings.get(i));
 		}
-		myPanel.stopAllEditing();
-		myPanel.repaint();
+		panel.repaint();
 		return true;
 	}
 
 	@Override
 	public boolean redo() {
+		AutomatonEditorPanel panel = getPanel();
 		for (Note n : myNotes)
-			myPanel.removeNote(n);
+			panel.removeNote(n);
 		return true;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Remove multiple notes";
 	}
 

@@ -1,35 +1,31 @@
 package view.automata.undoing;
 
+import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
 import model.undo.IUndoRedo;
 
-public class NoteRenameEvent implements IUndoRedo{
+public class NoteRenameEvent extends SingleNoteEvent{
 
 	private String myOldText;
-	private Note myNote;
-	private String myNewText;
 
-	public NoteRenameEvent(Note n, String oldText){
+	public NoteRenameEvent(AutomatonEditorPanel panel, Note n, String oldText){
+		super(panel, n);
 		myOldText = oldText;
-		myNote = n;
-		myNewText = n.getText();
 	}
 	
 	@Override
 	public boolean undo() {
-		myNote.setText(myOldText);
+		getNote().setText(myOldText);
 		return true;
 		}
 
 	@Override
 	public boolean redo() {
-		myNote.setText(myNewText);
-		return true;
+		return super.redo();
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Rename Note";
 	}
 

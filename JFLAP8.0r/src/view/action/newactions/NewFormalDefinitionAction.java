@@ -3,7 +3,8 @@ package view.action.newactions;
 import universe.preferences.JFLAPPreferences;
 import model.formaldef.FormalDefinition;
 
-public abstract class NewFormalDefinitionAction<T extends FormalDefinition> extends NewAction<T> {
+public abstract class NewFormalDefinitionAction<T extends FormalDefinition>
+		extends NewAction<T> {
 
 	public NewFormalDefinitionAction(String name) {
 		super(name);
@@ -12,7 +13,8 @@ public abstract class NewFormalDefinitionAction<T extends FormalDefinition> exte
 	@Override
 	public T createNewModel() {
 		T def = createDefinition();
-		def.setMode(JFLAPPreferences.getDefaultMode());
+		if (def != null)
+			def.setMode(JFLAPPreferences.getDefaultMode());
 		return def;
 	}
 

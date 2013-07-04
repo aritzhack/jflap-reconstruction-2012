@@ -1,5 +1,6 @@
 package model.automata.turing;
 
+import universe.preferences.JFLAPPreferences;
 import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
 import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.InputAlphabet;
@@ -8,6 +9,7 @@ import model.automata.State;
 import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
+import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
 public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>{
@@ -96,6 +98,14 @@ public class MultiTapeTuringMachine extends TuringMachine<MultiTapeTMTransition>
 
 	@Override
 	public MultiTapeTMTransition createBlankTransition(State from, State to) {
-		return new MultiTapeTMTransition(from, to);
+		Symbol[] read = new Symbol[myNumTapes];
+		Symbol[] write = new Symbol[myNumTapes];
+		TuringMachineMove[] move = new TuringMachineMove[myNumTapes];
+		for(int i=0; i< myNumTapes; i++){
+			read[i] = JFLAPPreferences.getTMBlankSymbol();
+			write[i] = JFLAPPreferences.getTMBlankSymbol();
+			move[i] = TuringMachineMove.RIGHT;
+ 		}
+		return new MultiTapeTMTransition(from, to, read, write, move);
 	}
 }

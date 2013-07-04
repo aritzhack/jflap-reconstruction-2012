@@ -12,6 +12,10 @@ import util.ISelector;
 import view.EditingPanel;
 import view.action.edit.DeleteAction;
 import view.action.grammar.SortProductionsAction;
+import view.automata.AutomatonEditorPanel;
+import view.automata.undoing.AutomataRedoAction;
+import view.automata.undoing.AutomataUndoAction;
+import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -60,8 +64,19 @@ public class EditMenu extends JMenu implements TabChangeListener {
 			this.setVisible(false);
 		}
 		if (keeper != null) {
-			this.add(new UndoRelatedMenuItem(new RedoAction(keeper)));
-			this.add(new UndoRelatedMenuItem(new UndoAction(keeper)));
+			UndoAction undo = new UndoAction(keeper);
+			RedoAction redo = new RedoAction(keeper);
+			
+			if(view instanceof AutomataView){
+				AutomataView aView = (AutomataView) view;
+				AutomatonEditorPanel panel = (AutomatonEditorPanel) aView.getCentralPanel();
+				
+				undo = new AutomataUndoAction(keeper, panel);
+				redo = new AutomataRedoAction(keeper, panel);
+			}
+			
+			this.add(new UndoRelatedMenuItem(redo));
+			this.add(new UndoRelatedMenuItem(undo));
 		}
 		// Grammar Options
 		if (view instanceof GrammarView) {

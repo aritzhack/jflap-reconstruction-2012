@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.views;
 
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;

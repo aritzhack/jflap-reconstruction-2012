@@ -15,16 +15,15 @@ import model.undo.IUndoRedo;
  * @author Ian McMahon
  *
  */
-public class ControlMoveEvent implements IUndoRedo{
+public class ControlMoveEvent extends ClearSelectionEvent{
 
 	private State myFrom;
 	private State myTo;
 	private Point2D pFrom;
 	private Point2D pTo;
-	private AutomatonEditorPanel myPanel;
 
 	public ControlMoveEvent(AutomatonEditorPanel panel, State[] states, Point2D origin, Point2D dest){
-		myPanel = panel;
+		super(panel);
 		myFrom = states[0];
 		myTo = states[1];
 		pFrom = origin;
@@ -33,25 +32,22 @@ public class ControlMoveEvent implements IUndoRedo{
 	
 	@Override
 	public boolean undo() {
-		myPanel.clearSelection();
 		setLocation(pFrom);
-		return true;
+		return super.undo();
 	}
 
 	@Override
 	public boolean redo() {
-		myPanel.clearSelection();
 		setLocation(pTo);
-		return true;
+		return super.undo();
 	}
 	
 	private void setLocation(Point2D point){
-		myPanel.moveCtrlPoint(myFrom, myTo, point);
+		getPanel().moveCtrlPoint(myFrom, myTo, point);
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Control Point Moved";
 	}
 	
