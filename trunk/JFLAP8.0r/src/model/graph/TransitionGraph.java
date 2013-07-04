@@ -58,6 +58,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 	private Map<Integer, List<T>> myOrderedTransitions;
 	private Map<T, Point2D> myCenterMap;
 	private Automaton<T> myAutomaton;
+	private LayoutAlgorithm myAlg;
 
 	public TransitionGraph(Automaton<T> a) {
 		this(a, new GEMLayoutAlgorithm());
@@ -68,6 +69,8 @@ public class TransitionGraph<T extends Transition<T>> extends
 		myCenterMap = new TreeMap<T, Point2D>();
 		myAutomaton = a;
 		myAutomaton.addListener(this);
+		myAlg = alg;
+		
 		for (State s : a.getStates())
 			this.addVertex(s, new Point());
 		alg.layout(this, new HashSet<State>());
@@ -173,6 +176,10 @@ public class TransitionGraph<T extends Transition<T>> extends
 	
 	public Automaton<T> getAutomaton (){
 		return myAutomaton;
+	}
+	
+	public void layout() {
+		myAlg.layout(this, new HashSet<State>());
 	}
 
 	/**

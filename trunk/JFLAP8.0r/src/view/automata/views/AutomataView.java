@@ -1,11 +1,13 @@
-package view.automata;
+package view.automata.views;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
@@ -14,13 +16,20 @@ import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
+import view.automata.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.DeleteTool;
 import view.automata.tools.StateTool;
 import view.automata.tools.ToolBar;
 import view.automata.tools.TransitionTool;
+import view.automata.undoing.AutomataRedoAction;
+import view.automata.undoing.AutomataUndoAction;
 import view.formaldef.BasicFormalDefinitionView;
 import view.undoing.UndoPanel;
+import view.undoing.redo.RedoAction;
+import view.undoing.redo.RedoButton;
+import view.undoing.undo.UndoAction;
+import view.undoing.undo.UndoButton;
 
 public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		extends BasicFormalDefinitionView<T> {
@@ -54,9 +63,6 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public void repaint() {
-		//Needed for validating the bounds of the Automaton
-//		if (getScroller() != null)
-//			getScroller().revalidate();
 		super.repaint();
 	}
 	
@@ -83,7 +89,12 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		panel.setTool(arrow);
 		ToolBar bar = new ToolBar(arrow, state, trans, delete);
 		bar.addToolListener(panel);
-		bar.add(new UndoPanel(keeper));
+		
+		AutomataUndoAction undo = new AutomataUndoAction(keeper, panel);
+		RedoAction redo = new AutomataRedoAction(keeper, panel);
+		
+		bar.add(new UndoButton(undo, true));
+		bar.add(new RedoButton(redo, true));
 		return bar;
 	}
 

@@ -17,15 +17,13 @@ public class Note extends JTextArea {
 
 	private AutomatonEditorPanel myPanel;
 
-	private Point myPoint;
-
 	public Note(AutomatonEditorPanel panel, Point p) {
 		this(panel, p, BLANK_TEXT);
 	}
 
 	public Note(AutomatonEditorPanel panel, Point p, String message) {
 		myPanel = panel;
-		setPoint(p);
+		setLocation(p);
 		setText(message);
 
 		setBorder(BorderFactory.createLineBorder(Color.black));
@@ -51,25 +49,8 @@ public class Note extends JTextArea {
 		this.requestFocus();
 	}
 	
-	public Point getPoint(){
-		return myPoint;
-	}
-	
-	public Rectangle getRectangle() {
-		int x = myPoint.x;
-		int y = myPoint.y;
-		int w = getBounds().width;
-		int h = getBounds().height;
-		return new Rectangle(x, y, w, h);
-	}
-	
-	public void setPoint(Point p) {
-		myPoint = p;
-		setLocation(p);
-	}
-	
-	private void resetBounds() {
-		setBounds(new Rectangle(myPoint, getPreferredSize()));
+	public void resetBounds() {
+		setBounds(new Rectangle(getLocation(), getPreferredSize()));
 	}
 	
 	
@@ -82,7 +63,7 @@ public class Note extends JTextArea {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Note){
-			return myPoint.equals(((Note) obj).myPoint) && getText().equals(((Note) obj).getText());
+			return getLocation().equals(((Note) obj).getLocation()) && getText().equals(((Note) obj).getText());
 		}
 		return false;
 	}

@@ -4,8 +4,13 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
@@ -15,8 +20,10 @@ import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.change.events.AddEvent;
 import model.change.events.SetToEvent;
+import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 import view.grammar.productions.LambdaRemovingEditor;
+import debug.JFLAPDebug;
 
 /**
  * Table that will pop up to implement the editing of transitions in an
@@ -64,10 +71,19 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 
 	public abstract S modifyTransition();
 
+	
+	public String getValidString(String s) {
+		if(s == null || s.equals(JFLAPPreferences.getEmptyString()))
+			s = "";
+		return s;
+	}
+	
 	@Override
 	protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
 			int condition, boolean pressed) {
-		if (ks.getKeyCode() == KeyEvent.VK_ENTER && !ks.isOnKeyRelease()) {
+		int keyCode = ks.getKeyCode();
+
+		if (keyCode == KeyEvent.VK_ENTER && !ks.isOnKeyRelease()) {
 			stopEditing(false);
 
 			if (e.isShiftDown()) {
@@ -77,7 +93,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 				myPanel.editTransition(trans, true);
 			}
 			return true;
-		} else if (ks.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		} else if (keyCode == KeyEvent.VK_ESCAPE) {
 			stopEditing(true);
 			return true;
 		}
@@ -117,13 +133,13 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 				if (!transitions.contains(myTrans)) {
 					transitions.add(myTrans);
 					myPanel.getKeeper().registerChange(
-							new AddEvent<S>(transitions, myTrans){
+							new AddEvent<S>(transitions, myTrans) {
 								@Override
 								public boolean undo() {
 									myPanel.clearSelection();
 									return super.undo();
 								}
-								
+
 								@Override
 								public boolean redo() {
 									myPanel.clearSelection();
@@ -132,13 +148,13 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 							});
 				} else if (isNotDuplicate(transitions, temp, wasInTransitions))
 					myPanel.getKeeper().registerChange(
-							new SetToEvent<S>(myTrans, temp, t.copy()){
+							new SetToEvent<S>(myTrans, temp, t.copy()) {
 								@Override
 								public boolean undo() {
 									myPanel.clearSelection();
 									return super.undo();
 								}
-								
+
 								@Override
 								public boolean redo() {
 									myPanel.clearSelection();

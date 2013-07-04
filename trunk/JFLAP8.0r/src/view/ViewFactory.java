@@ -5,16 +5,27 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import model.algorithms.conversion.autotogram.TMVariableMapping;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.moore.MooreMachine;
+import model.automata.turing.MultiTapeTuringMachine;
+import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.grammar.Grammar;
 import model.lsystem.LSystem;
 import model.pumping.ContextFreePumpingLemma;
 import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
 import universe.JFLAPUniverse;
-import view.automata.AutomataView;
-import view.automata.FSAView;
+import view.automata.views.AutomataView;
+import view.automata.views.BlockTMView;
+import view.automata.views.FSAView;
+import view.automata.views.MealyView;
+import view.automata.views.MooreView;
+import view.automata.views.PDAView;
+import view.automata.views.TMView;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
@@ -41,6 +52,11 @@ public class ViewFactory {
 		myClassToComponent.put(RegPumpingLemmaChooser.class, PumpingLemmaChooserView.class);
 		myClassToComponent.put(LSystem.class, LSystemInputView.class);
 		myClassToComponent.put(FiniteStateAcceptor.class, FSAView.class);
+		myClassToComponent.put(PushdownAutomaton.class, PDAView.class);
+		myClassToComponent.put(MealyMachine.class, MealyView.class);
+		myClassToComponent.put(MooreMachine.class, MooreView.class);
+		myClassToComponent.put(MultiTapeTuringMachine.class, TMView.class);
+		myClassToComponent.put(BlockTuringMachine.class, BlockTMView.class);
 //		myClassToComponent.put(SetsManager.class, SetsView.class);
 
 	}

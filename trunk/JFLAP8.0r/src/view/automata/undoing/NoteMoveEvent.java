@@ -7,36 +7,30 @@ import view.automata.Note;
 
 import model.undo.IUndoRedo;
 
-public class NoteMoveEvent implements IUndoRedo{
+public class NoteMoveEvent extends SingleNoteEvent{
 	
-	private AutomatonEditorPanel myPanel;
-	private Note myNote;
 	private Point from;
 	private Point to;
-	private String myString;
 
 	public NoteMoveEvent(AutomatonEditorPanel panel, Note n, Point old){
-		myPanel = panel;
-		myNote = n;
+		super(panel, n);
 		from = old;
-		to = n.getPoint();
+		to = n.getLocation();
 		
 		from.x = (int) Math.max(from.x, 0);
 		from.y = (int) Math.max(from.y, 0);
 		to.x = (int) Math.max(to.x, 0);
 		to.y = (int) Math.max(to.y, 0);
-		
-		myString = n.getText();
 	}
 
 	@Override
 	public boolean undo() {
-		return move(from);
+		return move(from) && setText();
 	}
 
 	@Override
 	public boolean redo() {
-		return move(to);
+		return move(to) && super.redo();
 	}
 
 	@Override
@@ -45,11 +39,8 @@ public class NoteMoveEvent implements IUndoRedo{
 	}
 	
 	private boolean move(Point dest){
-		myNote.setText(myString);
-		myNote.setPoint(dest);
-		
-		myPanel.clearSelection();
-		myPanel.stopAllEditing();
+		getNote().setLocation(dest);
+		getPanel().clearSelection();
 		return true;
 	}
 

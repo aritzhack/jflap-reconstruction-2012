@@ -55,9 +55,8 @@ public class FSATransitionTable extends TransitionTable<FiniteStateAcceptor, FSA
 
 	@Override
 	public FSATransition modifyTransition() {
-		String s = (String) getModel().getValueAt(0, 0);
-		if(s == null || s.equals(JFLAPPreferences.getEmptyString()))
-			s = "";
+		String s = getValidString((String) getModel().getValueAt(0, 0));
+		
 		
 		FSATransition trans = getTransition();
 		State from = trans.getFromState(), to = trans.getToState();

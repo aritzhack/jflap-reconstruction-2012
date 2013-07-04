@@ -8,38 +8,36 @@ import model.undo.IUndoRedo;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
 
-public class StateLabelAddEvent implements IUndoRedo{
-
-	private AutomatonEditorPanel myPanel;
+public class StateLabelAddEvent extends EditingEvent{
+	
 	private Note myLabel;
 	private String myText;
 	private State myState;
 
 	public StateLabelAddEvent(AutomatonEditorPanel panel, State s, String text){
-		myPanel = panel;
+		super(panel);
 		myState = s;
 		myText = text;
 		
 		Point center = (Point) panel.getPointForVertex(s);
-		myLabel = new Note(myPanel, center);
+		myLabel = new Note(panel, center);
 		myLabel.setBounds(new Rectangle(center, myLabel.getPreferredSize()));
 	}
 	
 	@Override
 	public boolean undo() {
-		myPanel.removeStateLabel(myState);
+		getPanel().removeStateLabel(myState);
 		return true;
 	}
 
 	@Override
 	public boolean redo() {
-		myPanel.addStateLabel(myState, myLabel, myText);
+		getPanel().addStateLabel(myState, myLabel, myText);
 		return true;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Adds a state label";
 	}
 

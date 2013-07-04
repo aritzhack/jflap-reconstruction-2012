@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import model.automata.turing.MultiTapeTMTransition;
@@ -21,6 +22,7 @@ import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
+import view.grammar.productions.LambdaRemovingEditor;
 
 /**
  * TransitionTable specific to non-Block Turing Machines
@@ -38,14 +40,26 @@ public class MultiTapeTMTransitionTable extends
 			AutomatonEditorPanel<MultiTapeTuringMachine, MultiTapeTMTransition> panel) {
 		super(automaton.getNumTapes(), 3, trans, automaton, panel);
 		
-		TableColumn directionColumn = getColumnModel().getColumn(2);
-		directionColumn.setCellEditor(new TMMoveEditor()); 
-		// TODO Auto-generated constructor stub
+		TableColumnModel tcm = getColumnModel();
+		BlankRemovingEditor blank = new BlankRemovingEditor();
+		TMMoveEditor move = new TMMoveEditor();
+		
+		tcm.getColumn(0).setCellEditor(blank);
+		tcm.getColumn(1).setCellEditor(blank);
+		tcm.getColumn(2).setCellEditor(move); 
 	}
 
 	@Override
 	public TableModel createModel() {
 		return new MultiTapeTMTransTableModel();
+	}
+	
+	@Override
+	public String getValidString(String s) {
+		s = super.getValidString(s);
+		if(s.isEmpty())
+			s = JFLAPPreferences.getBlank();
+		return s;
 	}
 
 	@Override
@@ -60,14 +74,11 @@ public class MultiTapeTMTransitionTable extends
 		TableModel model = getModel();
 
 		for (int i = 0; i < machine.getNumTapes(); i++) {
-			reads[i] = new Symbol((String) model.getValueAt(i, 0));
-			if(reads[i].length() == 0)
-				reads[i] = JFLAPPreferences.getTMBlankSymbol();
-			
-			writes[i] = new Symbol((String) model.getValueAt(i, 1));
-			if(writes[i].length() == 0)
-				writes[i] = JFLAPPreferences.getTMBlankSymbol();
-			
+			String r = getValidString((String) model.getValueAt(i, 0));
+			String w = getValidString((String) model.getValueAt(i, 1));
+
+			reads[i] = new Symbol(r);
+			writes[i] = new Symbol(w);
 			moves[i] = TuringMachineMove.getMove((String) model.getValueAt(i, 2));
 		}
 		
@@ -99,7 +110,7 @@ public class MultiTapeTMTransitionTable extends
 		}
 
 		public boolean isCellEditable(int r, int c) {
-			return c == 0;
+			return true;
 		}
 
 		public int getRowCount() {
@@ -119,16 +130,16 @@ public class MultiTapeTMTransitionTable extends
 		private KeyStroke[] strokes;
 		
 		public TMMoveEditor() {
-			super(new JComboBox(DIRECTIONS));
+			super(new JComboBox<String>(DIRECTIONS));
 			strokes = new KeyStroke[DIRECTIONS.length];
 			for(int i=0; i<strokes.length; i++)
 				strokes[i] = KeyStroke.getKeyStroke(DIRECTIONS[i].charAt(0), KeyEvent.SHIFT_DOWN_MASK);
 		}
 		
 		@Override
-		public Component getTableCellEditorComponent(JTable table,
+		public JComboBox getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
-			final JComboBox c = (JComboBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			JComboBox c = (JComboBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
 			InputMap imap = c.getInputMap();
 			ActionMap amap = c.getActionMap();
 			Object o = new Object();

@@ -52,7 +52,11 @@ import errors.BooleanWrapper;
 public class RedoButton extends UndoRelatedButton implements UndoKeeperListener {
 	
 	public RedoButton(UndoKeeper k, boolean useIcon) {
-		super(new RedoAction(k), useIcon);
+		this(new RedoAction(k), useIcon);
+	}
+	
+	public RedoButton (RedoAction action, boolean useIcon) {
+		super(action, useIcon);
 	}
 
 	@Override

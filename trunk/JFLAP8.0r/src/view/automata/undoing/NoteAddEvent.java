@@ -1,40 +1,35 @@
 package view.automata.undoing;
 
-import model.undo.IUndoRedo;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
-import view.automata.tools.EditingTool;
 
-public class NoteAddEvent implements IUndoRedo{
-
-	private AutomatonEditorPanel myPanel;
-	private String myString;
-	private Note myNote;
+public class NoteAddEvent extends SingleNoteEvent{
 
 	public NoteAddEvent(AutomatonEditorPanel panel, Note n){
-		myPanel = panel;
-		myNote = n;
-		myString = n.getText();
+		super(panel, n);
 	}
 	
 	@Override
 	public boolean undo() {
-		myPanel.removeNote(myNote);
+		AutomatonEditorPanel panel = getPanel();
+		panel.removeNote(getNote());
 		return true;
 	}
 
 	@Override
 	public boolean redo() {
-		myPanel.addNote(myNote);
-		myNote.setText(myString);
-		myNote.setSelectionStart(0);
-		myPanel.editNote(myNote);
-		return true;
+		AutomatonEditorPanel panel = getPanel();
+		Note note = getNote();
+		
+		boolean sup = super.redo();
+		panel.addNote(note);
+		note.setSelectionStart(0);
+		panel.editNote(note);
+		return sup;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Note creation event";
 	}
 

@@ -27,4 +27,9 @@ public enum TuringMachineMove {
 		return null;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return ""+char_abbr;
+	}
 }

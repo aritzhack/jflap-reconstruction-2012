@@ -44,5 +44,9 @@ public class CompoundUndoRedo implements IUndoRedo {
 			add(undo);
 		}
 	}
+	
+	public int size() {
+		return myStack.size();
+	}
 
 }

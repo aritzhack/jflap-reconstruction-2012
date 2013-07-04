@@ -12,7 +12,7 @@ import view.pumping.PumpingLemmaChooser;
 public class NewCFPumpingLemmaAction extends NewAction<PumpingLemmaChooser>{
 
 	public NewCFPumpingLemmaAction() {
-		super("Context Free Pumping Lemma");
+		super("Context-Free Pumping Lemma");
 	}
 
 	@Override

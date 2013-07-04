@@ -2,15 +2,15 @@ package view.automata.tools;
 
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;
+import model.automata.StateSet;
 import model.automata.Transition;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
@@ -30,12 +31,12 @@ import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.change.events.StartStateSetEvent;
 import model.undo.CompoundUndoRedo;
-import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
 import util.Point2DAdv;
-import view.EditingPanel;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.undoing.ClearSelectionEvent;
 import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteMoveEvent;
 import view.automata.undoing.StateLabelRemoveEvent;
@@ -88,7 +89,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		AutomatonEditorPanel<T, S> panel = getPanel();
 
 		myObject = panel.objectAtPoint(e.getPoint());
-		if (e.getSource() instanceof Note)
+		if (e.getSource() instanceof Note)	//Comes from a non-State-label Note
 			myObject = e.getSource();
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
@@ -97,7 +98,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 			if (myObject != null) {
 				boolean modifierDown = isModified(e);
 				List<Object> selectionList = panel.getSelection();
-				boolean isSelected = isSelected(selectionList);
+				boolean isSelected = myObjectSelected(selectionList);
 
 				if (selectionList.size() > 1 && !isSelected && !modifierDown)
 					panel.clearSelection();
@@ -122,7 +123,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					panel.selectAll(myDef.getTransitions()
 							.getTransitionsFromStateToState(edge[0], edge[1]));
 				} else if (myObject instanceof Note) {
-					myInitialObjectPoint = ((Note) myObject).getPoint();
+					myInitialObjectPoint = ((Note) myObject).getLocation();
 					myNoteMovingPoint = (Point2D) myInitialObjectPoint.clone();
 				}
 			} else {
@@ -145,7 +146,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		return e.isShiftDown() || e.isControlDown();
 	}
 
-	private boolean isSelected(List<Object> selectedObjects) {
+	private boolean myObjectSelected(List<Object> selectedObjects) {
 		if (myObject == null)
 			return false;
 		boolean contained = false;
@@ -181,7 +182,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				panel.selectAllInBounds(mySelectionBounds);
 				return;
 			}
-			if (isSelected(selectedObjs)) {
+			if (myObjectSelected(selectedObjs)) {
 				Point drag = e.getPoint();
 
 				if (myObject instanceof State) {
@@ -206,7 +207,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 						int nowAtY = (int) (myNoteMovingPoint.getY() + diffY);
 						drag = new Point(nowAtX, nowAtY);
 						panel.moveNote(n, drag);
-						myNoteMovingPoint = n.getPoint();
+						myNoteMovingPoint = n.getLocation();
 					}
 				}
 			}
@@ -230,8 +231,8 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 			}
 			if (o instanceof Note) {
 				Note n = (Note) o;
-				Point current = n.getPoint();
-				n.setPoint(new Point((int) (current.x + dx),
+				Point current = n.getLocation();
+				n.setLocation(new Point((int) (current.x + dx),
 						(int) (current.y + dy)));
 			}
 		}
@@ -246,7 +247,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		if (SwingUtilities.isLeftMouseButton(e) && isValidPoint(e)) {
 			List<Object> selectedObjs = panel.getSelection();
 
-			if (isSelected(selectedObjs)) {
+			if (myObjectSelected(selectedObjs)) {
 				if (myObject instanceof State) {
 					Point2D pRelease = e.getPoint();
 					StateMoveEvent moveEvent = new StateMoveEvent(panel, myDef,
@@ -314,14 +315,14 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 			}
 			if (o instanceof Note) {
 				Note n = (Note) o;
-				Point current = n.getPoint();
+				Point current = n.getLocation();
 				Point old = new Point((int) (current.x - dx),
 						(int) (current.y - dy));
 
 				comp.add(new NoteMoveEvent(panel, n, old));
 			}
 		}
-		comp.add(new ClearSelectionEvent());
+		comp.add(new ClearSelectionEvent(panel));
 	}
 
 	private boolean isValidPoint(MouseEvent e) {
@@ -583,32 +584,12 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		}
 	}
 
-	private class ClearSelectionEvent implements IUndoRedo {
-
-		@Override
-		public boolean undo() {
-			getPanel().clearSelection();
-			return true;
-		}
-
-		@Override
-		public boolean redo() {
-			return undo();
-		}
-
-		@Override
-		public String getName() {
-			return "Clear selected objects";
-		}
-
-	}
-
 	/**
 	 * The contextual menu class for context clicks in blank space.
 	 */
 	private class EmptyMenu extends JPopupMenu {
 
-		private JCheckBoxMenuItem stateLabels;
+//		private JCheckBoxMenuItem stateLabels;
 		private JMenuItem layoutGraph;
 		private JMenuItem renameStates;
 		private JMenuItem createNote;
@@ -616,24 +597,24 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		private Point myPoint;
 
 		public EmptyMenu() {
-			addStateLabels();
+//			addStateLabels();
 			addLayoutGraph();
 			addRenameStates();
 			addCreateNote();
 			addAutoZoom();
 		}
 
-		private void addStateLabels() {
-			stateLabels = new JCheckBoxMenuItem("Display State Labels");
-			stateLabels.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("NEEDS IMPLEMENTING!");
-				}
-			});
-			add(stateLabels);
-		}
+//		private void addStateLabels() {
+//			stateLabels = new JCheckBoxMenuItem("Display State Labels");
+//			stateLabels.addActionListener(new ActionListener() {
+//
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					JFLAPDebug.print("NEEDS IMPLEMENTING!");
+//				}
+//			});
+//			add(stateLabels);
+//		}
 
 		private void addLayoutGraph() {
 			layoutGraph = new JMenuItem("Layout Graph");
@@ -641,7 +622,23 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("NEEDS IMPLEMENTING!");
+					StateSet states = myDef.getStates();
+					AutomatonEditorPanel<T, S> panel = getPanel();
+					Map<State, Point2D> oldPoints = new HashMap<State, Point2D>();
+					
+					for(State s : states)
+						oldPoints.put(s,new Point2DAdv( panel.getPointForVertex(s)));
+					panel.layoutGraph();
+					
+					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(panel));
+					for(State s : oldPoints.keySet()){
+						Point2D newPoint = new Point2DAdv(panel.getPointForVertex(s)),
+								oldPoint = oldPoints.get(s);
+						
+						if(!newPoint.equals(oldPoint))
+							comp.add(new StateMoveEvent(panel, myDef, s, oldPoint, newPoint));
+					}
+					getKeeper().registerChange(comp);
 				}
 			});
 			this.add(layoutGraph);
@@ -653,7 +650,16 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("NEEDS IMPLEMENTING!");
+					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(getPanel()));
+					
+					for(State s : myDef.getStates()){
+						State basicName = new State(JFLAPPreferences.getDefaultStateNameBase() + s.getID(), s.getID());
+						if(!s.equals(basicName)){
+							comp.add(new SetToEvent<State>(s, s.copy(), basicName));
+						}
+					}
+					if(comp.size() > 1)
+						getKeeper().applyAndListen(comp);
 				}
 			});
 			this.add(renameStates);
