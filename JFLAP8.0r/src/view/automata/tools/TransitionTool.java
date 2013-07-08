@@ -9,6 +9,7 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 import model.automata.Automaton;
+import model.automata.AutomatonFunction;
 import model.automata.State;
 import model.automata.Transition;
 import util.JFLAPConstants;

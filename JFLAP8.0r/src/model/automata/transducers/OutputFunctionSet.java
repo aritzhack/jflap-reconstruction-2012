@@ -23,7 +23,7 @@ public class OutputFunctionSet<T extends OutputFunction<T>> extends FunctionSet<
 	}
 
 	public SymbolString getOutputForTransition(FSATransition trans) {
-		for (OutputFunction func: this){
+		for (T func: this){
 			if (func.matches(trans))
 				return new SymbolString(func.getOutput());
 		}

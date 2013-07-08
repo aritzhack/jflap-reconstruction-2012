@@ -3,6 +3,7 @@ package view.automata.transitiontable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import model.automata.Automaton;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
@@ -15,10 +16,10 @@ import view.automata.AutomatonEditorPanel;
  * 
  * @author Ian McMahon
  */
-public class FSATransitionTable extends TransitionTable<FiniteStateAcceptor, FSATransition>{
+public class FSATransitionTable<T extends Automaton<FSATransition>> extends TransitionTable<T, FSATransition>{
 
-	public FSATransitionTable(FSATransition trans, FiniteStateAcceptor automaton, 
-			AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel) {
+	public FSATransitionTable(FSATransition trans, T automaton, 
+			AutomatonEditorPanel<T, FSATransition> panel) {
 		super(1, 1, trans, automaton, panel);
 	}
 
@@ -56,7 +57,6 @@ public class FSATransitionTable extends TransitionTable<FiniteStateAcceptor, FSA
 	@Override
 	public FSATransition modifyTransition() {
 		String s = getValidString((String) getModel().getValueAt(0, 0));
-		
 		
 		FSATransition trans = getTransition();
 		State from = trans.getFromState(), to = trans.getToState();

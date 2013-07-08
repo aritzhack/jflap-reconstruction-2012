@@ -11,6 +11,8 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
@@ -89,7 +91,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		AutomatonEditorPanel<T, S> panel = getPanel();
 
 		myObject = panel.objectAtPoint(e.getPoint());
-		if (e.getSource() instanceof Note)	//Comes from a non-State-label Note
+		if (e.getSource() instanceof Note) // Comes from a non-State-label Note
 			myObject = e.getSource();
 
 		if (SwingUtilities.isLeftMouseButton(e)) {
@@ -589,7 +591,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	 */
 	private class EmptyMenu extends JPopupMenu {
 
-//		private JCheckBoxMenuItem stateLabels;
+		// private JCheckBoxMenuItem stateLabels;
 		private JMenuItem layoutGraph;
 		private JMenuItem renameStates;
 		private JMenuItem createNote;
@@ -597,24 +599,11 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		private Point myPoint;
 
 		public EmptyMenu() {
-//			addStateLabels();
 			addLayoutGraph();
 			addRenameStates();
 			addCreateNote();
 			addAutoZoom();
 		}
-
-//		private void addStateLabels() {
-//			stateLabels = new JCheckBoxMenuItem("Display State Labels");
-//			stateLabels.addActionListener(new ActionListener() {
-//
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					JFLAPDebug.print("NEEDS IMPLEMENTING!");
-//				}
-//			});
-//			add(stateLabels);
-//		}
 
 		private void addLayoutGraph() {
 			layoutGraph = new JMenuItem("Layout Graph");
@@ -625,18 +614,22 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					StateSet states = myDef.getStates();
 					AutomatonEditorPanel<T, S> panel = getPanel();
 					Map<State, Point2D> oldPoints = new HashMap<State, Point2D>();
-					
-					for(State s : states)
-						oldPoints.put(s,new Point2DAdv( panel.getPointForVertex(s)));
+
+					for (State s : states)
+						oldPoints.put(s,
+								new Point2DAdv(panel.getPointForVertex(s)));
 					panel.layoutGraph();
-					
-					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(panel));
-					for(State s : oldPoints.keySet()){
-						Point2D newPoint = new Point2DAdv(panel.getPointForVertex(s)),
-								oldPoint = oldPoints.get(s);
-						
-						if(!newPoint.equals(oldPoint))
-							comp.add(new StateMoveEvent(panel, myDef, s, oldPoint, newPoint));
+
+					CompoundUndoRedo comp = new CompoundUndoRedo(
+							new ClearSelectionEvent(panel));
+					for (State s : oldPoints.keySet()) {
+						Point2D newPoint = new Point2DAdv(panel
+								.getPointForVertex(s)), oldPoint = oldPoints
+								.get(s);
+
+						if (!newPoint.equals(oldPoint))
+							comp.add(new StateMoveEvent(panel, myDef, s,
+									oldPoint, newPoint));
 					}
 					getKeeper().registerChange(comp);
 				}
@@ -650,15 +643,40 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(getPanel()));
-					
-					for(State s : myDef.getStates()){
-						State basicName = new State(JFLAPPreferences.getDefaultStateNameBase() + s.getID(), s.getID());
-						if(!s.equals(basicName)){
-							comp.add(new SetToEvent<State>(s, s.copy(), basicName));
+					CompoundUndoRedo comp = new CompoundUndoRedo(
+							new ClearSelectionEvent(getPanel()));
+
+					StateSet states = myDef.getStates();
+					int maxId = states.size() - 1;
+					TreeSet<Integer> untaken = new TreeSet<Integer>();
+					Set<State> reassign = states.copy();
+
+					for (int i = 0; i <= maxId; i++)
+						untaken.add(new Integer(i));
+					for (State s : states)
+						if (untaken.remove(new Integer(s.getID()))) {
+							reassign.remove(s);
+							String basic = JFLAPPreferences
+									.getDefaultStateNameBase() + s.getID();
+
+							if (!s.getName().equals(basic))
+								comp.add(new SetToEvent<State>(s, s.copy(),
+										new State(basic, s.getID())));
+						}
+					// Now untaken has the untaken IDs, and reassign has the
+					// states that need reassigning.
+					for (State s : states) {
+						if (reassign.contains(s)) {
+							int newID = untaken.pollFirst();
+							String basic = JFLAPPreferences
+									.getDefaultStateNameBase() + newID;
+
+							if (!s.getName().equals(basic))
+								comp.add(new SetToEvent<State>(s, s.copy(),
+										new State(basic, newID)));
 						}
 					}
-					if(comp.size() > 1)
+					if (comp.size() > 1)
 						getKeeper().applyAndListen(comp);
 				}
 			});

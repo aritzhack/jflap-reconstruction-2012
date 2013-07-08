@@ -21,6 +21,10 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 	public MealyOutputFunction(FSATransition t, SymbolString output) {
 		this(t.getFromState(), new SymbolString(t.getInput()), output);
 	}
+	
+	public MealyOutputFunction(FSATransition t) {
+		this(t, new SymbolString());
+	}
 
 	@Override
 	public String getDescriptionName() {

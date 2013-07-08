@@ -1,19 +1,23 @@
 package view.automata.transitiontable;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
+
+import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -23,7 +27,6 @@ import model.change.events.SetToEvent;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 import view.grammar.productions.LambdaRemovingEditor;
-import debug.JFLAPDebug;
 
 /**
  * Table that will pop up to implement the editing of transitions in an
@@ -65,6 +68,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 			}
 		};
 		myPanel.addMouseListener(myListener);
+		addKeyBindings();
 	}
 
 	public abstract TableModel createModel();
@@ -78,26 +82,30 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		return s;
 	}
 	
-	@Override
-	protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
-			int condition, boolean pressed) {
-		int keyCode = ks.getKeyCode();
-
-		if (keyCode == KeyEvent.VK_ENTER && !ks.isOnKeyRelease()) {
-			stopEditing(false);
-
-			if (e.isShiftDown()) {
-				// Keep creating transitions
-				S trans = myPanel.createTransition(myTrans.getFromState(),
-						myTrans.getToState());
-				myPanel.editTransition(trans, true);
+	private void addKeyBindings() {
+		InputMap imap = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap amap = getActionMap();
+		
+		imap.put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "Enter");
+		amap.put("Enter", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stopEditing(false);
+				if((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0){
+					S trans = myPanel.createTransition(myTrans.getFromState(),
+							myTrans.getToState());
+					myPanel.editTransition(trans, true);
 			}
-			return true;
-		} else if (keyCode == KeyEvent.VK_ESCAPE) {
-			stopEditing(true);
-			return true;
-		}
-		return super.processKeyBinding(ks, e, condition, pressed);
+		}});
+		imap.put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ESCAPE), "Escape");
+		amap.put("Escape", new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				stopEditing(true);
+			}
+		});
 	}
 
 	/** Returns the table's transition. */
