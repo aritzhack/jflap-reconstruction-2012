@@ -19,7 +19,7 @@ public class NewTMAction extends
 
 	@Override
 	public MultiTapeTuringMachine createDefinition() {
-		SpinnerModel model = new SpinnerNumberModel(1, 1, 100, 1);
+		SpinnerModel model = new SpinnerNumberModel(1, 1, 15, 1);
 		JSpinner spinner = new JSpinner(model);
 		JPanel panel = new JPanel();
 		panel.add(new JLabel("Enter number of tapes: "));

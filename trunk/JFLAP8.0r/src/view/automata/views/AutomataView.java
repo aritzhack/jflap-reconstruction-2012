@@ -82,7 +82,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
 		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel, definition);
-		StateTool<T, S> state = new StateTool<T, S>(panel, definition);
+		StateTool<T, S> state = createStateTool(panel, definition);
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
 		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
 
@@ -96,6 +96,10 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		bar.add(new UndoButton(undo, true));
 		bar.add(new RedoButton(redo, true));
 		return bar;
+	}
+	
+	public StateTool<T, S> createStateTool(AutomatonEditorPanel<T, S> panel, T def){
+		return new StateTool<T, S>(panel, def);
 	}
 
 }

@@ -29,7 +29,7 @@ public abstract class NewAction<T> extends AbstractAction {
 		return new NewAction[] {
 				new NewFSAAction(),
 				// new NewMealyAction(),
-				// new NewMooreAction(),
+				 new NewMooreAction(),
 				new NewPDAAction(), new NewTMAction(),
 				// new NewBlockTMAction(),
 				new NewGrammarAction(), new NewSetsAction(),

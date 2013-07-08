@@ -13,7 +13,7 @@ public class TapeAlphabet extends Alphabet{
 
 	@Override
 	public Character getCharacterAbbr() {
-		return '\u0915';
+		return '\u0393';
 	}
 
 	@Override

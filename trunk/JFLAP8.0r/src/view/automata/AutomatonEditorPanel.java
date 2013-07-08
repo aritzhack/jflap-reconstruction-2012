@@ -314,8 +314,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		Set<S> transFromOrTo = transitions.getTransitionsFromState(vertex);
 		transFromOrTo.addAll(transitions.getTransitionsToState(vertex));
 
-		getKeeper().applyAndListen(
-				new CompoundRemoveEvent(new State[] { vertex }, transFromOrTo,
+		getKeeper().applyAndListen(createCompoundRemoveEvent(new State[] { vertex }, transFromOrTo,
 						new Point2D[] { p }));
 	}
 
@@ -356,7 +355,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		myEditingTable.setBounds(new Rectangle(tablePoint, tableSize));
 	
-		myEditingTable.requestFocus();
+		myEditingTable.requestFocusInWindow();
 	}
 
 	public void clearTableInfo() {
@@ -506,6 +505,15 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		GraphHelper.moveWithinFrame(myGraph, visible);
 		for (State s : myStateLabels.keySet())
 			moveStateLabel(s);
+	}
+	
+	public CompoundRemoveEvent createCompoundRemoveEvent(State[] states, Set<S> transitions,
+			Point2D[] points){
+		return new CompoundRemoveEvent(states, transitions, points);
+	}
+	
+	public T getAutomaton() {
+		return myAutomaton;
 	}
 
 	/**
@@ -663,7 +671,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	/**
 	 * Returns the radius of the vertex drawer.
 	 */
-	private double getStateRadius() {
+	public double getStateRadius() {
 		return myDrawer.getVertexDrawer().getVertexRadius();
 	}
 
@@ -717,8 +725,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						trans.addAll(transitionSet
 								.getTransitionsToState(states[i]));
 					}
-					CompoundRemoveEvent remove = new CompoundRemoveEvent(
-							states, trans, points);
+					CompoundRemoveEvent remove = createCompoundRemoveEvent(states, trans, points);
 					if (noteRemove != null)
 						remove.addEvent(noteRemove);
 					keeper.applyAndListen(remove);
@@ -736,7 +743,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	/**
 	 * Compound Event for undoing the deletion of a state and transitions.
 	 */
-	private class CompoundRemoveEvent implements IUndoRedo {
+	public class CompoundRemoveEvent implements IUndoRedo {
 
 		private State[] myStates;
 		private Point2D[] myPoints;

@@ -72,7 +72,7 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(myState != null){
-			AutomatonEditorPanel panel = getPanel();
+			AutomatonEditorPanel<T, S> panel = getPanel();
 			panel.clearSelection();
 			
 			if(SwingUtilities.isLeftMouseButton(e))
@@ -80,7 +80,19 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 			else if(!myPoint.equals(e.getPoint()))
 				panel.getKeeper().registerChange(new StateMoveEvent(panel, myDef, myState, myPoint, e.getPoint()));
 		}
+		clearValues();
+	}
+	
+	public void clearValues() {
 		myState = null;
 		myPoint = null;
+	}
+	
+	public State getState() {
+		return myState;
+	}
+	
+	public T getDef() {
+		return myDef;
 	}
 }

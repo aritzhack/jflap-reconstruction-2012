@@ -86,7 +86,7 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 
 	@Override
 	public String getLabelText() {
-		return super.getLabelText() + "|" + myPop + ";" + myPush;
+		return super.getLabelText() + ", " + myPop + "; " + myPush;
 	}
 
 

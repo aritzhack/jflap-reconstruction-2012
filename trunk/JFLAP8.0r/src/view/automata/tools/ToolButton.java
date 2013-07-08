@@ -11,6 +11,8 @@ import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 
+import debug.JFLAPDebug;
+
 
 public class ToolButton extends JToggleButton {
 
@@ -24,8 +26,8 @@ public class ToolButton extends JToggleButton {
 		ActionMap amap = this.getActionMap();
 		char key = myTool.getActivatingKey();
 		imap.put(KeyStroke.getKeyStroke(key), this);
-//		key = Character.isUpperCase(key) ? Character.toLowerCase(key) : Character.toUpperCase(key);
-//		imap.put(KeyStroke.getKeyStroke(key), this);
+		key = Character.isUpperCase(key) ? Character.toLowerCase(key) : Character.toUpperCase(key);
+		imap.put(KeyStroke.getKeyStroke(key), this);
 		amap.put(this, new ButtonClicker(this));
 	}
 

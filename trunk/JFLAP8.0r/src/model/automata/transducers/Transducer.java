@@ -13,7 +13,7 @@ import model.formaldef.FormalDefinition;
 import model.formaldef.components.FormalDefinitionComponent;
 import model.symbols.Symbol;
 
-public abstract class Transducer<T extends OutputFunction> extends Automaton<FSATransition> {
+public abstract class Transducer<T extends OutputFunction<T>> extends Automaton<FSATransition> {
 
 
 	public Transducer(StateSet states, 
@@ -21,7 +21,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 					OutputAlphabet outputAlph,
 					TransitionSet<FSATransition> functions, 
 					StartState start,
-					OutputFunctionSet outputFunctions) {
+					OutputFunctionSet<T> outputFunctions) {
 		super(states, langAlph, outputAlph, functions, start, outputFunctions);
 	}
 
@@ -43,7 +43,7 @@ public abstract class Transducer<T extends OutputFunction> extends Automaton<FSA
 		return this.getComponentOfClass(OutputAlphabet.class);
 	}
 	
-	public OutputFunctionSet getOutputFunctionSet(){
+	public OutputFunctionSet<T> getOutputFunctionSet(){
 		return this.getComponentOfClass(OutputFunctionSet.class);
 	}
 	
