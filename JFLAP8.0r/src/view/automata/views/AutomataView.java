@@ -2,16 +2,8 @@ package view.automata.views;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-
-import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -25,10 +17,8 @@ import view.automata.tools.TransitionTool;
 import view.automata.undoing.AutomataRedoAction;
 import view.automata.undoing.AutomataUndoAction;
 import view.formaldef.BasicFormalDefinitionView;
-import view.undoing.UndoPanel;
 import view.undoing.redo.RedoAction;
 import view.undoing.redo.RedoButton;
-import view.undoing.undo.UndoAction;
 import view.undoing.undo.UndoButton;
 
 public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
@@ -45,7 +35,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		
 		JScrollPane pane = getScroller();
 		pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);		
 		pane.revalidate();
 		repaint();
 	}
@@ -81,7 +71,7 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	private Component createDefaultToolbar(T definition, UndoKeeper keeper) {
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
-		ArrowTool<T, S> arrow = new ArrowTool<T, S>(panel, definition);
+		ArrowTool<T, S> arrow = createArrowTool(panel, definition);
 		StateTool<T, S> state = createStateTool(panel, definition);
 		TransitionTool<T, S> trans = new TransitionTool<T, S>(panel);
 		DeleteTool<T, S> delete = new DeleteTool<T, S>(panel);
@@ -96,6 +86,10 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		bar.add(new UndoButton(undo, true));
 		bar.add(new RedoButton(redo, true));
 		return bar;
+	}
+	
+	public ArrowTool<T, S> createArrowTool (AutomatonEditorPanel<T, S> panel, T def){
+		return new ArrowTool<T, S>(panel, def);
 	}
 	
 	public StateTool<T, S> createStateTool(AutomatonEditorPanel<T, S> panel, T def){

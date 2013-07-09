@@ -14,7 +14,7 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
 import universe.preferences.JFLAPPreferences;
-import view.MooreEditorPanel;
+import view.automata.MooreEditorPanel;
 import view.automata.undoing.StateAddEvent;
 
 public class MooreStateTool extends StateTool<MooreMachine, FSATransition> {
@@ -30,16 +30,13 @@ public class MooreStateTool extends StateTool<MooreMachine, FSATransition> {
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			MooreMachine m = getDef();
-			String output = (String) JOptionPane.showInputDialog(getPanel(),
-					"Enter output:", "Set Output",
-					JOptionPane.QUESTION_MESSAGE, null, null,
-					JFLAPPreferences.getEmptyString());
-
-			if (output == null
-					|| output.equals(JFLAPPreferences.getEmptyString()))
-				output = "";
+			MooreEditorPanel panel = (MooreEditorPanel) getPanel();
+			
+			
+			String output = panel.editOutputFunction(null);
 			super.mousePressed(e);
-			myFunction = ((MooreEditorPanel) getPanel()).addOutputFunction(getState(),
+			State s = getState();
+			myFunction = panel.addOutputFunction(s,
 					Symbolizers.symbolize(output, m));
 			mouseReleased(e);
 		} else

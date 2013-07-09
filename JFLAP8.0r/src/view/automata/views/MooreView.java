@@ -5,8 +5,10 @@ import javax.swing.JComponent;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.moore.MooreMachine;
 import model.undo.UndoKeeper;
-import view.MooreEditorPanel;
 import view.automata.AutomatonEditorPanel;
+import view.automata.MooreEditorPanel;
+import view.automata.tools.ArrowTool;
+import view.automata.tools.MooreArrowTool;
 import view.automata.tools.MooreStateTool;
 import view.automata.tools.StateTool;
 
@@ -15,6 +17,13 @@ public class MooreView extends AutomataView<MooreMachine, FSATransition>{
 	public MooreView(MooreMachine model) {
 		super(model);
 		// TODO Auto-generated constructor stub
+	}
+	
+	@Override
+	public ArrowTool<MooreMachine, FSATransition> createArrowTool(
+			AutomatonEditorPanel<MooreMachine, FSATransition> panel,
+			MooreMachine def) {
+		return new MooreArrowTool((MooreEditorPanel) panel, def);
 	}
 	
 	@Override

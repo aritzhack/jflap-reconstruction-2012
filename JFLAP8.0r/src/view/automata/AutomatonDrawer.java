@@ -11,9 +11,15 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.automata.acceptors.Acceptor;
+import model.automata.acceptors.fsa.FSATransition;
+import model.automata.transducers.OutputFunctionSet;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.mealy.MealyOutputFunction;
 import model.graph.Graph;
 import model.graph.TransitionGraph;
+import model.symbols.SymbolString;
 import util.arrows.GeometryHelper;
+import util.view.GraphHelper;
 import view.graph.GraphDrawer;
 
 public class AutomatonDrawer<T extends Transition<T>> extends
@@ -52,7 +58,7 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 	}
 
 	public void drawLabel(Graphics2D g2d, T t, TransitionGraph<T> obj, Point2D center) {
-		String label = t.getLabelText();
+		String label = GraphHelper.getLabelText(obj, t);
 		FontMetrics metrics = g2d.getFontMetrics();
 		int w = metrics.stringWidth(label);
 		int h = metrics.getMaxAscent();

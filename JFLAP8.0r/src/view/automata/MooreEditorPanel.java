@@ -1,4 +1,4 @@
-package view;
+package view.automata;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunctionSet;
@@ -20,8 +22,6 @@ import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import view.automata.AutomatonEditorPanel;
-import view.automata.Note;
 
 public class MooreEditorPanel extends
 		AutomatonEditorPanel<MooreMachine, FSATransition> {
@@ -71,6 +71,29 @@ public class MooreEditorPanel extends
 		myOutput.put(s, n);
 		moveOutputFunction(s);
 		return func;
+	}
+	
+	public Note getOutputNote(State s) {
+		return myOutput.get(s);
+	}
+	
+	public String editOutputFunction(State s) {
+		String old = null;
+		Note n = myOutput.get(s);
+		
+		if(n != null)
+			old = n.getText();
+		if(old == null || old.isEmpty())
+			old = JFLAPPreferences.getEmptyString();
+		String output = (String) JOptionPane.showInputDialog(this,
+				"Enter output:", "Set Output",
+				JOptionPane.QUESTION_MESSAGE, null, null,
+				old);
+
+		if (output == null
+				|| output.equals(JFLAPPreferences.getEmptyString()))
+			output = "";
+		return output;
 	}
 	
 	public void moveOutputFunction(State s){

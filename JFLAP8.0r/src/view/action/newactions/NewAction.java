@@ -28,7 +28,7 @@ public abstract class NewAction<T> extends AbstractAction {
 	public static NewAction[] getAllNewActions() {
 		return new NewAction[] {
 				new NewFSAAction(),
-				// new NewMealyAction(),
+				 new NewMealyAction(),
 				 new NewMooreAction(),
 				new NewPDAAction(), new NewTMAction(),
 				// new NewBlockTMAction(),

@@ -17,6 +17,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 
+import oldnewstuff.main.JFLAP;
+
 import debug.JFLAPDebug;
 
 import model.automata.Automaton;
@@ -24,6 +26,7 @@ import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.change.events.AddEvent;
 import model.change.events.SetToEvent;
+import model.undo.IUndoRedo;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 import view.grammar.productions.LambdaRemovingEditor;
@@ -64,7 +67,10 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		myListener = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				stopEditing(false);
+				IUndoRedo stop = stopEditing(false);
+				JFLAPDebug.print(stop);
+				if (stop != null)
+					myPanel.getKeeper().registerChange(stop);
 			}
 		};
 		myPanel.addMouseListener(myListener);
@@ -75,32 +81,34 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 
 	public abstract S modifyTransition();
 
-	
 	public String getValidString(String s) {
-		if(s == null || s.equals(JFLAPPreferences.getEmptyString()))
+		if (s == null || s.equals(JFLAPPreferences.getEmptyString()))
 			s = "";
 		return s;
 	}
-	
+
 	private void addKeyBindings() {
 		InputMap imap = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		ActionMap amap = getActionMap();
-		
+
 		imap.put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "Enter");
 		amap.put("Enter", new AbstractAction() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				stopEditing(false);
-				if((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0){
+				IUndoRedo stop = stopEditing(false);
+				if (stop != null)
+					myPanel.getKeeper().registerChange(stop);
+				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
 					S trans = myPanel.createTransition(myTrans.getFromState(),
 							myTrans.getToState());
 					myPanel.editTransition(trans, true);
+				}
 			}
-		}});
+		});
 		imap.put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ESCAPE), "Escape");
 		amap.put("Escape", new AbstractAction() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				stopEditing(true);
@@ -121,57 +129,62 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 	/**
 	 * Stops editing the table and modifies the transition accordingly. Will add
 	 * events to the UndoKeeper if applicable.
+	 * 
+	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public void stopEditing(boolean cancel) {
+	public IUndoRedo stopEditing(boolean cancel) {
 		try {
 			getCellEditor().stopCellEditing();
 		} catch (NullPointerException e) {
 		}
-
+		IUndoRedo ret = null;
 		if (!cancel) {
 			S t = modifyTransition();
 			if (t != null) {
 				TransitionSet<S> transitions = myAutomaton.getTransitions();
-				S temp = myTrans.copy();
+				
+				if(!transitions.contains(t)){
+					S temp = myTrans.copy();
+					boolean wasInTrans = transitions.contains(temp);
+					myTrans.setTo(t);
+					//Setting may modify the transition set
+					if(wasInTrans && !transitions.contains(temp)){
+						ret = new SetToEvent<S>(myTrans, temp, t) {
+							@Override
+							public boolean undo() {
+								myPanel.clearSelection();
+								return super.undo();
+							}
 
-				boolean wasInTransitions = transitions.contains(temp);
-				myTrans.setTo(t);
+							@Override
+							public boolean redo() {
+								myPanel.clearSelection();
+								return super.redo();
+							}
+						};
+					} else{
+						transitions.add(myTrans);
+						
+						ret = new AddEvent<S>(transitions, myTrans) {
+						@Override
+						public boolean undo() {
+							myPanel.clearSelection();
+							return super.undo();
+						}
 
-				if (!transitions.contains(myTrans)) {
-					transitions.add(myTrans);
-					myPanel.getKeeper().registerChange(
-							new AddEvent<S>(transitions, myTrans) {
-								@Override
-								public boolean undo() {
-									myPanel.clearSelection();
-									return super.undo();
-								}
-
-								@Override
-								public boolean redo() {
-									myPanel.clearSelection();
-									return super.redo();
-								}
-							});
-				} else if (isNotDuplicate(transitions, temp, wasInTransitions))
-					myPanel.getKeeper().registerChange(
-							new SetToEvent<S>(myTrans, temp, t.copy()) {
-								@Override
-								public boolean undo() {
-									myPanel.clearSelection();
-									return super.undo();
-								}
-
-								@Override
-								public boolean redo() {
-									myPanel.clearSelection();
-									return super.redo();
-								}
-							});
-			}
+						@Override
+						public boolean redo() {
+							myPanel.clearSelection();
+							return super.redo();
+						}
+						};
+					}
+				}
+			}				
 		}
 		removeSelf();
+		return ret;
 	}
 
 	/**
@@ -182,15 +195,5 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 		myPanel.removeMouseListener(myListener);
 		myPanel.remove(this);
 		myPanel.clearTableInfo();
-	}
-
-	/**
-	 * Returns true if myTransition differs from what it was before modification
-	 * and there is no transition equal to it still in the TransitionSet.
-	 */
-	private boolean isNotDuplicate(TransitionSet<S> transitions, S temp,
-			boolean wasInTransitions) {
-		return !temp.equals(myTrans) && wasInTransitions
-				&& !transitions.contains(temp);
 	}
 }
