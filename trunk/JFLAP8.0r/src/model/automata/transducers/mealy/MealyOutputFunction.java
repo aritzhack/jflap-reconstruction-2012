@@ -1,5 +1,6 @@
 package model.automata.transducers.mealy;
 
+import debug.JFLAPDebug;
 import util.UtilFunctions;
 import model.automata.InputAlphabet;
 import model.automata.State;
@@ -65,6 +66,11 @@ public class MealyOutputFunction extends OutputFunction<MealyOutputFunction> {
 		return this.myInput.compareTo(((MealyOutputFunction) o).myInput);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof OutputFunction)) return false;
+		return compareTo((OutputFunction) o) == 0;
+	}
 
 	@Override
 	public MealyOutputFunction copy() {

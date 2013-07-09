@@ -12,7 +12,7 @@ import model.automata.transducers.Transducer;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public abstract class InputOutputConfiguration<S extends Transducer<T>, T extends OutputFunction> 
+public abstract class InputOutputConfiguration<S extends Transducer<T>, T extends OutputFunction<T>> 
 							extends SingleSecondaryConfiguration<S, FSATransition> {
 
 	public InputOutputConfiguration(S a, State s, int pos, SymbolString input,

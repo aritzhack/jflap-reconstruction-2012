@@ -6,6 +6,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
@@ -22,7 +23,8 @@ public class TransitionTableFactory {
 			return new MultiTapeTMTransitionTable((MultiTapeTMTransition) trans, (MultiTapeTuringMachine) automaton, panel);
 		if(automaton instanceof MooreMachine)
 			return new FSATransitionTable<MooreMachine>((FSATransition) trans, (MooreMachine) automaton, panel);
-		
+		if(automaton instanceof MealyMachine)
+			return new MealyTransitionTable((FSATransition) trans, (MealyMachine) automaton, panel);
 		return null;
 	}
 }

@@ -81,7 +81,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		transform = new AffineTransform();
 		myStateLabels = new HashMap<State, Note>();
 		myNotes = new HashMap<Note, String>();
-		
+
 		addKeyListener(new DeleteKeyListener());
 	}
 
@@ -160,11 +160,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				keeper.applyAndListen(new NoteRemoveEvent(this, Arrays
 						.asList(new Note[] { n })));
 			} else if (!oldText.equals(text)) {
-				getKeeper().registerChange(new NoteRenameEvent(this, n, oldText));
+				getKeeper().registerChange(
+						new NoteRenameEvent(this, n, oldText));
 				myNotes.put(n, text);
 			}
 		}
-		if(myEditingTable != null)
+		if (myEditingTable != null)
 			myEditingTable.stopEditing(true);
 	}
 
@@ -314,8 +315,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		Set<S> transFromOrTo = transitions.getTransitionsFromState(vertex);
 		transFromOrTo.addAll(transitions.getTransitionsToState(vertex));
 
-		getKeeper().applyAndListen(createCompoundRemoveEvent(new State[] { vertex }, transFromOrTo,
-						new Point2D[] { p }));
+		getKeeper().applyAndListen(
+				createCompoundRemoveEvent(new State[] { vertex },
+						transFromOrTo, new Point2D[] { p }));
 	}
 
 	/** Returns a the location of vertex in the TransitionGraph. */
@@ -342,8 +344,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * calculated based on default settings.
 	 */
 	public void editTransition(S trans, boolean isNew) {
-		myEditingTable = TransitionTableFactory.createTable(trans,
-				myAutomaton, this);
+		myEditingTable = TransitionTableFactory.createTable(trans, myAutomaton,
+				this);
 		myEditingTable.setCellSelectionEnabled(true);
 		myEditingTable.changeSelection(0, 0, false, false);
 
@@ -354,7 +356,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				(int) center.getY() - tableSize.height / 2);
 
 		myEditingTable.setBounds(new Rectangle(tablePoint, tableSize));
-	
+
 		myEditingTable.requestFocusInWindow();
 	}
 
@@ -367,7 +369,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	/** Removes the transition from the Automaton and notifies the UndoKeeper. */
 	public void removeTransition(S trans) {
-		getKeeper().applyAndListen(new TransitionRemoveEvent(trans));
+		getKeeper().applyAndListen(createTransitionRemove(trans));
 	}
 
 	/**
@@ -396,7 +398,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		S[] temp = (S[]) myGraph.getOrderedTransitions(from, to).toArray(
 				new Transition[0]);
 
-		getKeeper().applyAndListen(new TransitionRemoveEvent(temp));
+		getKeeper().applyAndListen(createTransitionRemove(temp));
 	}
 
 	/** Creating of non-state-label notes. */
@@ -506,14 +508,22 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		for (State s : myStateLabels.keySet())
 			moveStateLabel(s);
 	}
-	
-	public CompoundRemoveEvent createCompoundRemoveEvent(State[] states, Set<S> transitions,
-			Point2D[] points){
+
+	public CompoundRemoveEvent createCompoundRemoveEvent(State[] states,
+			Set<S> transitions, Point2D[] points) {
 		return new CompoundRemoveEvent(states, transitions, points);
 	}
-	
+
 	public T getAutomaton() {
 		return myAutomaton;
+	}
+
+	private IUndoRedo createTransitionRemove(S... trans) {
+		return createTransitionRemove(Arrays.asList(trans));
+	}
+	
+	public IUndoRedo createTransitionRemove(Collection<S> trans){
+		return new TransitionRemoveEvent(trans);
 	}
 
 	/**
@@ -696,7 +706,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		@Override
 		public void keyTyped(KeyEvent e) {
 			stopAllEditing();
-			
+
 			if (e.getKeyChar() == KeyEvent.VK_DELETE) {
 				State[] states = myDrawer.getSelectedStates().toArray(
 						new State[0]);
@@ -725,17 +735,18 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 						trans.addAll(transitionSet
 								.getTransitionsToState(states[i]));
 					}
-					CompoundRemoveEvent remove = createCompoundRemoveEvent(states, trans, points);
+					CompoundRemoveEvent remove = createCompoundRemoveEvent(
+							states, trans, points);
 					if (noteRemove != null)
 						remove.addEvent(noteRemove);
 					keeper.applyAndListen(remove);
 				} else if (noteRemove != null) {
 					CompoundUndoRedo comp = new CompoundUndoRedo(noteRemove);
 					if (!trans.isEmpty())
-						comp.add(new TransitionRemoveEvent(trans));
+						comp.add(createTransitionRemove(trans));
 					keeper.applyAndListen(comp);
 				} else
-					keeper.applyAndListen(new TransitionRemoveEvent(trans));
+					keeper.applyAndListen(createTransitionRemove(trans));
 			}
 		}
 	}

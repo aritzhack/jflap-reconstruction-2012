@@ -7,10 +7,19 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
+import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
+import model.automata.acceptors.fsa.FSATransition;
+import model.automata.transducers.OutputFunctionSet;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.mealy.MealyOutputFunction;
 import model.graph.Graph;
 import model.graph.TransitionGraph;
+import model.symbols.SymbolString;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.arrows.GeometryHelper;
 import view.automata.LabelBounds;
@@ -79,13 +88,24 @@ public class GraphHelper {
 				pFrom, pTo);
 		// calculate bounds
 		FontMetrics metrics = g.getFontMetrics();
-		String label = trans.getLabelText();
+		String label = getLabelText(graph, trans);
 		int w = metrics.stringWidth(label);
 		int h = metrics.getMaxAscent();
 		int x = (int) (center.getX() - w / 2);
 		int y = (int) (center.getY() - h / 2);
 
 		return new LabelBounds(angle, new Rectangle(x, y, w, h));
+	}
+	
+	public static <T extends Transition<T>> String getLabelText(TransitionGraph<T> obj, T t) {
+		Automaton<T> auto = obj.getAutomaton();
+		String label = t.getLabelText();
+		if(auto instanceof MealyMachine){
+			OutputFunctionSet<MealyOutputFunction> funcs = ((MealyMachine) auto).getOutputFunctionSet();
+			SymbolString out = funcs.getOutputForTransition((FSATransition) t);
+			label += " ; "+ (out == null ? JFLAPPreferences.getEmptyString() : out.toString());
+		}
+		return label;
 	}
 
 	/**
