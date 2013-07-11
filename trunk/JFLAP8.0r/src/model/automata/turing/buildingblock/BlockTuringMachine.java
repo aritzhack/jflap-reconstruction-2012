@@ -1,5 +1,6 @@
 package model.automata.turing.buildingblock;
 
+import universe.preferences.JFLAPPreferences;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
@@ -82,7 +83,7 @@ public class BlockTuringMachine extends TuringMachine<BlockTransition> {
 
 	@Override
 	public BlockTransition createBlankTransition(State from, State to) {
-		return new BlockTransition((Block) from, (Block) to);
+		return new BlockTransition((Block) from, (Block) to, JFLAPPreferences.getTMBlankSymbol());
 	}
 
 }

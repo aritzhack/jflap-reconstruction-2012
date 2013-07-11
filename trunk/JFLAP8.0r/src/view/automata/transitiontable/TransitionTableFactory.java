@@ -10,6 +10,8 @@ import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
+import model.automata.turing.buildingblock.BlockTransition;
+import model.automata.turing.buildingblock.BlockTuringMachine;
 import view.automata.AutomatonEditorPanel;
 
 public class TransitionTableFactory {
@@ -25,6 +27,8 @@ public class TransitionTableFactory {
 			return new FSATransitionTable<MooreMachine>((FSATransition) trans, (MooreMachine) automaton, panel);
 		if(automaton instanceof MealyMachine)
 			return new MealyTransitionTable((FSATransition) trans, (MealyMachine) automaton, panel);
+		if(automaton instanceof BlockTuringMachine)
+			return new BlockTMTransitionTable((BlockTransition) trans, (BlockTuringMachine) automaton,panel);
 		return null;
 	}
 }

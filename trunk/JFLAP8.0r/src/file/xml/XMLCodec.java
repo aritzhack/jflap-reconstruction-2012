@@ -91,8 +91,10 @@ public class XMLCodec extends Codec {
 		} catch (Exception e) {
 			if(e instanceof IOException)
 				throw new FileJFLAPException("Could not open file to read!");
-			if(e instanceof NullPointerException)
+			if(e instanceof NullPointerException){
+				e.printStackTrace();
 				throw new FileJFLAPException("File is missing necessary values!");
+			}
 			throw new FileJFLAPException("Could not parse XML!\n" + e.getMessage());
 		} catch (ExceptionInInitializerError e) {
 			// Hmm. That shouldn't be.

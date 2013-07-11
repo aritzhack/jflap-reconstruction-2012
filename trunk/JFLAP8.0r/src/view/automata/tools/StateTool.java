@@ -58,7 +58,7 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 			}
 		}
 		if(myState != null){
-			getPanel().selectObject(myState);
+			panel.selectObject(myState);
 			myPoint = new Point2DAdv(panel.getPointForVertex(myState));
 		}
 	}
@@ -90,6 +90,10 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 	
 	public State getState() {
 		return myState;
+	}
+	
+	public void setState(State s) {
+		myState = s;
 	}
 	
 	public T getDef() {

@@ -68,9 +68,8 @@ public class MultiTapeTMTransitionTable extends
 		return new MultiTapeTMTransTableModel();
 	}
 
-	@Override
-	public String getValidString(String s) {
-		s = super.getValidString(s);
+	public static String getValidTMString(String s) {
+		s = getValidString(s);
 		if (s.isEmpty())
 			s = JFLAPPreferences.getBlank();
 		return s;
@@ -88,8 +87,8 @@ public class MultiTapeTMTransitionTable extends
 		TableModel model = getModel();
 
 		for (int i = 0; i < machine.getNumTapes(); i++) {
-			String r = getValidString((String) model.getValueAt(i, 0));
-			String w = getValidString((String) model.getValueAt(i, 1));
+			String r = getValidTMString((String) model.getValueAt(i, 0));
+			String w = getValidTMString((String) model.getValueAt(i, 1));
 
 			reads[i] = new Symbol(r);
 			writes[i] = new Symbol(w);

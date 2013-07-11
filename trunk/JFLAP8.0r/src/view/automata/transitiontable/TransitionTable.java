@@ -81,7 +81,7 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 
 	public abstract S modifyTransition();
 
-	public String getValidString(String s) {
+	public static String getValidString(String s) {
 		if (s == null || s.equals(JFLAPPreferences.getEmptyString()))
 			s = "";
 		return s;
