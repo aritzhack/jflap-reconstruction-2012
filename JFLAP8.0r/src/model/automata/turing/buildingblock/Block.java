@@ -54,4 +54,8 @@ public class Block extends State implements UsesSymbols{
 		return super.toDetailedString()+ "\n" + myMachine.toString();
 	}
 	
+	public Block copy(int newID) {
+		return new Block((TuringMachine) myMachine.copy(), getName(), newID);
+	}
+	
 }

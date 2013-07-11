@@ -1,6 +1,8 @@
 package model.automata;
 
-public class AutomatonException extends RuntimeException {
+import errors.JFLAPException;
+
+public class AutomatonException extends JFLAPException {
 
 	public AutomatonException() {
 		super();

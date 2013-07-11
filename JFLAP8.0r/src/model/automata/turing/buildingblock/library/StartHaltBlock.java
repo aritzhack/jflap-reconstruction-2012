@@ -10,7 +10,7 @@ import model.automata.turing.buildingblock.Block;
  * @author Ian McMahon
  *
  */
-public abstract class StartHaltBlock extends Block {
+public class StartHaltBlock extends Block {
 
 
 	public StartHaltBlock(String name, int id) {

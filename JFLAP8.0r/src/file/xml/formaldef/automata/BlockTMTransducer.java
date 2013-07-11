@@ -1,30 +1,21 @@
 package file.xml.formaldef.automata;
 
 import java.util.List;
-import java.util.Map;
-
-import util.UtilFunctions;
 
 import debug.JFLAPDebug;
-
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.TransitionSet;
 import model.automata.acceptors.FinalStateSet;
-import model.automata.acceptors.fsa.FSATransition;
 import model.automata.turing.BlankSymbol;
-import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.BlockLibrary;
-import model.formaldef.FormalDefinition;
 import model.formaldef.components.alphabets.Alphabet;
-import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import file.xml.formaldef.components.functions.transitions.TransitionSetTransducer;
 import file.xml.formaldef.components.functions.transitions.tm.BlockTransitionTransducer;
@@ -41,7 +32,7 @@ public class BlockTMTransducer extends AutomatonTransducer<BlockTuringMachine> {
 			List<Alphabet> alphs) {
 		InputAlphabet input = retrieveAlphabet(alphs, InputAlphabet.class);
 		TapeAlphabet tape = retrieveAlphabet(alphs, TapeAlphabet.class);
-
+		
 		BlockTransitionTransducer ducer = new BlockTransitionTransducer(input, tape);
 		
 		TransitionSetTransducer<BlockTransition> trans = 
@@ -86,6 +77,7 @@ public class BlockTMTransducer extends AutomatonTransducer<BlockTuringMachine> {
 
 	private StartState createStartBlock(StartState oldStart, BlockSet blocks) {
 		State old = oldStart.getState();
+		if(old == null) return oldStart;
 		Block start = blocks.getStateWithID(old.getID());
 		return new StartState(start);
 	}

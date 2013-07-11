@@ -1,6 +1,7 @@
 package view.automata.tools;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -25,8 +26,11 @@ import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
+import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
+import model.automata.turing.TuringMachine;
+import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.change.events.AddEvent;
 import model.change.events.RemoveEvent;
@@ -34,15 +38,22 @@ import model.change.events.SetToEvent;
 import model.change.events.StartStateSetEvent;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
+import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import util.Point2DAdv;
+import view.ViewFactory;
 import view.automata.AutomatonEditorPanel;
+import view.automata.BlockEditorPanel;
 import view.automata.Note;
 import view.automata.undoing.ClearSelectionEvent;
 import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteMoveEvent;
+import view.automata.undoing.StateAddEvent;
 import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateMoveEvent;
+import view.automata.views.AutomataView;
+import view.environment.JFLAPEnvironment;
 import debug.JFLAPDebug;
 
 /**
@@ -533,7 +544,17 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("Need to implement this!");
+					JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+					Block b = (Block) myObject;
+					TuringMachine m = b.getTuringMachine();
+					AutomataView view = (AutomataView) ViewFactory.createView(m);
+					Dimension size = env.getSize();
+					
+					env.addSelectedComponent(view);
+					env.setSize(size);
+					env.revalidate();
+					env.update();
+					((AutomatonEditorPanel) view.getCentralPanel()).layoutGraph();
 				}
 			});
 			copyBlock = new JMenuItem("Duplicate Block");
@@ -541,7 +562,15 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("Need to implement this!");
+					Block b = (Block) myObject;
+					TuringMachine m = b.getTuringMachine();
+					BlockEditorPanel panel = (BlockEditorPanel) getPanel();
+
+					Point2D p = panel.getPointForVertex(b);
+					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS*2, (int) p.getY());
+					
+					b = panel.addBlock(b, (Point) p);
+					getKeeper().registerChange(new StateAddEvent(panel, panel.getAutomaton(), b, p));
 				}
 			});
 			add(editBlock);
@@ -611,25 +640,30 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					StateSet states = myDef.getStates();
 					AutomatonEditorPanel<T, S> panel = getPanel();
-					Map<State, Point2D> oldPoints = new HashMap<State, Point2D>();
-
+					StateSet states = myDef.getStates();
+					TransitionSet<S> transitions = myDef.getTransitions();
+					
+					Map<State, Point2D> oldStatePoints = new HashMap<State, Point2D>();
+					
 					for (State s : states)
-						oldPoints.put(s,
+						oldStatePoints.put(s,
 								new Point2DAdv(panel.getPointForVertex(s)));
 					panel.layoutGraph();
 
-					CompoundUndoRedo comp = new CompoundUndoRedo(
-							new ClearSelectionEvent(panel));
-					for (State s : oldPoints.keySet()) {
+					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(panel));
+					
+					for (State s : oldStatePoints.keySet()) {
+						
 						Point2D newPoint = new Point2DAdv(panel
-								.getPointForVertex(s)), oldPoint = oldPoints
+								.getPointForVertex(s)), oldPoint = oldStatePoints
 								.get(s);
 
 						if (!newPoint.equals(oldPoint))
 							comp.add(new StateMoveEvent(panel, myDef, s,
 									oldPoint, newPoint));
+						
+						
 					}
 					getKeeper().registerChange(comp);
 				}

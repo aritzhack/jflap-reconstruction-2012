@@ -1,7 +1,10 @@
 package test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import file.xml.XMLCodec;
 
 import model.algorithms.testinput.simulate.AutoSimulator;
 import model.automata.InputAlphabet;
@@ -340,7 +343,11 @@ public class UniversalTMTest {
 		int numTapes = 3;
 		
 		MultiTapeTuringMachine universal = new MultiTapeTuringMachine(states, tapeAlph, blank, inputAlph, functions, start, finalStates, numTapes);
-		System.out.println(universal);
+		String toSave = System.getProperties().getProperty("user.dir")
+				+ "/filetest/universal.jff";
+		File f = new File(toSave);
+		XMLCodec codec = new XMLCodec();
+		codec.encode(universal, f, null);
 		
 		AutoSimulator simulator = new AutoSimulator(universal, 0);
 		simulator.beginSimulation(Symbolizers.symbolize("101101011101110101011010110", universal), Symbolizers.symbolize("110110110", universal), new SymbolString(one));
