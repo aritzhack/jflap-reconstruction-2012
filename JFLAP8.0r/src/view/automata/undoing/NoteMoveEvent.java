@@ -12,10 +12,10 @@ public class NoteMoveEvent extends SingleNoteEvent{
 	private Point from;
 	private Point to;
 
-	public NoteMoveEvent(AutomatonEditorPanel panel, Note n, Point old){
+	public NoteMoveEvent(AutomatonEditorPanel panel, Note n, Point old, Point newP){
 		super(panel, n);
 		from = old;
-		to = n.getLocation();
+		to = newP;
 		
 		from.x = (int) Math.max(from.x, 0);
 		from.y = (int) Math.max(from.y, 0);

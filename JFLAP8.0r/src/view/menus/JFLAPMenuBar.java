@@ -37,7 +37,8 @@ public class JFLAPMenuBar extends JMenuBar implements TabChangeListener {
 		add(new FileMenu(e));
 		addMenu(createEditMenu(e));
 		addMenu(createInputMenu(e));
-//		addMenu("Test", getTestMenuComponents(e));
+		addMenu(createTestMenu(e));
+		addMenu(createViewMenu(e));
 //		addMenu("Convert", getConvertMenuComponents(e));
 		this.add(new HelpMenu());
 		this.add(Box.createGlue());
@@ -58,8 +59,12 @@ public class JFLAPMenuBar extends JMenuBar implements TabChangeListener {
 		return null;
 	}
 
-	public Collection<JMenuItem> getTestMenuComponents(JFLAPEnvironment e) {
-		return null;
+	public JMenu createTestMenu(JFLAPEnvironment e) {
+		return new TestMenu(e);
+	}
+	
+	public JMenu createViewMenu(JFLAPEnvironment e) {
+		return new ViewMenu(e);
 	}
 
 	public JMenu createInputMenu(JFLAPEnvironment e) {

@@ -5,8 +5,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import model.algorithms.conversion.autotogram.TMVariableMapping;
-import model.automata.acceptors.fsa.FSATransition;
+import javax.swing.JEditorPane;
+
+import model.automata.Automaton;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.transducers.mealy.MealyMachine;
@@ -14,19 +15,19 @@ import model.automata.transducers.moore.MooreMachine;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.grammar.Grammar;
+import model.graph.TransitionGraph;
 import model.lsystem.LSystem;
 import model.pumping.ContextFreePumpingLemma;
 import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
-import universe.JFLAPUniverse;
+import view.automata.AutomatonEditorPanel;
 import view.automata.views.AutomataView;
 import view.automata.views.BlockTMView;
 import view.automata.views.FSAView;
 import view.automata.views.MealyView;
 import view.automata.views.MooreView;
+import view.automata.views.MultiTapeTMView;
 import view.automata.views.PDAView;
-import view.automata.views.TMView;
-import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.lsystem.LSystemInputView;
 import view.pumping.CFPumpingLemmaChooser;
@@ -55,7 +56,7 @@ public class ViewFactory {
 		myClassToComponent.put(PushdownAutomaton.class, PDAView.class);
 		myClassToComponent.put(MealyMachine.class, MealyView.class);
 		myClassToComponent.put(MooreMachine.class, MooreView.class);
-		myClassToComponent.put(MultiTapeTuringMachine.class, TMView.class);
+		myClassToComponent.put(MultiTapeTuringMachine.class, MultiTapeTMView.class);
 		myClassToComponent.put(BlockTuringMachine.class, BlockTMView.class);
 //		myClassToComponent.put(SetsManager.class, SetsView.class);
 
@@ -68,7 +69,8 @@ public class ViewFactory {
 	public static Component createView(Object decode) {		
 		if(decode instanceof PumpingLemma)
 			return createPumpingLemmaView((PumpingLemma) decode);
-		
+		if(decode instanceof TransitionGraph)
+			return createAutomataView((TransitionGraph) decode);
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
 		JFLAPDebug.print(argClass.getGenericSuperclass()+" "+viewClass);
@@ -104,6 +106,15 @@ public class ViewFactory {
          	inputPane = new HumanCFPumpingLemmaInputView(cf);
          inputPane.update();
          return inputPane;
+	}
+	
+	public static Component createAutomataView(TransitionGraph graph){
+		Automaton auto = graph.getAutomaton();
+		AutomataView view = (AutomataView) createView(auto);
+		AutomatonEditorPanel panel = (AutomatonEditorPanel) view.getCentralPanel();
+		
+		panel.setGraph(graph);
+		return view;
 	}
 
 }

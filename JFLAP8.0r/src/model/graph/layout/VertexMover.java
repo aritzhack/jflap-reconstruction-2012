@@ -22,15 +22,19 @@ package model.graph.layout;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import errors.JFLAPError;
-
 import model.graph.Graph;
 import model.graph.LayoutAlgorithm;
+import model.graph.TransitionGraph;
+import util.Point2DAdv;
+import util.arrows.GeometryHelper;
+import util.view.GraphHelper;
+import debug.JFLAPDebug;
+import errors.JFLAPError;
 
 
 
@@ -95,7 +99,6 @@ public class VertexMover extends LayoutAlgorithm {
 	
 	public void layout(Graph graph, Set notMoving) {  
 		ArrayList vertices = getMovableVertices(graph, notMoving);
-		
 		//Check whether to fill the screen first, because other commands will call the other
 		//shiftOntoScreen method.
 		if (command == FILL) {
@@ -140,16 +143,14 @@ public class VertexMover extends LayoutAlgorithm {
 			} catch (NullPointerException e) {
 				return;
 			}
-			cartesianToPolar(graph, vertices);
+			Point2D pCenter = new Point2DAdv(size.getWidth()/2, size.getHeight()/2);
+			double angle = theta * Math.PI / 180;
 
 			for (int i=0; i<vertices.size(); i++) {
-				point = graph.pointForVertex(vertices.get(i));				
-				graph.moveVertex(vertices.get(i), 
-					new Point2D.Double(point.getX(), point.getY() + theta / -180 * Math.PI));
+				point = graph.pointForVertex(vertices.get(i));		
+				Point2D rotate = GeometryHelper.rotatePoint(point, pCenter, angle);
+				graph.moveVertex(vertices.get(i),  rotate);
 			}
-			polarToCartesian(graph, vertices);
 		}
-		//Finally, shift onto the screen
-		shiftOntoScreen(graph, size, vertexDim, true);
 	}
 }

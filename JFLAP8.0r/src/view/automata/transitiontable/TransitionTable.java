@@ -68,7 +68,6 @@ public abstract class TransitionTable<T extends Automaton<S>, S extends Transiti
 			@Override
 			public void mousePressed(MouseEvent e) {
 				IUndoRedo stop = stopEditing(false);
-				JFLAPDebug.print(stop);
 				if (stop != null)
 					myPanel.getKeeper().registerChange(stop);
 			}

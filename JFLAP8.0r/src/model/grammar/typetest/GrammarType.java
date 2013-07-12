@@ -2,11 +2,10 @@ package model.grammar.typetest;
 
 import java.util.ArrayList;
 
-import model.formaldef.Describable;
 import model.grammar.Grammar;
-import model.grammar.Production;
 import model.grammar.typetest.matchers.CNFChecker;
 import model.grammar.typetest.matchers.ContextFreeChecker;
+import model.grammar.typetest.matchers.ContextSensitiveChecker;
 import model.grammar.typetest.matchers.GNFChecker;
 import model.grammar.typetest.matchers.GrammarChecker;
 import model.grammar.typetest.matchers.LL1Checker;
@@ -26,6 +25,7 @@ public enum GrammarType{
 	GREIBACH_NORMAL_FORM("Grammar in Greibach Normal Form", 
 							"GNF", 
 							new GNFChecker()),
+	CONTEXT_SENSITIVE("Context Sensitive Grammar", "CSG", new ContextSensitiveChecker()),
 	UNRESTRICTED("Unrestricted Grammar","UG", new UnrestrictedChecker()),
 	LL1("LL1 Grammar", "LL1", new LL1Checker())
 	;

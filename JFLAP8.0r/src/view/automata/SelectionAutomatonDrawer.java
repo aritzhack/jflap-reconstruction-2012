@@ -158,7 +158,7 @@ public class SelectionAutomatonDrawer<T extends Transition<T>> extends
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setStroke(new BasicStroke(6.0f));
 		g2.setColor(JFLAPPreferences.getSelectedTransitionColor());
-		CurvedArrow arrow = getArrow(from, to, obj);
+		CurvedArrow arrow = GraphHelper.getArrow(from, to, obj);
 		arrow.draw(g2);
 		g2.dispose();
 	}

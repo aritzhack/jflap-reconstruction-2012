@@ -15,6 +15,8 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import errors.BooleanWrapper;
 
 import model.automata.InputAlphabet;
@@ -58,7 +60,7 @@ public abstract class Alphabet extends SetComponent<Symbol>{
 	
 
 	public boolean equals(Object o){
-		if (!super.equals(o))
+		if (!(o instanceof Alphabet))
 			return false;
 		Alphabet other = (Alphabet) o;
 		return Arrays.equals(super.toArray(), other.toArray());

@@ -5,12 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-
-import view.lsystem.helperclasses.Axiom;
-import view.lsystem.helperclasses.Parameter;
-import view.lsystem.helperclasses.ParameterMap;
-import view.lsystem.helperclasses.ParameterName;
-import view.lsystem.helperclasses.ParameterValue;
+import java.util.TreeMap;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -32,6 +27,7 @@ import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.graph.TransitionGraph;
 import model.lsystem.LSystem;
 import model.pumping.cf.AiBjCk;
 import model.pumping.cf.AkBnCnDj;
@@ -58,7 +54,11 @@ import model.pumping.reg.BkABnBAn;
 import model.pumping.reg.NaNb;
 import model.pumping.reg.Palindrome;
 import model.regex.RegularExpression;
-import model.symbols.symbolizer.SimpleSymbolizer;
+import view.lsystem.helperclasses.Axiom;
+import view.lsystem.helperclasses.Parameter;
+import view.lsystem.helperclasses.ParameterMap;
+import view.lsystem.helperclasses.ParameterName;
+import view.lsystem.helperclasses.ParameterValue;
 import file.xml.formaldef.automata.BlockTMTransducer;
 import file.xml.formaldef.automata.FSATransducer;
 import file.xml.formaldef.automata.MealyMachineTransducer;
@@ -81,7 +81,6 @@ import file.xml.formaldef.components.states.ToStateTransducer;
 import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
 import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
 import file.xml.formaldef.components.symbols.StartVariableTransducer;
-import file.xml.formaldef.components.symbols.SymbolStringTransducer;
 import file.xml.formaldef.grammar.GrammarTransducer;
 import file.xml.formaldef.lsystem.AxiomTransducer;
 import file.xml.formaldef.lsystem.LSystemTransducer;
@@ -90,6 +89,9 @@ import file.xml.formaldef.lsystem.ParameterNameTransducer;
 import file.xml.formaldef.lsystem.ParameterTransducer;
 import file.xml.formaldef.lsystem.ParameterValueTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
+import file.xml.graph.ControlPointMapTransducer;
+import file.xml.graph.StatePointMapTransducer;
+import file.xml.graph.TransitionGraphTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;
 
@@ -172,6 +174,8 @@ public class TransducerFactory{
 		addMapping(BkABnBAn.class, new RegPumpingLemmaTransducer());
 		addMapping(NaNb.class, new RegPumpingLemmaTransducer());
 		addMapping(Palindrome.class, new RegPumpingLemmaTransducer());
+		
+		addMapping(TransitionGraph.class, new TransitionGraphTransducer());
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {

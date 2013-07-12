@@ -10,7 +10,7 @@ import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.undo.UndoKeeper;
 
-public class BlockTMView extends AutomataView<BlockTuringMachine, BlockTransition>{
+public class BlockTMView extends TuringMachineView<BlockTuringMachine, BlockTransition>{
 
 	public BlockTMView(BlockTuringMachine model) {
 		super(model);

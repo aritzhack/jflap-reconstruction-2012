@@ -45,7 +45,9 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		super.mousePressed(e);
 		AutomatonEditorPanel<T, S> panel = getPanel();
+		
 		//Left click, create a state, move it to mouse's location
 		if (SwingUtilities.isLeftMouseButton(e)){
 			myState = panel.createState(e.getPoint());

@@ -66,6 +66,12 @@ public abstract class FormalDefinitionView<T, S extends FormalDefinition> extend
 		return myCentralPanel;
 	}
 	
+	public void setCentralPanel(JComponent panel){
+		myCentralPanel = panel;
+		revalidate();
+		repaint();
+	}
+	
 	public T getModel(){
 		return myModel;
 	}

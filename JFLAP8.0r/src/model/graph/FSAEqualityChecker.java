@@ -20,9 +20,11 @@
 
 package model.graph;
 
+import debug.JFLAPDebug;
 import model.algorithms.transform.fsa.NFAtoDFAConverter;
 import model.algorithms.transform.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.automata.determinism.FSADeterminismChecker;
 
 /**
  * This determines if two FSAs accept the same language.
@@ -48,8 +50,11 @@ public class FSAEqualityChecker {
 		fsa2 = fsa2.copy();
 
 		// Make sure they're DFAs.
-		fsa1 = NFAtoDFAConverter.convertToDFA(fsa1);
-		fsa2 = NFAtoDFAConverter.convertToDFA(fsa2);
+		FSADeterminismChecker check = new FSADeterminismChecker();
+		if(!check.isDeterministic(fsa1))
+			fsa1 = NFAtoDFAConverter.convertToDFA(fsa1);
+		if(!check.isDeterministic(fsa2))
+			fsa2 = NFAtoDFAConverter.convertToDFA(fsa2);
 		// Minimize the DFAs.
 		fsa1 = MinimizeDFAAlgorithm.minimize(fsa1);
 		fsa2 = MinimizeDFAAlgorithm.minimize(fsa2);

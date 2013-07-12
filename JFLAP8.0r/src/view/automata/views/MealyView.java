@@ -6,9 +6,10 @@ import view.automata.MealyEditorPanel;
 
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.mealy.MealyMachine;
+import model.automata.transducers.mealy.MealyOutputFunction;
 import model.undo.UndoKeeper;
 
-public class MealyView extends AutomataView<MealyMachine, FSATransition>{
+public class MealyView extends TransducerView<MealyMachine, MealyOutputFunction>{
 
 	public MealyView(MealyMachine model) {
 		super(model);

@@ -95,6 +95,7 @@ public class XMLCodec extends Codec {
 				e.printStackTrace();
 				throw new FileJFLAPException("File is missing necessary values!");
 			}
+			e.printStackTrace();
 			throw new FileJFLAPException("Could not parse XML!\n" + e.getMessage());
 		} catch (ExceptionInInitializerError e) {
 			// Hmm. That shouldn't be.
