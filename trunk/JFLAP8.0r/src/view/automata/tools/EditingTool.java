@@ -1,5 +1,7 @@
 package view.automata.tools;
 
+import java.awt.event.MouseEvent;
+
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
@@ -28,6 +30,11 @@ public abstract class EditingTool<T extends Automaton<S>, S extends Transition<S
 
 	public UndoKeeper getKeeper() {
 		return myKeeper;
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		myPanel.clearSelection();
 	}
 
 	public void setActive(boolean active) {

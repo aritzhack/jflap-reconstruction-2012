@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 
 import model.automata.Automaton;
 import model.automata.Transition;
+import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
 import view.automata.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
@@ -94,6 +95,16 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 	
 	public StateTool<T, S> createStateTool(AutomatonEditorPanel<T, S> panel, T def){
 		return new StateTool<T, S>(panel, def);
+	}
+	
+	@Override
+	public T getDefinition() {
+		// TODO Auto-generated method stub
+		return super.getDefinition();
+	}
+	
+	public TransitionGraph<S> getGraph() {
+		return ((AutomatonEditorPanel<T, S>) getCentralPanel()).getGraph();
 	}
 
 }

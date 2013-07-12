@@ -59,6 +59,7 @@ public abstract class Graph<T> extends ChangingObject {
 		StringBuffer sb = new StringBuffer();
 		sb.append(super.toString() + "\n");
 		sb.append(verticesToPoints);
+		sb.append(myCtrlPoints.values());
 		return sb.toString();
 	}
 
@@ -189,7 +190,6 @@ public abstract class Graph<T> extends ChangingObject {
 
 			} else
 				ctrl.setFrom(x, y);
-			setControlPt(ctrl.toBasicPoint(), vertex, to);
 		}
 		for (T from : myEdgeIDs.keySet()) {
 			Map<T, Integer> map = myEdgeIDs.get(from);
@@ -198,7 +198,6 @@ public abstract class Graph<T> extends ChangingObject {
 				int id = map.get(vertex);
 				ctrl = myCtrlPoints.get(id);
 				ctrl.setTo(x, y);
-				setControlPt(ctrl.toBasicPoint(), from, vertex);
 			}
 		}
 		distributeChanged();
@@ -264,8 +263,8 @@ public abstract class Graph<T> extends ChangingObject {
 	 * point.
 	 */
 	public void setControlPt(Point2D ctrl, T from, T to) {
-//		int edgeID = getID(from, to);
-//		myCtrlPoints.get(edgeID).setLocation(ctrl);
+		int edgeID = getID(from, to);
+		myCtrlPoints.get(edgeID).setLocation(ctrl);
 		distributeChanged();
 	}
 

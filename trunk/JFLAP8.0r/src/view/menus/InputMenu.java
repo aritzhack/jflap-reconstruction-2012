@@ -4,13 +4,12 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
-import debug.JFLAPDebug;
-
-import model.undo.UndoKeeper;
 import view.action.grammar.LanguageGeneratorAction;
 import view.action.grammar.parse.BruteParseAction;
 import view.action.grammar.parse.CYKParseAction;
 import view.action.lsystem.LSystemRenderAction;
+import view.automata.views.AcceptorView;
+import view.automata.views.TuringMachineView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -55,6 +54,17 @@ public class InputMenu extends JMenu implements TabChangeListener {
 			if (view instanceof LSystemInputView) {
 				LSystemInputView v = (LSystemInputView) view;
 				this.add(new LSystemRenderAction(v));
+			}
+			if (view instanceof AcceptorView){
+				AcceptorView v = (AcceptorView) view;
+//				this.add(new StepWithClosureAction(v));
+//				this.add(new StepByStateAction(v));
+//				this.add(new FastRunAction(v));
+//				this.add(new MultipleRunAction(v));
+			}
+			if (view instanceof TuringMachineView){
+				TuringMachineView v = (TuringMachineView) view;
+//				this.add(new MultipleTransducerRunAction(v));
 			}
 		}
 	}

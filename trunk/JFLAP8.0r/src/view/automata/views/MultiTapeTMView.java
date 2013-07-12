@@ -6,9 +6,9 @@ import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.undo.UndoKeeper;
 
-public class TMView extends AutomataView<MultiTapeTuringMachine, MultiTapeTMTransition> {
+public class MultiTapeTMView extends TuringMachineView<MultiTapeTuringMachine, MultiTapeTMTransition> {
 
-	public TMView(MultiTapeTuringMachine model) {
+	public MultiTapeTMView(MultiTapeTuringMachine model) {
 		super(model);
 		// TODO Auto-generated constructor stub
 	}

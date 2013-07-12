@@ -36,12 +36,14 @@ import model.automata.acceptors.Acceptor;
 import model.change.events.RemoveEvent;
 import model.change.events.StartStateSetEvent;
 import model.graph.ControlPoint;
+import model.graph.LayoutAlgorithm;
 import model.graph.TransitionGraph;
 import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
+import util.Point2DAdv;
 import util.arrows.CurvedArrow;
 import util.view.GraphHelper;
 import view.EditingPanel;
@@ -50,12 +52,15 @@ import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
 import view.automata.transitiontable.TransitionTable;
 import view.automata.transitiontable.TransitionTableFactory;
+import view.automata.undoing.CompoundMoveEvent;
+import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteAddEvent;
 import view.automata.undoing.NoteRemoveEvent;
 import view.automata.undoing.NoteRenameEvent;
 import view.automata.undoing.StateLabelAddEvent;
 import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateLabelRenameEvent;
+import view.automata.undoing.StateMoveEvent;
 
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
@@ -206,6 +211,17 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		}
 	}
 
+	public void setGraph(TransitionGraph<S> graph) {
+		myGraph.removeListener(this);
+		myGraph = graph;
+		myGraph.addListener(this);
+		repaint();
+	}
+
+	public TransitionGraph<S> getGraph() {
+		return myGraph;
+	}
+
 	/** Sets the given object as selected in the AutomatonDrawer. */
 	public void selectObject(Object o) {
 		myDrawer.setSelected(o, true);
@@ -240,7 +256,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			LabelBounds label = GraphHelper.getLabelBounds(myGraph, trans,
 					getGraphics());
 			State from = trans.getFromState(), to = trans.getToState();
-			CurvedArrow arrow = myDrawer.getArrow(from, to, myGraph);
+			CurvedArrow arrow = GraphHelper.getArrow(from, to, myGraph);
 
 			if (bounds.intersects(label.getRectangle())
 					|| bounds.contains(label.getRectangle()))
@@ -385,9 +401,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * point.
 	 */
 	public void moveCtrlPoint(State from, State to, Point2D point) {
-		ControlPoint ctrl = myGraph.getControlPt(from, to);
-		ctrl.setLocation(point);
-		myGraph.setControlPt(ctrl, from, to);
+		myGraph.setControlPt(point, from, to);
 	}
 
 	/**
@@ -414,6 +428,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myNotes.put(n, n.getText());
 		n.addMouseListener(myTool);
 		n.addMouseMotionListener(myTool);
+	}
+	
+	public List<Note> getNotes() {
+		return new ArrayList<Note>(myNotes.keySet());
 	}
 
 	/** Enables the note and requests focus. */
@@ -498,13 +516,66 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		repaint();
 	}
 
+	public void setLayoutAlgorithm(LayoutAlgorithm alg) {
+		myGraph.setLayoutAlgorithm(alg);
+	}
+
 	public void layoutGraph() {
+		StateSet states = myAutomaton.getStates();
+		TransitionSet<S> transitions = myAutomaton.getTransitions();
+
+		Map<State, Point2D> oldStatePoints = new HashMap<State, Point2D>();
+		Map<State[], Point2D> oldCtrlPoints = new HashMap<State[], Point2D>();
+
+		for (State s : states) {
+			oldStatePoints.put(s, new Point2DAdv(getPointForVertex(s)));
+			for (S trans : transitions.getTransitionsFromState(s)) {
+				State to = trans.getToState();
+				State[] edge = new State[] { s, to };
+
+				oldCtrlPoints.put(edge, getControlPoint(edge));
+			}
+
+		}
 		myGraph.layout();
+		resizeGraph();
+
+		List<StateMoveEvent> move = new ArrayList<StateMoveEvent>();
+
+		for (State s : oldStatePoints.keySet()) {
+
+			Point2D newPoint = new Point2DAdv(getPointForVertex(s)), oldPoint = oldStatePoints
+					.get(s);
+			if (!newPoint.equals(oldPoint))
+				move.add(new StateMoveEvent(this, myAutomaton, s, oldPoint,
+						newPoint));
+
+		}
+		CompoundMoveEvent comp = new CompoundMoveEvent(this, move);
+
+		for (State[] edge : oldCtrlPoints.keySet()) {
+			Point2D newPoint = new Point2DAdv(getControlPoint(edge)), oldPoint = oldCtrlPoints
+					.get(edge);
+
+			if (!newPoint.equals(oldPoint))
+				comp.addEvents(new ControlMoveEvent(this, edge, oldPoint,
+						newPoint));
+		}
+		if (!comp.isEmpty())
+			getKeeper().registerChange(comp);
+	}
+
+	public void resizeGraph() {
+		updateBounds(getGraphics());
 		Rectangle visible = getVisibleRect();
-		int bounds = (int) getStateBounds();
-		visible = new Rectangle(visible.x + bounds, visible.y + bounds,
-				visible.width - 2 * bounds, visible.height - 2 * bounds);
-		GraphHelper.moveWithinFrame(myGraph, visible);
+		Rectangle b = new Rectangle(getPreferredSize());
+
+		if (!visible.contains(b)) {
+			int bounds = (int) getStateBounds();
+			visible = new Rectangle(visible.x + bounds, visible.y + bounds,
+					visible.width - 2 * bounds, visible.height - 2 * bounds);
+			GraphHelper.moveWithinFrame(myGraph, visible);
+		}
 		for (State s : myStateLabels.keySet())
 			moveStateLabel(s);
 	}
@@ -521,8 +592,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	private IUndoRedo createTransitionRemove(S... trans) {
 		return createTransitionRemove(Arrays.asList(trans));
 	}
-	
-	public IUndoRedo createTransitionRemove(Collection<S> trans){
+
+	public IUndoRedo createTransitionRemove(Collection<S> trans) {
 		return new TransitionRemoveEvent(trans);
 	}
 
@@ -563,7 +634,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		for (S trans : myAutomaton.getTransitions()) {
 			State from = trans.getFromState(), to = trans.getToState();
 
-			CurvedArrow edge = myDrawer.getArrow(from, to, myGraph);
+			CurvedArrow edge = GraphHelper.getArrow(from, to, myGraph);
 			if (CurvedArrow.intersects(p, 2, edge))
 				return new State[] { from, to };
 		}
@@ -585,22 +656,15 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * preferred size contains the entire graph (so the containing scroll pane
 	 * knows to resize).
 	 */
-	private void updateBounds(Graphics g) {
-		double maxx = 0, maxy = 0, minx = 0, miny = 0;
+	public void updateBounds(Graphics g) {
+		Point2D max = GraphHelper.getMaxPoint(myGraph, g);
+		Point2D min = GraphHelper.getMinPoint(myGraph, g);
+		double maxx = max.getX(), minx = min.getX();
+		double maxy = max.getY(), miny = min.getY();
 
 		// Compare to State points
 		// TODO: Labels, when they're implemented
 		for (State vert : myAutomaton.getStates()) {
-			Point2D point = myGraph.pointForVertex(vert);
-			double x = point.getX(), y = point.getY();
-
-			maxx = Math.max(maxx, x + getStateBounds());
-			maxy = Math.max(maxy, y + getStateBounds());
-			miny = Math.min(miny, y - getStateBounds());
-			if (Automaton.isStartState(myAutomaton, vert))
-				x -= JFLAPConstants.STATE_RADIUS;
-			minx = Math.min(minx, x - getStateBounds());
-
 			if (myStateLabels.containsKey(vert)) {
 				Note sLabel = myStateLabels.get(vert);
 				if (sLabel != null) {
@@ -612,27 +676,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 					miny = Math.min(miny, lBounds.getMinY());
 				}
 			}
-		}
-
-		// Compare to labels and arrow boundaries
-		for (S trans : myAutomaton.getTransitions()) {
-			LabelBounds labelBounds = GraphHelper.getLabelBounds(myGraph,
-					trans, g);
-			CurvedArrow arrow = myDrawer.getArrow(trans.getFromState(),
-					trans.getToState(), myGraph);
-			Rectangle2D arrowBounds = arrow.getCurveBounds();
-
-			maxx = Math.max(maxx, labelBounds.getMaxX());
-			maxx = Math.max(maxx, arrowBounds.getMaxX());
-
-			minx = Math.min(minx, labelBounds.getMinX());
-			minx = Math.min(minx, arrowBounds.getMinX());
-
-			maxy = Math.max(maxy, labelBounds.getMaxY());
-			maxy = Math.max(maxy, arrowBounds.getMaxY());
-
-			miny = Math.min(miny, labelBounds.getMinY());
-			miny = Math.min(miny, arrowBounds.getMinY());
 		}
 
 		for (Note n : myNotes.keySet()) {

@@ -10,6 +10,7 @@ import util.JFLAPConstants;
 import util.arrows.ArrowHead;
 import util.arrows.CurvedArrow;
 import util.arrows.GeometryHelper;
+import util.view.GraphHelper;
 
 import debug.JFLAPDebug;
 
@@ -54,32 +55,9 @@ public class GraphDrawer<T> implements JFLAPConstants {
 	}
 
 	public void drawEdge(T from, T to, Graph<T> obj, Graphics g) {
-		CurvedArrow curve = getArrow(from, to, obj);
+		CurvedArrow curve = GraphHelper.getArrow(from, to, obj);
 		curve.draw(g);
 	}
-	
-	public CurvedArrow getArrow(T from, T to, Graph<T> obj) {
-		Point2D pFrom = obj.pointForVertex(from);
-		Point2D pTo = obj.pointForVertex(to);
-		Point2D ctrl = obj.getControlPt(from,to);
-		double rad = getVertexDrawer().getVertexRadius();
-		double theta1 = GeometryHelper.calculateAngle(pFrom, pTo),
-				theta2=GeometryHelper.calculateAngle(pTo, pFrom);
-		if (from.equals(to)){
-			theta1=-3*Math.PI/4;
-			theta2=-Math.PI/4;
-		}
-			
-		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);
-		Point2D edgeTo = GeometryHelper.pointOnCircle(pTo,rad,theta2);
-		
-		double arrowheadLen = 0;
-		if (obj.isDirected()) arrowheadLen=ARROW_LENGTH;
-		CurvedArrow curve = new CurvedArrow(arrowheadLen, ARROW_ANGLE);
-		curve.setCurve(edgeFrom, ctrl, edgeTo);
-		return curve;
-	}
-
 		
 	public VertexDrawer<T> getVertexDrawer(){
 		return myVertexDrawer;

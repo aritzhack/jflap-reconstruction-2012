@@ -4,6 +4,7 @@ import javax.swing.JComponent;
 
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.moore.MooreMachine;
+import model.automata.transducers.moore.MooreOutputFunction;
 import model.undo.UndoKeeper;
 import view.automata.AutomatonEditorPanel;
 import view.automata.MooreEditorPanel;
@@ -12,7 +13,7 @@ import view.automata.tools.MooreArrowTool;
 import view.automata.tools.MooreStateTool;
 import view.automata.tools.StateTool;
 
-public class MooreView extends AutomataView<MooreMachine, FSATransition>{
+public class MooreView extends TransducerView<MooreMachine, MooreOutputFunction>{
 
 	public MooreView(MooreMachine model) {
 		super(model);

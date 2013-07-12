@@ -56,6 +56,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 				pFrom = pCurrent = panel.getPointForVertex(from);
 			}
 		}
+		super.mousePressed(e);
 	}
 
 	@Override

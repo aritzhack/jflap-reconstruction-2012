@@ -2,18 +2,15 @@ package model.automata.determinism;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.SingleInputTransition;
-import model.automata.TransitionSet;
-import model.symbols.SymbolString;
+import model.automata.Transition;
 
-public abstract class DeterminismChecker<T extends SingleInputTransition<T>> {
+public abstract class DeterminismChecker<T extends Transition<T>> {
 
 	
 	public DeterminismChecker(){
@@ -54,29 +51,27 @@ public abstract class DeterminismChecker<T extends SingleInputTransition<T>> {
 	private Collection<T> getNondeterministicTransitionsForState(State s,
 			Automaton<T> m) {
 		
-		Map<SymbolString, ArrayList<T>> dMap = new HashMap<SymbolString, ArrayList<T>>();
 		
-		Set<T> from = m.getTransitions().getTransitionsFromState(s);
+		List<T> from = new ArrayList<T>(m.getTransitions().getTransitionsFromState(s));
+		Set<T> nonDet = new TreeSet<T>();
 		
-		for (T trans: from){
-			SymbolString compare = retrieveApplicableString(trans);
-			ArrayList<T> list = dMap.get(compare);
-			if (list == null)
-				list = new ArrayList<T>();
-			list.add(trans);
-			dMap.put(compare, list);
+		for (int i=0; i < from.size(); i++){
+			T trans = from.get(i);
+			
+			if(trans.isLambdaTransition())
+				nonDet.add(trans);
+			else
+				for(int j = i+1; j < from.size(); j++){
+					T trans2 = from.get(j);
+					if(areNondeterministic(trans, trans2)){
+						nonDet.add(trans);
+						nonDet.add(trans2);
+					}
+				}
 		}
 		
-		ArrayList<T> list = new ArrayList<T>();
-		for(ArrayList<T> t: dMap.values()){
-			if (t.size() > 1)
-				list.addAll(t);
-				
-		}
-		
-		return list;
+		return nonDet;
 	}
-
-
-	protected abstract SymbolString retrieveApplicableString(T trans);
+	
+	protected abstract boolean areNondeterministic(T trans1, T trans2);
 }

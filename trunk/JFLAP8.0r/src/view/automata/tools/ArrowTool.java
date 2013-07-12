@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import view.automata.AutomatonEditorPanel;
 import view.automata.BlockEditorPanel;
 import view.automata.Note;
 import view.automata.undoing.ClearSelectionEvent;
+import view.automata.undoing.CompoundMoveEvent;
 import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteMoveEvent;
 import view.automata.undoing.StateAddEvent;
@@ -289,7 +291,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 						panel.clearSelection();
 					if (!myInitialObjectPoint.equals(myNoteMovingPoint))
 						keeper.registerChange(new NoteMoveEvent(panel,
-								(Note) myObject, (Point) myInitialObjectPoint));
+								(Note) myObject, (Point) myInitialObjectPoint, ((Note) myObject).getLocation()));
 
 				}
 			}
@@ -332,7 +334,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				Point old = new Point((int) (current.x - dx),
 						(int) (current.y - dy));
 
-				comp.add(new NoteMoveEvent(panel, n, old));
+				comp.add(new NoteMoveEvent(panel, n, old, n.getLocation()));
 			}
 		}
 		comp.add(new ClearSelectionEvent(panel));
@@ -641,31 +643,8 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					AutomatonEditorPanel<T, S> panel = getPanel();
-					StateSet states = myDef.getStates();
-					TransitionSet<S> transitions = myDef.getTransitions();
 					
-					Map<State, Point2D> oldStatePoints = new HashMap<State, Point2D>();
-					
-					for (State s : states)
-						oldStatePoints.put(s,
-								new Point2DAdv(panel.getPointForVertex(s)));
 					panel.layoutGraph();
-
-					CompoundUndoRedo comp = new CompoundUndoRedo(new ClearSelectionEvent(panel));
-					
-					for (State s : oldStatePoints.keySet()) {
-						
-						Point2D newPoint = new Point2DAdv(panel
-								.getPointForVertex(s)), oldPoint = oldStatePoints
-								.get(s);
-
-						if (!newPoint.equals(oldPoint))
-							comp.add(new StateMoveEvent(panel, myDef, s,
-									oldPoint, newPoint));
-						
-						
-					}
-					getKeeper().registerChange(comp);
 				}
 			});
 			this.add(layoutGraph);

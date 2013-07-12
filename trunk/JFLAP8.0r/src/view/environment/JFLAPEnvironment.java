@@ -108,6 +108,10 @@ public class JFLAPEnvironment extends JFrame implements
 	public void addTabListener(TabChangeListener menu) {
 		myListeners.add(menu);
 	}
+	
+	public void removeTabListener(TabChangeListener listener) {
+		myListeners.remove(listener);
+	}
 
 	private void setFile(File f) {
 		myFile = f;
@@ -202,7 +206,10 @@ public class JFLAPEnvironment extends JFrame implements
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
 
-			if (c instanceof FormalDefinitionView) {
+			if (c instanceof AutomataView){
+				return ((AutomataView) c).getGraph();
+			}
+			else if (c instanceof FormalDefinitionView) {
 				return ((FormalDefinitionView) c).getDefinition();
 			} else if (c instanceof PumpingLemmaInputView) {
 				return ((PumpingLemmaInputView) c).getLemma();

@@ -23,6 +23,8 @@ package model.graph;
 import java.util.HashMap;
 import java.util.Map;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.fsa.FSATransition;
