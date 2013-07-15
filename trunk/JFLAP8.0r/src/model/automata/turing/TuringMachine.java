@@ -35,7 +35,7 @@ public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>
 	}
 
 
-	private void setBlankSymbol(BlankSymbol blank) {
+	public void setBlankSymbol(BlankSymbol blank) {
 		myBlank = blank;
 		this.getTapeAlphabet().add(blank.getSymbol());
 		this.getTapeAlphabet().addRules(new TuringMachineBlankRule(myBlank));

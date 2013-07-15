@@ -37,7 +37,7 @@ public class ParameterTransducer extends BasicTransducer<Parameter> {
 			String tag = e.getTagName();
 			
 			boolean isName = tag.equals(PARAMETER_NAME_TAG);
-			boolean isValue = tag.equals(PARAMETER_VALUE_TAG);
+			boolean isValue = tag.equals(VALUE_TAG);
 			if(isName || isValue){
 				XMLTransducer trans = TransducerFactory.getTransducerForTag(tag);
 				

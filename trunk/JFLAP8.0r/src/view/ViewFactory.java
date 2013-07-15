@@ -1,13 +1,14 @@
 package view;
 
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JEditorPane;
-
 import model.automata.Automaton;
+import model.automata.State;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.automata.transducers.mealy.MealyMachine;
@@ -20,7 +21,9 @@ import model.lsystem.LSystem;
 import model.pumping.ContextFreePumpingLemma;
 import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
+import model.regex.RegularExpression;
 import view.automata.AutomatonEditorPanel;
+import view.automata.Note;
 import view.automata.views.AutomataView;
 import view.automata.views.BlockTMView;
 import view.automata.views.FSAView;
@@ -40,6 +43,7 @@ import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
+import file.xml.graph.AutomatonEditorData;
 //import view.sets.SetsView;
 
 public class ViewFactory {
@@ -69,8 +73,8 @@ public class ViewFactory {
 	public static Component createView(Object decode) {		
 		if(decode instanceof PumpingLemma)
 			return createPumpingLemmaView((PumpingLemma) decode);
-		if(decode instanceof TransitionGraph)
-			return createAutomataView((TransitionGraph) decode);
+		if(decode instanceof AutomatonEditorData)
+			return createAutomataView((AutomatonEditorData) decode);
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
 		JFLAPDebug.print(argClass.getGenericSuperclass()+" "+viewClass);
@@ -108,12 +112,25 @@ public class ViewFactory {
          return inputPane;
 	}
 	
-	public static Component createAutomataView(TransitionGraph graph){
+	public static Component createAutomataView(AutomatonEditorData data){
+		TransitionGraph graph = data.getGraph();
+		Map<Point2D, String> labels = data.getLabels(), notes = data.getNotes();
+		
 		Automaton auto = graph.getAutomaton();
 		AutomataView view = (AutomataView) createView(auto);
 		AutomatonEditorPanel panel = (AutomatonEditorPanel) view.getCentralPanel();
 		
 		panel.setGraph(graph);
+		
+		for(Point2D p : notes.keySet()){
+			Point basic = new Point((int) p.getX(), (int) p.getY());
+			panel.addNote(new Note(panel, basic, notes.get(p)));
+		}
+		for(Point2D p : labels.keySet()){
+			Point basic = new Point((int) p.getX(), (int) p.getY());
+			panel.addStateLabel((State) graph.vertexForPoint(p), new Note(panel, basic), labels.get(p));
+		}
+		panel.stopAllEditing();
 		return view;
 	}
 

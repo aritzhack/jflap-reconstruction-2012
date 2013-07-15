@@ -43,8 +43,9 @@ public interface XMLTags {
 	public static final String PARAMETER_TAG = "parameter";
 	public static final String PARAMETER_MAP_TAG = "parameter_map";
 	public static final String PARAMETER_NAME_TAG = "parameter_name";
-	public static final String PARAMETER_VALUE_TAG = "value";
+	public static final String VALUE_TAG = "value";
 	
+	public static final String EDITOR_PANEL_TAG = "editor_panel";
 	public static final String TRANS_GRAPH_TAG = "transition_graph";
 	public static final String CTRL_POINT = "control_point";
 	public static final String CTRL_POINT_MAP = "control_point_map";
@@ -53,5 +54,8 @@ public interface XMLTags {
 	public static final String POINT_TAG = "point";
 	public static final String X_TAG = "x";
 	public static final String Y_TAG = "y";
-
+	public static final String NOTE_MAP_TAG = "note_map";
+	public static final String NOTE_TAG = "note";
+	public static final String STATE_LABELS = "state_label_map";
+	
 }

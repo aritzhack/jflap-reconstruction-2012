@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.TreeMap;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -27,7 +26,6 @@ import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
-import model.graph.TransitionGraph;
 import model.lsystem.LSystem;
 import model.pumping.cf.AiBjCk;
 import model.pumping.cf.AkBnCnDj;
@@ -89,9 +87,8 @@ import file.xml.formaldef.lsystem.ParameterNameTransducer;
 import file.xml.formaldef.lsystem.ParameterTransducer;
 import file.xml.formaldef.lsystem.ParameterValueTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
-import file.xml.graph.ControlPointMapTransducer;
-import file.xml.graph.StatePointMapTransducer;
-import file.xml.graph.TransitionGraphTransducer;
+import file.xml.graph.AutomatonEditorData;
+import file.xml.graph.AutomatonEditorTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;
 
@@ -175,7 +172,7 @@ public class TransducerFactory{
 		addMapping(NaNb.class, new RegPumpingLemmaTransducer());
 		addMapping(Palindrome.class, new RegPumpingLemmaTransducer());
 		
-		addMapping(TransitionGraph.class, new TransitionGraphTransducer());
+		addMapping(AutomatonEditorData.class, new AutomatonEditorTransducer());
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {

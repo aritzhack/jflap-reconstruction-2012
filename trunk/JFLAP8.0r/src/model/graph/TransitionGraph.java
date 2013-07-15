@@ -128,11 +128,16 @@ public class TransitionGraph<T extends Transition<T>> extends
 		}
 		distributeChange(event);
 	}
+	
+	@Override
+	public void update(State from, State to) {
+		updateLabelCenters(from, to);
+	}
 
 	@Override
 	public void setControlPt(Point2D ctrl, State from, State to) {
 		super.setControlPt(ctrl, from, to);
-		updateLabelCenters(from, to);
+		update(from, to);
 	}
 
 	/** Helper function to simplify control point moving. */

@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,6 +24,8 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.AutomatonException;
 import model.automata.StartState;
@@ -33,9 +34,10 @@ import model.automata.StateSet;
 import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
+import model.automata.turing.buildingblock.Block;
+import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.change.events.RemoveEvent;
 import model.change.events.StartStateSetEvent;
-import model.graph.ControlPoint;
 import model.graph.LayoutAlgorithm;
 import model.graph.TransitionGraph;
 import model.undo.CompoundUndoRedo;
@@ -81,7 +83,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myAutomaton = m;
 		myGraph = new TransitionGraph<S>(m);
 		myGraph.addListener(this);
-		StateDrawer vDraw = new StateDrawer();
+		StateDrawer vDraw = (m instanceof BlockTuringMachine ? new BlockDrawer() : new StateDrawer());
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
 		myStateLabels = new HashMap<State, Note>();
@@ -603,10 +605,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * as "on top" as well).
 	 */
 	private State stateAtPoint(Point2D p) {
-		Point2D[] points = myGraph.points();
-		for (int i = points.length - 1; i >= 0; i--) {
-			if (p.distance(points[i]) <= getStateRadius())
-				return myGraph.vertexForPoint(points[i]);
+		State[] states = myAutomaton.getStates().toArray(new State[0]);
+		for (int i = states.length - 1; i >= 0; i--) {
+			State s = states[i];
+			Point2D point = myGraph.pointForVertex(s);
+			if (p.distance(point) <= getStateRadius() || (isWithinBlock(s, p)))
+				return s;
 		}
 		return null;
 	}
@@ -719,6 +723,18 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		// TODO: may want to change when you actually set the size
 		setPreferredSize(new Dimension(x, y));
 		revalidate();
+	}
+	
+	private boolean isWithinBlock(State s, Point2D p){
+		if(!(s instanceof Block)) return false;
+		Point2D center = myGraph.pointForVertex(s);
+		int size = (int) getStateRadius();
+		
+		int x = (int) center.getX() - size;
+		int y = (int) center.getY() - size;
+		Rectangle r = new Rectangle(x, y, size*2, size*2);
+		
+		return r.contains(p);
 	}
 
 	/**

@@ -73,18 +73,16 @@ public class JFLAPPreferences {
 	public static final Terminal SLR_MARKER = new Terminal("_");
 	public static final String RECENT_CHANGED = "recent_changed";
 	public static final String MODE_CHANGED = "mode";
-	public static enum PREF_CHANGE { lambda_change,
-			blank_change, set_change, LSdistance_change,
+	public static enum PREF_CHANGE { lambda_change, set_change, LSdistance_change,
 			LSangle_change, LShue_change, LSwidth_change,
 			LSincrement_change, CYK_direction_change, CYK_color_change, TM_buffer_change,
-			regex_union_change, regex_open_change, regex_close_change, state_color_change, 
+			regex_union_change, regex_group_change, state_color_change, 
 			selected_color_change, background_color_change, transition_color_change,
 			selected_trans_color_change, grouping_change};
 			
 	public static JFLAPMode DEFAULT_MODE = JFLAPMode.DEFAULT;
 
 	private static String LAMBDA = JFLAPConstants.LAMBDA;
-	private static String BLANK = JFLAPConstants.BLANK;
 	private static String EMPTY_SET = JFLAPConstants.EMPTY_SET;
 
 	private static double DEFAULT_LS_DISTANCE = JFLAPConstants.DEFAULT_LS_DISTANCE;
@@ -133,18 +131,7 @@ public class JFLAPPreferences {
 			distributeChange(PREF_CHANGE.lambda_change.toString(), LAMBDA);
 		}
 	}
-
-	public static String getBlank() {
-		return BLANK;
-	}
-
-	public static void setBlank(String blank) {
-		if (!BLANK.equals(blank)) {
-			BLANK = blank;
-			distributeChange(PREF_CHANGE.blank_change, BLANK);
-		}
-	}
-
+	
 	public static String getEmptySetString() {
 		return EMPTY_SET;
 	}
@@ -266,22 +253,15 @@ public class JFLAPPreferences {
 	public static OpenGroup getCurrentRegExOpenGroup() {
 		return new OpenGroup(DEFAULT_OPEN_GROUP);
 	}
-
-	public static void setRegExOpenGroup(String open) {
-		if (!DEFAULT_OPEN_GROUP.equals(open)) {
-			DEFAULT_OPEN_GROUP = open;
-			distributeChange(PREF_CHANGE.regex_open_change, open);
-		}
-	}
-
 	public static CloseGroup getCurrentRegExCloseGroup() {
 		return new CloseGroup(DEFAULT_CLOSE_GROUP);
 	}
-
-	public static void setRegExCloseGroup(String close) {
-		if (!DEFAULT_CLOSE_GROUP.equals(close)) {
-			DEFAULT_CLOSE_GROUP = close;
-			distributeChange(PREF_CHANGE.regex_close_change, close);
+	
+	public static void setRegexGrouping(String[] group){
+		if(!(DEFAULT_OPEN_GROUP.equals(group[0]) && DEFAULT_CLOSE_GROUP.equals(group[1]))){
+			DEFAULT_OPEN_GROUP = group[0];
+			DEFAULT_CLOSE_GROUP = group[1];
+			distributeChange(PREF_CHANGE.regex_group_change, group);
 		}
 	}
 	
@@ -345,7 +325,7 @@ public class JFLAPPreferences {
 	}
 
 	public static Symbol getTMBlankSymbol() {
-		return new PermanentSymbol(BLANK);
+		return new PermanentSymbol(JFLAPConstants.BLANK);
 	}
 
 	public static Symbol getEmptySetSymbol() {

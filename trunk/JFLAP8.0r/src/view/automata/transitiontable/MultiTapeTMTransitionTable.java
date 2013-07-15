@@ -21,6 +21,7 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import view.automata.AutomatonEditorPanel;
 
 /**
@@ -71,7 +72,7 @@ public class MultiTapeTMTransitionTable extends
 	public static String getValidTMString(String s) {
 		s = getValidString(s);
 		if (s.isEmpty())
-			s = JFLAPPreferences.getBlank();
+			s = JFLAPConstants.BLANK;
 		return s;
 	}
 

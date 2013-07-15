@@ -30,6 +30,9 @@ import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
+import model.automata.acceptors.pda.PushdownAutomaton;
+import model.automata.transducers.mealy.MealyMachine;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockTuringMachine;
@@ -37,6 +40,9 @@ import model.change.events.AddEvent;
 import model.change.events.RemoveEvent;
 import model.change.events.SetToEvent;
 import model.change.events.StartStateSetEvent;
+import model.graph.LayoutAlgorithm;
+import model.graph.LayoutAlgorithmFactory;
+import model.graph.layout.VertexMover;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
@@ -569,7 +575,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					BlockEditorPanel panel = (BlockEditorPanel) getPanel();
 
 					Point2D p = panel.getPointForVertex(b);
-					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS*2, (int) p.getY());
+					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS*2 + 5, (int) p.getY());
 					
 					b = panel.addBlock(b, (Point) p);
 					getKeeper().registerChange(new StateAddEvent(panel, panel.getAutomaton(), b, p));
@@ -626,12 +632,13 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		private JMenuItem layoutGraph;
 		private JMenuItem renameStates;
 		private JMenuItem createNote;
-		private JCheckBoxMenuItem autoZoom;
+		private JMenuItem autoZoom;
 		private Point myPoint;
 
 		public EmptyMenu() {
 			addLayoutGraph();
-			addRenameStates();
+			if(!(myDef instanceof BlockTuringMachine))
+				addRenameStates();
 			addCreateNote();
 			addAutoZoom();
 		}
@@ -709,12 +716,27 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		}
 
 		private void addAutoZoom() {
-			autoZoom = new JCheckBoxMenuItem("Auto-Zoom");
+			autoZoom = new JMenuItem("Fit to screen");
 			autoZoom.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JFLAPDebug.print("NEEDS IMPLEMENTING!");
+					AutomatonEditorPanel panel = getPanel();
+					Rectangle visible = panel.getVisibleRect();
+					double vertexBuffer;
+					if (myDef instanceof MultiTapeTuringMachine)
+						vertexBuffer = 80 * ((MultiTapeTuringMachine) myDef).getNumTapes();
+					else if (myDef instanceof PushdownAutomaton)
+						vertexBuffer = 80;
+					else if (myDef instanceof MealyMachine)
+						vertexBuffer = 65;
+					else
+						vertexBuffer = JFLAPConstants.STATE_RADIUS * 2;
+					
+					LayoutAlgorithm layout = LayoutAlgorithmFactory.getLayoutAlgorithm(VertexMover.FILL, new Dimension(visible.width, visible.height), 
+							new Dimension(JFLAPConstants.STATE_RADIUS+5, JFLAPConstants.STATE_RADIUS + 5), vertexBuffer);
+					panel.setLayoutAlgorithm(layout);
+					panel.layoutGraph();
 				}
 			});
 			this.add(autoZoom);

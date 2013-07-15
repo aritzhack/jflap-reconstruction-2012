@@ -1,10 +1,8 @@
 package view.action.automata;
 
-import java.awt.Dimension;
-
 import javax.swing.AbstractAction;
 
-import universe.JFLAPUniverse;
+import model.automata.Automaton;
 import view.automata.AutomatonEditorPanel;
 import view.automata.views.AutomataView;
 
@@ -20,5 +18,9 @@ public abstract class AutomatonAction extends AbstractAction{
 	
 	public AutomatonEditorPanel getEditorPanel() {
 		return (AutomatonEditorPanel) myView.getCentralPanel();
+	}
+	
+	public Automaton getAutomaton() {
+		return myView.getDefinition();
 	}
 }

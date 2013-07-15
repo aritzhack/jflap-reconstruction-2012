@@ -10,11 +10,11 @@ import javax.swing.SpinnerNumberModel;
 import model.automata.turing.MultiTapeTuringMachine;
 import universe.JFLAPUniverse;
 
-public class NewTMAction extends
+public class NewMultiTapeTMAction extends
 		NewFormalDefinitionAction<MultiTapeTuringMachine> {
 
-	public NewTMAction() {
-		super("Turing Machine");
+	public NewMultiTapeTMAction() {
+		super("Multi-Tape Turing Machine");
 	}
 
 	@Override

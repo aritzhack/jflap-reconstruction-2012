@@ -190,6 +190,7 @@ public abstract class Graph<T> extends ChangingObject {
 
 			} else
 				ctrl.setFrom(x, y);
+			update(vertex, to);
 		}
 		for (T from : myEdgeIDs.keySet()) {
 			Map<T, Integer> map = myEdgeIDs.get(from);
@@ -198,9 +199,14 @@ public abstract class Graph<T> extends ChangingObject {
 				int id = map.get(vertex);
 				ctrl = myCtrlPoints.get(id);
 				ctrl.setTo(x, y);
+				update(from, vertex);
 			}
 		}
 		distributeChanged();
+	}
+
+	public void update(T vertex, T to) {
+		
 	}
 
 	/** Returns if an edge exists between two vertices. */

@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
+import file.xml.graph.AutomatonEditorData;
+
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.graph.TransitionGraph;
@@ -65,11 +67,6 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public Component createToolbar(T definition, UndoKeeper keeper) {
-		// TODO: figure this out :p
-		return createDefaultToolbar(definition, keeper);
-	}
-	
-	private Component createDefaultToolbar(T definition, UndoKeeper keeper) {
 		AutomatonEditorPanel<T, S> panel = (AutomatonEditorPanel<T, S>) getCentralPanel();
 
 		ArrowTool<T, S> arrow = createArrowTool(panel, definition);
@@ -103,8 +100,8 @@ public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
 		return super.getDefinition();
 	}
 	
-	public TransitionGraph<S> getGraph() {
-		return ((AutomatonEditorPanel<T, S>) getCentralPanel()).getGraph();
+	public AutomatonEditorData<T, S> createData() {
+		return new AutomatonEditorData<T, S>((AutomatonEditorPanel<T, S>) getCentralPanel());
 	}
 
 }
