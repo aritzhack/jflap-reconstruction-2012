@@ -25,6 +25,8 @@ import javax.swing.JTabbedPane;
 import debug.JFLAPDebug;
 
 import model.automata.Automaton;
+import model.automata.turing.BlankSymbol;
+import model.automata.turing.TuringMachine;
 import model.formaldef.FormalDefinition;
 import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
@@ -108,7 +110,7 @@ public class JFLAPEnvironment extends JFrame implements
 	public void addTabListener(TabChangeListener menu) {
 		myListeners.add(menu);
 	}
-	
+
 	public void removeTabListener(TabChangeListener listener) {
 		myListeners.remove(listener);
 	}
@@ -206,10 +208,9 @@ public class JFLAPEnvironment extends JFrame implements
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
 
-			if (c instanceof AutomataView){
-				return ((AutomataView) c).getGraph();
-			}
-			else if (c instanceof FormalDefinitionView) {
+			if (c instanceof AutomataView) {
+				return ((AutomataView) c).createData();
+			} else if (c instanceof FormalDefinitionView) {
 				return ((FormalDefinitionView) c).getDefinition();
 			} else if (c instanceof PumpingLemmaInputView) {
 				return ((PumpingLemmaInputView) c).getLemma();
@@ -471,7 +472,11 @@ public class JFLAPEnvironment extends JFrame implements
 				&& current instanceof CYKParseView) {
 			((CYKParseView) current).getRunningView().changeDiagonal(
 					(Boolean) val);
-		} 
+		} else if (current instanceof AutomataView) {
+			if (pref.equals(PREF_CHANGE.lambda_change.toString()))
+				distributeTabChangedEvent();
+
+		}
 		revalidate();
 		repaint();
 	}

@@ -38,6 +38,7 @@ import model.automata.turing.buildingblock.library.WriteBlock;
 import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import view.automata.BlockEditorPanel;
 import view.environment.JFLAPEnvironment;
 import file.FileJFLAPException;
@@ -71,7 +72,7 @@ public class BlockStateTool extends
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			String[] options = new String[] { "Import from file",
-					"Library building block", "New block" };
+					"Use library building block", "Create new block" };
 
 			int n = JOptionPane.showOptionDialog(
 					JFLAPUniverse.getActiveEnvironment(),
@@ -132,7 +133,7 @@ public class BlockStateTool extends
 		JPanel input = new JPanel(new BorderLayout());
 		JPanel left = new JPanel();
 		JLabel symbol = new JLabel("Symbol: ");
-		symArea = new JTextField(JFLAPPreferences.getBlank(), 10);
+		symArea = new JTextField(JFLAPConstants.BLANK, 10);
 		
 		left.add(symbol);
 		left.add(symArea);
@@ -246,7 +247,7 @@ public class BlockStateTool extends
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			symArea.setText(JFLAPPreferences.getBlank());
+			symArea.setText(JFLAPConstants.BLANK);
 		}
 		
 	}

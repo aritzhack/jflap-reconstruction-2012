@@ -54,12 +54,18 @@ public class VertexDrawer<T>{
 		Graphics g2 = g.create();
 		// Draw the basic background of the state.
 		g2.setColor(myColor);
-		g2.fillOval(r.x, r.y, r.width, r.height);
-		// What about the text label?
+		fillShape(g2, r);
 		myOutlineStroke.apply((Graphics2D) g2);
-		
-		g2.drawOval(r.x, r.y, r.width, r.height);
+		drawShape(g2, r);
 
+	}
+	
+	public void fillShape(Graphics g, Rectangle r){
+		g.fillOval(r.x, r.y, r.width, r.height);
+	}
+	
+	public void drawShape(Graphics g, Rectangle r){
+		g.drawOval(r.x, r.y, r.width, r.height);
 	}
 
 	private Rectangle createRectangle(int x, int y, int radius) {

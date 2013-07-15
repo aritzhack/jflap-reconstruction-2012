@@ -59,7 +59,7 @@ public class PreferenceDialog extends JDialog {
 		super(JFLAPUniverse.getActiveEnvironment(), "Preferences", true);
 		buttonList = new ArrayList<JRadioButton>();
 		myTabbedPane = new JTabbedPane();
-		myTabbedPane.setPreferredSize(new Dimension(860, 330));
+		myTabbedPane.setPreferredSize(new Dimension(860, 270));
 		
 		add(myTabbedPane);
 		init();
@@ -139,7 +139,7 @@ public class PreferenceDialog extends JDialog {
 	
 	private JPanel createGroupingPanel() {
 		JPanel panel = new JPanel();
-		panel.add(new JLabel("Default Grouping Pair: "));
+		panel.add(new JLabel("Custom Mode Grouping Pair: "));
 		ButtonGroup group = new ButtonGroup();
 		
 		JRadioButton pointyBrackets = new JRadioButton(new GroupingAction(POINTY_BRACKETS));
@@ -213,12 +213,10 @@ public class PreferenceDialog extends JDialog {
 	}
 
 	private JPanel createSymbolPanel() {
-		JPanel symbols = new JPanel(new GridLayout(4, 2));
+		JPanel symbols = new JPanel(new GridLayout(2, 2));
 
 		symbols.add(new JLabel("Empty String Symbol: "));
 		symbols.add(createEmptySymbolOptions());
-		symbols.add(new JLabel("Blank TM Symbol: "));
-		symbols.add(createBlankOptions());
 		symbols.add(new JLabel("Empty Set Symbol: "));
 		symbols.add(createEmptySetOptions());
 
@@ -243,32 +241,6 @@ public class PreferenceDialog extends JDialog {
 		else
 			lambda.doClick();
 
-		return panel;
-	}
-
-	private JPanel createBlankOptions() {
-		JPanel panel = new JPanel();
-		ButtonGroup group = new ButtonGroup();
-
-		JRadioButton square = new JRadioButton(new BlankPrefAction(
-				JFLAPConstants.BLANK));
-		JRadioButton b = new JRadioButton(new BlankPrefAction("B"));
-		JRadioButton zero = new JRadioButton(new BlankPrefAction("0"));
-		panel.add(square);
-		group.add(square);
-		buttonList.add(square);
-		panel.add(b);
-		group.add(b);
-		panel.add(zero);
-		group.add(zero);
-		
-		String blank = JFLAPPreferences.getBlank();
-		if (blank.equals("0"))
-			zero.doClick();
-		else if (blank.equals("B"))
-			b.doClick();
-		else
-			square.doClick();
 		return panel;
 	}
 
@@ -338,8 +310,8 @@ public class PreferenceDialog extends JDialog {
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		JLabel angle = createLSystemLabel("Angle Change"), distance = createLSystemLabel("Distance"), hue = createLSystemLabel("Hue Change"), inc = createLSystemLabel("Line Increment"), width = createLSystemLabel("Line Width"), open = new JLabel(
-				"Regex Open group: "), close = new JLabel("Regex close group: "), union = new JLabel(
+		JLabel angle = createLSystemLabel("Angle Change"), distance = createLSystemLabel("Distance"), hue = createLSystemLabel("Hue Change"), inc = createLSystemLabel("Line Increment"), width = createLSystemLabel("Line Width"), 
+				openClose = new JLabel("Regex Grouping: "), union = new JLabel(
 				"Regex union symbol: ");
 
 		aSpin = createLSystemSpinner(LS_ANGLE, JFLAPPreferences.getLSAngle());
@@ -347,7 +319,7 @@ public class PreferenceDialog extends JDialog {
 		hSpin = createLSystemSpinner(LS_HUE, JFLAPPreferences.getLSHue());
 		iSpin = createLSystemSpinner(LS_INCREMENT, JFLAPPreferences.getLSIncrement());
 		wSpin = createLSystemSpinner(LS_WIDTH, JFLAPPreferences.getLSWidth());
-		JPanel openP = createOpenClosePanel(true), closeP = createOpenClosePanel(false), unionP = createUnionPanel();
+		JPanel openCloseP = createOpenClosePanel(), unionP = createUnionPanel();
 
 		layout.setHorizontalGroup(layout
 				.createSequentialGroup()
@@ -355,14 +327,14 @@ public class PreferenceDialog extends JDialog {
 						layout.createParallelGroup(Alignment.LEADING)
 								.addComponent(angle).addComponent(distance)
 								.addComponent(hue).addComponent(inc)
-								.addComponent(width).addComponent(open)
-								.addComponent(close).addComponent(union))
+								.addComponent(width).addComponent(openClose)
+								.addComponent(union))
 				.addGroup(
 						layout.createParallelGroup(Alignment.LEADING)
 								.addComponent(aSpin).addComponent(dSpin)
 								.addComponent(hSpin).addComponent(iSpin)
-								.addComponent(wSpin).addComponent(openP)
-								.addComponent(closeP).addComponent(unionP)));
+								.addComponent(wSpin).addComponent(openCloseP)
+								.addComponent(unionP)));
 		layout.setVerticalGroup(layout
 				.createSequentialGroup()
 				.addGroup(
@@ -382,10 +354,7 @@ public class PreferenceDialog extends JDialog {
 								.addComponent(width).addComponent(wSpin))
 				.addGroup(
 						layout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(open).addComponent(openP))
-				.addGroup(
-						layout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(close).addComponent(closeP))
+								.addComponent(openClose).addComponent(openCloseP))
 				.addGroup(
 						layout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(union).addComponent(unionP)));
@@ -402,20 +371,14 @@ public class PreferenceDialog extends JDialog {
 		return new JSpinner(bufferAmount);
 	}
 
-	private JPanel createOpenClosePanel(boolean open) {
-		int index = open ? 0 : 1;
-
+	private JPanel createOpenClosePanel() {
 		JPanel panel = new JPanel();
 		ButtonGroup group = new ButtonGroup();
 
-		JRadioButton paren = new JRadioButton(new OpenClosePrefAction(open,
-				PARENS[index]));
-		JRadioButton squareBrackets = new JRadioButton(new OpenClosePrefAction(
-				open, SQUARE_BRACKETS[index]));
-		JRadioButton pointyBrackets = new JRadioButton(new OpenClosePrefAction(
-				open, POINTY_BRACKETS[index]));
-		JRadioButton curlyBrackets = new JRadioButton(
-				new OpenClosePrefAction(open, CURLY_BRACKETS[index]));
+		JRadioButton paren = new JRadioButton(new OpenClosePrefAction(PARENS));
+		JRadioButton squareBrackets = new JRadioButton(new OpenClosePrefAction(SQUARE_BRACKETS));
+		JRadioButton pointyBrackets = new JRadioButton(new OpenClosePrefAction(POINTY_BRACKETS));
+		JRadioButton curlyBrackets = new JRadioButton(new OpenClosePrefAction(CURLY_BRACKETS));
 
 		panel.add(paren);
 		group.add(paren);
@@ -427,15 +390,14 @@ public class PreferenceDialog extends JDialog {
 		panel.add(curlyBrackets);
 		group.add(curlyBrackets);
 
-		String currentGroup = open ? JFLAPPreferences
-				.getCurrentRegExOpenGroup().getString() : JFLAPPreferences
-				.getCurrentRegExCloseGroup().getString();
+		String currentGroup = JFLAPPreferences
+				.getCurrentRegExOpenGroup().getString();
 
-		if (currentGroup.equals(CURLY_BRACKETS[index]))
+		if (currentGroup.equals(CURLY_BRACKETS[0]))
 			curlyBrackets.doClick();
-		else if (currentGroup.equals(SQUARE_BRACKETS[index]))
+		else if (currentGroup.equals(SQUARE_BRACKETS[0]))
 			squareBrackets.doClick();
-		else if (currentGroup.equals(POINTY_BRACKETS[index]))
+		else if (currentGroup.equals(POINTY_BRACKETS[0]))
 			pointyBrackets.doClick();
 		else
 			paren.doClick();
@@ -617,20 +579,6 @@ public class PreferenceDialog extends JDialog {
 		}
 	}
 
-	private class BlankPrefAction extends AbstractAction {
-		private String myBlank;
-
-		public BlankPrefAction(String blank) {
-			super(blank);
-			myBlank = blank;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFLAPPreferences.setBlank(myBlank);
-		}
-	}
-
 	private class EmptySetPrefAction extends AbstractAction {
 		private String myString;
 
@@ -678,22 +626,19 @@ public class PreferenceDialog extends JDialog {
 	}
 
 	private class OpenClosePrefAction extends AbstractAction {
-		private String myString;
-		private boolean myOpen;
 
-		public OpenClosePrefAction(boolean open, char empty) {
-			super(""+empty);
-			myOpen = open;
-			myString = ""+ empty;
+		private char[] myPair;
+
+		public OpenClosePrefAction(char[] pair) {
+			super(pair[0]+""+pair[1]);
+			myPair = pair;
 		}
-
+		
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (myOpen)
-				JFLAPPreferences.setRegExOpenGroup(myString);
-			else
-				JFLAPPreferences.setRegExCloseGroup(myString);
+		public void actionPerformed(ActionEvent arg0) {
+			JFLAPPreferences.setRegexGrouping(new String[]{""+myPair[0], ""+myPair[1]});
 		}
+		
 	}
 
 	private class UnionPrefAction extends AbstractAction {

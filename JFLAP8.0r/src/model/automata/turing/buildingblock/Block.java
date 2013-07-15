@@ -3,6 +3,8 @@ package model.automata.turing.buildingblock;
 import java.util.Collection;
 import java.util.Set;
 
+import universe.preferences.JFLAPPreferences;
+
 import model.automata.State;
 import model.automata.turing.TuringMachine;
 import model.formaldef.UsesSymbols;
@@ -55,7 +57,10 @@ public class Block extends State implements UsesSymbols{
 	}
 	
 	public Block copy(int newID) {
-		return new Block((TuringMachine) myMachine.copy(), getName(), newID);
+		String name = getName();
+		if(name.equals(JFLAPPreferences.getDefaultStateNameBase()+getID()))
+			name = JFLAPPreferences.getDefaultStateNameBase() + newID;
+		return new Block((TuringMachine) myMachine.copy(), name, newID);
 	}
 	
 }

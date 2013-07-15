@@ -28,21 +28,18 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 	public AutomatonDrawer(StateDrawer vDraw) {
 		super(vDraw);
 	}
-	
+
 	@Override
 	public void drawVertex(State v, Graph<State> obj, Graphics g) {
 		TransitionGraph<T> graph = (TransitionGraph<T>) obj;
 		Automaton<T> auto = graph.getAutomaton();
-		
-		boolean isFinal = false;		
-		if(auto instanceof Acceptor) 
+
+		boolean isFinal = false;
+		if (auto instanceof Acceptor)
 			isFinal = Acceptor.isFinalState((Acceptor) auto, v);
 		boolean isInitial = v.equals(auto.getStartState());
-		
-		if(isFinal || isInitial)
-			drawVertex(v, obj, g, isFinal, isInitial);
-		else 
-			super.drawVertex(v, obj, g);
+
+		drawVertex(v, obj, g, isFinal, isInitial);
 	}
 
 	@Override
@@ -57,7 +54,8 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 		// drawPoint(g, ctrl);
 	}
 
-	public void drawLabel(Graphics2D g2d, T t, TransitionGraph<T> obj, Point2D center) {
+	public void drawLabel(Graphics2D g2d, T t, TransitionGraph<T> obj,
+			Point2D center) {
 		String label = GraphHelper.getLabelText(obj, t);
 		FontMetrics metrics = g2d.getFontMetrics();
 		int w = metrics.stringWidth(label);
@@ -67,11 +65,12 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 		g2d.drawString(label, x, y);
 	}
 
-	private void drawVertex (State v, Graph<State> obj, Graphics g, boolean isFinal, boolean isInitial){
+	private void drawVertex(State v, Graph<State> obj, Graphics g,
+			boolean isFinal, boolean isInitial) {
 		StateDrawer sDraw = (StateDrawer) getVertexDrawer();
 		sDraw.draw(obj.pointForVertex(v), v, g, isFinal, isInitial);
 	}
-	
+
 	private void drawLabels(List<T> transitions, Graphics g,
 			TransitionGraph<T> graph, Point2D pFrom, Point2D pTo) {
 		// draw Labels
@@ -97,9 +96,10 @@ public class AutomatonDrawer<T extends Transition<T>> extends
 		AffineTransform at = new AffineTransform();
 		double angle = (GeometryHelper.calculateAngle(from, to) - (GeometryHelper
 				.getXDisplacement(from, to) < 0 ? Math.PI : 0)) % (2 * Math.PI);
-		//The subtraction is due to the fact that calculateAngle needs it in most cases,
-		//but causes strange text rotation in this case.
-		
+		// The subtraction is due to the fact that calculateAngle needs it in
+		// most cases,
+		// but causes strange text rotation in this case.
+
 		at.rotate(angle % Math.PI, center.getX(), center.getY());
 		return at;
 	}

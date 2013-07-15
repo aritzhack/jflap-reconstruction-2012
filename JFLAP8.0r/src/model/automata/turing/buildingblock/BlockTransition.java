@@ -2,6 +2,8 @@ package model.automata.turing.buildingblock;
 
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
@@ -64,13 +66,22 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 	}
 
 	private void checkInput(SymbolString input) {
-		int i = input.startsWith(new Symbol(NOT)) ? 1 : 0;
-
+		Symbol not = new Symbol(NOT);
+		int i = input.startsWith(not) ? 1 : 0;
 		SymbolString symbol = input.subList(i);
-
+		
+		if (symbol.isEmpty())
+			input.add(JFLAPPreferences.getTMBlankSymbol());
+		
 		if (symbol.size() > 1)
 			throw new AutomatonException("You may not set the input on a Turing machine block transition " +
 					"to a string of more than one symbols.");
+		if (input.get(i).equals(not))
+			throw new AutomatonException("You may not set the input on a Turing machine block transition " +
+					"to a string consisting of multiple negations.");
+		if (input.startsWith(not) && input.get(i).equals(new Symbol(TILDE)))
+			throw new AutomatonException("Tilde (~) represents any symbol.\nYou may not set the input on a Turing machine block transition " +
+					"to a string that represents nothing.");
 	}
 
 	@Override

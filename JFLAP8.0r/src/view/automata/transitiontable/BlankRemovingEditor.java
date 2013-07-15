@@ -4,6 +4,7 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 import util.view.tables.SelectingEditor;
 
 public class BlankRemovingEditor extends SelectingEditor{
@@ -29,7 +30,7 @@ public class BlankRemovingEditor extends SelectingEditor{
 		public BlankRemoveRunnable(JTextComponent jtc){
 			myJTC = jtc;
 			String s = jtc.getText();
-			if (s.equals(JFLAPPreferences.getBlank())){
+			if (s.equals(JFLAPConstants.BLANK)){
 				jtc.setText("");
 			}
 		}

@@ -40,7 +40,7 @@ public class ParameterValueTransducer implements XMLTransducer<ParameterValue>{
 
 	@Override
 	public String getTag() {
-		return PARAMETER_VALUE_TAG;
+		return VALUE_TAG;
 	}
 
 	@Override

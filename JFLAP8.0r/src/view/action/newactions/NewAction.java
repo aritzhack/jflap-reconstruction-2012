@@ -30,12 +30,15 @@ public abstract class NewAction<T> extends AbstractAction {
 				new NewFSAAction(),
 				new NewMealyAction(),
 				new NewMooreAction(),
-				new NewPDAAction(), new NewTMAction(),
+				new NewPDAAction(), 
+				new NewMultiTapeTMAction(),
 				new NewBlockTMAction(),
-				new NewGrammarAction(), new NewSetsAction(),
+				new NewGrammarAction(), 
+				new NewSetsAction(),
 				new NewLSystemAction(),
-				// new NewRegexAction(),
-				new NewRegPumpingLemmaAction(), new NewCFPumpingLemmaAction() };
+//				new NewRegexAction(),
+				new NewRegPumpingLemmaAction(), 
+				new NewCFPumpingLemmaAction() };
 	}
 
 }

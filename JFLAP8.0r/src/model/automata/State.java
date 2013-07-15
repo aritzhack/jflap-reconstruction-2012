@@ -52,14 +52,7 @@ public class State extends SetSubComponent<State> implements JFLAPConstants {
 
 	@Override 
 	public State copy(){
-		try{
-			Constructor c = this.getClass().getConstructor(String.class, int.class);
-			return (State) c.newInstance(this.getName(), this.getID());
-		}catch(Exception e){
-			throw new RuntimeException(e);
-		}
-
-
+		return new State(this.getName(), this.getID());
 	}
 
 

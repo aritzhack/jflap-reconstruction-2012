@@ -1,5 +1,6 @@
 package model.automata.determinism;
 
+import debug.JFLAPDebug;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.symbols.Symbol;
 import util.JFLAPConstants;
@@ -14,7 +15,6 @@ public class BlockTMDeterminismChecker extends
 		Symbol[] s2 = trans2.getInput();
 		String sym1 = s1[0].toString();
 		String sym2 = s2[0].toString();
-
 		if (sym1.equals(JFLAPConstants.TILDE)
 				|| sym2.equals(JFLAPConstants.TILDE))
 			return true;

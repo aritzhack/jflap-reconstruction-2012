@@ -47,8 +47,7 @@ public class StateDrawer extends VertexDrawer<State> {
 		int radius = JFLAPConstants.STATE_RADIUS;
 		
 		if (isFinal)
-			g.drawOval((int) x - radius + 3, (int) y - radius + 3,
-					(radius - 3) << 1, (radius - 3) << 1);
+			drawFinal(x - radius + 3, y - radius + 3, g, (radius - 3) * 2);
 		// If this is the initial state.
 		if (isInitial) {
 			int[] xPoly = { (int) x - radius, (int) x - (radius << 1),
@@ -60,4 +59,10 @@ public class StateDrawer extends VertexDrawer<State> {
 			g.drawPolygon(xPoly, yPoly, 3);
 		}
 	}
+
+	public void drawFinal(double x, double y, Graphics g, int radius) {
+		g.drawOval((int) x, (int) y,
+				radius, radius);
+	}
+	
 }
