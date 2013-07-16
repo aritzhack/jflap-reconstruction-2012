@@ -1,24 +1,14 @@
 package file.xml.graph;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import model.automata.Automaton;
-import model.automata.State;
 import model.graph.TransitionGraph;
-import model.undo.UndoKeeper;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import view.automata.AutomatonEditorPanel;
-import view.automata.Note;
 import file.xml.StructureTransducer;
 import file.xml.XMLHelper;
-import file.xml.formaldef.automata.AutomatonTransducer;
 
 public class AutomatonEditorTransducer extends StructureTransducer<AutomatonEditorData>{
 

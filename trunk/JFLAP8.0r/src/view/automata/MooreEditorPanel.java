@@ -12,12 +12,15 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunctionSet;
 import model.automata.transducers.moore.MooreMachine;
 import model.automata.transducers.moore.MooreOutputFunction;
 import model.change.events.RemoveEvent;
+import model.graph.TransitionGraph;
 import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
@@ -31,6 +34,16 @@ public class MooreEditorPanel extends
 	public MooreEditorPanel(MooreMachine m, UndoKeeper keeper, boolean editable) {
 		super(m, keeper, editable);
 		myOutput = new HashMap<State, Note>();
+		OutputFunctionSet<MooreOutputFunction> funcs = m.getOutputFunctionSet();
+		for(State s : m.getStates())
+			addOutputFunction(s, funcs.getOutputForTransition(new FSATransition(s, s)));
+	}
+	
+	@Override
+	public void setGraph(TransitionGraph<FSATransition> graph) {
+		super.setGraph(graph);
+		for(State s : getAutomaton().getStates())
+			moveOutputFunction(s);
 	}
 	
 	@Override

@@ -9,10 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,7 +24,6 @@ import model.automata.StartState;
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.Transition;
-import model.automata.TransitionSet;
 import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.FinalStateSet;
 import model.automata.acceptors.pda.PushdownAutomaton;
@@ -42,6 +38,7 @@ import model.change.events.SetToEvent;
 import model.change.events.StartStateSetEvent;
 import model.graph.LayoutAlgorithm;
 import model.graph.LayoutAlgorithmFactory;
+import model.graph.TransitionGraph;
 import model.graph.layout.VertexMover;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
@@ -49,12 +46,14 @@ import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.Point2DAdv;
+import util.arrows.CurvedArrow;
+import util.view.GraphHelper;
 import view.ViewFactory;
 import view.automata.AutomatonEditorPanel;
 import view.automata.BlockEditorPanel;
+import view.automata.LabelBounds;
 import view.automata.Note;
 import view.automata.undoing.ClearSelectionEvent;
-import view.automata.undoing.CompoundMoveEvent;
 import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteMoveEvent;
 import view.automata.undoing.StateAddEvent;
@@ -62,7 +61,6 @@ import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateMoveEvent;
 import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
-import debug.JFLAPDebug;
 
 /**
  * Tool for selection and editing of Automaton graphs.
@@ -76,7 +74,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	private Object myObject;
 	private Point2D myInitialPoint;
 	private Point2D myInitialObjectPoint;
-	private Point2D myNoteMovingPoint;
+	private Point2D myMovingPoint;
 
 	private StateMenu myStateMenu;
 	private EmptyMenu myEmptyMenu;
@@ -119,7 +117,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 			if (myObject != null) {
 				boolean modifierDown = isModified(e);
 				List<Object> selectionList = panel.getSelection();
-				boolean isSelected = myObjectSelected(selectionList);
+				boolean isSelected = myObjectSelected();
 
 				if (selectionList.size() > 1 && !isSelected && !modifierDown)
 					panel.clearSelection();
@@ -131,21 +129,22 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				panel.selectObject(myObject);
 
-				if (isStateClicked(e))
+				if (isStateClicked(e)) {
 					myInitialObjectPoint = new Point2DAdv(
 							panel.getPointForVertex((State) myObject));
-				else if (isTransitionClicked(e))
+					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
+				} else if (isTransitionClicked(e))
 					panel.editTransition((S) myObject, false);
 
 				else if (myObject instanceof State[]) {
 					State[] edge = (State[]) myObject;
 					myInitialObjectPoint = panel.getControlPoint(edge);
-
+					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
 					panel.selectAll(myDef.getTransitions()
 							.getTransitionsFromStateToState(edge[0], edge[1]));
 				} else if (myObject instanceof Note) {
 					myInitialObjectPoint = ((Note) myObject).getLocation();
-					myNoteMovingPoint = (Point2D) myInitialObjectPoint.clone();
+					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
 				}
 			} else {
 				panel.stopAllEditing();
@@ -167,16 +166,8 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		return e.isShiftDown() || e.isControlDown();
 	}
 
-	private boolean myObjectSelected(List<Object> selectedObjects) {
-		if (myObject == null)
-			return false;
-		boolean contained = false;
-		for (Object o : selectedObjects) {
-			if (myObject.equals(o) || isEdgeEqual(o)) {
-				contained = true;
-			}
-		}
-		return contained;
+	private boolean myObjectSelected() {
+		return getPanel().isSelected(myObject);
 	}
 
 	@Override
@@ -187,52 +178,104 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		if (SwingUtilities.isLeftMouseButton(e)) {
 
 			if (myObject == null) {
-				// Drag a selection rectangle, selecting everything within its
-				// bounds.
-				int nowX = e.getPoint().x;
-				int nowY = e.getPoint().y;
-				int leftX = (int) myInitialPoint.getX();
-				int topY = (int) myInitialPoint.getY();
-				if (nowX < leftX)
-					leftX = nowX;
-				if (nowY < topY)
-					topY = nowY;
-				mySelectionBounds = new Rectangle(leftX, topY, Math.abs(nowX
-						- (int) myInitialPoint.getX()), Math.abs(nowY
-						- (int) myInitialPoint.getY()));
-				panel.selectAllInBounds(mySelectionBounds);
+				selectRectangle(e, panel);
 				return;
 			}
-			if (myObjectSelected(selectedObjs)) {
+			if (myObjectSelected()) {
 				Point drag = e.getPoint();
 
 				if (myObject instanceof State) {
-					// Move the state
-					State s = (State) myObject;
+					stateDragged(e, panel, selectedObjs, drag);
 
-					if (selectedObjs.size() > 1) {
-						moveSelectedObjects(e, s, selectedObjs);
-					}
-					panel.moveState(s, drag);
 				} else if (myObject instanceof State[]) {
-					// Move the control point
-					State from = ((State[]) myObject)[0], to = ((State[]) myObject)[1];
-					panel.moveCtrlPoint(from, to, drag);
+					edgeDragged(panel, drag);
 				} else if (myObject instanceof Note) {
-					Note n = (Note) myObject;
-					if (!n.isEditable()) {
-						int diffX = (int) (drag.x - myInitialPoint.getX());
-						int diffY = (int) (drag.y - myInitialPoint.getY());
-
-						int nowAtX = (int) (myNoteMovingPoint.getX() + diffX);
-						int nowAtY = (int) (myNoteMovingPoint.getY() + diffY);
-						drag = new Point(nowAtX, nowAtY);
-						panel.moveNote(n, drag);
-						myNoteMovingPoint = n.getLocation();
-					}
+					noteDragged(panel, drag);
 				}
 			}
 		}
+	}
+
+	private void noteDragged(AutomatonEditorPanel<T, S> panel, Point drag) {
+		Note n = (Note) myObject;
+		if (!n.isEditable()) {
+			int diffX = (int) (drag.x - myInitialPoint.getX());
+			int diffY = (int) (drag.y - myInitialPoint.getY());
+
+			int nowAtX = (int) (myMovingPoint.getX() + diffX);
+			int nowAtY = (int) (myMovingPoint.getY() + diffY);
+			drag = new Point(nowAtX, nowAtY);
+			panel.moveNote(n, drag);
+			myMovingPoint = n.getLocation();
+		}
+	}
+
+	private void edgeDragged(AutomatonEditorPanel<T, S> panel, Point drag) {
+		// Move the control point
+		State from = ((State[]) myObject)[0], to = ((State[]) myObject)[1];
+		TransitionGraph<S> graph = panel.getGraph();
+		CurvedArrow arrow = GraphHelper.getArrow(from, to, graph);
+		arrow = new CurvedArrow(arrow.getP1(), drag, arrow.getP2(), JFLAPConstants.ARROW_LENGTH, JFLAPConstants.ARROW_ANGLE);
+		double minx = arrow.getCurveBounds().getMinX(), miny = arrow.getCurveBounds().getMinY();
+		
+		panel.moveCtrlPoint(from, to, drag);
+		
+		for(S trans : graph.getOrderedTransitions(from, to)){
+			LabelBounds bounds = GraphHelper.getLabelBounds(graph, trans, panel.getGraphics());
+			minx = Math.min(minx, bounds.getMinX());
+			miny = Math.min(miny, bounds.getMinY());
+		}
+		if (minx < 0) {
+			myMovingPoint = new Point2DAdv(myMovingPoint.getX() - (minx - 1),
+					myMovingPoint.getY());
+		}
+		if (miny < 0) {
+			myMovingPoint = new Point2DAdv(myMovingPoint.getX(),
+					myMovingPoint.getY() - (miny - 1));
+		}
+	}
+
+	private void checkMin(AutomatonEditorPanel<T, S> panel) {
+		Point2D min = panel.getMinPoint();
+		double minx = min.getX(), miny = min.getY();
+
+		if (minx < 0) {
+			myMovingPoint = new Point2DAdv(myMovingPoint.getX() - (minx - 1),
+					myMovingPoint.getY());
+		}
+		if (miny < 0) {
+			myMovingPoint = new Point2DAdv(myMovingPoint.getX(),
+					myMovingPoint.getY() - (miny - 1));
+		}
+	}
+
+	private void stateDragged(MouseEvent e, AutomatonEditorPanel<T, S> panel,
+			List<Object> selectedObjs, Point drag) {
+		// Move the state
+		State s = (State) myObject;
+
+		if (selectedObjs.size() > 1) {
+			moveSelectedObjects(e, s, selectedObjs);
+		}
+		panel.moveState(s, drag);
+		checkMin(panel);
+	}
+
+	private void selectRectangle(MouseEvent e, AutomatonEditorPanel<T, S> panel) {
+		// Drag a selection rectangle, selecting everything within its
+		// bounds.
+		int nowX = e.getPoint().x;
+		int nowY = e.getPoint().y;
+		int leftX = (int) myInitialPoint.getX();
+		int topY = (int) myInitialPoint.getY();
+		if (nowX < leftX)
+			leftX = nowX;
+		if (nowY < topY)
+			topY = nowY;
+		mySelectionBounds = new Rectangle(leftX, topY, Math.abs(nowX
+				- (int) myInitialPoint.getX()), Math.abs(nowY
+				- (int) myInitialPoint.getY()));
+		panel.selectAllInBounds(mySelectionBounds);
 	}
 
 	private void moveSelectedObjects(MouseEvent e, State s,
@@ -268,36 +311,36 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		if (SwingUtilities.isLeftMouseButton(e) && isValidPoint(e)) {
 			List<Object> selectedObjs = panel.getSelection();
 
-			if (myObjectSelected(selectedObjs)) {
+			if (myObjectSelected()) {
 				if (myObject instanceof State) {
-					Point2D pRelease = e.getPoint();
+					Point2D pRelease = GraphHelper.getOnscreenPoint(
+							Automaton.isStartState(myDef, (State) myObject),
+							panel.getPointForVertex((State) myObject));
 					StateMoveEvent moveEvent = new StateMoveEvent(panel, myDef,
 							(State) myObject, myInitialObjectPoint, pRelease);
 
-					if (selectedObjs.size() > 1) {
-						CompoundUndoRedo comp = new CompoundUndoRedo(moveEvent);
-						addMoveEvents(comp, pRelease);
+					// Clear the selection and notify the undo keeper
+					if (!modified && selectedObjs.size() == 1)
+						panel.clearSelection();
+					CompoundUndoRedo comp = new CompoundUndoRedo(moveEvent);
+					addMoveEvents(comp, pRelease);
 
-						keeper.registerChange(comp);
-					} else {
-						// Clear the selection and notify the undo keeper
-						if (!modified)
-							panel.clearSelection();
-						keeper.registerChange(moveEvent);
-					}
+					keeper.registerChange(comp);
+
 				} else if (myObject instanceof State[]) {
 					// Notify the undo keeper
 					if (isOnlyObject(selectedObjs) && !modified)
 						panel.clearSelection();
+					Point2D ctrl = panel.getControlPoint((State[]) myObject);
 					keeper.registerChange(new ControlMoveEvent(panel,
-							(State[]) myObject, myInitialObjectPoint, e
-									.getPoint()));
+							(State[]) myObject, myMovingPoint, ctrl));
 				} else if (myObject instanceof Note) {
 					if (selectedObjs.size() == 1 && !modified)
 						panel.clearSelection();
-					if (!myInitialObjectPoint.equals(myNoteMovingPoint))
+					if (!myInitialObjectPoint.equals(myMovingPoint))
 						keeper.registerChange(new NoteMoveEvent(panel,
-								(Note) myObject, (Point) myInitialObjectPoint, ((Note) myObject).getLocation()));
+								(Note) myObject, (Point) myInitialObjectPoint,
+								((Note) myObject).getLocation()));
 
 				}
 			}
@@ -306,7 +349,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		myInitialPoint = null;
 		mySelectionBounds = null;
 		myInitialObjectPoint = null;
-		myNoteMovingPoint = null;
+		myMovingPoint = null;
 		panel.repaint();
 
 		if (!(myObject instanceof Transition))
@@ -322,25 +365,54 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	}
 
 	private void addMoveEvents(CompoundUndoRedo comp, Point2D pRelease) {
-		double dx = pRelease.getX() - myInitialPoint.getX(), dy = pRelease
-				.getY() - myInitialPoint.getY();
+		double dx = pRelease.getX() - myInitialObjectPoint.getX(), dy = pRelease
+				.getY() - myInitialObjectPoint.getY();
 		AutomatonEditorPanel<T, S> panel = getPanel();
 		List<Object> selectedObjs = panel.getSelection();
 
-		for (Object o : selectedObjs) {
-			if (o instanceof State && !o.equals(myObject)) {
-				Point2D pTo = new Point2DAdv(panel.getPointForVertex((State) o));
-				Point2D pFrom = new Point2DAdv(pTo.getX() - dx, pTo.getY() - dy);
+		if (myMovingPoint.equals(myInitialObjectPoint))
+			for (Object o : selectedObjs) {
+				if (o instanceof State && !o.equals(myObject)) {
+					Point2D pTo = new Point2DAdv(
+							panel.getPointForVertex((State) o));
+					Point2D pFrom = new Point2DAdv(pTo.getX() - dx, pTo.getY()
+							- dy);
 
-				comp.add(new StateMoveEvent(panel, myDef, (State) o, pFrom, pTo));
+					comp.add(new StateMoveEvent(panel, myDef, (State) o, pFrom,
+							pTo));
+				}
+				if (o instanceof Note) {
+					Note n = (Note) o;
+					Point current = n.getLocation();
+					Point old = new Point((int) (current.x - dx),
+							(int) (current.y - dy));
+
+					comp.add(new NoteMoveEvent(panel, n, old, n.getLocation()));
+				}
 			}
-			if (o instanceof Note) {
-				Note n = (Note) o;
-				Point current = n.getLocation();
-				Point old = new Point((int) (current.x - dx),
-						(int) (current.y - dy));
+		else {
+			double dxSel = dx, dySel = dy;
+			dx = myMovingPoint.getX() - myInitialObjectPoint.getX();
+			dy = myMovingPoint.getY() - myInitialObjectPoint.getY();
 
-				comp.add(new NoteMoveEvent(panel, n, old, n.getLocation()));
+			for (State s : myDef.getStates())
+				if (!s.equals(myObject)) {
+					Point2D pTo = new Point2DAdv(panel.getPointForVertex(s));
+					Point2D pFrom = panel.isSelected(s) ? new Point2DAdv(
+							pTo.getX() - dxSel, pTo.getY() - dySel)
+							: new Point2DAdv(pTo.getX() - dx, pTo.getY() - dy);
+
+					comp.add(new StateMoveEvent(panel, myDef, s, pFrom, pTo));
+				}
+			for (Note n : panel.getNotes()) {
+				Point current = n.getLocation();
+				Point old = panel.isSelected(n) ? new Point(
+						(int) (current.x - dxSel), (int) (current.y - dySel))
+						: new Point((int) (current.x - dx),
+								(int) (current.y - dy));
+
+				comp.add(new NoteMoveEvent(panel, n, old, (Point) current
+						.clone()));
 			}
 		}
 		comp.add(new ClearSelectionEvent(panel));
@@ -410,7 +482,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		if (!active) {
 			myInitialPoint = null;
 			myInitialObjectPoint = null;
-			myNoteMovingPoint = null;
+			myMovingPoint = null;
 			myObject = null;
 			mySelectionBounds = null;
 		}
@@ -555,14 +627,16 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
 					Block b = (Block) myObject;
 					TuringMachine m = b.getTuringMachine();
-					AutomataView view = (AutomataView) ViewFactory.createView(m);
+					AutomataView view = (AutomataView) ViewFactory
+							.createView(m);
 					Dimension size = env.getSize();
-					
+
 					env.addSelectedComponent(view);
 					env.setSize(size);
 					env.revalidate();
 					env.update();
-					((AutomatonEditorPanel) view.getCentralPanel()).layoutGraph();
+					((AutomatonEditorPanel) view.getCentralPanel())
+							.layoutGraph();
 				}
 			});
 			copyBlock = new JMenuItem("Duplicate Block");
@@ -575,10 +649,14 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					BlockEditorPanel panel = (BlockEditorPanel) getPanel();
 
 					Point2D p = panel.getPointForVertex(b);
-					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS*2 + 5, (int) p.getY());
-					
+					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS
+							* 2 + 5, (int) p.getY());
+
 					b = panel.addBlock(b, (Point) p);
-					getKeeper().registerChange(new StateAddEvent(panel, panel.getAutomaton(), b, p));
+					getKeeper()
+							.registerChange(
+									new StateAddEvent(panel, panel
+											.getAutomaton(), b, p));
 				}
 			});
 			add(editBlock);
@@ -637,7 +715,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 		public EmptyMenu() {
 			addLayoutGraph();
-			if(!(myDef instanceof BlockTuringMachine))
+			if (!(myDef instanceof BlockTuringMachine))
 				addRenameStates();
 			addCreateNote();
 			addAutoZoom();
@@ -650,7 +728,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					AutomatonEditorPanel<T, S> panel = getPanel();
-					
+
 					panel.layoutGraph();
 				}
 			});
@@ -725,16 +803,23 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					Rectangle visible = panel.getVisibleRect();
 					double vertexBuffer;
 					if (myDef instanceof MultiTapeTuringMachine)
-						vertexBuffer = 80 * ((MultiTapeTuringMachine) myDef).getNumTapes();
+						vertexBuffer = 80 * ((MultiTapeTuringMachine) myDef)
+								.getNumTapes();
 					else if (myDef instanceof PushdownAutomaton)
 						vertexBuffer = 80;
 					else if (myDef instanceof MealyMachine)
 						vertexBuffer = 65;
 					else
 						vertexBuffer = JFLAPConstants.STATE_RADIUS * 2;
-					
-					LayoutAlgorithm layout = LayoutAlgorithmFactory.getLayoutAlgorithm(VertexMover.FILL, new Dimension(visible.width, visible.height), 
-							new Dimension(JFLAPConstants.STATE_RADIUS+5, JFLAPConstants.STATE_RADIUS + 5), vertexBuffer);
+
+					LayoutAlgorithm layout = LayoutAlgorithmFactory
+							.getLayoutAlgorithm(
+									VertexMover.FILL,
+									new Dimension(visible.width, visible.height),
+									new Dimension(
+											JFLAPConstants.STATE_RADIUS + 5,
+											JFLAPConstants.STATE_RADIUS + 5),
+									vertexBuffer);
 					panel.setLayoutAlgorithm(layout);
 					panel.layoutGraph();
 				}

@@ -2,6 +2,8 @@ package view.automata.undoing;
 
 import java.awt.geom.Point2D;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.State;
 import model.undo.IUndoRedo;
@@ -27,21 +29,19 @@ public class StateMoveEvent implements IUndoRedo {
 		myPanel = panel;
 		myDefinition = def;
 		myState = vertex;
-		myFrom = from;
-		myTo = to;
+		myFrom = GraphHelper.getOnscreenPoint(
+				Automaton.isStartState(myDefinition, myState), from);
+		myTo = GraphHelper.getOnscreenPoint(
+				Automaton.isStartState(myDefinition, myState), to);
 	}
 
 	@Override
 	public boolean undo() {
-		myFrom = GraphHelper.getOnscreenPoint(
-				Automaton.isStartState(myDefinition, myState), myFrom);
 		return moveAndClear(myFrom);
 	}
 
 	@Override
 	public boolean redo() {
-		myTo = GraphHelper.getOnscreenPoint(
-				Automaton.isStartState(myDefinition, myState), myTo);
 		return moveAndClear(myTo);
 	}
 

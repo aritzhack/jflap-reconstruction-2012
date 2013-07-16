@@ -83,7 +83,7 @@ public class MealyTransitionTable extends
 	@Override
 	public IUndoRedo stopEditing(boolean cancel) {
 		IUndoRedo sup = super.stopEditing(cancel);
-		JFLAPDebug.print(myFunc == null);
+
 		if (!cancel) {
 			CompoundUndoRedo comp = null;
 			MealyMachine mealy = getAutomaton();
