@@ -24,8 +24,6 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.AutomatonException;
 import model.automata.StartState;
@@ -83,7 +81,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myAutomaton = m;
 		myGraph = new TransitionGraph<S>(m);
 		myGraph.addListener(this);
-		StateDrawer vDraw = (m instanceof BlockTuringMachine ? new BlockDrawer() : new StateDrawer());
+		StateDrawer vDraw = (m instanceof BlockTuringMachine ? new BlockDrawer()
+				: new StateDrawer());
 		myDrawer = new SelectionAutomatonDrawer<S>(vDraw);
 		transform = new AffineTransform();
 		myStateLabels = new HashMap<State, Note>();
@@ -282,6 +281,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		clearSelection();
 		selectAll(list);
 	}
+	
+	public boolean isSelected (Object o){
+		return myDrawer.isSelected(o);
+	}
 
 	public List<Object> getSelection() {
 		List<Object> list = new ArrayList<Object>();
@@ -306,7 +309,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public State createState(Point point) {
 		StateSet states = myAutomaton.getStates();
 		State vertex = states.createAndAddState();
-		myGraph.moveVertex(vertex, point);
+		myGraph.moveVertex(vertex, new Point2DAdv(point));
 		return vertex;
 	}
 
@@ -431,7 +434,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		n.addMouseListener(myTool);
 		n.addMouseMotionListener(myTool);
 	}
-	
+
 	public List<Note> getNotes() {
 		return new ArrayList<Note>(myNotes.keySet());
 	}
@@ -599,6 +602,49 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return new TransitionRemoveEvent(trans);
 	}
 
+	public Point2D getMinPoint() {
+		Point2D min = GraphHelper.getMinPoint(myGraph, getGraphics());
+		double minx = min.getX(), miny = min.getY();
+
+		for (State vert : myStateLabels.keySet()) {
+			Note sLabel = myStateLabels.get(vert);
+			if (sLabel != null) {
+				Rectangle lBounds = sLabel.getBounds();
+				minx = Math.min(minx, lBounds.getMinX());
+				miny = Math.min(miny, lBounds.getMinY());
+			}
+		}
+		for (Note n : myNotes.keySet()) {
+			Rectangle r = n.getBounds();
+			minx = Math.min(minx, r.getMinX());
+			miny = Math.min(miny, r.getMinY());
+		}
+		return new Point2DAdv(minx, miny);
+	}
+
+	public Point2D getMaxPoint() {
+		Point2D max = GraphHelper.getMaxPoint(myGraph, getGraphics());
+		double maxx = max.getX(), maxy = max.getY();
+
+		for (State vert : myStateLabels.keySet()) {
+			Note sLabel = myStateLabels.get(vert);
+			if (sLabel != null) {
+				Rectangle lBounds = sLabel.getBounds();
+
+				maxx = Math.max(maxx, lBounds.getMaxX());
+				maxy = Math.max(maxy, lBounds.getMaxY());
+			}
+		}
+
+		for (Note n : myNotes.keySet()) {
+			Rectangle r = n.getBounds();
+
+			maxx = Math.max(maxx, r.getMaxX());
+			maxy = Math.max(maxy, r.getMaxY());
+		}
+		return new Point2DAdv(maxx, maxy);
+	}
+
 	/**
 	 * Returns the state at the specified point, if one exists. If there are
 	 * multiple, it will return the most recently created one (which is rendered
@@ -661,36 +707,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * knows to resize).
 	 */
 	public void updateBounds(Graphics g) {
-		Point2D max = GraphHelper.getMaxPoint(myGraph, g);
-		Point2D min = GraphHelper.getMinPoint(myGraph, g);
+		Point2D min = getMinPoint();
+		Point2D max = getMaxPoint();
 		double maxx = max.getX(), minx = min.getX();
 		double maxy = max.getY(), miny = min.getY();
-
-		// Compare to State points
-		// TODO: Labels, when they're implemented
-		for (State vert : myAutomaton.getStates()) {
-			if (myStateLabels.containsKey(vert)) {
-				Note sLabel = myStateLabels.get(vert);
-				if (sLabel != null) {
-					Rectangle lBounds = sLabel.getBounds();
-
-					maxx = Math.max(maxx, lBounds.getMaxX());
-					minx = Math.min(minx, lBounds.getMinX());
-					maxy = Math.max(maxy, lBounds.getMaxY());
-					miny = Math.min(miny, lBounds.getMinY());
-				}
-			}
-		}
-
-		for (Note n : myNotes.keySet()) {
-			Rectangle r = n.getBounds();
-
-			maxx = Math.max(maxx, r.getMaxX());
-			minx = Math.min(minx, r.getMinX());
-			maxy = Math.max(maxy, r.getMaxY());
-			miny = Math.min(miny, r.getMinY());
-		}
-
+		
 		if (minx < 0 || miny < 0) {
 			// Adjust so they get off the boundary
 			minx -= minx < 0 ? 1 : 0;
@@ -698,18 +719,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 			// We must adjust all the states so that everything is viewable.
 			for (State vert : myAutomaton.getStates()) {
-				Point2D current = myGraph.pointForVertex(vert);
+				Point2D current = (Point2D) myGraph.pointForVertex(vert)
+						.clone();
 
 				moveState(vert, new Point2D.Double(current.getX() - minx,
 						current.getY() - miny));
-
-				for (State adj : myGraph.adjacent(vert)) {
-					Point2D ctrl = myGraph.getControlPt(vert, adj);
-
-					if (ctrl.getX() < 0 || ctrl.getY() < 0)
-						moveCtrlPoint(vert, adj, new Point2D.Double(ctrl.getX()
-								- minx, ctrl.getY() - miny));
-				}
 			}
 			for (Note n : myNotes.keySet()) {
 				Point nPoint = n.getLocation();
@@ -724,16 +738,17 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		setPreferredSize(new Dimension(x, y));
 		revalidate();
 	}
-	
-	private boolean isWithinBlock(State s, Point2D p){
-		if(!(s instanceof Block)) return false;
+
+	private boolean isWithinBlock(State s, Point2D p) {
+		if (!(s instanceof Block))
+			return false;
 		Point2D center = myGraph.pointForVertex(s);
 		int size = (int) getStateRadius();
-		
+
 		int x = (int) center.getX() - size;
 		int y = (int) center.getY() - size;
-		Rectangle r = new Rectangle(x, y, size*2, size*2);
-		
+		Rectangle r = new Rectangle(x, y, size * 2, size * 2);
+
 		return r.contains(p);
 	}
 

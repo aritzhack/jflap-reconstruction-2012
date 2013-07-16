@@ -77,7 +77,7 @@ public class ViewFactory {
 			return createAutomataView((AutomatonEditorData) decode);
 		Class argClass = decode.getClass();
 		Class<? extends Component> viewClass = myClassToComponent.get(argClass);
-		JFLAPDebug.print(argClass.getGenericSuperclass()+" "+viewClass);
+//		JFLAPDebug.print(argClass.getGenericSuperclass()+" "+viewClass);
 		try {
 			return viewClass.getConstructor(argClass).newInstance(decode);
 		} catch (Exception e) {

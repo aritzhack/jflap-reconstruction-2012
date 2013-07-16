@@ -42,6 +42,7 @@ import model.change.events.ModifyEvent;
 import model.change.events.RemoveEvent;
 import model.graph.layout.GEMLayoutAlgorithm;
 import util.JFLAPConstants;
+import util.Point2DAdv;
 import util.arrows.GeometryHelper;
 
 /**
@@ -72,7 +73,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 		myAlg = alg;
 		
 		for (State s : a.getStates())
-			this.addVertex(s, new Point());
+			this.addVertex(s, new Point2DAdv());
 		alg.layout(this, new HashSet<State>());
 		for (T t : a.getTransitions()) {
 			addTransition(t);
@@ -102,7 +103,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 			while (it.hasNext()) {
 				Object o = it.next();
 				if (o instanceof State && event.getSource().equals(myAutomaton.getStates())) {
-					addVertex((State) o, new Point());
+					addVertex((State) o, new Point2DAdv());
 				} else if (o instanceof Transition)
 					addTransition((T) o);
 			}

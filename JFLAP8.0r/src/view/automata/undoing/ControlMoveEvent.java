@@ -4,6 +4,9 @@ import java.awt.Panel;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import debug.JFLAPDebug;
+
+import util.Point2DAdv;
 import view.automata.AutomatonEditorPanel;
 
 import model.automata.State;
