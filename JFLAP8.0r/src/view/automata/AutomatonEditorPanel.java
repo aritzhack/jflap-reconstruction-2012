@@ -47,6 +47,7 @@ import util.Point2DAdv;
 import util.arrows.CurvedArrow;
 import util.view.GraphHelper;
 import view.EditingPanel;
+import view.automata.tools.ArrowTool;
 import view.automata.tools.EditingTool;
 import view.automata.tools.Tool;
 import view.automata.tools.ToolListener;
@@ -506,7 +507,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	}
 
 	public void moveStateLabel(State s) {
-		Point center = (Point) getPointForVertex(s);
+		Point2D center = getPointForVertex(s);
 		Note n = myStateLabels.get(s);
 		if (n != null) {
 			int x = (int) (center.getX() - n.getBounds().width / 2);
@@ -602,8 +603,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return new TransitionRemoveEvent(trans);
 	}
 
-	public Point2D getMinPoint() {
-		Point2D min = GraphHelper.getMinPoint(myGraph, getGraphics());
+	public Point2D getMinPoint(Graphics g) {
+		Point2D min = GraphHelper.getMinPoint(myGraph, g);
 		double minx = min.getX(), miny = min.getY();
 
 		for (State vert : myStateLabels.keySet()) {
@@ -622,8 +623,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return new Point2DAdv(minx, miny);
 	}
 
-	public Point2D getMaxPoint() {
-		Point2D max = GraphHelper.getMaxPoint(myGraph, getGraphics());
+	public Point2D getMaxPoint(Graphics g) {
+		Point2D max = GraphHelper.getMaxPoint(myGraph, g);
 		double maxx = max.getX(), maxy = max.getY();
 
 		for (State vert : myStateLabels.keySet()) {
@@ -707,8 +708,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * knows to resize).
 	 */
 	public void updateBounds(Graphics g) {
-		Point2D min = getMinPoint();
-		Point2D max = getMaxPoint();
+		Point2D min = getMinPoint(g);
+		Point2D max = getMaxPoint(g);
 		double maxx = max.getX(), minx = min.getX();
 		double maxy = max.getY(), miny = min.getY();
 		
@@ -717,14 +718,21 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			minx -= minx < 0 ? 1 : 0;
 			miny -= miny < 0 ? 1 : 0;
 
-			// We must adjust all the states so that everything is viewable.
+			if(myTool instanceof ArrowTool)
+			for(S trans : myAutomaton.getTransitions()){
+				State from = trans.getFromState(), to = trans.getToState();
+				Point2D current = myGraph.getControlPt(from, to);
+				if(((ArrowTool) myTool).isMainObject(new State[]{from, to}))
+					moveCtrlPoint(from, to, new Point2DAdv(current.getX() - minx, current.getY() - miny));
+			}
+			
 			for (State vert : myAutomaton.getStates()) {
-				Point2D current = (Point2D) myGraph.pointForVertex(vert)
-						.clone();
+				Point2D current = myGraph.pointForVertex(vert);
 
 				moveState(vert, new Point2D.Double(current.getX() - minx,
 						current.getY() - miny));
 			}
+			
 			for (Note n : myNotes.keySet()) {
 				Point nPoint = n.getLocation();
 				nPoint = new Point((int) (nPoint.x - minx),

@@ -143,6 +143,7 @@ public class GraphHelper implements JFLAPConstants{
 			
 			minx = Math.min(minx, arrowBounds.getMinX());
 			miny = Math.min(miny, arrowBounds.getMinY());
+			
 			if(g != null){
 				LabelBounds bounds = getLabelBounds(graph, trans, g);
 				minx = Math.min(minx, bounds.getMinX());
@@ -187,8 +188,8 @@ public class GraphHelper implements JFLAPConstants{
 		double theta1 = GeometryHelper.calculateAngle(pFrom, pTo),
 				theta2=GeometryHelper.calculateAngle(pTo, pFrom);
 		if (from.equals(to)){
-			theta1=-3*Math.PI/4;
-			theta2=-Math.PI/4;
+			theta1=-Math.PI/4;
+			theta2=-3*Math.PI/4;
 		}
 			
 		Point2D edgeFrom = GeometryHelper.pointOnCircle(pFrom,rad,theta1);

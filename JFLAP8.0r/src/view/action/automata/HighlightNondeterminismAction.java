@@ -53,6 +53,9 @@ public class HighlightNondeterminismAction extends AutomatonAction {
 			
 			AutomatonEditorPanel panel = getPanel();
 			panel.selectAll(trans);
+			for(Transition t : trans){
+				panel.selectObject(new State[]{t.getFromState(), t.getToState()});
+			}
 			panel.selectAll(Arrays.asList(states));
 			update();
 		}

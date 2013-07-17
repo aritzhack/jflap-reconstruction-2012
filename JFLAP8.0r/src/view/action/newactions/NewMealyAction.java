@@ -11,8 +11,6 @@ public class NewMealyAction extends NewFormalDefinitionAction<MealyMachine> {
 
 	@Override
 	public MealyMachine createDefinition() {
-		
-		JFLAPDebug.print("need to implement transition editor first");
 		return new MealyMachine();
 	}
 

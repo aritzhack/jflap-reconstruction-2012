@@ -116,11 +116,11 @@ public class MultiTapeTMTransition extends Transition<MultiTapeTMTransition> {
 	public String getLabelText() {
 		String label = "";
 		for (int i = 0; i < this.getNumTapes(); i++){
-			label += this.getRead(i) + ";" + 
-					this.getWrite(i) + "," + 
-					this.getMove(i) + "|";
+			label += this.getRead(i) + "; " + 
+					this.getWrite(i) + ", " + 
+					this.getMove(i) + " | ";
 		}
-		return label.substring(0,label.length()-1);
+		return label.substring(0,label.length()-3);
 	}
 
 	public int getNumTapes() {

@@ -2,9 +2,9 @@ package view.automata.undoing;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 
 import model.automata.State;
-import model.undo.IUndoRedo;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
 
@@ -19,9 +19,11 @@ public class StateLabelAddEvent extends EditingEvent{
 		myState = s;
 		myText = text;
 		
-		Point center = (Point) panel.getPointForVertex(s);
-		myLabel = new Note(panel, center);
-		myLabel.setBounds(new Rectangle(center, myLabel.getPreferredSize()));
+		Point2D center = panel.getPointForVertex(s);
+		center = new Point((int) center.getX(), (int) center.getY());
+		
+		myLabel = new Note(panel, (Point) center);
+		myLabel.setBounds(new Rectangle((Point) center, myLabel.getPreferredSize()));
 	}
 	
 	@Override

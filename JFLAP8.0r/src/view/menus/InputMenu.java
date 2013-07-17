@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
+import view.action.automata.SimulateAction;
 import view.action.grammar.LanguageGeneratorAction;
 import view.action.grammar.parse.BruteParseAction;
 import view.action.grammar.parse.CYKParseAction;
@@ -57,7 +58,7 @@ public class InputMenu extends JMenu implements TabChangeListener {
 			}
 			if (view instanceof AcceptorView){
 				AcceptorView v = (AcceptorView) view;
-//				this.add(new StepWithClosureAction(v));
+				this.add(new SimulateAction(v));
 //				this.add(new StepByStateAction(v));
 //				this.add(new FastRunAction(v));
 //				this.add(new MultipleRunAction(v));
