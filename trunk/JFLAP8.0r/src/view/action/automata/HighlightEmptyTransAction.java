@@ -54,6 +54,8 @@ public class HighlightEmptyTransAction extends AutomatonAction {
 			
 			AutomatonEditorPanel panel = getPanel();
 			panel.selectAll(lambdas);
+			for(Transition t : lambdas)
+				panel.selectObject(new State[]{t.getFromState(), t.getToState()});
 			update();
 		}
 	}

@@ -73,7 +73,9 @@ public class MooreEditorPanel extends
 		MooreOutputFunction func = new MooreOutputFunction(s, symbols);
 		output.add(func);
 		
-		Note n = new Note(this, (Point) getPointForVertex(s), symbols.toString());
+		Point2D p = getPointForVertex(s);
+		p = new Point((int) p.getX(), (int) p.getY());
+		Note n = new Note(this, (Point) p, symbols.toString());
 		add(n);
 		n.resetBounds();
 		
