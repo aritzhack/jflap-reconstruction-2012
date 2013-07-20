@@ -3,8 +3,6 @@ package view.automata.transitiontable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import debug.JFLAPDebug;
-
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunctionSet;
@@ -19,6 +17,12 @@ import model.undo.IUndoRedo;
 import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 
+/** 
+ * Transition Table specific to MealyMachines, allows editing of output as well as the transition.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class MealyTransitionTable extends
 		TransitionTable<MealyMachine, FSATransition> {
 	private static final String[] NAME = new String[] { "Label", "Output" };
@@ -40,6 +44,7 @@ public class MealyTransitionTable extends
 				break;
 			}
 		}
+		
 		final String input = getTransition().getLabelText();
 		final String output = myFunc == null ? JFLAPPreferences
 				.getEmptyString() : new SymbolString(myFunc.getOutput())
@@ -96,9 +101,9 @@ public class MealyTransitionTable extends
 				comp = new CompoundUndoRedo(sup);
 
 			if (sup instanceof AddEvent) {
-				OutputFunctionSet<MealyOutputFunction> funcSet = mealy
-						.getOutputFunctionSet();
+				OutputFunctionSet<MealyOutputFunction> funcSet = mealy.getOutputFunctionSet();
 				funcSet.add(myFunc = new MealyOutputFunction(trans, outSymbols));
+				
 				AddEvent<MealyOutputFunction> mealAdd = new AddEvent<MealyOutputFunction>(
 						funcSet, myFunc);
 				if (comp == null)
@@ -108,6 +113,7 @@ public class MealyTransitionTable extends
 			} else if (myFunc != null){
 				MealyOutputFunction temp = myFunc.copy();
 				myFunc.setTo(new MealyOutputFunction(trans, outSymbols));
+				
 				//If the function changed, register a settoevent
 				if (!myFunc.equals(temp)) {
 					SetToEvent<MealyOutputFunction> mealSet = new SetToEvent<MealyOutputFunction>(

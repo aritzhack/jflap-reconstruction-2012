@@ -6,20 +6,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import debug.JFLAPDebug;
-
-import model.algorithms.transform.grammar.UselessProductionRemover;
-import model.automata.Automaton;
 import model.automata.AutomatonException;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.graph.FSAEqualityChecker;
 import universe.JFLAPUniverse;
 import view.automata.AutomatonEditorPanel;
-import view.automata.views.AcceptorView;
-import view.automata.views.AutomataView;
 import view.automata.views.FSAView;
-import view.automata.views.TuringMachineView;
 import view.environment.JFLAPEnvironment;
 
 public class DFAEqualityAction extends AutomatonAction {
@@ -38,6 +31,7 @@ public class DFAEqualityAction extends AutomatonAction {
 		
 		if(auto.getStartState() == null)
 			throw new AutomatonException("This automaton has no initial state!");
+		
 		JFLAPEnvironment[] enviros = JFLAPUniverse.getRegistry().toArray(new JFLAPEnvironment[0]);
 		JFLAPEnvironment active = JFLAPUniverse.getActiveEnvironment();
 		JComboBox<JFLAPEnvironment> combo = new JComboBox<JFLAPEnvironment>();
@@ -52,6 +46,7 @@ public class DFAEqualityAction extends AutomatonAction {
 		
 		if (combo.getItemCount() == 0)
 			throw new AutomatonException("No other FAs around!");
+		
 		int result = JOptionPane.showOptionDialog(active, combo, "Compare against FA",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, null, null);

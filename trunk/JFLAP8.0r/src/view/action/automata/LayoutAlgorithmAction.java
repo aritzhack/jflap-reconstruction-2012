@@ -30,17 +30,14 @@ import model.automata.transducers.mealy.MealyMachine;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.graph.LayoutAlgorithm;
 import model.graph.LayoutAlgorithmFactory;
-import model.graph.TransitionGraph;
-import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import view.automata.AutomatonEditorPanel;
 import view.automata.views.AutomataView;
-import view.environment.JFLAPEnvironment;
 
 /**
  * This action allows for a layout algorithm to be applied to an automaton.
  * 
- * @author Chris Morgan
+ * @author Chris Morgan, Ian McMahon
  */
 public class LayoutAlgorithmAction<T extends Automaton<S>, S extends Transition<S>> extends AutomatonAction {
 	/**

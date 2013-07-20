@@ -1,5 +1,6 @@
 package view.action.automata;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -17,9 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import model.algorithms.testinput.simulate.AutomatonSimulator;
-import model.algorithms.testinput.simulate.Configuration;
-import model.algorithms.testinput.simulate.ConfigurationFactory;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.Automaton;
 import model.automata.State;
@@ -32,10 +30,13 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
+import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import view.automata.SimulatorPanel;
+import view.automata.simulate.SimulatorPanel;
 import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
+import view.environment.TabChangeListener;
+import view.environment.TabChangedEvent;
 import file.XMLFileChooser;
 
 public class SimulateAction extends AutomatonAction {
@@ -140,7 +141,7 @@ public class SimulateAction extends AutomatonAction {
 		int result = JOptionPane.showOptionDialog(component, panel, "Input",
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, null, null);
-		if (result != JOptionPane.YES_OPTION)
+		if (result != JOptionPane.OK_OPTION)
 			return null;
 		if (tapes == 0) {
 			String input = fields[0].getText();
@@ -199,9 +200,8 @@ public class SimulateAction extends AutomatonAction {
 	}
 
 	private void handleInput(Object input) {
-		Configuration configs = null;
 		Automaton auto = getAutomaton();
-		AutomatonSimulator simulator = new SingleInputSimulator(auto);
+		SingleInputSimulator simulator = new SingleInputSimulator(auto);
 		if (input == null)
 			return;
 
@@ -211,23 +211,31 @@ public class SimulateAction extends AutomatonAction {
 			SymbolString[] symbols = new SymbolString[s.length];
 			for (int i = 0; i < s.length; i++)
 				symbols[i] = Symbolizers.symbolize(s[i], auto);
-			configs = ConfigurationFactory.createInitialConfiguration(auto,
-					symbols);
+			handleInteraction(simulator, symbols);
 		} else {
 			String s = (String) input;
 			SymbolString symbol = Symbolizers.symbolize(s, auto);
-			configs = ConfigurationFactory.createInitialConfiguration(auto,
-					symbol);
+			handleInteraction(simulator, symbol);
 		}
-		handleInteraction(simulator, configs);
-
 	}
 
-	private void handleInteraction(AutomatonSimulator simulator, Configuration configs) {
+	private void handleInteraction(SingleInputSimulator simulator, SymbolString... symbols) {
+		final Color current = JFLAPPreferences.getSelectedStateColor();
 		
-			SimulatorPanel simpane = new SimulatorPanel(getEditorPanel(), simulator,
-					configs);
-			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(simpane);
-		
+		SimulatorPanel simpane = new SimulatorPanel(getEditorPanel(),
+				simulator, symbols);
+		final JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+		env.addSelectedComponent(simpane);
+		env.addTabListener(new TabChangeListener() {
+
+			@Override
+			public void tabChanged(TabChangedEvent e) {
+				if (e.getCurrentView().equals(getView())){
+					JFLAPPreferences.setSelectedStateColor(current);
+					env.removeTabListener(this);
+				}
+			}
+		});
+
 	}
 }

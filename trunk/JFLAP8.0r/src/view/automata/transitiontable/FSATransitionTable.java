@@ -6,19 +6,20 @@ import javax.swing.table.TableModel;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
-import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
-import universe.preferences.JFLAPPreferences;
 import view.automata.AutomatonEditorPanel;
 
-/** TransitionTable specific to FiniteStateAcceptors.
+/**
+ * TransitionTable specific to FSAs and MooreMachines (though technically, you
+ * could use it for Mealy, output wouldn't be available).
  * 
  * @author Ian McMahon
  */
-public class FSATransitionTable<T extends Automaton<FSATransition>> extends TransitionTable<T, FSATransition>{
+public class FSATransitionTable<T extends Automaton<FSATransition>> extends
+		TransitionTable<T, FSATransition> {
 
-	public FSATransitionTable(FSATransition trans, T automaton, 
+	public FSATransitionTable(FSATransition trans, T automaton,
 			AutomatonEditorPanel<T, FSATransition> panel) {
 		super(1, 1, trans, automaton, panel);
 	}
@@ -27,7 +28,7 @@ public class FSATransitionTable<T extends Automaton<FSATransition>> extends Tran
 	public TableModel createModel() {
 		return new AbstractTableModel() {
 			private String s = getTransition().getLabelText();
-			
+
 			public Object getValueAt(int row, int column) {
 				return s;
 			}
@@ -57,11 +58,11 @@ public class FSATransitionTable<T extends Automaton<FSATransition>> extends Tran
 	@Override
 	public FSATransition modifyTransition() {
 		String s = getValidString((String) getModel().getValueAt(0, 0));
-		
+
 		FSATransition trans = getTransition();
 		State from = trans.getFromState(), to = trans.getToState();
 		SymbolString symbols = Symbolizers.symbolize(s, getAutomaton());
-		
+
 		return new FSATransition(from, to, symbols);
 	}
 

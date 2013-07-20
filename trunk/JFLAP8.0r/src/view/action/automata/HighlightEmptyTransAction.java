@@ -52,8 +52,9 @@ public class HighlightEmptyTransAction extends AutomatonAction {
 			add(new JLabel(JFLAPPreferences.getEmptyString()+"-transitions are highlighted."),
 					BorderLayout.NORTH);
 			
-			AutomatonEditorPanel panel = getPanel();
+			AutomatonEditorPanel panel = getEditorPanel();
 			panel.selectAll(lambdas);
+			
 			for(Transition t : lambdas)
 				panel.selectObject(new State[]{t.getFromState(), t.getToState()});
 			update();

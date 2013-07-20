@@ -54,7 +54,7 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 		setPreferredSize(new Dimension(width, panDim.height + PADDING));
 	}
 
-	public AutomatonEditorPanel<T, S> getPanel() {
+	public AutomatonEditorPanel<T, S> getEditorPanel() {
 		return myPanel;
 	}
 

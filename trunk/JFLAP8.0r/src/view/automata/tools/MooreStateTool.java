@@ -2,7 +2,6 @@ package view.automata.tools;
 
 import java.awt.event.MouseEvent;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import model.automata.State;
@@ -13,10 +12,14 @@ import model.change.events.AddEvent;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
-import universe.preferences.JFLAPPreferences;
 import view.automata.MooreEditorPanel;
 import view.automata.undoing.StateAddEvent;
 
+/** State tool specific to MooreMachines, deals with Output symbols for States when created.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class MooreStateTool extends StateTool<MooreMachine, FSATransition> {
 
 	private MooreOutputFunction myFunction;
@@ -32,9 +35,9 @@ public class MooreStateTool extends StateTool<MooreMachine, FSATransition> {
 			MooreMachine m = getDef();
 			MooreEditorPanel panel = (MooreEditorPanel) getPanel();
 			
-			
 			String output = panel.editOutputFunction(null);
 			super.mousePressed(e);
+			
 			State s = getState();
 			myFunction = panel.addOutputFunction(s,
 					Symbolizers.symbolize(output, m));

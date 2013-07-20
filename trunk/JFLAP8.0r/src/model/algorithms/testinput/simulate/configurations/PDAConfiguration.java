@@ -22,7 +22,7 @@ public class PDAConfiguration extends
 		return "PDA Configuration";
 	}
 
-	private SymbolString getStack(){
+	public SymbolString getStack(){
 		return this.getStringForIndex(0);
 	}
 

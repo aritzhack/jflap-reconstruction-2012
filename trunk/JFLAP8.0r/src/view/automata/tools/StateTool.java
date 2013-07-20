@@ -7,7 +7,6 @@ import javax.swing.SwingUtilities;
 
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.Transition;
 import util.Point2DAdv;
 import view.automata.AutomatonEditorPanel;
@@ -24,7 +23,7 @@ public class StateTool<T extends Automaton<S>, S extends Transition<S>> extends
 	public StateTool(AutomatonEditorPanel<T, S> panel, T def) {
 		super(panel);
 		myDef = def;
-		this.myState = null;
+		myState = null;
 		myPoint = null;
 	}
 

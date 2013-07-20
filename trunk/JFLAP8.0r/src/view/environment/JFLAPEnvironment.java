@@ -24,22 +24,13 @@ import javax.swing.JTabbedPane;
 
 import debug.JFLAPDebug;
 
-import model.automata.Automaton;
-import model.automata.turing.BlankSymbol;
-import model.automata.turing.TuringMachine;
-import model.formaldef.FormalDefinition;
-import universe.preferences.JFLAPMode;
-import universe.preferences.JFLAPPreferences;
 import universe.preferences.PreferenceChangeListener;
 import universe.preferences.JFLAPPreferences.PREF_CHANGE;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
-import view.automata.AutomatonEditorPanel;
 import view.automata.views.AutomataView;
-import view.formaldef.BasicFormalDefinitionView;
 import view.formaldef.FormalDefinitionView;
-import view.grammar.parsing.cyk.CYKParseTablePanel;
 import view.grammar.parsing.cyk.CYKParseView;
 import view.lsystem.LSystemRenderView;
 import view.menus.JFLAPMenuBar;
@@ -262,7 +253,9 @@ public class JFLAPEnvironment extends JFrame implements
 	}
 
 	private void distributeTabChangedEvent() {
-		for (TabChangeListener l : myListeners) {
+		TabChangeListener[] listeners = myListeners.toArray(new TabChangeListener[0]);
+		
+		for (TabChangeListener l : listeners) {
 			l.tabChanged(new TabChangedEvent(myTabbedPane
 					.getSelectedComponent(), myTabbedPane.getTabCount()));
 		}
@@ -385,21 +378,11 @@ public class JFLAPEnvironment extends JFrame implements
 
 		myTabbedPane.revalidate();
 	}
-
-	/**
-	 * Special rewrite of the static JOptionPane.showConfirmDialog method such
-	 * that the dialog can be navigated by using the right and left arrow keys
-	 * along with tab and shift-tab.
-	 * 
-	 * @param message
-	 *            The message to be displayed to the user for confirmation.
-	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's
-	 *         selection.
-	 */
-	public int showConfirmDialog(Object message) {
+	
+	public Object showConfirmDialog(Object message, Object[] options, Object initialValue){
 		JOptionPane pane = new JOptionPane(message,
 				JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION,
-				null, null, null);
+				null, options, initialValue);
 
 		JDialog dialog = pane.createDialog(this, "Select an Option");
 		NoAltMnemonicDispatcher mnem = new NoAltMnemonicDispatcher(pane);
@@ -425,9 +408,23 @@ public class JFLAPEnvironment extends JFrame implements
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.removeKeyEventDispatcher(mnem);
+		return pane.getValue();
+	}
 
-		if (pane.getValue() instanceof Integer)
-			return ((Integer) pane.getValue()).intValue();
+	/**
+	 * Special rewrite of the static JOptionPane.showConfirmDialog method such
+	 * that the dialog can be navigated by using the right and left arrow keys
+	 * along with tab and shift-tab.
+	 * 
+	 * @param message
+	 *            The message to be displayed to the user for confirmation.
+	 * @return YES_OPTION, NO_OPTION, or CANCEL_OPTION depending on user's
+	 *         selection.
+	 */
+	public int showConfirmDialog(Object message) {
+		Object conf = showConfirmDialog(message, null, null);
+		if(conf instanceof Integer)
+			return ((Integer) conf).intValue();
 		return -1;
 	}
 

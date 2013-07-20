@@ -586,6 +586,52 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			moveStateLabel(s);
 	}
 
+	/**
+	 * Updates the graph so that all parts (States, arrows, labels, notes) are
+	 * moved to an accessible region (within the enclosing scroll pane), and the
+	 * preferred size contains the entire graph (so the containing scroll pane
+	 * knows to resize).
+	 */
+	public void updateBounds(Graphics g) {
+		Point2D min = getMinPoint(g);
+		Point2D max = getMaxPoint(g);
+		double maxx = max.getX(), minx = min.getX();
+		double maxy = max.getY(), miny = min.getY();
+		
+		if (minx < 0 || miny < 0) {
+			// Adjust so they get off the boundary
+			minx -= minx < 0 ? 1 : 0;
+			miny -= miny < 0 ? 1 : 0;
+
+			if(myTool instanceof ArrowTool)
+			for(S trans : myAutomaton.getTransitions()){
+				State from = trans.getFromState(), to = trans.getToState();
+				Point2D current = myGraph.getControlPt(from, to);
+				if(((ArrowTool) myTool).isMainObject(new State[]{from, to}))
+					moveCtrlPoint(from, to, new Point2DAdv(current.getX() - minx, current.getY() - miny));
+			}
+			
+			for (State vert : myAutomaton.getStates()) {
+				Point2D current = myGraph.pointForVertex(vert);
+
+				moveState(vert, new Point2D.Double(current.getX() - minx,
+						current.getY() - miny));
+			}
+			
+			for (Note n : myNotes.keySet()) {
+				Point nPoint = n.getLocation();
+				nPoint = new Point((int) (nPoint.x - minx),
+						(int) (nPoint.y - miny));
+				n.setLocation(nPoint);
+			}
+		}
+
+		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
+		// TODO: may want to change when you actually set the size
+		setPreferredSize(new Dimension(x, y));
+		revalidate();
+	}
+
 	public CompoundRemoveEvent createCompoundRemoveEvent(State[] states,
 			Set<S> transitions, Point2D[] points) {
 		return new CompoundRemoveEvent(states, transitions, points);
@@ -593,10 +639,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	public T getAutomaton() {
 		return myAutomaton;
-	}
-
-	private IUndoRedo createTransitionRemove(S... trans) {
-		return createTransitionRemove(Arrays.asList(trans));
 	}
 
 	public IUndoRedo createTransitionRemove(Collection<S> trans) {
@@ -701,52 +743,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return null;
 	}
 
-	/**
-	 * Updates the graph so that all parts (States, arrows, labels, notes) are
-	 * moved to an accessible region (within the enclosing scroll pane), and the
-	 * preferred size contains the entire graph (so the containing scroll pane
-	 * knows to resize).
-	 */
-	public void updateBounds(Graphics g) {
-		Point2D min = getMinPoint(g);
-		Point2D max = getMaxPoint(g);
-		double maxx = max.getX(), minx = min.getX();
-		double maxy = max.getY(), miny = min.getY();
-		
-		if (minx < 0 || miny < 0) {
-			// Adjust so they get off the boundary
-			minx -= minx < 0 ? 1 : 0;
-			miny -= miny < 0 ? 1 : 0;
-
-			if(myTool instanceof ArrowTool)
-			for(S trans : myAutomaton.getTransitions()){
-				State from = trans.getFromState(), to = trans.getToState();
-				Point2D current = myGraph.getControlPt(from, to);
-				if(((ArrowTool) myTool).isMainObject(new State[]{from, to}))
-					moveCtrlPoint(from, to, new Point2DAdv(current.getX() - minx, current.getY() - miny));
-			}
-			
-			for (State vert : myAutomaton.getStates()) {
-				Point2D current = myGraph.pointForVertex(vert);
-
-				moveState(vert, new Point2D.Double(current.getX() - minx,
-						current.getY() - miny));
-			}
-			
-			for (Note n : myNotes.keySet()) {
-				Point nPoint = n.getLocation();
-				nPoint = new Point((int) (nPoint.x - minx),
-						(int) (nPoint.y - miny));
-				n.setLocation(nPoint);
-			}
-		}
-
-		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
-		// TODO: may want to change when you actually set the size
-		setPreferredSize(new Dimension(x, y));
-		revalidate();
-	}
-
 	private boolean isWithinBlock(State s, Point2D p) {
 		if (!(s instanceof Block))
 			return false;
@@ -773,6 +769,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 */
 	private double getStateBounds() {
 		return getStateRadius() + 5;
+	}
+
+	private IUndoRedo createTransitionRemove(S... trans) {
+		return createTransitionRemove(Arrays.asList(trans));
 	}
 
 	private class DeleteKeyListener implements KeyListener {

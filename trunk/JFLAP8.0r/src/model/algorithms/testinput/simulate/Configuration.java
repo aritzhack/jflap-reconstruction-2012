@@ -44,6 +44,8 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		myPrimary = primary;
 		myStrings = strings;
 		this.setState(s);
+		updateAccept();
+		updateReject();
 	}
 
 	private LinkedList<T> findValidTransitions() {

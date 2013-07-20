@@ -20,7 +20,7 @@ public abstract class InputOutputConfiguration<S extends Transducer<T>, T extend
 		super(a, s, pos, input, output);
 	}
 
-	private SymbolString getOutput() {
+	public SymbolString getOutput() {
 		return super.getSecondaryString();
 	}
 
