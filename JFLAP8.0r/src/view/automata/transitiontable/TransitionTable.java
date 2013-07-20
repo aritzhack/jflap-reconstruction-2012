@@ -5,10 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
-
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JTable;
@@ -16,10 +13,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-
-import oldnewstuff.main.JFLAP;
-
-import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.Transition;

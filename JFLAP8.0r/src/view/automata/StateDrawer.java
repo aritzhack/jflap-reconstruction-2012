@@ -44,7 +44,7 @@ public class StateDrawer extends VertexDrawer<State> {
 	/** Draws the State depending on whether it is the Start and/or a Final State in the graph. */
 	private void draw (double x, double y, State obj, Graphics g, boolean isFinal, boolean isInitial){
 		this.draw(x, y, obj, g);
-		int radius = JFLAPConstants.STATE_RADIUS;
+		int radius = (int) getVertexRadius();
 		
 		if (isFinal)
 			drawFinal(x - radius + 3, y - radius + 3, g, (radius - 3) * 2);

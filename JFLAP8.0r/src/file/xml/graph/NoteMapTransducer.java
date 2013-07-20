@@ -1,6 +1,5 @@
 package file.xml.graph;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +11,12 @@ import org.w3c.dom.Element;
 import file.xml.BasicTransducer;
 import file.xml.XMLHelper;
 
+/**
+ * Transducer for encoding the data (text) of each Note of an AutomatonEditorPanel to its locations on the panel.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class NoteMapTransducer extends BasicTransducer<Map<Point2D, String>> {
 
 	private PointTransducer subTrans = new PointTransducer();
@@ -35,18 +40,18 @@ public class NoteMapTransducer extends BasicTransducer<Map<Point2D, String>> {
 	}
 
 	@Override
-	public Element toXMLTree(Document doc, Map<Point2D, String> structure) {
+	public Element toXMLTree(Document doc, Map<Point2D, String> noteMap) {
 		Element root = XMLHelper.createElement(doc, getTag(), null, null);
 
-		for (Point2D p : structure.keySet()) {
-			String text = structure.get(p);
+		for (Point2D p : noteMap.keySet()) {
+			String text = noteMap.get(p);
 
-			Element sPoint = XMLHelper.createElement(doc, NOTE_TAG, null, null);
-			sPoint.appendChild(XMLHelper.createElement(doc, VALUE_TAG, text,
+			Element note_elem = XMLHelper.createElement(doc, NOTE_TAG, null, null);
+			note_elem.appendChild(XMLHelper.createElement(doc, VALUE_TAG, text,
 					null));
-			sPoint.appendChild(subTrans.toXMLTree(doc, p));
+			note_elem.appendChild(subTrans.toXMLTree(doc, p));
 
-			root.appendChild(sPoint);
+			root.appendChild(note_elem);
 		}
 		return root;
 	}

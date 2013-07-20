@@ -1,5 +1,6 @@
 package test;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,19 +12,25 @@ import javax.swing.JPanel;
 
 import debug.JFLAPDebug;
 
+import model.algorithms.testinput.simulate.AutomatonSimulator;
+import model.algorithms.testinput.simulate.ConfigurationChain;
+import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.Automaton;
 import model.automata.State;
-import model.automata.StateSet;
 import model.automata.Transition;
 import model.graph.TransitionGraph;
+import model.symbols.symbolizer.Symbolizers;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
+import view.action.automata.SimulateAction;
 import view.automata.AutomatonDrawer;
 import view.automata.AutomatonEditorPanel;
 import view.automata.StateDrawer;
+import view.automata.simulate.ConfigurationButton;
 import view.automata.views.AutomataView;
 import view.graph.GraphDrawer;
 import file.xml.XMLCodec;
+import file.xml.graph.AutomatonEditorData;
 
 public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 
@@ -31,12 +38,16 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 	public void runTest() {
 		String toSave = System.getProperties().getProperty("user.dir")
 				+ "/filetest";
-		File f = new File(toSave + "/tm_AnBnCn.jff");
-		Automaton a = XMLCodec.decode(f, Automaton.class);
+		File f = new File(toSave + "/ex1.6a.jff");
+		AutomatonEditorData a = (AutomatonEditorData) new XMLCodec().decode(f);
+		TransitionGraph graph = a.getGraph();
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
-		AutomataView panel = new AutomataView(a, new UndoKeeper(), true);
+		AutomataView panel = new AutomataView(graph.getAutomaton(), new UndoKeeper(), true);
+		((AutomatonEditorPanel) panel.getCentralPanel()).setGraph(graph);
 		
+//		Simu
+//		panel.add(new ConfigurationButton(config))
 		panel.setOpaque(true);
 		frame.add(panel);
 		frame.pack();

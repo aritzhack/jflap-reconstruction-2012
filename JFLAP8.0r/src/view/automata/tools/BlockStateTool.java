@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import debug.JFLAPDebug;
+
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
@@ -73,19 +75,16 @@ public class BlockStateTool extends
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			String[] options = new String[] { "Import from file",
 					"Use library building block", "Create new block" };
-
-			int n = JOptionPane.showOptionDialog(
-					JFLAPUniverse.getActiveEnvironment(),
-					"Choose Block creation type:", "Block Creation",
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-			if (n == JOptionPane.YES_OPTION)
+			
+			Object n = JFLAPUniverse.getActiveEnvironment().showConfirmDialog(
+					"Choose Block creation type:", options, options[0]);
+			if (options[0].equals(n))
 				importFromFile();
-			else if (n == JOptionPane.NO_OPTION)
+			else if (options[1].equals(n))
 				promptBuiltinBlock();
-			else if (n == JOptionPane.CANCEL_OPTION)
+			else if (options[2].equals(n))
 				createNewBlock();
+			
 			Block b = (Block) getState();
 			if (b != null) {
 				((BlockEditorPanel) getPanel()).addBlock(b, e.getPoint());

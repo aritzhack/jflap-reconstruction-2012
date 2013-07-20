@@ -16,6 +16,10 @@ public abstract class AutomatonAction extends AbstractAction{
 		myView = view;
 	}
 	
+	public AutomataView getView() {
+		return myView;
+	}
+	
 	public AutomatonEditorPanel getEditorPanel() {
 		return (AutomatonEditorPanel) myView.getCentralPanel();
 	}

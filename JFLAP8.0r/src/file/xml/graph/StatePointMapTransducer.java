@@ -8,16 +8,14 @@ import java.util.TreeMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import debug.JFLAPDebug;
-
-import view.lsystem.helperclasses.Parameter;
-import view.lsystem.helperclasses.ParameterMap;
-import view.lsystem.helperclasses.ParameterName;
-import view.lsystem.helperclasses.ParameterValue;
-
 import file.xml.BasicTransducer;
 import file.xml.XMLHelper;
 
+/**
+ * Transducer for encoding all states (by their ID number) to their given points (Point2D) as specified in a TransitionGraph.
+ * @author Ian McMahon
+ *
+ */
 public class StatePointMapTransducer extends
 		BasicTransducer<Map<Integer, Point2D>> {
 	
@@ -48,8 +46,8 @@ public class StatePointMapTransducer extends
 
 		for (Integer id : structure.keySet()) {
 			Point2D value = structure.get(id);
-			
 			Element sPoint = XMLHelper.createElement(doc, STATE_POINT, null, null);
+			
 			sPoint.appendChild(XMLHelper.createElement(doc, STATE_TAG, id, null));
 			sPoint.appendChild(subTrans.toXMLTree(doc, value));
 			

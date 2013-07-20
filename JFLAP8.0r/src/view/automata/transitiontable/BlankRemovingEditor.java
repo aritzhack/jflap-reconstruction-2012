@@ -3,10 +3,15 @@ package view.automata.transitiontable;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import util.view.tables.SelectingEditor;
 
+/**
+ * Editor for TuringMachineTransitionTables to make BlankSymbols respond as if there's nothing there.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class BlankRemovingEditor extends SelectingEditor{
 	
 	public BlankRemovingEditor() {

@@ -10,6 +10,12 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import view.automata.AutomatonEditorPanel;
 
+/**
+ * Transition Table for PushdownAutomata.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PDATransitionTable extends TransitionTable<PushdownAutomaton, PDATransition> {
 
 	private static final String NAME[] = { "Read", "Pop", "Push" };

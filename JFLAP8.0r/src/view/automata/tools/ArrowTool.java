@@ -106,8 +106,8 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	@Override
 	public void mousePressed(MouseEvent e) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
-
 		myObject = panel.objectAtPoint(e.getPoint());
+
 		if (e.getSource() instanceof Note) // Comes from a non-State-label Note
 			myObject = e.getSource();
 
@@ -119,33 +119,37 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				List<Object> selectionList = panel.getSelection();
 				boolean isSelected = myObjectSelected();
 
-				if (selectionList.size() > 1 && !isSelected && !modifierDown)
+				// If not selected and just a normal click, clear other
+				// selections
+				if (!isSelected && !modifierDown)
 					panel.clearSelection();
 
+				// If selected and shift/ctrl down, deselect object
 				if (isSelected && modifierDown) {
 					panel.deselectObject(myObject);
 					return;
 				}
 
 				panel.selectObject(myObject);
-
-				if (isStateClicked(e)) {
-					myInitialObjectPoint = new Point2DAdv(
-							panel.getPointForVertex((State) myObject));
+				if (isTransitionClicked(e)) {
+					if (e.getClickCount() == 2)
+						panel.editTransition((S) myObject, false);
+				} else {
+					if (isStateClicked(e)) {
+						myInitialObjectPoint = new Point2DAdv(
+								panel.getPointForVertex((State) myObject));
+					} else if (myObject instanceof State[]) {
+						State[] edge = (State[]) myObject;
+						myInitialObjectPoint = panel.getControlPoint(edge);
+						panel.selectAll(myDef.getTransitions()
+								.getTransitionsFromStateToState(edge[0],
+										edge[1]));
+					} else if (myObject instanceof Note) {
+						myInitialObjectPoint = ((Note) myObject).getLocation();
+						myNoteMovingPoint = (Point2D) myInitialObjectPoint
+								.clone();
+					}
 					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
-				} else if (isTransitionClicked(e))
-					panel.editTransition((S) myObject, false);
-
-				else if (myObject instanceof State[]) {
-					State[] edge = (State[]) myObject;
-					myInitialObjectPoint = panel.getControlPoint(edge);
-					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
-					panel.selectAll(myDef.getTransitions()
-							.getTransitionsFromStateToState(edge[0], edge[1]));
-				} else if (myObject instanceof Note) {
-					myInitialObjectPoint = ((Note) myObject).getLocation();
-					myMovingPoint = (Point2D) myInitialObjectPoint.clone();
-					myNoteMovingPoint = (Point2D) myMovingPoint.clone();
 				}
 			} else {
 				panel.stopAllEditing();
@@ -154,6 +158,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		} else if (SwingUtilities.isRightMouseButton(e)) {
 			panel.stopAllEditing();
 			panel.clearSelection();
+
 			if (e.getSource().equals(panel)) {
 				if (isStateClicked(e))
 					showStateMenu(e.getPoint());
@@ -161,14 +166,6 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					showEmptyMenu(e.getPoint());
 			}
 		}
-	}
-
-	private boolean isModified(MouseEvent e) {
-		return e.isShiftDown() || e.isControlDown();
-	}
-
-	private boolean myObjectSelected() {
-		return getPanel().isSelected(myObject);
 	}
 
 	@Override
@@ -187,7 +184,6 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 				if (myObject instanceof State) {
 					stateDragged(e, panel, selectedObjs, drag);
-
 				} else if (myObject instanceof State[]) {
 					edgeDragged(panel, drag);
 				} else if (myObject instanceof Note) {
@@ -195,6 +191,185 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				}
 			}
 		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		AutomatonEditorPanel<T, S> panel = getPanel();
+		UndoKeeper keeper = getKeeper();
+		boolean modified = isModified(e);
+
+		if (SwingUtilities.isLeftMouseButton(e) && isValidPoint(e)) {
+			List<Object> selectedObjs = panel.getSelection();
+
+			if (myObjectSelected()) {
+				if (myObject instanceof State) {
+					stateReleased(panel, keeper, modified, selectedObjs);
+				} else if (myObject instanceof State[]) {
+					edgeReleased(panel, keeper, modified, selectedObjs);
+				} else if (myObject instanceof Note) {
+					noteReleased(panel, keeper, modified, selectedObjs);
+				}
+				// Don't do anything if it was a transition,
+				// we will have a TransitionTable open.
+			}
+		} else if (!modified && !(myObject instanceof Transition)) {
+			panel.requestFocus();
+			panel.clearSelection();
+		}
+
+		resetData();
+		panel.repaint();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() instanceof Note && !(isModified(e))) {
+			Note n = (Note) e.getComponent();
+			getPanel().editNote(n);
+		}
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		if (mySelectionBounds != null)
+			g.drawRect(mySelectionBounds.x, mySelectionBounds.y,
+					mySelectionBounds.width, mySelectionBounds.height);
+	}
+
+	@Override
+	public void setActive(boolean active) {
+		super.setActive(active);
+
+		if (!active) {
+			resetData();
+			myObject = null;
+		}
+	}
+
+	/** Returns true if o is equal to this tool's main object. */
+	public boolean isMainObject(Object o) {
+		return myObject != null && (myObject.equals(o) || isEdgeEqual(o));
+	}
+
+	/** Returns true if shift or ctrl was down. */
+	private boolean isModified(MouseEvent e) {
+		return e.isShiftDown() || e.isControlDown();
+	}
+
+	/** Returns true if myObject is currently selected. */
+	private boolean myObjectSelected() {
+		return getPanel().isSelected(myObject);
+	}
+
+	/** Clears all points, objects, and data. */
+	private void resetData() {
+		myInitialPoint = null;
+		myInitialObjectPoint = null;
+		myMovingPoint = null;
+		myNoteMovingPoint = null;
+		mySelectionBounds = null;
+	}
+
+	/**
+	 * Returns true if the point is not equal to the initial point or if it is
+	 * from a Note.
+	 */
+	private boolean isValidPoint(MouseEvent e) {
+		return myInitialPoint != null
+				&& (!myInitialPoint.equals(e.getPoint()) || e.getSource() instanceof Note);
+	}
+
+	/**
+	 * Returns true if myObject (a State[]) is the only object in the list, or
+	 * if it and its transitions are.
+	 */
+	private boolean isOnlyObject(List<Object> selectedObjs) {
+		for (Object o : selectedObjs) {
+			if (o instanceof State)
+				return false;
+			if (o instanceof State[] && !isEdgeEqual(o))
+				return false;
+			if (o instanceof Transition
+					&& !isEdgeEqual(new State[] {
+							((Transition) o).getFromState(),
+							((Transition) o).getToState() }))
+				return false;
+		}
+		return true;
+	}
+
+	/** Shows the state menu at the specific point. */
+	private void showStateMenu(Point2D point) {
+		myStateMenu.show(getPanel(), (int) point.getX(), (int) point.getY());
+	}
+
+	/** Shows the empty menu at the specific point. */
+	private void showEmptyMenu(Point2D point) {
+		myEmptyMenu.show(getPanel(), (int) point.getX(), (int) point.getY());
+	}
+
+	/**
+	 * Returns true if the selected object is a State and the user clicked once.
+	 */
+	private boolean isStateClicked(MouseEvent e) {
+		return myObject instanceof State;
+	}
+
+	/**
+	 * Returns true if the selected object is a Transition
+	 */
+	private boolean isTransitionClicked(MouseEvent e) {
+		return myObject instanceof Transition;
+	}
+
+	/**
+	 * Returns true if myObject and o are both State[], and their from and to
+	 * states are equal.
+	 */
+	private boolean isEdgeEqual(Object o) {
+		if (!(o instanceof State[] && myObject instanceof State[]))
+			return false;
+		State[] o1 = (State[]) myObject, o2 = (State[]) o;
+		return o1[0].equals(o2[0]) && o1[1].equals(o2[1]);
+	}
+
+	/** Drag a selection rectangle, selecting everything within its bounds. */
+	private void selectRectangle(MouseEvent e, AutomatonEditorPanel<T, S> panel) {
+
+		int nowX = e.getPoint().x;
+		int nowY = e.getPoint().y;
+
+		int leftX = (int) myInitialPoint.getX();
+		int topY = (int) myInitialPoint.getY();
+
+		if (nowX < leftX)
+			leftX = nowX;
+		if (nowY < topY)
+			topY = nowY;
+		mySelectionBounds = new Rectangle(leftX, topY, Math.abs(nowX
+				- (int) myInitialPoint.getX()), Math.abs(nowY
+				- (int) myInitialPoint.getY()));
+		panel.selectAllInBounds(mySelectionBounds);
+	}
+
+	private void stateDragged(MouseEvent e, AutomatonEditorPanel<T, S> panel,
+			List<Object> selectedObjs, Point drag) {
+		// Move the state
+		State s = (State) myObject;
+
+		if (selectedObjs.size() > 1) {
+			moveSelectedObjects(e, s, selectedObjs);
+		}
+		panel.moveState(s, drag);
+		checkMin(panel);
+	}
+
+	private void edgeDragged(AutomatonEditorPanel<T, S> panel, Point drag) {
+		// Move the control point
+		State from = ((State[]) myObject)[0], to = ((State[]) myObject)[1];
+		panel.moveCtrlPoint(from, to, new Point2DAdv(drag.getX(), drag.getY()));
+		checkMin(panel);
 	}
 
 	private void noteDragged(AutomatonEditorPanel<T, S> panel, Point drag) {
@@ -212,13 +387,80 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		checkMin(panel);
 	}
 
-	private void edgeDragged(AutomatonEditorPanel<T, S> panel, Point drag) {
-		// Move the control point
-		State from = ((State[]) myObject)[0], to = ((State[]) myObject)[1];
-		panel.moveCtrlPoint(from, to, new Point2DAdv(drag.getX(), drag.getY()));
-		checkMin(panel);
+	private void stateReleased(AutomatonEditorPanel<T, S> panel,
+			UndoKeeper keeper, boolean modified, List<Object> selectedObjs) {
+		State s = (State) myObject;
+
+		Point2D pRelease = GraphHelper.getOnscreenPoint(
+				Automaton.isStartState(myDef, s), panel.getPointForVertex(s));
+		StateMoveEvent moveEvent = new StateMoveEvent(panel, myDef, s,
+				myInitialObjectPoint, pRelease);
+
+		// Clear the selection and notify the undo keeper
+		if (!modified && selectedObjs.size() == 1)
+			panel.clearSelection();
+		CompoundMoveEvent comp = new CompoundMoveEvent(panel, moveEvent);
+		addMoveEvents(comp, pRelease);
+
+		keeper.registerChange(comp);
 	}
 
+	private void edgeReleased(AutomatonEditorPanel<T, S> panel,
+			UndoKeeper keeper, boolean modified, List<Object> selectedObjs) {
+		State[] edge = (State[]) myObject;
+		Point2D ctrl = panel.getControlPoint(edge);
+		ControlMoveEvent move = new ControlMoveEvent(panel, edge,
+				myInitialObjectPoint, ctrl);
+
+		// If this is the only object and this is a normal click,
+		// clear selection
+		if (isOnlyObject(selectedObjs) && !modified)
+			panel.clearSelection();
+
+		if (myMovingPoint.equals(myInitialObjectPoint))
+			keeper.registerChange(move);
+
+		else {
+			CompoundMoveEvent comp = new CompoundMoveEvent(panel,
+					new ArrayList<StateMoveEvent>());
+
+			addMoveEvents(comp, ctrl);
+			comp.addEvents(move);
+			keeper.registerChange(comp);
+		}
+	}
+
+	private void noteReleased(AutomatonEditorPanel<T, S> panel,
+			UndoKeeper keeper, boolean modified, List<Object> selectedObjs) {
+		Note n = (Note) myObject;
+		if (selectedObjs.size() == 1 && !modified)
+			panel.clearSelection();
+
+		// If you have moved the note, notify undo keeper
+		if (!myInitialObjectPoint.equals(myNoteMovingPoint)
+				|| !myInitialObjectPoint.equals(myMovingPoint)) {
+			NoteMoveEvent move = new NoteMoveEvent(panel, n,
+					(Point) myInitialObjectPoint, n.getLocation());
+
+			if (myInitialObjectPoint.equals(myMovingPoint))
+				keeper.registerChange(move);
+			else {
+				CompoundMoveEvent comp = new CompoundMoveEvent(panel,
+						new ArrayList<StateMoveEvent>());
+				addMoveEvents(comp, myMovingPoint);
+				comp.addEvents(move);
+				keeper.registerChange(comp);
+			}
+		}
+	}
+
+	/**
+	 * Moves myMovingPoint if the most recent drag placed objects offscreen top
+	 * or left, as the rest of the objects will be moving that much. This is
+	 * needed for graphically sound undo/redo.
+	 * 
+	 * @param panel
+	 */
 	private void checkMin(AutomatonEditorPanel<T, S> panel) {
 		Point2D min = panel.getMinPoint(panel.getGraphics());
 		double minx = min.getX(), miny = min.getY();
@@ -233,35 +475,10 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		}
 	}
 
-	private void stateDragged(MouseEvent e, AutomatonEditorPanel<T, S> panel,
-			List<Object> selectedObjs, Point drag) {
-		// Move the state
-		State s = (State) myObject;
-
-		if (selectedObjs.size() > 1) {
-			moveSelectedObjects(e, s, selectedObjs);
-		}
-		panel.moveState(s, drag);
-		checkMin(panel);
-	}
-
-	private void selectRectangle(MouseEvent e, AutomatonEditorPanel<T, S> panel) {
-		// Drag a selection rectangle, selecting everything within its
-		// bounds.
-		int nowX = e.getPoint().x;
-		int nowY = e.getPoint().y;
-		int leftX = (int) myInitialPoint.getX();
-		int topY = (int) myInitialPoint.getY();
-		if (nowX < leftX)
-			leftX = nowX;
-		if (nowY < topY)
-			topY = nowY;
-		mySelectionBounds = new Rectangle(leftX, topY, Math.abs(nowX
-				- (int) myInitialPoint.getX()), Math.abs(nowY
-				- (int) myInitialPoint.getY()));
-		panel.selectAllInBounds(mySelectionBounds);
-	}
-
+	/**
+	 * Moves all objects in selectedObjs the same distance as the state that was
+	 * dragged.
+	 */
 	private void moveSelectedObjects(MouseEvent e, State s,
 			List<Object> selectedObjs) {
 		AutomatonEditorPanel<T, S> panel = getPanel();
@@ -286,94 +503,11 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 		}
 	}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		AutomatonEditorPanel<T, S> panel = getPanel();
-		UndoKeeper keeper = getKeeper();
-		boolean modified = isModified(e);
-
-		if (SwingUtilities.isLeftMouseButton(e) && isValidPoint(e)) {
-			List<Object> selectedObjs = panel.getSelection();
-
-			if (myObjectSelected()) {
-				if (myObject instanceof State) {
-					Point2D pRelease = GraphHelper.getOnscreenPoint(
-							Automaton.isStartState(myDef, (State) myObject),
-							panel.getPointForVertex((State) myObject));
-					StateMoveEvent moveEvent = new StateMoveEvent(panel, myDef,
-							(State) myObject, myInitialObjectPoint, pRelease);
-
-					// Clear the selection and notify the undo keeper
-					if (!modified && selectedObjs.size() == 1)
-						panel.clearSelection();
-					CompoundMoveEvent comp = new CompoundMoveEvent(panel,
-							moveEvent);
-					addMoveEvents(comp, pRelease);
-
-					keeper.registerChange(comp);
-
-				} else if (myObject instanceof State[]) {
-					// Notify the undo keeper
-					if (isOnlyObject(selectedObjs) && !modified)
-						panel.clearSelection();
-					Point2D ctrl = panel.getControlPoint((State[]) myObject);
-					
-					ControlMoveEvent move = new ControlMoveEvent(panel,
-							(State[]) myObject, myInitialObjectPoint, ctrl);
-					if (!myMovingPoint.equals(myInitialObjectPoint)) {
-						CompoundMoveEvent comp = new CompoundMoveEvent(panel,
-								new ArrayList<StateMoveEvent>());
-						
-						addMoveEvents(comp, ctrl);
-						comp.addEvents(move);
-						keeper.registerChange(comp);
-					} else
-						keeper.registerChange(move);
-				} else if (myObject instanceof Note) {
-					if (selectedObjs.size() == 1 && !modified)
-						panel.clearSelection();
-					
-					if (!myInitialObjectPoint.equals(myNoteMovingPoint) || !myInitialObjectPoint.equals(myMovingPoint)) {
-						NoteMoveEvent move = new NoteMoveEvent(panel,
-								(Note) myObject, (Point) myInitialObjectPoint,
-								((Note) myObject).getLocation());
-						if (!myInitialObjectPoint.equals(myMovingPoint)) {
-							CompoundMoveEvent comp = new CompoundMoveEvent(
-									panel, new ArrayList<StateMoveEvent>());
-							addMoveEvents(comp, myMovingPoint);
-							comp.addEvents(move);
-							keeper.registerChange(comp);
-						} else
-							keeper.registerChange(move);
-					}
-
-				}
-			}
-		} else if (!modified && !(myObject instanceof Transition))
-			panel.clearSelection();
-		myInitialPoint = null;
-		mySelectionBounds = null;
-		myInitialObjectPoint = null;
-		myMovingPoint = null;
-		myNoteMovingPoint = null;
-		panel.repaint();
-
-		if (!(myObject instanceof Transition))
-			panel.requestFocus();
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() instanceof Note
-				&& !(e.isControlDown() || e.isShiftDown())) {
-			Note n = (Note) e.getComponent();
-			getPanel().editNote(n);
-		}
-	}
-
-	public boolean isMainObject(Object o) {
-		return myObject != null && (myObject.equals(o) || isEdgeEqual(o));
-	}
-	
+	/**
+	 * Adds undo/redo events to the CompoundMoveEvent so that when moves are
+	 * undone, they appear as they were before, even if the move shifting
+	 * objects offscreen.
+	 */
 	private void addMoveEvents(CompoundMoveEvent comp, Point2D pRelease) {
 		double dx = pRelease.getX() - myInitialObjectPoint.getX(), dy = pRelease
 				.getY() - myInitialObjectPoint.getY();
@@ -421,91 +555,24 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 							pTo));
 				}
 			for (Note n : panel.getNotes()) {
-				Point current = n.getLocation();
-				Point old = panel.isSelected(n) ? new Point(
-						(int) (current.x - dxSel), (int) (current.y - dySel))
-						: new Point((int) (current.x - dx),
-								(int) (current.y - dy));
+				if (!n.equals(myObject)) {
+					Point current = n.getLocation();
+					Point old = panel.isSelected(n) ? new Point(
+							(int) (current.x - dxSel),
+							(int) (current.y - dySel)) : new Point(
+							(int) (current.x - dx), (int) (current.y - dy));
 
-				comp.addEvents(new NoteMoveEvent(panel, n, old, (Point) current
-						.clone()));
+					comp.addEvents(new NoteMoveEvent(panel, n, old,
+							(Point) current.clone()));
+				}
 			}
 		}
 	}
 
-	private boolean isValidPoint(MouseEvent e) {
-		return myInitialPoint != null
-				&& (!myInitialPoint.equals(e.getPoint()) || e.getSource() instanceof Note);
-	}
-
-	private boolean isOnlyObject(List<Object> selectedObjs) {
-		for (Object o : selectedObjs) {
-			if (o instanceof State)
-				return false;
-			if (o instanceof State[] && !isEdgeEqual(o))
-				return false;
-			if (o instanceof Transition
-					&& !isEdgeEqual(new State[] {
-							((Transition) o).getFromState(),
-							((Transition) o).getToState() }))
-				return false;
-		}
-		return true;
-	}
-	
-
-	private void showStateMenu(Point2D point) {
-		myStateMenu.show(getPanel(), (int) point.getX(), (int) point.getY());
-	}
-
-	private void showEmptyMenu(Point2D point) {
-		myEmptyMenu.show(getPanel(), (int) point.getX(), (int) point.getY());
-	}
-
 	/**
-	 * Returns true if the selected object is a State and the user clicked once.
+	 * JPopupMenu with options specific to States.
+	 * @author Ian McMahon
 	 */
-	private boolean isStateClicked(MouseEvent e) {
-		return e.getClickCount() == 1 && myObject instanceof State;
-	}
-
-	/**
-	 * Returns true if the selected object is a Transition and the user double
-	 * clicked.
-	 */
-	private boolean isTransitionClicked(MouseEvent e) {
-		return e.getClickCount() == 2 && myObject instanceof Transition;
-	}
-
-	private boolean isEdgeEqual(Object o) {
-		if (!(o instanceof State[] && myObject instanceof State[]))
-			return false;
-		State[] o1 = (State[]) myObject, o2 = (State[]) o;
-		return o1[0].equals(o2[0]) && o1[1].equals(o2[1]);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		if (mySelectionBounds != null)
-			g.drawRect(mySelectionBounds.x, mySelectionBounds.y,
-					mySelectionBounds.width, mySelectionBounds.height);
-	}
-
-	@Override
-	public void setActive(boolean active) {
-		super.setActive(active);
-
-		if (!active) {
-			myInitialPoint = null;
-			myInitialObjectPoint = null;
-			myMovingPoint = null;
-			myObject = null;
-			mySelectionBounds = null;
-			myNoteMovingPoint = null;
-		}
-
-	}
-
 	private class StateMenu extends JPopupMenu {
 
 		private JCheckBoxMenuItem makeFinal;

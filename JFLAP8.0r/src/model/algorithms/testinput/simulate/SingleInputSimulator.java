@@ -8,15 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import debug.JFLAPDebug;
-
-import util.Copyable;
-
-import model.algorithms.AlgorithmException;
 import model.automata.Automaton;
-import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.formaldef.Describable;
-import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.SymbolString;
 
 
@@ -56,7 +48,8 @@ public class SingleInputSimulator extends AutomatonSimulator{
 			if (chain.isFrozen())
 				myChains.add(chain);
 			else if(chain.isFinished()){
-				myChains.remove(chain);
+				//myChains.remove(chain);
+				//As myChains is clear, don't do anything, just ignore it
 			}
 			else{
 				myChains.addAll(stepAndFork(chain));
@@ -105,7 +98,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 //		}
 	}
 
-	public void reverse(){
+	public ConfigurationChain[] reverse(){
 		Set<ConfigurationChain> toRemove = new HashSet<ConfigurationChain>();
 		Set<ConfigurationChain> toAdd = new HashSet<ConfigurationChain>();
 		for (ConfigurationChain chain: myChains){
@@ -121,6 +114,7 @@ public class SingleInputSimulator extends AutomatonSimulator{
 		myChains.removeAll(toRemove);
 		myChains.addAll(toAdd);
 		updateSelectedStates();
+		return myChains.toArray(new ConfigurationChain[0]);
 	}
 	
 	@Override

@@ -2,18 +2,20 @@ package file.xml.graph;
 
 import java.awt.geom.Point2D;
 
-import model.automata.State;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import debug.JFLAPDebug;
 
 import util.Point2DAdv;
 
 import file.xml.BasicTransducer;
 import file.xml.XMLHelper;
 
+/**
+ * Transducer for encoding of a Point2D as an (x, y) value, both of which are doubles.
+ * 
+ * @author Ian McMahon
+ *
+ */
 public class PointTransducer extends BasicTransducer<Point2D>{
 
 	@Override
@@ -31,6 +33,7 @@ public class PointTransducer extends BasicTransducer<Point2D>{
 		Element parent = XMLHelper.createElement(doc, getTag(), null, null);
 		Element x = XMLHelper.createElement(doc, X_TAG, item.getX(), null);
 		Element y = XMLHelper.createElement(doc, Y_TAG, item.getY(), null);
+		
 		parent.appendChild(x);
 		parent.appendChild(y);
 		return parent;

@@ -47,7 +47,7 @@ import view.automata.views.AutomataView;
  * This action itself will save the current layout of the automaton, and an action stored inside
  * this action will restore the automaton's saved layout.
  * 
- * @author Chris Morgan
+ * @author Chris Morgan, Ian McMahon
  */
 public class LayoutStorageAction extends AutomatonAction {
 	/**
@@ -76,33 +76,37 @@ public class LayoutStorageAction extends AutomatonAction {
 				
 				List<StateMoveEvent> sMove = new ArrayList<StateMoveEvent>();
 				List<IUndoRedo> otherMove = new ArrayList<IUndoRedo>();
-				
+				Point2D current, prev;
 				for(Object o : myObjectsToPoints.keySet()){
 					if(o instanceof State){
 						State s = (State) o;
-						Point2D current = new Point2DAdv(panel.getPointForVertex(s));
-						Point2D prev = myObjectsToPoints.get(s);
+						current = new Point2DAdv(panel.getPointForVertex(s));
+						prev = myObjectsToPoints.get(s);
+						
 						if(!current.equals(prev)){
 							sMove.add(new StateMoveEvent(panel, auto, s, current, prev));
 						}
 					} else if (o instanceof State[]){
 						State[] edge = (State[]) o;
-						Point2D current = new Point2DAdv(panel.getControlPoint(edge));
-						Point2D prev = myObjectsToPoints.get(edge);
+						current = new Point2DAdv(panel.getControlPoint(edge));
+						prev = myObjectsToPoints.get(edge);
+						
 						if(!current.equals(prev)){
 							otherMove.add(new ControlMoveEvent(panel, edge, current, prev));
 						}
 					} else{
 						Note n = (Note) o;
-						Point current = new Point(n.getLocation());
-						Point prev = (Point) myObjectsToPoints.get(n);
+						current = new Point(n.getLocation());
+						prev = myObjectsToPoints.get(n);
+						
 						if(!current.equals(prev)){
-							otherMove.add(new NoteMoveEvent(panel, n, current, prev));
+							otherMove.add(new NoteMoveEvent(panel, n, (Point) current, (Point) prev));
 						}
 					}
 				}
 				CompoundMoveEvent event = new CompoundMoveEvent(panel, sMove);
 				event.addEvents(otherMove);
+				
 				if(!event.isEmpty())
 					panel.getKeeper().applyAndListen(event);
 			}
