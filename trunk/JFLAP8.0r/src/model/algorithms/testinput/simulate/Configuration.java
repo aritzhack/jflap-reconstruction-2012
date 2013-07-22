@@ -99,6 +99,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 				configs.add(c);
 				c.setTransitionTo(trans);
 				c.updateAccept();
+				c.updateReject();
 			}
 		}
 		
@@ -107,7 +108,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 	}
 
 	private boolean checkAccept() {
-		return !this.hasNextState() && this.isDone() && this.isInFinalState();
+		return this.isDone() && this.isInFinalState();
 	}
 
 	protected boolean isInFinalState(){

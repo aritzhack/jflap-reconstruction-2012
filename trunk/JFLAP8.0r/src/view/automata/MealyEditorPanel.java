@@ -29,7 +29,6 @@ public class MealyEditorPanel extends AutomatonEditorPanel<MealyMachine, FSATran
 	public IUndoRedo createTransitionRemove(Collection<FSATransition> trans) {
 		OutputFunctionSet<MealyOutputFunction> funcSet = getAutomaton().getOutputFunctionSet();
 		IUndoRedo sup = super.createTransitionRemove(trans);
-		JFLAPDebug.print("mealy");
 		if(!trans.isEmpty()){
 			RemoveEvent<MealyOutputFunction> remove = getMealyRemoveEvent(trans,
 					funcSet);

@@ -21,7 +21,7 @@ import view.automata.AutomatonEditorPanel;
 
 public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends AutomatonDisplayPanel<T, S> {
-
+	
 	private SingleInputSimulator mySimulator;
 	private SymbolString[] myInput;
 	private JScrollPane scroller;
@@ -36,6 +36,7 @@ public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 				.darker().darker());
 		simulator.beginSimulation(input);
 
+		super.update();
 		initView();
 		update();
 	}
@@ -77,8 +78,10 @@ public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 		
 		Dimension size  = getPreferredSize();
 		split.setPreferredSize(new Dimension(size.width, lSize.height + size.height));
-		split.setDividerLocation(0.6);
-		split.setResizeWeight(0.6);
+		
+		double ratio = size.getHeight() / (size.height + lSize.height);
+		split.setDividerLocation(ratio);
+		split.setResizeWeight(ratio);
 		
 		add(split, BorderLayout.CENTER);
 	}

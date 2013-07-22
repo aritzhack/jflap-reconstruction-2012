@@ -16,7 +16,7 @@ public class AutoSimulator extends AutomatonSimulator{
 
 	public AutoSimulator(Automaton a, int specialCase) {
 		super(a);
-		mySimulator  = new SingleInputSimulator(a, specialCase);
+		mySimulator  = new SingleInputSimulator(a, specialCase, false);
 	}
 
 	public List<ConfigurationChain> getNextAccept(){
