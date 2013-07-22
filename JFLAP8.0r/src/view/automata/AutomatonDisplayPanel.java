@@ -2,7 +2,12 @@ package view.automata;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
+
+import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.State;
@@ -16,7 +21,9 @@ import util.view.magnify.MagnifiablePanel;
 
 public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends MagnifiablePanel {
-
+	
+	private static final int MAX_HEIGHT = 400;
+	private static final int MAX_WIDTH = 1000;
 	private static final int PADDING = 150;
 	private AutomatonEditorPanel<T, S> myPanel;
 
@@ -46,12 +53,26 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 	}
 
 	public void update() {
-		myPanel.updateBounds(JFLAPUniverse.getActiveEnvironment().getGraphics());
-
+		Graphics g = getGraphics();
+		myPanel.updateBounds(g);
+		
 		Dimension panDim = myPanel.getPreferredSize();
+		if(panDim.height > MAX_HEIGHT || panDim.width > MAX_WIDTH){
+			if(panDim.height > MAX_HEIGHT)
+				panDim = new Dimension(panDim.width, MAX_HEIGHT);
+			if(panDim.width > MAX_WIDTH)
+				panDim = new Dimension(MAX_WIDTH, panDim.height);
+		}
+		
 		int width = Math.max(getViewSize().width, panDim.width)
 				+ JFLAPConstants.STATE_RADIUS + 5;
-		setPreferredSize(new Dimension(width, panDim.height + PADDING));
+		int height = panDim.height + PADDING;
+		
+		setPreferredSize(new Dimension(width, height));
+		
+		Point2D max = myPanel.getMaxPoint(g);
+		if(max.getX() >= width || max.getY() > height)
+			myPanel.resizeGraph(new Rectangle(width - (JFLAPConstants.STATE_RADIUS + 5), height - PADDING));
 	}
 
 	public AutomatonEditorPanel<T, S> getEditorPanel() {

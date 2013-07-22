@@ -211,7 +211,8 @@ public class ConfigurationController extends JToolBar {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		for (ConfigurationChain chain : mySimulator.getChains()) {
+		ConfigurationChain[] chains = mySimulator.getChains().toArray(new ConfigurationChain[0]);
+		for (ConfigurationChain chain : chains) {
 			Configuration config = chain.getCurrentConfiguration();
 
 			if (configs.contains(chain.getCurrentConfiguration())) {

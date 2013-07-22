@@ -30,9 +30,14 @@ public class ConfigurationFactory {
 		PDAConfiguration.class};
 
 	private static final int MAX_TAPE_SIZE = 5;
+	
+	public static Configuration createInitialConfiguration(Automaton a, SymbolString...input){
+		return createInitialConfiguration(a, a.getStartState(), input);
+	}
+	
 
-	public static Configuration createInitialConfiguration(Automaton a, SymbolString ... input) {
-		State s = a.getStartState();
+	public static Configuration createInitialConfiguration(Automaton a, State s, SymbolString ... input) {
+		
 		if (a instanceof FiniteStateAcceptor){
 			return new FSAConfiguration((FiniteStateAcceptor) a,s, 0, input[0]);
 		}

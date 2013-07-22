@@ -48,7 +48,6 @@ public class TransducerConfigurationIcon<T extends Transducer<S>, S extends Outp
         // Draw the torn tape with the rest of the input.
         SymbolString symbols = config.getPrimaryString();
 		int primary = config.getPrimaryPosition();
-		int end = primary + symbols.get(primary).length();
 		
         Torn.paintSymbolString((Graphics2D)g, symbols,
                  RIGHT_STATE.x+5.0f,

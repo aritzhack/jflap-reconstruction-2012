@@ -24,6 +24,8 @@ import java.util.TreeSet;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.AutomatonException;
 import model.automata.StartState;
@@ -544,7 +546,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		}
 		myGraph.layout();
-		resizeGraph();
+		resizeGraph(getVisibleRect());
 
 		List<StateMoveEvent> move = new ArrayList<StateMoveEvent>();
 
@@ -571,9 +573,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			getKeeper().registerChange(comp);
 	}
 
-	public void resizeGraph() {
+	public void resizeGraph(Rectangle visible) {
 		updateBounds(getGraphics());
-		Rectangle visible = getVisibleRect();
 		Rectangle b = new Rectangle(getPreferredSize());
 
 		if (!visible.contains(b)) {

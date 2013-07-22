@@ -45,6 +45,7 @@ public abstract class EditingTool<T extends Automaton<S>, S extends Transition<S
 			myPanel.removeMouseListener(this);
 			myPanel.removeMouseMotionListener(this);
 		}
+		myPanel.requestFocus();
 		myPanel.clearSelection();
 	}
 }

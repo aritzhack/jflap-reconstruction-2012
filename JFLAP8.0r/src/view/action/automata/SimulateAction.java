@@ -41,14 +41,20 @@ import file.XMLFileChooser;
 
 public class SimulateAction extends AutomatonAction {
 
-	public SimulateAction(AutomataView view) {
-		super("Step...", view);
+	private boolean myClosure;
+
+	public SimulateAction(AutomataView view, boolean closure) {
+		super((closure ? "Step..." : "Step by State..."), view);
 		Automaton auto = getAutomaton();
-		if (auto instanceof FiniteStateAcceptor
-				|| auto instanceof PushdownAutomaton)
+		myClosure = closure;
+		
+		if (closure && (auto instanceof FiniteStateAcceptor
+				|| auto instanceof PushdownAutomaton))
 			putValue(NAME, "Step with Closure...");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R,
-				JFLAPConstants.MAIN_MENU_MASK));
+		int mask = JFLAPConstants.MAIN_MENU_MASK;
+		if(!closure)
+			mask |= KeyEvent.SHIFT_DOWN_MASK;
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R,	mask));
 	}
 
 	@Override
@@ -201,7 +207,7 @@ public class SimulateAction extends AutomatonAction {
 
 	private void handleInput(Object input) {
 		Automaton auto = getAutomaton();
-		SingleInputSimulator simulator = new SingleInputSimulator(auto);
+		SingleInputSimulator simulator = new SingleInputSimulator(auto, myClosure);
 		if (input == null)
 			return;
 

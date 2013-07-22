@@ -213,9 +213,11 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				// Don't do anything if it was a transition,
 				// we will have a TransitionTable open.
 			}
-		} else if (!modified && !(myObject instanceof Transition)) {
+		} else if (!(myObject instanceof Transition)) {
 			panel.requestFocus();
-			panel.clearSelection();
+			
+			if(!modified)
+				panel.clearSelection();
 		}
 
 		resetData();
@@ -240,7 +242,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	@Override
 	public void setActive(boolean active) {
 		super.setActive(active);
-
+		
 		if (!active) {
 			resetData();
 			myObject = null;
