@@ -1,4 +1,5 @@
 package oldnewstuff.view.tree;
+
 /*
  *  JFLAP - Formal Languages and Automata Package
  * 
@@ -21,9 +22,10 @@ import java.util.Map;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import debug.JFLAPDebug;
+
 import model.algorithms.testinput.simulate.Configuration;
-import model.algorithms.testinput.simulate.configurations.tm.MultiTapeTMConfiguration;
-import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
+import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.automata.Automaton;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.grammar.Grammar;
@@ -46,11 +48,11 @@ public class InputTableModel extends GrowableTableModel {
 	 *            the automaton that we're inputting stuff for
 	 */
 	public InputTableModel(Automaton automaton, int add) {
-		super(2 * inputsForMachine(automaton)+1+add);
+		super(2 * inputsForMachine(automaton) + 1 + add);
 	}
-	
+
 	public InputTableModel(Grammar gram, int add) {
-		super(2 * 1 + 1+add);
+		super(2 * 1 + 1 + add);
 	}
 
 	/**
@@ -79,7 +81,6 @@ public class InputTableModel extends GrowableTableModel {
 	protected Object[] initializeRow(int row) {
 		return createEmptyRow();
 	}
-	
 
 	/**
 	 * This returns the name of the columns. In the input table model, each of
@@ -95,27 +96,27 @@ public class InputTableModel extends GrowableTableModel {
 	 *            the number of the column to get the name for
 	 * @return the name of the column
 	 */
-	public String getColumnName(int column) {  
-        int count = getColumnCount();
+	public String getColumnName(int column) {
+		int count = getColumnCount();
 		if (column == count - 1)
 			return "Result";
-        int offset = 0;	
-		if(isMultiple){
-            offset = 1;
-            if(column == 0) return "File";
-        }
-		
-		String word = "";
-		if(column <= (getInputCount()-1+offset) && column >= (offset)){
-			word = "Input";
+		int offset = 0;
+		if (isMultiple) {
+			offset = 1;
+			if (column == 0)
+				return "File";
 		}
-		else if(column > (getInputCount()-1+offset)){
+
+		String word = "";
+		if (column <= (getInputCount() - 1 + offset) && column >= (offset)) {
+			word = "Input";
+		} else if (column > (getInputCount() - 1 + offset)) {
 			word = "Output";
 			column -= getInputCount();
 		}
-		if (getInputCount()==1)
+		if (getInputCount() == 1)
 			return word;
-		return word + " " + (column+1-offset);
+		return word + " " + (column + 1 - offset);
 	}
 
 	/**
@@ -130,12 +131,13 @@ public class InputTableModel extends GrowableTableModel {
 	 */
 	public String[][] getInputs() {
 		String[][] inputs = new String[getRowCount() - 1][getInputCount()];
-		for (int r = 0; r < inputs.length; r++){
-            int begin = 0;
-            if(isMultiple) begin= 1;
-			for (int c=0; c < inputs[r].length; c++)
-				inputs[r][c] = (String) getValueAt(r, c+begin);
-        }
+		for (int r = 0; r < inputs.length; r++) {
+			int begin = 0;
+			if (isMultiple)
+				begin = 1;
+			for (int c = 0; c < inputs[r].length; c++)
+				inputs[r][c] = (String) getValueAt(r, c + begin);
+		}
 		return inputs;
 	}
 
@@ -149,10 +151,12 @@ public class InputTableModel extends GrowableTableModel {
 	 * @param column
 	 *            the column to check for editableness
 	 * @return by default this returns <CODE>true</CODE> if this is any column
-	 *         other than the last column; in that instance this returns <CODE>false</CODE>
+	 *         other than the last column; in that instance this returns
+	 *         <CODE>false</CODE>
 	 */
 	public boolean isCellEditable(int row, int column) {
-        if(isMultiple) return (column < getInputCount() && column > 0); 
+		if (isMultiple)
+			return (column < getInputCount() && column > 0);
 		return column < getInputCount();
 	}
 
@@ -165,7 +169,8 @@ public class InputTableModel extends GrowableTableModel {
 	 *         for an n-tape turing machine, 1 for most anything else
 	 */
 	public static int inputsForMachine(Automaton automaton) {
-		return automaton instanceof MultiTapeTuringMachine ? ((MultiTapeTuringMachine) automaton).getNumTapes(): 1;
+		return automaton instanceof MultiTapeTuringMachine ? ((MultiTapeTuringMachine) automaton)
+				.getNumTapes() : 1;
 	}
 
 	/**
@@ -174,8 +179,9 @@ public class InputTableModel extends GrowableTableModel {
 	 * @return the number of inputs for this table model
 	 */
 	public int getInputCount() {
-        int columnCount = getColumnCount();
-        if(isMultiple) columnCount-=1;
+		int columnCount = getColumnCount();
+		if (isMultiple)
+			columnCount -= 1;
 		return columnCount / 2;
 	}
 
@@ -193,45 +199,48 @@ public class InputTableModel extends GrowableTableModel {
 	 * @return a copy of the model that was last edited with the correct number
 	 *         of inputs for this automaton
 	 */
-	public static InputTableModel getModel(Automaton automaton, boolean multipleFile) {        
+	public static InputTableModel getModel(Automaton automaton,
+			boolean multipleFile) {
 		InputTableModel model = (InputTableModel) INPUTS_TO_MODELS
 				.get(new Integer(inputsForMachine(automaton)));
 		if (model != null && (model.isMultiple == multipleFile)) {
 			model = new InputTableModel(model);
 			// Clear out the results column.
 			for (int i = 0; i < (model.getRowCount() - 1); i++)
-				model.setResult(i, "", null, null, 0);
-		}
-        else {
-            int add = 0;
-            if(multipleFile) add = 1;
+				model.setResult(i, "", null);
+		} else {
+			int add = 0;
+			if (multipleFile)
+				add = 1;
 			model = new InputTableModel(automaton, add);
 		}
 		model.addTableModelListener(LISTENER);
-        if(multipleFile){
-            model.isMultiple = true;
-            
-        }
+		if (multipleFile) {
+			model.isMultiple = true;
+
+		}
 		return model;
 	}
-	public static InputTableModel getModel(Grammar gram, boolean multipleFile) {        
+
+	public static InputTableModel getModel(Grammar gram, boolean multipleFile) {
 		InputTableModel model = (InputTableModel) INPUTS_TO_MODELS
 				.get(new Integer(1));
 		if (model != null) {
 			model = new InputTableModel(model);
 			// Clear out the results column.
 			for (int i = 0; i < (model.getRowCount() - 1); i++)
-				model.setResult(i, "", null, null, 0);
+				model.setResult(i, "", null);
 		} else {
-            int add = 0;
-            if(multipleFile) add = 1;
+			int add = 0;
+			if (multipleFile)
+				add = 1;
 			model = new InputTableModel(gram, add);
 		}
 		model.addTableModelListener(LISTENER);
-        if(multipleFile){
-            model.isMultiple = true;
-            
-        }
+		if (multipleFile) {
+			model.isMultiple = true;
+
+		}
 		return model;
 	}
 
@@ -245,72 +254,19 @@ public class InputTableModel extends GrowableTableModel {
 	 * @param result
 	 *            the result to put in the result column
 	 * @param config
-	 *            the associated configuration, or <CODE>null</CODE> if you
-	 *            wish to not have a configuration associated with a row
+	 *            the associated configuration, or <CODE>null</CODE> if you wish
+	 *            to not have a configuration associated with a row
 	 */
-	public void setResult(int row, String result, Configuration config, ArrayList comparison, int index) {
+	public void setResult(int row, String result, ConfigurationChain config) {
 		int halfway = getInputCount();
-        if(isMultiple) halfway++;
-        int outNum = 1;
-		// Set the output columns.
-        //TODO: fix this turing stuff
-//        if(config instanceof MultiTapeTMConfiguration && config != null){
-//        	MultiTapeTMConfiguration c = (MultiTapeTMConfiguration) config;
-//			Tape[] tapes = c.getTapes();
-//			outNum = tapes.length;
-//			if (config.isAccept()) {				
-//				for (int i = 0; i < tapes.length; i++) {
-//					String put = tapes[i].getOutput();
-//					if(comparison!=null){
-//						String expected = ((String)comparison.get(index+i));
-//						if(!expected.equals("~") && !expected.equals(put)) put = put+"("+expected+")";
-//						if(((String)comparison.get(index+outNum)).toLowerCase().startsWith("r")){
-//							if(!result.endsWith(")")) result = result+"(Reject)";
-//							if(!put.endsWith(")")) put = put + "("+expected+")";
-//						}
-//						
-//					}
-//					setValueAt(put, row, halfway + i);		
-//				}
-//			}
-//			else{				
-//				for (int i = 0; i < halfway; i++){
-//					String put = "";
-//                    if(comparison!=null){
-//    					String expected = ((String)comparison.get(index+i));
-//    					if(!((String)comparison.get(index+outNum)).toLowerCase().startsWith("r")){
-//    						if(!result.endsWith(")")) result = result+"(Accept)";						
-//    						put = put + "("+expected+")";
-//    					}
-//                    }
-//					setValueAt(put, row, halfway + i);				
-//				}
-//			}
-//		} else{
-			for (int i = 0; (halfway+i) < this.columns; i++)
-				setValueAt("", row, halfway + i);
-            boolean accept = false;
-            if(config==null){
-                if(result.equals("Reject")) accept = false;
-            }
-            else accept = config.isAccept();
-            if(comparison!=null && (index+outNum)<comparison.size()){
-                if(((String)comparison.get(index+outNum)).toLowerCase().startsWith("r") && accept){
-                    if(!result.endsWith(")")) result = result+"(Reject)";
-                }
-                else if(!((String)comparison.get(index+outNum)).toLowerCase().startsWith("r") && !accept){
-                    if(!result.endsWith(")")) result = result+"(Accept)";
-                }
-            }
-            else if(comparison !=null && config == null){
-                
-            }
-			
-//		}
-		
-		// Finally, set the result.
+		if (isMultiple)
+			halfway++;
+		int outNum = 1;
+
+		for (int i = 0; (halfway + i) < this.columns; i++)
+			setValueAt("", row, halfway + i);
 		setValueAt(result, row, getColumnCount() - 1);
-		// Store the accepting configuration at this entry.
+
 		if (config == null)
 			rowToAssociatedConfiguration.remove(new Integer(row));
 		else
@@ -334,12 +290,12 @@ public class InputTableModel extends GrowableTableModel {
 	 * @param row
 	 *            the row for which we want the associated accepting
 	 *            configuration
-	 * @return the accepting configuration associated with a row, or <CODE>null</CODE>
-	 *         if there is no associated accepting configuration
+	 * @return the accepting configuration associated with a row, or
+	 *         <CODE>null</CODE> if there is no associated accepting
+	 *         configuration
 	 */
-	public Configuration getAssociatedConfigurationForRow(int row) {
-		return (Configuration) rowToAssociatedConfiguration
-				.get(new Integer(row));
+	public ConfigurationChain getAssociatedConfigurationForRow(int row) {
+		return rowToAssociatedConfiguration.get(new Integer(row));
 	}
 
 	/** The static table model listener for caching inputs. */
@@ -353,8 +309,8 @@ public class InputTableModel extends GrowableTableModel {
 			INPUTS_TO_MODELS.put(inputs, model);
 		}
 	};
-    
-    public boolean isMultiple = false;
+
+	public boolean isMultiple = false;
 
 	/**
 	 * The map of number of inputs (stored as integers) to input table models.
@@ -365,5 +321,5 @@ public class InputTableModel extends GrowableTableModel {
 	 * The map of row to the associated configuration. If this row does not have
 	 * an associated configuration, this map should not hold an entry.
 	 */
-	private final Map rowToAssociatedConfiguration = new HashMap();
+	private final Map<Integer, ConfigurationChain> rowToAssociatedConfiguration = new HashMap<Integer, ConfigurationChain>();
 }

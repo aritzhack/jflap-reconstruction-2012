@@ -14,7 +14,6 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.automata.TransitionSet;
-import model.automata.turing.TuringMachine;
 import model.symbols.SymbolString;
 
 public class SingleInputSimulator extends AutomatonSimulator {
@@ -70,34 +69,49 @@ public class SingleInputSimulator extends AutomatonSimulator {
 	public Collection<? extends ConfigurationChain> stepAndFork(
 			ConfigurationChain chain) {
 		ArrayList<ConfigurationChain> chains = new ArrayList<ConfigurationChain>();
-
 		LinkedList<Configuration> nextConfigs = chain.getCurrentConfiguration()
 				.getNextConfigurations();
 
-		// Configuration next = nextConfigs.pollFirst();
-		// chain.add(next);
-		// chains.add(chain);
 		if (closure) {
+			Configuration next = nextConfigs.pollFirst();
+			ConfigurationChain clone = chain.clone();
+
+			while (next != null && next.getTransitionTo().isLambdaTransition())
+				next = nextConfigs.pollFirst();
+			if (next != null) {
+				chain.add(next);
+				chains.add(chain);
+
+				Set<State> seen = new HashSet<State>();
+				seen.add(next.getState());
+				addClosure(chain, next, chains, seen);
+			}
+
 			for (Configuration c : nextConfigs) {
 				if (!c.getTransitionTo().isLambdaTransition()) {
 					String nextID = chain.getID() + chain.getNumChildren();
+
 					ConfigurationChain newChain = new ConfigurationChain(c,
-							chain.clone(), nextID);
+							clone, nextID);
 					chains.add(newChain);
-					
+					chain.incrementNumChildren();
+
 					Set<State> seen = new HashSet<State>();
 					seen.add(c.getState());
 					addClosure(newChain, c, chains, seen);
-					chain.incrementNumChildren();
 				}
 			}
-		} else
+		} else {
+			Configuration next = nextConfigs.pollFirst();
+			chain.add(next);
+			chains.add(chain);
+
 			for (Configuration c : nextConfigs) {
 				String nextID = chain.getID() + chain.getNumChildren();
 				chains.add(new ConfigurationChain(c, chain.clone(), nextID));
 				chain.incrementNumChildren();
 			}
-
+		}
 		return chains;
 	}
 
@@ -245,34 +259,62 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 	private void addClosure(ConfigurationChain chain, Configuration current,
 			Collection<ConfigurationChain> chains, Set<State> seen) {
-		Automaton auto = getAutomaton();
-		TransitionSet transitions = auto.getTransitions();
-		Set<Transition> to = transitions.getTransitionsFromState(current.getState());
-		
-		int numClosure = 0;
 		LinkedList<Configuration> next = current.getNextConfigurations();
-	
+		int size = next.size();
+		int numLambda = 0;
+		ConfigurationChain clone = chain.clone();
+		boolean allLambda = true;
+
+		//by default, we want non-lambda transitions to continue the current chain
 		for (Configuration config : next) {
-			Transition trans = config.getTransitionTo();
+			if (!config.getTransitionTo().isLambdaTransition())
+				allLambda = false;
+		}
+
+		if (allLambda) {
+			Configuration config = next.pollFirst();
 			
-			if (trans.isLambdaTransition()) {
-				State s = config.getState();
-				
-				if(!trans.isLoop() && !seen.contains(s)){
-					String nextID = chain.getID() + chain.getNumChildren();
-					ConfigurationChain newChain = new ConfigurationChain(config, chain.clone(), nextID);
-					
-					chain.incrementNumChildren();
-					chains.add(newChain);
-					
-					seen.add(s);
-					addClosure(newChain, config, chains, seen);
-					seen.remove(s);
+			while (config != null) {
+				Transition trans = config.getTransitionTo();
+
+				if (trans.isLambdaTransition()) {
+					State s = config.getState();
+
+					if (!trans.isLoop() && !seen.contains(s)) {
+						chain.add(config);
+						seen.add(s);
+						addClosure(chain, config, chains, seen);
+					}
+					numLambda++;
+					break;
 				}
-				numClosure++;
+				config = next.pollFirst();
 			}
 		}
-//		if (numClosure != 0 && numClosure == to.size() && !chain.isHalted())
-//			chains.remove(chain);
+
+		for (Configuration nextConfig : next) {
+			Transition trans = nextConfig.getTransitionTo();
+
+			if (trans.isLambdaTransition()) {
+				State s = nextConfig.getState();
+
+				if (!trans.isLoop() && !seen.contains(s)) {
+					String nextID = chain.getID() + chain.getNumChildren();
+					ConfigurationChain newChain = new ConfigurationChain(
+							nextConfig, clone, nextID);
+
+					chain.incrementNumChildren();
+					chains.add(newChain);
+
+					seen.add(s);
+					addClosure(newChain, nextConfig, chains, seen);
+				}
+				numLambda++;
+			}
+		}
+		seen.remove(current.getState());
+		
+		if (numLambda != 0 && numLambda == size && !chain.isHalted())
+			chains.remove(chain);
 	}
 }

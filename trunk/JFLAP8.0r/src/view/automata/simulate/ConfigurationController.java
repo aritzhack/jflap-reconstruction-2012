@@ -1,33 +1,20 @@
 package view.automata.simulate;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-
-import debug.JFLAPDebug;
-
-import view.automata.AutomatonEditorPanel;
 
 import model.algorithms.testinput.simulate.Configuration;
 import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
-import model.algorithms.testinput.simulate.configurations.tm.BlockTMConfiguration;
-import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.Automaton;
-import model.automata.turing.MultiTapeTuringMachine;
-import model.automata.turing.TuringMachine;
-import model.automata.turing.buildingblock.Block;
+import model.automata.turing.buildingblock.BlockTuringMachine;
+import view.automata.AutomatonEditorPanel;
 
 /*
  *  JFLAP - Formal Languages and Automata Package
@@ -370,7 +357,7 @@ public class ConfigurationController extends JToolBar {
 	 * @author Jinghui Lim
 	 */
 	private boolean isTuringMachine() {
-		return getAutomaton() instanceof MultiTapeTuringMachine;
+		return getAutomaton() instanceof BlockTuringMachine;
 	}
 
 	private Automaton getAutomaton() {
