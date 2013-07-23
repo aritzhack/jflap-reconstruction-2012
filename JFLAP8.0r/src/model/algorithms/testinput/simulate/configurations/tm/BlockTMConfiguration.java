@@ -47,7 +47,6 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	protected boolean canMoveAlongTransition(BlockTransition trans) {
 		Symbol read = this.getReadForTape(0);
 		Symbol[] input = trans.getInput();
-	
 
 		if (input[0].getString().equals(JFLAPConstants.NOT) &&
 				read.equals(input[1]))
@@ -56,7 +55,6 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 				!input[0].getString().equals(JFLAPConstants.TILDE) &&
 				!read.equals(input[0]))
 			return false;
-		
 		
 		TMConfiguration config = applyBlock(trans.getToState());
 
@@ -81,7 +79,7 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 		
 		
 		auto.beginSimulation(init);
-		List<ConfigurationChain> chainList = auto.getNextAccept();
+		List<ConfigurationChain> chainList = auto.getFirstAccept();
 		if (chainList.isEmpty()) return null;
 		
 		ConfigurationChain chain = chainList.get(0);

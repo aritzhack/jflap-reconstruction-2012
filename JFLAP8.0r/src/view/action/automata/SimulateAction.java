@@ -160,7 +160,7 @@ public class SimulateAction extends AutomatonAction {
 		}
 	}
 
-	private boolean actionPermissible() {
+	public boolean actionPermissible() {
 		Automaton auto = getAutomaton();
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
 
@@ -225,7 +225,7 @@ public class SimulateAction extends AutomatonAction {
 		}
 	}
 
-	private void handleInteraction(SingleInputSimulator simulator, SymbolString... symbols) {
+	public void handleInteraction(SingleInputSimulator simulator, SymbolString... symbols) {
 		final Color current = JFLAPPreferences.getSelectedStateColor();
 		
 		SimulatorPanel simpane = new SimulatorPanel(getEditorPanel(),

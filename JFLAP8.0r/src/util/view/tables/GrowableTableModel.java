@@ -94,7 +94,7 @@ public abstract class GrowableTableModel extends AbstractTableModel implements
 	 */
 	public void copy(GrowableTableModel model) {
 		columns = model.getColumnCount();
-		getData().clear();
+		data = new ArrayList<Object[]>();
 		Iterator it = model.getData().iterator();
 		while (it.hasNext()) {
 			Object[] oldRow = (Object[]) it.next();
