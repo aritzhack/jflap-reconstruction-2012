@@ -22,14 +22,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import debug.JFLAPDebug;
-
-import universe.preferences.PreferenceChangeListener;
+import model.automata.turing.TuringMachine;
+import model.graph.TransitionGraph;
 import universe.preferences.JFLAPPreferences.PREF_CHANGE;
+import universe.preferences.PreferenceChangeListener;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
+import view.automata.AutomatonEditorPanel;
+import view.automata.BlockEditorPanel;
 import view.automata.views.AutomataView;
+import view.automata.views.BlockTMView;
+import view.automata.views.TuringMachineView;
 import view.formaldef.FormalDefinitionView;
 import view.grammar.parsing.cyk.CYKParseView;
 import view.lsystem.LSystemRenderView;
@@ -279,6 +283,15 @@ public class JFLAPEnvironment extends JFrame implements
 			}
 		}
 
+		if (myPrimaryView instanceof BlockTMView && i != 0){
+			if(c instanceof TuringMachineView){
+				TuringMachineView view = (TuringMachineView) c;
+				BlockEditorPanel panel = ((BlockTMView) myPrimaryView).getCentralPanel();
+				TransitionGraph graph = ((AutomatonEditorPanel) view.getCentralPanel()).getGraph();
+				
+				panel.setGraph((TuringMachine) view.getDefinition(), graph);
+			}
+		}
 		if (c instanceof EditingPanel)
 			amDirty = true;
 		myTabbedPane.remove(i);

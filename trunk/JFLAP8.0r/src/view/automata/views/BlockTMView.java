@@ -1,5 +1,7 @@
 package view.automata.views;
 
+import java.awt.Component;
+
 import javax.swing.JComponent;
 
 import view.automata.AutomatonEditorPanel;
@@ -14,6 +16,11 @@ public class BlockTMView extends TuringMachineView<BlockTuringMachine, BlockTran
 
 	public BlockTMView(BlockTuringMachine model) {
 		super(model);
+	}
+	
+	@Override
+	public BlockEditorPanel getCentralPanel() {
+		return (BlockEditorPanel) super.getCentralPanel();
 	}
 	
 	@Override

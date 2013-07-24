@@ -26,6 +26,8 @@ import model.grammar.Grammar;
 import model.grammar.StartVariable;
 import model.grammar.TerminalAlphabet;
 import model.grammar.VariableAlphabet;
+import model.graph.BlockTMGraph;
+import model.graph.TransitionGraph;
 import model.lsystem.LSystem;
 import model.pumping.cf.AiBjCk;
 import model.pumping.cf.AkBnCnDj;
@@ -89,6 +91,8 @@ import file.xml.formaldef.lsystem.ParameterValueTransducer;
 import file.xml.formaldef.regex.RegExTransducer;
 import file.xml.graph.AutomatonEditorData;
 import file.xml.graph.AutomatonEditorTransducer;
+import file.xml.graph.BlockTMGraphTransducer;
+import file.xml.graph.TransitionGraphTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;
 
@@ -173,6 +177,8 @@ public class TransducerFactory{
 		addMapping(Palindrome.class, new RegPumpingLemmaTransducer());
 		
 		addMapping(AutomatonEditorData.class, new AutomatonEditorTransducer());
+		addMapping(BlockTMGraph.class, new BlockTMGraphTransducer());
+		addMapping(TransitionGraph.class, new TransitionGraphTransducer());
 	}
 
 	public static void addMapping(Class c, XMLTransducer ... struct) {

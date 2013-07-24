@@ -35,7 +35,8 @@ public abstract class Automaton<T extends Transition<T>> extends FormalDefinitio
 	}
 
 	public State getStartState() {
-		return getComponentOfClass(StartState.class).getState();
+		StartState start = getComponentOfClass(StartState.class);
+		return start == null ? null : start.getState();
 	}
 
 	public void setStartState(State s){

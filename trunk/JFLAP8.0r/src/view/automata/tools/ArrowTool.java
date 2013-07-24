@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import debug.JFLAPDebug;
+
 import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;
@@ -60,6 +62,8 @@ import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateMoveEvent;
 import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
+import view.environment.TabChangeListener;
+import view.environment.TabChangedEvent;
 
 /**
  * Tool for selection and editing of Automaton graphs.
@@ -711,18 +715,24 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+					BlockEditorPanel panel = (BlockEditorPanel) getPanel();
 					Block b = (Block) myObject;
+					
 					TuringMachine m = b.getTuringMachine();
 					AutomataView view = (AutomataView) ViewFactory
 							.createView(m);
+					AutomatonEditorPanel central = (AutomatonEditorPanel) view.getCentralPanel();
+					central.setGraph(panel.getGraph(b));
+					
 					Dimension size = env.getSize();
 
 					env.addSelectedComponent(view);
 					env.setSize(size);
 					env.revalidate();
 					env.update();
-					((AutomatonEditorPanel) view.getCentralPanel())
-							.layoutGraph();
+//					((AutomatonEditorPanel) view.getCentralPanel())
+//							.layoutGraph();
+
 				}
 			});
 			copyBlock = new JMenuItem("Duplicate Block");

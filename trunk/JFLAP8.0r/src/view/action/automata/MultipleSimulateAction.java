@@ -27,40 +27,39 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableColumnModel;
 
-import debug.JFLAPDebug;
-
-import model.algorithms.testinput.simulate.AutoSimulator;
 import model.algorithms.testinput.simulate.Configuration;
 import model.algorithms.testinput.simulate.ConfigurationChain;
+import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.algorithms.testinput.simulate.configurations.InputOutputConfiguration;
 import model.automata.Automaton;
 import model.automata.transducers.Transducer;
 import model.automata.turing.MultiTapeTuringMachine;
-import model.grammar.Grammar;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import oldnewstuff.view.tree.InputTableModel;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import util.view.magnify.MagnifiablePanel;
-import util.view.magnify.MagnifiableToolbar;
+import util.view.magnify.MagnifiableScrollPane;
+import util.view.magnify.MagnifiableTable;
 import util.view.magnify.SizeSlider;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.AutomatonEditorPanel;
 import view.automata.simulate.TraceWindow;
 import view.automata.views.AutomataView;
+import view.environment.JFLAPEnvironment;
 import view.grammar.productions.LambdaRemovingEditor;
 import file.XMLFileChooser;
 
@@ -72,7 +71,7 @@ import file.XMLFileChooser;
  * @modified by Kyung Min (Jason) Lee
  */
 
-public class MultipleSimulateAction extends NoInteractionSimulateAction {
+public class MultipleSimulateAction extends FastSimulateAction {
 
 	protected JTable table;
 	private static String[] RESULT = { "Accept", "Reject", "Cancelled" };
@@ -114,18 +113,22 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 		return "Multiple Run";
 	}
 
-	private JTable initializeTable() {
+	public JTable initializeTable() {
 		InputTableModel model = InputTableModel.getModel(getAutomaton(), false);
 
-		JTable table = new JTable(model);
-		table.setCellEditor(new LambdaRemovingEditor());
-		
+		MagnifiableTable table = new MagnifiableTable(model);
 		TableColumnModel tcmodel = table.getColumnModel();
 		for (int i = model.getInputCount(); i > 0; i--) {
 			tcmodel.removeColumn(tcmodel.getColumn(model.getInputCount()));
 		}
+
+		LambdaRemovingEditor lambda = new LambdaRemovingEditor();
+		for (int i = 0; i < table.getColumnCount(); i++)
+			table.getColumnModel().getColumn(i).setCellEditor(lambda);
+
 		table.setShowGrid(true);
 		table.setGridColor(Color.lightGray);
+		//TODO: don't allow for dragging of columns
 		return table;
 	}
 
@@ -133,12 +136,18 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 		Automaton auto = getAutomaton();
 
 		table = initializeTable();
-
-		MagnifiablePanel panel = new MagnifiablePanel(new BorderLayout());
-		MagnifiableToolbar bar = new MagnifiableToolbar();
-		panel.add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		JToolBar bar = new JToolBar();
+		MagnifiableScrollPane tableScroller = new MagnifiableScrollPane(table);
+		SizeSlider slider = new SizeSlider(tableScroller);
+		
+		
+		panel.add(tableScroller, BorderLayout.CENTER);
 		panel.add(bar, BorderLayout.SOUTH);
-		panel.add(new SizeSlider(panel), BorderLayout.NORTH);
+		panel.add(slider, BorderLayout.NORTH);
+		
+		slider.distributeMagnification();
 
 		// Load inputs
 		bar.add(new AbstractAction("Load Inputs") {
@@ -155,35 +164,32 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 			}
 		});
 
-		if (!((InputTableModel) table.getModel()).isMultiple) {
-			// Add the clear button.
-			bar.add(new AbstractAction("Clear") {
-				public void actionPerformed(ActionEvent e) {
-					clear();
-				}
-			});
-			String empty = JFLAPPreferences.getEmptyString();
+		// Add the clear button.
+		bar.add(new AbstractAction("Clear") {
+			public void actionPerformed(ActionEvent e) {
+				clear();
+			}
+		});
+		String empty = JFLAPPreferences.getEmptyString();
 
-			bar.add(new AbstractAction("Enter " + empty) {
-				public void actionPerformed(ActionEvent e) {
-					int row = table.getSelectedRow();
-					if (row == -1)
-						return;
-					for (int column = 0; column < table.getColumnCount() - 1; column++)
-						table.getModel().setValueAt("", row, column);
-				}
-			});
-		}
-		
+		bar.add(new AbstractAction("Enter " + empty) {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if (row == -1)
+					return;
+				for (int column = 0; column < table.getColumnCount() - 1; column++)
+					table.getModel().setValueAt("", row, column);
+			}
+		});
+
 		bar.add(new AbstractAction("View Trace") {
 			public void actionPerformed(ActionEvent e) {
 				showTrace(e);
 			}
 
 		});
-
 		MultiplePane mp = new MultiplePane(getEditorPanel(), panel);
-		
+
 		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(mp);
 	}
 
@@ -229,38 +235,69 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 		Automaton auto = getAutomaton();
 
 		String[][] inputs = model.getInputs();
-		int uniqueInputs = inputs.length;
 		int tapes = 1;
 
 		if (auto instanceof MultiTapeTuringMachine)
 			tapes = ((MultiTapeTuringMachine) auto).getNumTapes();
 
-		AutoSimulator sim = new AutoSimulator(auto, 0);
+		SingleInputSimulator sim = new SingleInputSimulator(auto, false);
 
 		for (int i = 0; i < inputs.length; i++) {
 			SymbolString[] symbols = new SymbolString[tapes];
 
-			for (int j = 0; j < tapes; j++)
-				symbols[j] = Symbolizers.symbolize(inputs[i][j], auto);
+			for (int j = 0; j < tapes; j++) {
+				String in = inputs[i][j];
+				if (in == null || in.equals(JFLAPPreferences.getEmptyString()))
+					in = "";
+				symbols[j] = Symbolizers.symbolize(in, auto);
+			}
 			sim.beginSimulation(symbols);
-			List<ConfigurationChain> chains = sim.getFirstAccept();
 
-			if (!chains.isEmpty()) {
-				ConfigurationChain chain = chains.get(0);
-				Configuration config = chain.getCurrentConfiguration();
+			JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
+			int numberGenerated = 0;
+			int warningGenerated = WARNING_STEP;
+			int result = 1;
+			ConfigurationChain returnChain = null;
+
+			Set<ConfigurationChain> configs;
+
+			loop: while (!(configs = sim.getChains()).isEmpty()) {
+				numberGenerated += configs.size();
+				// Make sure we should continue.
+				if (numberGenerated >= warningGenerated) {
+					if (!confirmContinue(numberGenerated, env)) {
+						result = 2;
+						break loop;
+					}
+					while (numberGenerated >= warningGenerated)
+						warningGenerated *= 2;
+				}
+
+				for (ConfigurationChain chain : configs) {
+					if (chain.isAccept()) {
+						result = 0;
+						returnChain = chain;
+						break loop;
+					}
+					if (chain.isReject() && returnChain == null)
+						returnChain = chain;
+				}
+				sim.step();
+			}
+			if (result == 0) {
+				Configuration config = returnChain.getCurrentConfiguration();
 
 				if (auto instanceof Transducer) {
 					InputOutputConfiguration output = (InputOutputConfiguration) config;
-					model.setResult(i, output.getOutput().toNondelimitedString(), chain);
+					model.setResult(i, output.getOutput().toString(),
+							returnChain);
 				} else
-					model.setResult(i, RESULT[0], chain);
-			} else{
-				chains = sim.getFirstHalt();
-				if(!chains.isEmpty())
-					model.setResult(i, RESULT[1], chains.get(0));
-				else
-					model.setResult(i, RESULT[2], null);
-			}
+					model.setResult(i, RESULT[result], returnChain);
+			} else if (result == 2)
+				model.setResult(i, RESULT[result], null);
+
+			else
+				model.setResult(i, RESULT[result], returnChain);
 
 		}
 	}
@@ -275,12 +312,12 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 		InputTableModel model = (InputTableModel) table.getModel();
 		model.clear();
 	}
-	
+
 	private void showTrace(ActionEvent e) {
 		int[] rows = table.getSelectedRows();
 		InputTableModel tm = (InputTableModel) table.getModel();
 		List nonassociatedRows = new ArrayList();
-		
+
 		for (int i = 0; i < rows.length; i++) {
 			if (rows[i] == tm.getRowCount() - 1)
 				continue;
@@ -315,20 +352,32 @@ public class MultipleSimulateAction extends NoInteractionSimulateAction {
 			if (nonassociatedRows.size() == 1)
 				sb.append("es");
 			sb.append(" not have end configurations.");
-			JOptionPane.showMessageDialog(
-					(Component) e.getSource(), sb.toString(),
-					"Bad Rows Selected", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog((Component) e.getSource(),
+					sb.toString(), "Bad Rows Selected",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	private class MultiplePane extends AutomatonDisplayPanel{
+
+	private class MultiplePane extends AutomatonDisplayPanel {
+		private JSplitPane split;
+
 		public MultiplePane(AutomatonEditorPanel editor, JPanel info) {
 			super(editor, "Multiple Run");
 			update();
-			Dimension size = getPreferredSize(), infoSize = info.getPreferredSize();
-			add(info, BorderLayout.EAST);
-			setPreferredSize(new Dimension(size.width + infoSize.width, size.height));
-			repaint();
+
+			Dimension size = getPreferredSize(), infoSize = info
+					.getMinimumSize();
+			split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+					getEditorPanel(), info);
+			setPreferredSize(new Dimension(size.width + infoSize.width,
+					size.height));
+			double ratio = ((double) (size.width))
+					/ (size.width + infoSize.width);
+
+			split.setResizeWeight(ratio);
+
+			add(split, BorderLayout.CENTER);
 		}
 	}
+
 }

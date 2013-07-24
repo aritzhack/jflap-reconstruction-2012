@@ -5,6 +5,8 @@ import java.awt.Font;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
+import universe.preferences.JFLAPPreferences;
+
 
 public class MagnifiableButton extends JButton implements Magnifiable {
 
@@ -12,6 +14,10 @@ public class MagnifiableButton extends JButton implements Magnifiable {
 
 	public MagnifiableButton(int defaultSize){
 		this("", defaultSize);
+	}
+	
+	public MagnifiableButton(AbstractAction action) {
+		this(action, JFLAPPreferences.getDefaultTextSize());
 	}
 	
 	public MagnifiableButton(AbstractAction action, int defaultSize){

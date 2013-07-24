@@ -17,15 +17,11 @@
 package view.action.automata;
 
 import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-import debug.JFLAPDebug;
-
-import model.algorithms.testinput.simulate.AutoSimulator;
 import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.symbols.SymbolString;
@@ -33,6 +29,7 @@ import universe.JFLAPUniverse;
 import view.automata.simulate.TraceWindow;
 import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
+import debug.JFLAPDebug;
 
 /**
  * This is the action used for the simulation of input on an automaton with no
@@ -42,7 +39,7 @@ import view.environment.JFLAPEnvironment;
  * @author Thomas Finley
  */
 
-public class NoInteractionSimulateAction extends SimulateAction {
+public class FastSimulateAction extends SimulateAction {
 
 	/** The steps in warnings. */
 	protected static final int WARNING_STEP = 500;
@@ -55,7 +52,7 @@ public class NoInteractionSimulateAction extends SimulateAction {
 	 * @param environment
 	 *            the environment object that we shall add our simulator pane to
 	 */
-	public NoInteractionSimulateAction(AutomataView view) {
+	public FastSimulateAction(AutomataView view) {
 		super(view, false);
 		putValue(NAME, "Fast Run...");
 		putValue(ACCELERATOR_KEY, null);
@@ -103,19 +100,15 @@ public class NoInteractionSimulateAction extends SimulateAction {
 	@Override
 	public void handleInteraction(SingleInputSimulator simulator,
 			SymbolString... symbols) {
-		AutoSimulator sim = new AutoSimulator(simulator.getAutomaton(),
-				simulator.getSpecialAcceptCase());
-		sim.beginSimulation(symbols);
-
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
 		int numberGenerated = 0;
 		int warningGenerated = WARNING_STEP;
 		int numberAccepted = 0;
 
-		List<ConfigurationChain> configs;
+		simulator.beginSimulation(symbols);
+		Set<ConfigurationChain> configs;
 
-		while (!(configs = sim.getNextAccept()).isEmpty()) {
-			JFLAPDebug.print(configs);
+		while (!(configs = simulator.getChains()).isEmpty()) {
 			numberGenerated += configs.size();
 			// Make sure we should continue.
 			if (numberGenerated >= warningGenerated) {
@@ -126,10 +119,13 @@ public class NoInteractionSimulateAction extends SimulateAction {
 			}
 
 			for (ConfigurationChain chain : configs) {
-				numberAccepted++;
-				if (!reportConfiguration(chain, env))
-					return;
+				if (chain.isAccept()) {
+					numberAccepted++;
+					if (!reportConfiguration(chain, env))
+						return;
+				}
 			}
+			simulator.step();
 		}
 		if (numberAccepted == 0) {
 			JOptionPane.showMessageDialog(env, "The input was rejected.");

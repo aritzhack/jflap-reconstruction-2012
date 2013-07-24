@@ -1,6 +1,9 @@
 package model.automata.turing;
 
+import java.util.Arrays;
 import java.util.Collection;
+
+import debug.JFLAPDebug;
 
 import model.automata.InputAlphabet;
 import model.automata.StartState;
@@ -13,7 +16,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.formaldef.rules.applied.TuringMachineBlankRule;
 import model.symbols.Symbol;
 
-public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T> {
+public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>{
 
 
 	private BlankSymbol myBlank;
@@ -31,7 +34,8 @@ public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>
 
 
 	public Symbol getBlankSymbol() {
-		return getComponentOfClass(BlankSymbol.class).getSymbol();
+		BlankSymbol blank = getComponentOfClass(BlankSymbol.class);
+		return blank == null ? null : blank.getSymbol();
 	}
 
 
@@ -62,6 +66,23 @@ public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>
 		super.componentChanged(event);
 	}
 
-
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(new Object[]{getStates(), getTapeAlphabet(), getBlankSymbol(), getInputAlphabet(), getTransitions(), getStartState(), getFinalStateSet()});
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TuringMachine))
+			return false;
+		TuringMachine other = (TuringMachine) obj;
+		return this.getStates().equals(other.getStates())
+				&& this.getTapeAlphabet().equals(other.getTapeAlphabet())
+				&& this.getBlankSymbol().equals(other.getBlankSymbol())
+				&& this.getInputAlphabet().equals(other.getInputAlphabet())
+				&& this.getTransitions().equals(other.getTransitions())
+				&& this.getStartState().equals(other.getStartState())
+				&& this.getFinalStateSet().equals(other.getFinalStateSet());
+	}
 
 }

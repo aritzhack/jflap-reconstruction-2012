@@ -74,9 +74,9 @@ public class BlockTMConfiguration extends TMConfiguration<BlockTuringMachine, Bl
 	 */
 	private TMConfiguration applyBlock(Block toState) {
 		TMConfiguration init = createInitialConfig(toState);
+		
 		AutoSimulator auto = new AutoSimulator(toState.getTuringMachine(),
 				getSpecialCase());
-		
 		
 		auto.beginSimulation(init);
 		List<ConfigurationChain> chainList = auto.getFirstAccept();

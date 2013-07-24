@@ -14,12 +14,9 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-
-import debug.JFLAPDebug;
 
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
@@ -29,6 +26,7 @@ import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.automata.turing.buildingblock.library.CopyBlock;
+import model.automata.turing.buildingblock.library.EmptyBlockTMUpdatingBlock;
 import model.automata.turing.buildingblock.library.HaltBlock;
 import model.automata.turing.buildingblock.library.MoveBlock;
 import model.automata.turing.buildingblock.library.MoveUntilBlock;
@@ -37,6 +35,7 @@ import model.automata.turing.buildingblock.library.ShiftBlock;
 import model.automata.turing.buildingblock.library.StartBlock;
 import model.automata.turing.buildingblock.library.StartHaltBlock;
 import model.automata.turing.buildingblock.library.WriteBlock;
+import model.graph.TransitionGraph;
 import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
@@ -46,6 +45,7 @@ import view.environment.JFLAPEnvironment;
 import file.FileJFLAPException;
 import file.XMLFileChooser;
 import file.xml.XMLCodec;
+import file.xml.graph.AutomatonEditorData;
 
 public class BlockStateTool extends
 		StateTool<BlockTuringMachine, BlockTransition> {
@@ -75,7 +75,7 @@ public class BlockStateTool extends
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			String[] options = new String[] { "Import from file",
 					"Use library building block", "Create new block" };
-			
+
 			Object n = JFLAPUniverse.getActiveEnvironment().showConfirmDialog(
 					"Choose Block creation type:", options, options[0]);
 			if (options[0].equals(n))
@@ -84,7 +84,7 @@ public class BlockStateTool extends
 				promptBuiltinBlock();
 			else if (options[2].equals(n))
 				createNewBlock();
-			
+
 			Block b = (Block) getState();
 			if (b != null) {
 				((BlockEditorPanel) getPanel()).addBlock(b, e.getPoint());
@@ -105,6 +105,11 @@ public class BlockStateTool extends
 		XMLCodec codec = new XMLCodec();
 		Object o = codec.decode(f);
 
+		if (o instanceof AutomatonEditorData) {
+			TransitionGraph graph = ((AutomatonEditorData) o).getGraph();
+			o = graph.getAutomaton();
+		}
+
 		if (!(o instanceof TuringMachine))
 			throw new FileJFLAPException(
 					"Only Turing Machine files can be imported as building blocks!");
@@ -112,8 +117,11 @@ public class BlockStateTool extends
 		String name = f.getName();
 		int last = name.lastIndexOf('.');
 		name = name.substring(0, last);
-		
-		setState(new Block(machine, name, getNextID()));
+
+		Block block = machine instanceof BlockTuringMachine ? new EmptyBlockTMUpdatingBlock(
+				(BlockTuringMachine) machine, getTape(), name, getNextID(),
+				null) : new Block(machine, name, getNextID());
+		setState(block);
 	}
 
 	private void promptBuiltinBlock() {
@@ -128,26 +136,26 @@ public class BlockStateTool extends
 
 		panel.add(createTopButtonPanel());
 		panel.add(createBottomButtonPanel());
-		
+
 		JPanel input = new JPanel(new BorderLayout());
 		JPanel left = new JPanel();
 		JLabel symbol = new JLabel("Symbol: ");
 		symArea = new JTextField(JFLAPConstants.BLANK, 10);
-		
+
 		left.add(symbol);
 		left.add(symArea);
-		
+
 		left.add(new JButton(new AddBlankSymbolAction()));
-		
+
 		JPanel right = new JPanel();
 		JLabel dir = new JLabel("Direction: ");
-		moves = new JComboBox<String>(new String[]{"R", "L"});
+		moves = new JComboBox<String>(new String[] { "R", "L" });
 		right.add(dir);
 		right.add(moves);
-		
+
 		input.add(left, BorderLayout.WEST);
 		input.add(right, BorderLayout.EAST);
-		
+
 		panel.add(input);
 
 		JFLAPEnvironment env = JFLAPUniverse.getActiveEnvironment();
@@ -172,31 +180,31 @@ public class BlockStateTool extends
 
 	private JPanel createTopButtonPanel() {
 		JPanel middlePanel = new JPanel();
-		JButton start = new JButton(new StartBlockAction()), 
-				move = new JButton(new MoveBlockAction()), 
-				mUntil = new JButton(new MoveUntilAction()), 
-				shift = new JButton(new ShiftBlockAction());
-		
+		JButton start = new JButton(new StartBlockAction()), move = new JButton(
+				new MoveBlockAction()), mUntil = new JButton(
+				new MoveUntilAction()), shift = new JButton(
+				new ShiftBlockAction());
+
 		start.setToolTipText("Initial State.");
 		move.setToolTipText("Move head one space on tape in specified direction.");
 		mUntil.setToolTipText("Move specified direction until symbol is found.");
 		shift.setToolTipText("Delete symbol under head and shift tape one space in specified direction.");
-		
+
 		middlePanel.add(start);
 		middlePanel.add(move);
 		middlePanel.add(mUntil);
 		middlePanel.add(shift);
-		
+
 		return middlePanel;
 	}
-	
+
 	private JPanel createBottomButtonPanel() {
 		JPanel bottomPanel = new JPanel();
-		JButton halt = new JButton(new HaltBlockAction()), 
-				write = new JButton(new WriteBlockAction()), 
-				mUNot = new JButton(new MoveUntilNotAction()), 
-				copy = new JButton(new CopyBlockAction());
-		
+		JButton halt = new JButton(new HaltBlockAction()), write = new JButton(
+				new WriteBlockAction()), mUNot = new JButton(
+				new MoveUntilNotAction()), copy = new JButton(
+				new CopyBlockAction());
+
 		halt.setToolTipText("Final State.");
 		write.setToolTipText("Write specified symbol under head.");
 		mUNot.setToolTipText("Move specified direction until a symbol different from specified symbol is found.");
@@ -208,27 +216,27 @@ public class BlockStateTool extends
 		bottomPanel.add(copy);
 		return bottomPanel;
 	}
-	
+
 	private int getNextID() {
 		BlockSet blocks = getDef().getStates();
 		return blocks.getNextUnusedID();
 	}
-	
+
 	private TuringMachineMove getMove() {
 		return TuringMachineMove.getMove((String) moves.getSelectedItem());
 	}
-	
+
 	private TapeAlphabet getTape() {
 		return getDef().getTapeAlphabet();
 	}
-	
+
 	private Symbol getSymbol() {
 		return new Symbol(symArea.getText());
 	}
-	
-	private class DialogDisposeAction extends AbstractAction{
-		public DialogDisposeAction(String name){
-			super(name +" Block");
+
+	private class DialogDisposeAction extends AbstractAction {
+		public DialogDisposeAction(String name) {
+			super(name + " Block");
 		}
 
 		@Override
@@ -237,9 +245,9 @@ public class BlockStateTool extends
 			dial = null;
 		}
 	}
-	
-	private class AddBlankSymbolAction extends AbstractAction{
-		
+
+	private class AddBlankSymbolAction extends AbstractAction {
+
 		public AddBlankSymbolAction() {
 			super("Set to Blank Symbol");
 		}
@@ -248,51 +256,53 @@ public class BlockStateTool extends
 		public void actionPerformed(ActionEvent arg0) {
 			symArea.setText(JFLAPConstants.BLANK);
 		}
-		
+
 	}
 
-	private class StartBlockAction extends DialogDisposeAction{
+	private class StartBlockAction extends DialogDisposeAction {
 
-		public StartBlockAction(){
+		public StartBlockAction() {
 			super("Start");
 		}
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			setState(new StartBlock(getNextID()));
 			super.actionPerformed(arg0);
 		}
-		
+
 	}
-	
-	private class MoveBlockAction extends DialogDisposeAction{
+
+	private class MoveBlockAction extends DialogDisposeAction {
 		public MoveBlockAction() {
 			super("Move");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setState(new MoveBlock(getMove(), getTape(), getNextID()));
 			super.actionPerformed(e);
 		}
 	}
-	
-	private class MoveUntilAction extends DialogDisposeAction{
+
+	private class MoveUntilAction extends DialogDisposeAction {
 		public MoveUntilAction() {
 			super("Move Until");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			setState(new MoveUntilBlock(getMove(), getSymbol(), getTape(), getNextID()));
+			setState(new MoveUntilBlock(getMove(), getSymbol(), getTape(),
+					getNextID()));
 			super.actionPerformed(e);
 		}
 	}
-	
-	private class ShiftBlockAction extends DialogDisposeAction{
+
+	private class ShiftBlockAction extends DialogDisposeAction {
 		public ShiftBlockAction() {
 			super("Shift");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setState(new ShiftBlock(getMove(), getTape(), getNextID()));
@@ -300,47 +310,48 @@ public class BlockStateTool extends
 		}
 	}
 
-	private class HaltBlockAction extends DialogDisposeAction{
+	private class HaltBlockAction extends DialogDisposeAction {
 		public HaltBlockAction() {
 			super("Final");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setState(new HaltBlock(getNextID()));
 			super.actionPerformed(e);
 		}
 	}
-	
-	private class WriteBlockAction extends DialogDisposeAction{
+
+	private class WriteBlockAction extends DialogDisposeAction {
 		public WriteBlockAction() {
 			super("Write");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setState(new WriteBlock(getSymbol(), getTape(), getNextID()));
 			super.actionPerformed(e);
 		}
 	}
-	
-	private class MoveUntilNotAction extends DialogDisposeAction{
+
+	private class MoveUntilNotAction extends DialogDisposeAction {
 		public MoveUntilNotAction() {
 			super("Move Until Not");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			setState(new MoveUntilNotBlock(getMove(), getSymbol(), getTape(), getNextID()));
+			setState(new MoveUntilNotBlock(getMove(), getSymbol(), getTape(),
+					getNextID()));
 			super.actionPerformed(e);
 		}
 	}
-	
-	private class CopyBlockAction extends DialogDisposeAction{
+
+	private class CopyBlockAction extends DialogDisposeAction {
 		public CopyBlockAction() {
 			super("Copy");
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setState(new CopyBlock(getTape(), getNextID()));

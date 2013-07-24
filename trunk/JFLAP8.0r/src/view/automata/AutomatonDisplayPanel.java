@@ -23,7 +23,7 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 		extends MagnifiablePanel {
 	
 	private static final int MAX_HEIGHT = 400;
-	private static final int MAX_WIDTH = 1000;
+	private static final int MAX_WIDTH = 700;
 	private static final int PADDING = 150;
 	private AutomatonEditorPanel<T, S> myPanel;
 

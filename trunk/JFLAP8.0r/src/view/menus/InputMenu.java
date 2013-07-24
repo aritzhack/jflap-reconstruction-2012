@@ -4,8 +4,9 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
+import view.action.automata.MultipleTransducerSimulateAction;
 import view.action.automata.MultipleSimulateAction;
-import view.action.automata.NoInteractionSimulateAction;
+import view.action.automata.FastSimulateAction;
 import view.action.automata.SimulateAction;
 import view.action.grammar.LanguageGeneratorAction;
 import view.action.grammar.parse.BruteParseAction;
@@ -65,13 +66,13 @@ public class InputMenu extends JMenu implements TabChangeListener {
 				
 				if (view instanceof AcceptorView ){
 					this.add(new SimulateAction(v, false));
-					this.add(new NoInteractionSimulateAction(v));
+					this.add(new FastSimulateAction(v));
 				}
 				this.add(new MultipleSimulateAction(v));
 			}
 			if (view instanceof TuringMachineView){
 				TuringMachineView v = (TuringMachineView) view;
-//				this.add(new MultipleTransducerRunAction(v));
+				this.add(new MultipleTransducerSimulateAction((TuringMachineView) view));
 			}
 		}
 	}

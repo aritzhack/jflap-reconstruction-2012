@@ -15,7 +15,6 @@ package oldnewstuff.view.tree;
  *  JFLAP is open source software. Please see the LICENSE for terms.
  *
  */
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,11 +23,15 @@ import javax.swing.event.TableModelListener;
 
 import debug.JFLAPDebug;
 
-import model.algorithms.testinput.simulate.Configuration;
 import model.algorithms.testinput.simulate.ConfigurationChain;
+import model.algorithms.testinput.simulate.configurations.tm.TMConfiguration;
 import model.automata.Automaton;
 import model.automata.turing.MultiTapeTuringMachine;
+import model.formaldef.FormalDefinition;
 import model.grammar.Grammar;
+import model.symbols.SymbolString;
+import model.symbols.symbolizer.Symbolizers;
+import universe.preferences.JFLAPPreferences;
 import util.view.tables.GrowableTableModel;
 
 /**
@@ -41,6 +44,8 @@ import util.view.tables.GrowableTableModel;
  */
 
 public class InputTableModel extends GrowableTableModel {
+	private FormalDefinition myDefinition;
+
 	/**
 	 * This instantiates an <CODE>InputTableModel</CODE>.
 	 * 
@@ -49,10 +54,12 @@ public class InputTableModel extends GrowableTableModel {
 	 */
 	public InputTableModel(Automaton automaton, int add) {
 		super(2 * inputsForMachine(automaton) + 1 + add);
+		myDefinition = automaton;
 	}
 
 	public InputTableModel(Grammar gram, int add) {
 		super(2 * 1 + 1 + add);
+		myDefinition = gram;
 	}
 
 	/**
@@ -63,6 +70,7 @@ public class InputTableModel extends GrowableTableModel {
 	 */
 	public InputTableModel(InputTableModel model) {
 		super(model);
+		myDefinition = model.myDefinition;
 	}
 
 	/**
@@ -259,18 +267,43 @@ public class InputTableModel extends GrowableTableModel {
 	 */
 	public void setResult(int row, String result, ConfigurationChain config) {
 		int halfway = getInputCount();
-		if (isMultiple)
-			halfway++;
-		int outNum = 1;
 
-		for (int i = 0; (halfway + i) < this.columns; i++)
-			setValueAt("", row, halfway + i);
+		if (config != null
+				&& config.getCurrentConfiguration() instanceof TMConfiguration) {
+			TMConfiguration c = (TMConfiguration) config
+					.getCurrentConfiguration();
+			int tapes = c.getNumOfSecondary();
+
+			if (config.isAccept())
+				for (int i = 0; i < tapes; i++) {
+					int index = c.getPositionForIndex(i);
+					SymbolString symbols = c.getStringForIndex(i);
+					String put = symbols.subList(index, symbols.size() - JFLAPPreferences.getDefaultTMBufferSize())
+							.toString();
+					setValueAt(put, row, halfway + i);
+				}
+			else
+				for (int i = 0; i < halfway; i++)
+					setValueAt("", row, halfway + i);
+		} else
+			for (int i = 0; (halfway + i) < this.columns; i++)
+				setValueAt("", row, halfway + i);
 		setValueAt(result, row, getColumnCount() - 1);
 
 		if (config == null)
 			rowToAssociatedConfiguration.remove(new Integer(row));
 		else
 			rowToAssociatedConfiguration.put(new Integer(row), config);
+	}
+
+	@Override
+	public void setValueAt(Object newdata, int row, int column) {
+		String data = (String) newdata;
+		if (column < getInputCount()) {
+			SymbolString val = Symbolizers.symbolize(data, myDefinition);
+			data = val.toString();
+		}
+		super.setValueAt(data, row, column);
 	}
 
 	/**

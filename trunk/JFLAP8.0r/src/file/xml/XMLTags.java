@@ -47,6 +47,7 @@ public interface XMLTags {
 	
 	public static final String EDITOR_PANEL_TAG = "editor_panel";
 	public static final String TRANS_GRAPH_TAG = "transition_graph";
+	public static final String BLOCK_GRAPH_TAG = "block_tm_graph";
 	public static final String CTRL_POINT = "control_point";
 	public static final String CTRL_POINT_MAP = "control_point_map";
 	public static final String STATE_POINT = "state_point";
