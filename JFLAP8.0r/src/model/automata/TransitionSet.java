@@ -145,6 +145,21 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	public TransitionSet<T> copy() {
 		return (TransitionSet<T>) super.copy();
 	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Arrays.hashCode(this.toArray(new Transition[0]));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this)
+			return true;
+		if(!(obj instanceof TransitionSet))
+			return false;
+		return((TransitionSet) obj).size() == this.size() && containsAll((TransitionSet) obj);
+	}
 
 	/**
 	 * Removes all transitions with a from or to state corresponding

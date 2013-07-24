@@ -71,10 +71,10 @@ public class SingleInputSimulator extends AutomatonSimulator {
 		ArrayList<ConfigurationChain> chains = new ArrayList<ConfigurationChain>();
 		LinkedList<Configuration> nextConfigs = chain.getCurrentConfiguration()
 				.getNextConfigurations();
+		ConfigurationChain clone = chain.clone();
 
 		if (closure) {
 			Configuration next = nextConfigs.pollFirst();
-			ConfigurationChain clone = chain.clone();
 
 			while (next != null && next.getTransitionTo().isLambdaTransition())
 				next = nextConfigs.pollFirst();
@@ -108,7 +108,7 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 			for (Configuration c : nextConfigs) {
 				String nextID = chain.getID() + chain.getNumChildren();
-				chains.add(new ConfigurationChain(c, chain.clone(), nextID));
+				chains.add(new ConfigurationChain(c, clone, nextID));
 				chain.incrementNumChildren();
 			}
 		}

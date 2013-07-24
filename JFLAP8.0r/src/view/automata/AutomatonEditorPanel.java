@@ -629,7 +629,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		int x = (int) (Math.ceil(maxx)), y = (int) (Math.ceil(maxy));
 		// TODO: may want to change when you actually set the size
-		setPreferredSize(new Dimension(x, y));
+		Dimension newSize = new Dimension(x, y);
+		setPreferredSize(newSize);
+		setMinimumSize(newSize);
+		setMaximumSize(newSize);
 		revalidate();
 	}
 

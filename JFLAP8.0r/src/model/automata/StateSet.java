@@ -1,7 +1,10 @@
 package model.automata;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeSet;
+
+import debug.JFLAPDebug;
 
 import universe.preferences.JFLAPPreferences;
 
@@ -62,6 +65,20 @@ public class StateSet extends SetComponent<State> {
 	@Override
 	public StateSet copy() {
 		return (StateSet) super.copy();
+	}
+	
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(this.toArray(new State[0]));
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this)
+			return true;
+		if(!(obj instanceof StateSet))
+			return false;
+		return((StateSet) obj).size() == this.size() && containsAll((StateSet) obj);
 	}
 	
 }

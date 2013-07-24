@@ -5,6 +5,7 @@ import java.util.Map;
 
 import model.automata.Automaton;
 import model.automata.Transition;
+import model.graph.BlockTMGraph;
 import model.graph.TransitionGraph;
 
 import org.w3c.dom.Document;
@@ -34,6 +35,7 @@ public class AutomatonEditorTransducer extends StructureTransducer<AutomatonEdit
 	@Override
 	public AutomatonEditorData fromStructureRoot(Element root) {
 		Element graph_elem = XMLHelper.getChildArray(root, STRUCTURE_TAG).get(0);
+		graphTrans = (TransitionGraphTransducer) StructureTransducer.getStructureTransducer(graph_elem);
 		TransitionGraph graph = graphTrans.fromStructureRoot(graph_elem);
 
 		Element note_elem = XMLHelper.getChildrenWithTag(root, NOTE_MAP_TAG).get(0);
@@ -48,6 +50,8 @@ public class AutomatonEditorTransducer extends StructureTransducer<AutomatonEdit
 	@Override
 	public Element appendComponentsToRoot(Document doc, AutomatonEditorData editorData, Element root) {
 		TransitionGraph graph = editorData.getGraph();
+		graphTrans = graph instanceof BlockTMGraph ? new BlockTMGraphTransducer() : new TransitionGraphTransducer();
+		
 		Map<Point2D, String> labels = editorData.getLabels();
 		Map<Point2D, String> notes = editorData.getNotes();
 
