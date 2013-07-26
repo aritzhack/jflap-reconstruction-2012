@@ -1,10 +1,13 @@
 package model.graph;
 
 import java.awt.geom.Point2D;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import model.automata.State;
+import model.automata.Transition;
+import model.automata.TransitionSet;
+import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTransition;
@@ -13,7 +16,7 @@ import model.graph.layout.GEMLayoutAlgorithm;
 
 public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 
-	private Map<Block, TransitionGraph> blockGraphs;
+	private Map<Integer, TransitionGraph> blockGraphs;
 
 	public BlockTMGraph(BlockTuringMachine a) {
 		this(a, new GEMLayoutAlgorithm());
@@ -21,7 +24,7 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 
 	public BlockTMGraph(BlockTuringMachine a, LayoutAlgorithm alg) {
 		super(a, alg);
-		blockGraphs = new HashMap<Block, TransitionGraph>();
+		blockGraphs = new TreeMap<Integer, TransitionGraph>();
 		BlockSet blocks = a.getStates();
 
 		for (State s : blocks) {
@@ -36,13 +39,25 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 	}
 
 	public void setGraph(Block b, TransitionGraph transitionGraph) {
-		TransitionGraph current = blockGraphs.get(b);
-		blockGraphs.put(b, transitionGraph);
+		TransitionGraph current = blockGraphs.get(b.getID());
+		if (current == null || !current.getClass().equals(transitionGraph.getClass()))
+			blockGraphs.put(b.getID(), transitionGraph);
+		else {
+			TuringMachine auto = b.getTuringMachine();
+			TransitionSet<? extends Transition<?>> transitions = auto
+					.getTransitions();
+
+			for (State s : auto.getStates())
+				current.moveVertex(s, transitionGraph.pointForVertex(s));
+			for (Transition t : transitions)
+				current.setControlPt(transitionGraph.getControlPt(t), t);
+		}
+		// blockGraphs.put(b.getID(), transitionGraph);
 		distributeChanged();
 	}
 
 	public TransitionGraph getGraph(Block b) {
-		return blockGraphs.get(b);
+		return blockGraphs.get(b.getID());
 	}
 
 	@Override
@@ -59,7 +74,7 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 	public boolean removeVertex(State vertex) {
 		Block b = (Block) vertex;
 		if (super.removeVertex(b) && blockGraphs != null) {
-			blockGraphs.remove(b);
+			blockGraphs.remove(b.getID());
 			return true;
 		}
 		return false;

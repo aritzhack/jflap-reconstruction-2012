@@ -156,7 +156,7 @@ public class TransitionSet<T extends Transition<T>> extends FunctionSet<T> {
 	public boolean equals(Object obj) {
 		if(obj == this)
 			return true;
-		if(!(obj instanceof TransitionSet))
+		if(!(obj.getClass().equals(this.getClass())))
 			return false;
 		return((TransitionSet) obj).size() == this.size() && containsAll((TransitionSet) obj);
 	}

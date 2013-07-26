@@ -128,25 +128,6 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		button.doClick();
 	}
 
-	public void setFocused(Configuration configuration) {
-		ConfigurationButton button = (ConfigurationButton) configurationToButtonMap
-				.get(configuration);
-		if (button == null)
-			return;
-		if (button.getState() == ConfigurationButton.NORMAL) {
-			// System.out.println("Setting color");
-			button.setState(ConfigurationButton.FOCUSED);
-			button.doClick();
-		}
-	}
-
-	public boolean isFocused(Configuration configuration) {
-		ConfigurationButton button = (ConfigurationButton) configurationToButtonMap
-				.get(configuration);
-		return button == null ? false
-				: button.getState() == ConfigurationButton.FOCUSED;
-	}
-
 	/**
 	 * @param configuration
 	 */
@@ -172,8 +153,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		if (button == null)
 			return;
 		int state = button.getState();
-		if (state == ConfigurationButton.FREEZE
-				|| state == ConfigurationButton.FOCUSED)
+		if (state == ConfigurationButton.FREEZE)
 			button.setState(ConfigurationButton.NORMAL);
 		button.doClick();
 	}
@@ -245,8 +225,7 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 			ConfigurationButton button = configurationToButtonMap.get(config);
 
 			if (button != null
-					&& (button.getState() == ConfigurationButton.NORMAL || button
-							.getState() == ConfigurationButton.FOCUSED))
+					&& button.getState() == ConfigurationButton.NORMAL)
 				list.add(config);
 		}
 		return list.toArray(new Configuration[0]);

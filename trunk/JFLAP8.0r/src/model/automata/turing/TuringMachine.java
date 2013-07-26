@@ -65,24 +65,4 @@ public abstract class TuringMachine<T extends Transition<T>> extends Acceptor<T>
 		}
 		super.componentChanged(event);
 	}
-
-	@Override
-	public int hashCode() {
-		return Arrays.hashCode(new Object[]{getStates(), getTapeAlphabet(), getBlankSymbol(), getInputAlphabet(), getTransitions(), getStartState(), getFinalStateSet()});
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TuringMachine))
-			return false;
-		TuringMachine other = (TuringMachine) obj;
-		return this.getStates().equals(other.getStates())
-				&& this.getTapeAlphabet().equals(other.getTapeAlphabet())
-				&& this.getBlankSymbol().equals(other.getBlankSymbol())
-				&& this.getInputAlphabet().equals(other.getInputAlphabet())
-				&& this.getTransitions().equals(other.getTransitions())
-				&& this.getStartState().equals(other.getStartState())
-				&& this.getFinalStateSet().equals(other.getFinalStateSet());
-	}
-
 }

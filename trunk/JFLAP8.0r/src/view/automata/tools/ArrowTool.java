@@ -20,8 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;
@@ -41,6 +39,7 @@ import model.change.events.SetToEvent;
 import model.change.events.StartStateSetEvent;
 import model.graph.LayoutAlgorithm;
 import model.graph.LayoutAlgorithmFactory;
+import model.graph.TransitionGraph;
 import model.graph.layout.VertexMover;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
@@ -62,8 +61,6 @@ import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateMoveEvent;
 import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
-import view.environment.TabChangeListener;
-import view.environment.TabChangedEvent;
 
 /**
  * Tool for selection and editing of Automaton graphs.
@@ -743,12 +740,15 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					Block b = (Block) myObject;
 					TuringMachine m = b.getTuringMachine();
 					BlockEditorPanel panel = (BlockEditorPanel) getPanel();
-
+					TransitionGraph graph = panel.getGraph(b);
+					
 					Point2D p = panel.getPointForVertex(b);
 					p = new Point((int) p.getX() + JFLAPConstants.STATE_RADIUS
 							* 2 + 5, (int) p.getY());
 
 					b = panel.addBlock(b, (Point) p);
+					panel.setGraph(b, graph);
+					
 					getKeeper()
 							.registerChange(
 									new StateAddEvent(panel, panel

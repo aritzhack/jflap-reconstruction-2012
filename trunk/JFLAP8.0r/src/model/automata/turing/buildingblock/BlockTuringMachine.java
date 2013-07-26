@@ -60,12 +60,14 @@ public class BlockTuringMachine extends TuringMachine<BlockTransition> {
 	
 	@Override
 	public BlockTuringMachine copy() {
+		State start = getStartState();
+		StartState newStart = new StartState(start == null ? null : start.copy());
 		return new BlockTuringMachine(this.getStates().copy(),
 				this.getTapeAlphabet().copy(),
 				new BlankSymbol(),
 				this.getInputAlphabet().copy(), 
 				this.getTransitions().copy(), 
-				new StartState(this.getStartState().copy()), 
+				newStart, 
 				this.getFinalStateSet().copy());
 	}
 	

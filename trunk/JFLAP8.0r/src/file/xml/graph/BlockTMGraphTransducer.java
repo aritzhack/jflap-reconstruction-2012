@@ -11,6 +11,7 @@ import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
 import model.automata.turing.buildingblock.BlockTuringMachine;
+import model.automata.turing.buildingblock.UpdatingBlock;
 import model.graph.BlockTMGraph;
 import model.graph.TransitionGraph;
 
@@ -39,33 +40,29 @@ public class BlockTMGraphTransducer extends TransitionGraphTransducer {
 		BlockTuringMachine machine = (BlockTuringMachine) graph.getAutomaton();
 		BlockTMGraph blockGraph = new BlockTMGraph(machine);
 		
-		Element sub_elem = XMLHelper.getChildrenWithTag(root, SUBGRAPH_TAG).get(0);
-		List<Element> turings = XMLHelper.getChildrenWithTag(sub_elem, STRUCTURE_TAG);
-		Map<TuringMachine, TransitionGraph> graphMap = new HashMap<TuringMachine, TransitionGraph>();
+		List<Element> sub_elems = XMLHelper.getChildrenWithTag(root, SUBGRAPH_TAG);
+		Map<Integer, TransitionGraph> graphMap = new HashMap<Integer, TransitionGraph>();
 		
-		for (Element block_elem : turings){
-			String type = StructureTransducer.retrieveTypeTag(block_elem);
+		for (Element block_elem : sub_elems){
+			Element id_elem = XMLHelper.getChildrenWithTag(block_elem, STATE_TAG).get(0);
+			Element graph_elem = XMLHelper.getChildrenWithTag(block_elem, STRUCTURE_TAG).get(0);
 			
-			if(type.equals(getTag()) || type.equals(TRANS_GRAPH_TAG)){
-				XMLTransducer<TransitionGraph> subTrans = TransducerFactory.getTransducerForTag(type);
-				TransitionGraph subGraph = subTrans.fromStructureRoot(block_elem);
-				
-				graphMap.put((TuringMachine) subGraph.getAutomaton(), subGraph);
-			}
+			String id = XMLHelper.containedText(id_elem);
+			String type = StructureTransducer.retrieveTypeTag(graph_elem);
+			
+			XMLTransducer<TransitionGraph> subTrans = TransducerFactory.getTransducerForTag(type);
+			TransitionGraph subGraph = subTrans.fromStructureRoot(graph_elem);
+			graphMap.put(Integer.parseInt(id), subGraph);
 		}
 		
 		BlockSet blocks = machine.getStates();
+		BlockSet copy = blocks.copy();
 		
-		for (State s : blocks) {
-			Block b = (Block) s;
+		for (State s : copy) {
+			Block b = (Block) s;	
 			blockGraph.moveVertex(s, graph.pointForVertex(s));
-			TuringMachine tm = b.getTuringMachine();
-			for(TuringMachine machine1 : graphMap.keySet()){
-				JFLAPDebug.print(machine1+" "+tm+" "+machine1.equals(tm));
-				JFLAPDebug.print(graphMap.get(machine1));
-				JFLAPDebug.print(graphMap.containsKey(tm));
-			}
-			blockGraph.setGraph(b, graphMap.get(tm));
+			
+			blockGraph.setGraph(b, graphMap.get(b.getID()));
 		}
 		
 		for (Transition<?> t : machine.getTransitions()) {
@@ -83,16 +80,18 @@ public class BlockTMGraphTransducer extends TransitionGraphTransducer {
 		BlockTuringMachine auto = blockGraph.getAutomaton();
 		
 		root = super.appendComponentsToRoot(doc, graph, root);
-		Element sub_elem = XMLHelper.createElement(doc, SUBGRAPH_TAG, null, null);
 		
 		for(State s : auto.getStates()){
 			Block b = (Block) s;
 			TransitionGraph bGraph = blockGraph.getGraph(b);
-			
+
+			Element sub_elem = XMLHelper.createElement(doc, SUBGRAPH_TAG, null, null);
 			XMLTransducer<TransitionGraph> trans = TransducerFactory.getTransducerForStructure(bGraph);
+			
+			sub_elem.appendChild(XMLHelper.createElement(doc, STATE_TAG, b.getID(), null));
 			sub_elem.appendChild(trans.toXMLTree(doc, bGraph));
+			root.appendChild(sub_elem);
 		}
-		root.appendChild(sub_elem);
 		
 		return root;
 	}

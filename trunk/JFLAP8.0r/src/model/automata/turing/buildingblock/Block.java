@@ -56,6 +56,11 @@ public class Block extends State implements UsesSymbols{
 		return super.toDetailedString()+ "\n" + myMachine.toString();
 	}
 	
+	@Override
+	public Block copy() {
+		return new Block((TuringMachine) myMachine.copy(), getName(), getID());
+	}
+	
 	public Block copy(int newID) {
 		String name = getName();
 		if(name.equals(JFLAPPreferences.getDefaultStateNameBase()+getID()))
