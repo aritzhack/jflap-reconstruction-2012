@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import debug.JFLAPDebug;
+
 import model.automata.State;
 import model.automata.StateSet;
 import model.automata.turing.MultiTapeTuringMachine;

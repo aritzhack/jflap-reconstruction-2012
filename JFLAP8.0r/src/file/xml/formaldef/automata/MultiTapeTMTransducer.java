@@ -6,6 +6,8 @@ import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import debug.JFLAPDebug;
+
 import util.UtilFunctions;
 
 import model.automata.InputAlphabet;
@@ -62,20 +64,30 @@ public class MultiTapeTMTransducer extends AutomatonTransducer<MultiTapeTuringMa
 	}
 	@Override
 	public MultiTapeTuringMachine buildStructure(Object[] subComp) {
-		TransitionSet<MultiTapeTMTransition> transitions =
-				retrieveTarget(TransitionSet.class, subComp);
-
+		StateSet states = retrieveTarget(StateSet.class, subComp);
+		states = states == null ? new StateSet() : states;
+		
+		TapeAlphabet tape = retrieveTarget(TapeAlphabet.class, subComp);
+		tape = tape == null ? new TapeAlphabet() : tape;
+		
+		BlankSymbol blank = retrieveTarget(BlankSymbol.class, subComp);
+		blank = blank == null ? new BlankSymbol() : blank;
+		
+		InputAlphabet input = retrieveTarget(InputAlphabet.class, subComp);
+		input = input == null ? new InputAlphabet() : input;
+		
+		TransitionSet<MultiTapeTMTransition> transitions = retrieveTarget(TransitionSet.class, subComp);
+		transitions = transitions == null ? new TransitionSet<MultiTapeTMTransition>() : transitions;
+		
+		StartState start = retrieveTarget(StartState.class, subComp);
+		start = start == null ? new StartState() : start;
+		
+		FinalStateSet finals = retrieveTarget(FinalStateSet.class, subComp);
+		finals = finals == null ? new FinalStateSet() : finals;
+		
 		int numTapes = retrieveTarget(Integer.class, subComp);
-
-		return new MultiTapeTuringMachine(
-				retrieveTarget(StateSet.class,subComp), 
-				retrieveTarget(TapeAlphabet.class, subComp),
-				retrieveTarget(BlankSymbol.class, subComp),
-				retrieveTarget(InputAlphabet.class, subComp),
-				transitions,
-				retrieveTarget(StartState.class, subComp),
-				retrieveTarget(FinalStateSet.class, subComp),
-				numTapes);
+		
+		return new MultiTapeTuringMachine(states, tape, blank, input, transitions, start, finals, numTapes);
 
 	}
 }

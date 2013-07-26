@@ -43,10 +43,9 @@ public class ConfigurationButton extends JToggleButton {
 	private int state = NORMAL;
 	private Configuration config = null;
 	private ConfigurationIcon icon = null;
-	public static final int NORMAL = 0, ACCEPT = 1, REJECT = 2, FREEZE = 3,
-			FOCUSED = 4;
+	public static final int NORMAL = 0, ACCEPT = 1, REJECT = 2, FREEZE = 3;
 	private static final String[] TEXT = { "Normal", "Accept", "Reject",
-		"Freeze", "Focused" };
+		"Freeze"};
 	/**
 	 * Instantiates a configuration button with a configuration with the default
 	 * setting of the state being labeled as NORMAL.

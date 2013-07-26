@@ -5,6 +5,8 @@ import java.awt.Point;
 import debug.JFLAPDebug;
 
 import model.automata.State;
+import model.automata.turing.MultiTapeTMTransition;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.buildingblock.Block;
 import model.automata.turing.buildingblock.BlockSet;
@@ -29,26 +31,29 @@ public class BlockEditorPanel extends
 			b = b.copy(blocks.getNextUnusedID());
 		blocks.add(b);
 		moveState(b, p);
+		
+		TuringMachine machine = b.getTuringMachine();
+		TransitionGraph graph = machine instanceof BlockTuringMachine ? new BlockTMGraph((BlockTuringMachine) machine) : 
+			new TransitionGraph<MultiTapeTMTransition>((MultiTapeTuringMachine) machine);
+		setGraph(machine, graph);
 		return b;
 	}
 	
 	public TransitionGraph getGraph(Block b){
-		return getGraph().getGraph(b);
+		return ((BlockTMGraph) getGraph()).getGraph(b);
+	}
+
+
+	public void setGraph(Block block, TransitionGraph graph) {
+		((BlockTMGraph) getGraph()).setGraph(block, graph);
 	}
 	
 	public void setGraph(TuringMachine machine, TransitionGraph graph){
 		for(State s : getAutomaton().getStates()){
 			Block b = (Block) s;
-			
 			if(b.getTuringMachine().equals(machine)){
-				getGraph().setGraph(b, graph);
-				return;
+				setGraph(b, graph);
 			}
 		}
-	}
-
-	@Override
-	public BlockTMGraph getGraph() {
-		return (BlockTMGraph) super.getGraph();
 	}
 }

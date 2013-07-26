@@ -93,17 +93,14 @@ public class ConfigurationController extends JToolBar {
 		 * Add Focus and Defocus buttons only if it is a Turing machine.
 		 */
 		if (isTuringMachine()) {
-			this.add(new AbstractAction("Focus") {
-				public void actionPerformed(ActionEvent e) {
-					focus();
-				}
-			});
-
-			this.add(new AbstractAction("Defocus") {
-				public void actionPerformed(ActionEvent e) {
-					defocus();
-				}
-			});
+//			this.add(new AbstractAction("Step into Block") {
+//				
+//				@Override
+//				public void actionPerformed(ActionEvent arg0) {
+//					stepIntoBlock();
+//					
+//				}
+//			});
 		}
 		this.add(new AbstractAction("Freeze") {
 			public void actionPerformed(ActionEvent e) {
@@ -161,7 +158,7 @@ public class ConfigurationController extends JToolBar {
 		mySimulator.step();
 		update();
 	}
-
+	
 	/**
 	 * Freezes selected myConfigPanel.
 	 */
@@ -212,28 +209,6 @@ public class ConfigurationController extends JToolBar {
 	}
 
 	/**
-	 * Zooms in on selected configuration
-	 */
-	public void focus() {
-		List<Configuration> configs = myConfigPanel.getSelected();
-		if (configs.isEmpty()) {
-			JOptionPane.showMessageDialog(myConfigPanel,
-					NO_CONFIGURATION_ERROR, NO_CONFIGURATION_ERROR_TITLE,
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		} else if (configs.size() > 1) {
-			JOptionPane.showMessageDialog(myConfigPanel,
-					FOCUS_CONFIGURATION_ERROR, FOCUS_CONFIGURATION_ERROR_TITLE,
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		Configuration toFocus = configs.get(0);
-		myConfigPanel.setFocused(toFocus);
-		mySimPanel.repaint();
-	}
-
-	/**
 	 * Sets the drawer to draw the selected configurations' states as selected,
 	 * or to draw all configurations' states as selected in the event that there
 	 * are no selected configurations. In this case, the selection refers to the
@@ -249,33 +224,7 @@ public class ConfigurationController extends JToolBar {
 		}
 		mySimPanel.repaint();
 	}
-
-	// private boolean setFocusIfNeeded(Configuration current, boolean
-	// foundFocused) {
-	// Configuration parentConfig = current.getParent();
-	// if (parentConfig == null)
-	// return foundFocused;
-	//
-	// if (parentConfig.getFocused()) {
-	// current.setFocused(true);
-	// if (!foundFocused) {
-	// myConfigPanel.setFocused(current);
-	// current.setFocused(true);
-	//
-	// foundFocused = true;
-	// }
-	// }
-	// return foundFocused;
-	// }
-
-	public void defocus() {
-		for (Configuration config : myConfigPanel.getConfigurations()) {
-			if (myConfigPanel.isFocused(config)) {
-				myConfigPanel.defocus(config);
-			}
-		}
-	}
-
+	
 	/**
 	 * Thaws the selected myConfigPanel.
 	 */

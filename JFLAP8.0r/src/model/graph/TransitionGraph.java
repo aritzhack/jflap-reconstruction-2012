@@ -165,6 +165,13 @@ public class TransitionGraph<T extends Transition<T>> extends
 	public Point2D getLabelCenter(T t) {
 		return myCenterMap.get(t);
 	}
+	
+	/**
+	 * Returns the ControlPoint for the edge specified by the given transition
+	 */
+	public ControlPoint getControlPt(T trans) {
+		return super.getControlPt(trans.getFromState(), trans.getToState());
+	}
 
 	/**
 	 * Returns the center point for the label specified by the transition based on when it was added (lvl).

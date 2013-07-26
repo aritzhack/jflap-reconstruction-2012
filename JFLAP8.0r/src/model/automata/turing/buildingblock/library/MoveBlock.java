@@ -1,5 +1,6 @@
 package model.automata.turing.buildingblock.library;
 
+import debug.JFLAPDebug;
 import model.automata.State;
 import model.automata.TransitionSet;
 import model.automata.turing.MultiTapeTMTransition;

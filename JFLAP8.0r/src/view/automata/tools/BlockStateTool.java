@@ -18,6 +18,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import debug.JFLAPDebug;
+
+import model.automata.turing.MultiTapeTMTransition;
+import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
 import model.automata.turing.TuringMachine;
 import model.automata.turing.TuringMachineMove;
@@ -35,6 +39,7 @@ import model.automata.turing.buildingblock.library.ShiftBlock;
 import model.automata.turing.buildingblock.library.StartBlock;
 import model.automata.turing.buildingblock.library.StartHaltBlock;
 import model.automata.turing.buildingblock.library.WriteBlock;
+import model.graph.BlockTMGraph;
 import model.graph.TransitionGraph;
 import model.symbols.Symbol;
 import universe.JFLAPUniverse;
@@ -78,8 +83,9 @@ public class BlockStateTool extends
 
 			Object n = JFLAPUniverse.getActiveEnvironment().showConfirmDialog(
 					"Choose Block creation type:", options, options[0]);
+			TransitionGraph graph = null;
 			if (options[0].equals(n))
-				importFromFile();
+				graph = importFromFile();
 			else if (options[1].equals(n))
 				promptBuiltinBlock();
 			else if (options[2].equals(n))
@@ -87,26 +93,33 @@ public class BlockStateTool extends
 
 			Block b = (Block) getState();
 			if (b != null) {
-				((BlockEditorPanel) getPanel()).addBlock(b, e.getPoint());
+				BlockEditorPanel panel = (BlockEditorPanel) getPanel();
+				panel.addBlock(b, e.getPoint());
+				
+				if(graph != null)
+					panel.setGraph(b, graph);
 			}
 			super.mouseReleased(e);
+			
 		} else
 			super.mousePressed(e);
 	}
 
-	private void importFromFile() {
+	private TransitionGraph importFromFile() {
 		XMLFileChooser chooser = new XMLFileChooser();
 
 		int n = chooser.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION)
-			return;
+			return null;
 
 		File f = chooser.getSelectedFile();
 		XMLCodec codec = new XMLCodec();
 		Object o = codec.decode(f);
 
+		TransitionGraph graph = null;
+		
 		if (o instanceof AutomatonEditorData) {
-			TransitionGraph graph = ((AutomatonEditorData) o).getGraph();
+			graph = ((AutomatonEditorData) o).getGraph();
 			o = graph.getAutomaton();
 		}
 
@@ -114,6 +127,7 @@ public class BlockStateTool extends
 			throw new FileJFLAPException(
 					"Only Turing Machine files can be imported as building blocks!");
 		TuringMachine machine = (TuringMachine) o;
+		
 		String name = f.getName();
 		int last = name.lastIndexOf('.');
 		name = name.substring(0, last);
@@ -122,6 +136,7 @@ public class BlockStateTool extends
 				(BlockTuringMachine) machine, getTape(), name, getNextID(),
 				null) : new Block(machine, name, getNextID());
 		setState(block);
+		return graph;
 	}
 
 	private void promptBuiltinBlock() {

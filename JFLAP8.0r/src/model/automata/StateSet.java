@@ -76,7 +76,7 @@ public class StateSet extends SetComponent<State> {
 	public boolean equals(Object obj) {
 		if(obj == this)
 			return true;
-		if(!(obj instanceof StateSet))
+		if(!(obj.getClass().equals(this.getClass())))
 			return false;
 		return((StateSet) obj).size() == this.size() && containsAll((StateSet) obj);
 	}
