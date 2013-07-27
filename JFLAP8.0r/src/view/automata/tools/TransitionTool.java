@@ -8,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
+import javax.swing.SwingUtilities;
+
 import model.automata.Automaton;
 import model.automata.AutomatonFunction;
 import model.automata.State;
@@ -50,7 +52,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		AutomatonEditorPanel<T, S> panel = getPanel();
 		Object obj = panel.objectAtPoint(e.getPoint());
 
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (SwingUtilities.isLeftMouseButton(e)) {
 			if (obj instanceof State) {
 				from = (State) obj;
 				pFrom = pCurrent = panel.getPointForVertex(from);
@@ -61,7 +63,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (from != null) {
+		if (hasFrom()) {
 			pCurrent = e.getPoint();
 			getPanel().repaint();
 		}
@@ -69,22 +71,30 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (from != null) {
+		if (hasFrom()) {
 			AutomatonEditorPanel<T, S> panel = getPanel();
 			Object obj = panel.objectAtPoint(e.getPoint());
 			
 			if (obj instanceof State) {
-				S trans = panel.createTransition(from, (State) obj);
+				S trans = createTransition(panel, obj);
 				panel.editTransition(trans, true);
 			}
-			from = null;
-			panel.repaint();
+			clear();
 		}
+	}
+
+	public S createTransition(AutomatonEditorPanel<T, S> panel, Object obj) {
+		return panel.createTransition(from, (State) obj);
+	}
+
+	public void clear() {
+		from = null;
+		getPanel().repaint();
 	}
 
 	@Override
 	public void draw(Graphics g) {
-		if (from != null) {
+		if (hasFrom()) {
 			Graphics2D g2 = (Graphics2D) g;
 			Stroke s = g2.getStroke();
 			
@@ -97,4 +107,7 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		}
 	}
 
+	public boolean hasFrom() {
+		return from != null;
+	}
 }

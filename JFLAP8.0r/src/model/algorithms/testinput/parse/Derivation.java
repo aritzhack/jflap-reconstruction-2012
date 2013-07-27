@@ -123,13 +123,17 @@ public class Derivation implements Copyable {
 
 	@Override
 	public String toString() {
-		return myProductions.toString();
+		return myProductions.toString()+"\n"+mySubstitutions.toString();
 	}
 
 	public Production getProduction(int i) {
 		return myProductions.get(i);
 	}
 
+	public int getSubstitution(int i) {
+		return mySubstitutions.get(i);
+	}
+	
 	@Override
 	public Derivation copy() {
 		Derivation copy = new Derivation(myProductions.get(0));

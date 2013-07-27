@@ -29,7 +29,7 @@ public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 
 	public SimulatorPanel(AutomatonEditorPanel<T, S> editor,
 			SingleInputSimulator simulator, SymbolString... input) {
-		super(editor, "Simulate");
+		super(editor, editor.getAutomaton(), "Simulate");
 		mySimulator = simulator;
 		myInput = input;
 		JFLAPPreferences.setSelectedStateColor(JFLAPPreferences.getStateColor()

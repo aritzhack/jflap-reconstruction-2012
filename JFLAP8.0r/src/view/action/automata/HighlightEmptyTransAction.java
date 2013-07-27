@@ -48,7 +48,7 @@ public class HighlightEmptyTransAction extends AutomatonAction {
 	private class LambdaPanel extends AutomatonDisplayPanel{
 
 		public LambdaPanel(AutomatonEditorPanel editor, Set<Transition> lambdas){
-			super(editor, JFLAPPreferences.getEmptyString() + "-Transitions");
+			super(editor, editor.getAutomaton(), JFLAPPreferences.getEmptyString() + "-Transitions");
 			add(new JLabel(JFLAPPreferences.getEmptyString()+"-transitions are highlighted."),
 					BorderLayout.NORTH);
 			

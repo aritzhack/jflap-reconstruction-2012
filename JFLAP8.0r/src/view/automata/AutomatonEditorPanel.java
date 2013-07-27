@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
@@ -21,10 +22,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import debug.JFLAPDebug;
 
 import model.automata.Automaton;
 import model.automata.AutomatonException;
@@ -68,6 +71,8 @@ import view.automata.undoing.StateMoveEvent;
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
 
+	public static final String DELETE = "delete";
+	
 	private EditingTool<T, S> myTool;
 	private T myAutomaton;
 	private TransitionGraph<S> myGraph;
@@ -90,8 +95,11 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		transform = new AffineTransform();
 		myStateLabels = new HashMap<State, Note>();
 		myNotes = new HashMap<Note, String>();
-
-		addKeyListener(new DeleteKeyListener());
+		
+		InputMap iMap = getInputMap();
+		ActionMap aMap = getActionMap();
+		iMap.put(KeyStroke.getKeyStroke((char) KeyEvent.VK_DELETE), DELETE);
+		aMap.put(DELETE, new DeleteAction());
 	}
 
 	@Override
@@ -779,61 +787,50 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		return createTransitionRemove(Arrays.asList(trans));
 	}
 
-	private class DeleteKeyListener implements KeyListener {
+	private class DeleteAction extends AbstractAction{
 
 		@Override
-		public void keyPressed(KeyEvent e) {
-		}
+		public void actionPerformed(ActionEvent e) {
+			State[] states = myDrawer.getSelectedStates().toArray(
+					new State[0]);
+			Set<S> trans = new TreeSet<S>(myDrawer.getSelectedTransitions());
+			Set<Note> notes = new HashSet<Note>(myDrawer.getSelectedNotes());
 
-		@Override
-		public void keyReleased(KeyEvent e) {
-		}
+			myDrawer.clearSelection();
 
-		@Override
-		public void keyTyped(KeyEvent e) {
-			stopAllEditing();
+			TransitionSet<S> transitionSet = myAutomaton.getTransitions();
+			UndoKeeper keeper = getKeeper();
+			NoteRemoveEvent noteRemove = null;
 
-			if (e.getKeyChar() == KeyEvent.VK_DELETE) {
-				State[] states = myDrawer.getSelectedStates().toArray(
-						new State[0]);
-				Set<S> trans = new TreeSet<S>(myDrawer.getSelectedTransitions());
-				Set<Note> notes = new HashSet<Note>(myDrawer.getSelectedNotes());
+			if (notes.size() > 0)
+				noteRemove = new NoteRemoveEvent(AutomatonEditorPanel.this,
+						notes);
 
-				myDrawer.clearSelection();
+			if (states.length > 0) {
+				Point2D[] points = new Point2D[states.length];
+				for (int i = 0; i < states.length; i++) {
+					points[i] = GraphHelper.getOnscreenPoint(
+							Automaton.isStartState(myAutomaton, states[i]),
+							myGraph.pointForVertex(states[i]));
 
-				TransitionSet<S> transitionSet = myAutomaton.getTransitions();
-				UndoKeeper keeper = getKeeper();
-				NoteRemoveEvent noteRemove = null;
-
-				if (notes.size() > 0)
-					noteRemove = new NoteRemoveEvent(AutomatonEditorPanel.this,
-							notes);
-
-				if (states.length > 0) {
-					Point2D[] points = new Point2D[states.length];
-					for (int i = 0; i < states.length; i++) {
-						points[i] = GraphHelper.getOnscreenPoint(
-								Automaton.isStartState(myAutomaton, states[i]),
-								myGraph.pointForVertex(states[i]));
-
-						trans.addAll(transitionSet
-								.getTransitionsFromState(states[i]));
-						trans.addAll(transitionSet
-								.getTransitionsToState(states[i]));
-					}
-					CompoundRemoveEvent remove = createCompoundRemoveEvent(
-							states, trans, points);
-					if (noteRemove != null)
-						remove.addEvent(noteRemove);
-					keeper.applyAndListen(remove);
-				} else if (noteRemove != null) {
-					CompoundUndoRedo comp = new CompoundUndoRedo(noteRemove);
-					if (!trans.isEmpty())
-						comp.add(createTransitionRemove(trans));
-					keeper.applyAndListen(comp);
-				} else
-					keeper.applyAndListen(createTransitionRemove(trans));
-			}
+					trans.addAll(transitionSet
+							.getTransitionsFromState(states[i]));
+					trans.addAll(transitionSet
+							.getTransitionsToState(states[i]));
+				}
+				CompoundRemoveEvent remove = createCompoundRemoveEvent(
+						states, trans, points);
+				if (noteRemove != null)
+					remove.addEvent(noteRemove);
+				keeper.applyAndListen(remove);
+			} else if (noteRemove != null) {
+				CompoundUndoRedo comp = new CompoundUndoRedo(noteRemove);
+				if (!trans.isEmpty())
+					comp.add(createTransitionRemove(trans));
+				keeper.applyAndListen(comp);
+			} else
+				keeper.applyAndListen(createTransitionRemove(trans));
+			
 		}
 	}
 
