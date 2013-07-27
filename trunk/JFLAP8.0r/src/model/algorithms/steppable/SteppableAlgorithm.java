@@ -18,7 +18,7 @@ public abstract class SteppableAlgorithm extends ChangingObject implements Descr
 																				Steppable {
 
 	
-	private static final int ALG_STEP = 0;
+	public static final int ALG_STEP = 0;
 	private AlgorithmStep[] mySteps;
 	private List<SteppableAlgorithmListener> myListeners;
 

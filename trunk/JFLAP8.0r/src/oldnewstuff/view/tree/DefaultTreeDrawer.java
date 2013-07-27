@@ -320,7 +320,7 @@ public class DefaultTreeDrawer implements TreeDrawer, TreeModelListener {
 	 * 
 	 * @param placer
 	 *            the new node placer
-	 * @see gui.tree.DefaultNodePlacer
+	 * @see TreeNodeGraph.tree.DefaultNodePlacer
 	 */
 	public void setNodePlacer(NodePlacer placer) {
 		this.nodePlacer = placer;

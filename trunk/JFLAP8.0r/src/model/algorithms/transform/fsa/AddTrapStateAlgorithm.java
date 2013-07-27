@@ -82,7 +82,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	}
 
 	public boolean addStateAsTrapState(State s) {
-		if (!myNewDFA.getStates().add(s))
+		if (!myNewDFA.getStates().contains(s))
 			return false;
 		setupState(s);
 		return true;
@@ -92,17 +92,18 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 		s.setName(TRAP);
 		myTrapState = s;
 		myTransitionsNeeded = getAllTransitionsNeeded();
+		distributeChanged();
 	}
 
 	public boolean addTransition(State from, Symbol s){
 		for (FSATransition trans: myTransitionsNeeded.toArray(new FSATransition[0])){
+			
 			if (trans.getFromState().equals(from) &&
 					trans.getInput()[0].equals(s)){
-				if (!addTransition(trans))
-					return false;
+				return addTransition(trans);
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public FiniteStateAcceptor getDFAWithTrapState() {
@@ -113,11 +114,18 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	public boolean trapStateNeeded() {
 		return !getAllTransitionsNeeded().isEmpty();
 	}
+	
+	public int transitionsRemaining() {
+		return getAllTransitionsNeeded().size();
+	}
 
 	private boolean addTransition(FSATransition trans) {
 		if (!myNewDFA.getTransitions().add(trans))
 			return false;
-		return myTransitionsNeeded.remove(trans);
+		boolean remove = myTransitionsNeeded.remove(trans);
+		if(remove)
+			distributeChanged();
+		return remove;
 	}
 
 	private Set<FSATransition> getAllTransitionsNeeded() {
@@ -157,6 +165,14 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 	}
 
 	
+	public boolean hasTrapState() {
+		return myTrapState != null;
+	}
+	
+	public boolean isTrapState(State s){
+		return hasTrapState() && myTrapState.equals(s);
+	}
+
 	public static boolean trapStateNeeded(FiniteStateAcceptor fsa) {
 		FSADeterminismChecker check = new FSADeterminismChecker();
 		if (!check.isDeterministic(fsa))
@@ -191,7 +207,7 @@ public class AddTrapStateAlgorithm extends FormalDefinitionAlgorithm<FiniteState
 
 		@Override
 		public boolean isComplete() {
-			return !trapStateNeeded(myNewDFA) || myTrapState != null;
+			return !trapStateNeeded(myNewDFA) || hasTrapState();
 		}
 		
 	}

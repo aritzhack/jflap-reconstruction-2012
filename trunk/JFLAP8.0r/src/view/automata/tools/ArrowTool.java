@@ -322,7 +322,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	/**
 	 * Returns true if the selected object is a Transition
 	 */
-	private boolean isTransitionClicked(MouseEvent e) {
+	public boolean isTransitionClicked(MouseEvent e) {
 		return myObject instanceof Transition;
 	}
 

@@ -38,7 +38,7 @@ public class HighlightNondeterminismAction extends AutomatonAction {
 	private class NondeterminismPanel extends AutomatonDisplayPanel{
 
 		public NondeterminismPanel(AutomatonEditorPanel editor) {
-			super(editor, "Nondeterminism");
+			super(editor, editor.getAutomaton(), "Nondeterminism");
 			add(new JLabel("Nondeterministic states and transitions are highlighted."),
 					BorderLayout.NORTH);
 			

@@ -27,10 +27,9 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 	private static final int PADDING = 150;
 	private AutomatonEditorPanel<T, S> myPanel;
 
-	public AutomatonDisplayPanel(AutomatonEditorPanel<T, S> editor, String name) {
+	public AutomatonDisplayPanel(AutomatonEditorPanel<T, S> editor, T auto, String name) {
 		super(new BorderLayout());
 		setName(name);
-		T auto = editor.getAutomaton();
 
 		myPanel = (AutomatonEditorPanel<T, S>) (auto instanceof MooreMachine ? new MooreEditorPanel(
 				(MooreMachine) auto, new UndoKeeper(), false)
@@ -49,6 +48,7 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 					editor.getControlPoint(states));
 		}
 
+		myPanel.getActionMap().put(AutomatonEditorPanel.DELETE, null);
 		add(myPanel, BorderLayout.CENTER);
 	}
 
