@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
+import view.action.automata.CombineAutomataAction;
 import view.action.automata.TrapStateAction;
 import view.automata.views.AutomataView;
 import view.automata.views.FSAView;
@@ -39,8 +40,10 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		}
 		
 		if(view instanceof AutomataView){
+			AutomataView v = (AutomataView) view;
 			if(view instanceof FSAView)
 				this.add(new TrapStateAction((FSAView) view));
+			this.add(new CombineAutomataAction(v));
 		}
 		
 //		if(view instanceof RegexView){

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -27,8 +28,7 @@ public class AutomatonEditorData<T extends Automaton<S>, S extends Transition<S>
 
 	public AutomatonEditorData(AutomatonEditorPanel<T, S> panel) {
 		T auto = panel.getAutomaton();
-		myGraph = panel.getGraph();
-
+		myGraph = panel.getGraph().copy();
 		myLabels = new HashMap<Point2D, String>();
 		myNotes = new HashMap<Point2D, String>();
 

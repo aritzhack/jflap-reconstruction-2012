@@ -84,13 +84,13 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 				Set<State> seen = new HashSet<State>();
 				seen.add(next.getState());
-				addClosure(chain, next, chains, seen);
+				addClosure(chain, chains, seen);
 			}
 
 			for (Configuration c : nextConfigs) {
 				if (!c.getTransitionTo().isLambdaTransition()) {
 					String nextID = chain.getID() + chain.getNumChildren();
-
+					
 					ConfigurationChain newChain = new ConfigurationChain(c,
 							clone, nextID);
 					chains.add(newChain);
@@ -98,7 +98,7 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 					Set<State> seen = new HashSet<State>();
 					seen.add(c.getState());
-					addClosure(newChain, c, chains, seen);
+					addClosure(newChain, chains, seen);
 				}
 			}
 		} else {
@@ -187,7 +187,7 @@ public class SingleInputSimulator extends AutomatonSimulator {
 		if (closure) {
 			Set<State> seen = new HashSet<State>();
 			seen.add(c.getState());
-			addClosure(chain, myInitialConfiguration, myChains, seen);
+			addClosure(chain, myChains, seen);
 		}
 		this.updateSelectedStates();
 	}
@@ -257,15 +257,19 @@ public class SingleInputSimulator extends AutomatonSimulator {
 		return null;
 	}
 
-	private void addClosure(ConfigurationChain chain, Configuration current,
+	private void addClosure(ConfigurationChain chain,
 			Collection<ConfigurationChain> chains, Set<State> seen) {
-		LinkedList<Configuration> next = current.getNextConfigurations();
-		int size = next.size();
 		int numLambda = 0;
-		ConfigurationChain clone = chain.clone();
 		boolean allLambda = true;
 
-		//by default, we want non-lambda transitions to continue the current chain
+		Configuration current = chain.getCurrentConfiguration();
+		LinkedList<Configuration> next = current.getNextConfigurations();
+
+		int size = next.size();
+		ConfigurationChain clone = chain.clone();
+
+		// by default, we want non-lambda transitions to continue the current
+		// chain
 		for (Configuration config : next) {
 			if (!config.getTransitionTo().isLambdaTransition())
 				allLambda = false;
@@ -273,19 +277,23 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 		if (allLambda) {
 			Configuration config = next.pollFirst();
-			
+
 			while (config != null) {
 				Transition trans = config.getTransitionTo();
 
+				// This is going to continue the current chain. Only increment
+				// numLambda if you are staying on the current state (we don't
+				// want to delete the current chain if it goes on)
 				if (trans.isLambdaTransition()) {
 					State s = config.getState();
 
-					if (!trans.isLoop() && !seen.contains(s)) {
+					if (trans.isLoop())
+						numLambda++;
+					else if (!seen.contains(s)) {
 						chain.add(config);
 						seen.add(s);
-						addClosure(chain, config, chains, seen);
+						addClosure(chain, chains, seen);
 					}
-					numLambda++;
 					break;
 				}
 				config = next.pollFirst();
@@ -307,13 +315,12 @@ public class SingleInputSimulator extends AutomatonSimulator {
 					chains.add(newChain);
 
 					seen.add(s);
-					addClosure(newChain, nextConfig, chains, seen);
+					addClosure(newChain, chains, seen);
 				}
 				numLambda++;
 			}
 		}
 		seen.remove(current.getState());
-		
 		if (numLambda != 0 && numLambda == size && !chain.isHalted())
 			chains.remove(chain);
 	}

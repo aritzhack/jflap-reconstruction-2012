@@ -112,7 +112,7 @@ public class ViewFactory {
          return inputPane;
 	}
 	
-	public static Component createAutomataView(AutomatonEditorData data){
+	public static AutomataView createAutomataView(AutomatonEditorData data){
 		TransitionGraph graph = data.getGraph();
 		Map<Point2D, String> labels = data.getLabels(), notes = data.getNotes();
 		

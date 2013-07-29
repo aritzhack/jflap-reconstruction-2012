@@ -55,7 +55,7 @@ public class MultiTapeTuringMachine extends
 		return new MultiTapeTuringMachine(this.getStates().copy(), this
 				.getTapeAlphabet().copy(), new BlankSymbol(), this
 				.getInputAlphabet().copy(), this.getTransitions().copy(),
-				new StartState(this.getStartState().copy()), this
+				new StartState(getStartState() == null ? null : this.getStartState().copy()), this
 						.getFinalStateSet().copy(), myNumTapes);
 	}
 

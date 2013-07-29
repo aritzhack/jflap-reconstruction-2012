@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import debug.JFLAPDebug;
 import util.JFLAPConstants;
 import util.arrows.GeometryHelper;
 import model.change.ChangingObject;

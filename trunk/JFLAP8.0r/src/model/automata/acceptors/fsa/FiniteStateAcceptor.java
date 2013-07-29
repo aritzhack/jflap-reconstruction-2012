@@ -58,10 +58,11 @@ public class FiniteStateAcceptor extends Acceptor<FSATransition> {
 	
 	@Override
 	public FiniteStateAcceptor copy() {
+		StartState start = getStartState() == null ? new StartState() : new StartState(getStartState().copy());
 		return new FiniteStateAcceptor(this.getStates().copy(),
 				this.getInputAlphabet().copy(),
 				this.getTransitions().copy(),
-				new StartState(this.getStartState().copy()),
+				start,
 				this.getFinalStateSet().copy());
 	}
 

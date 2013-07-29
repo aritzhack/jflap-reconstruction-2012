@@ -64,6 +64,8 @@ public abstract class Transition<T extends Transition<T>> extends
 	}
 
 	public abstract String getLabelText();
+	
+	public abstract T copy(State from, State to);
 
 	/**
 	 * Checks to see if this transition has a lambda input component. subclasses
