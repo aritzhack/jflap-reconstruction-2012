@@ -29,6 +29,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.AutomatonException;
 import model.automata.StartState;
@@ -165,6 +166,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		// graphics with the TransitionTables
 		// Also so you don't break things (like undoing a creation while you
 		// still have the state selected)
+
 		UndoKeeper keeper = getKeeper();
 		for (Note n : myNotes.keySet()) {
 			n.setEditable(false);
@@ -177,9 +179,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				keeper.applyAndListen(new NoteRemoveEvent(this, Arrays
 						.asList(new Note[] { n })));
 			} else if (!oldText.equals(text)) {
+				myNotes.put(n, text);
 				getKeeper().registerChange(
 						new NoteRenameEvent(this, n, oldText));
-				myNotes.put(n, text);
 			}
 		}
 		if (myEditingTable != null)
@@ -317,7 +319,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * Creates and adds a new, default-named state to the automaton, and sets
 	 * its location to the given point.
 	 */
-	public State createState(Point point) {
+	public State createState(Point2D point) {
 		StateSet states = myAutomaton.getStates();
 		State vertex = states.createAndAddState();
 		myGraph.moveVertex(vertex, new Point2DAdv(point));
@@ -376,6 +378,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * calculated based on default settings.
 	 */
 	public void editTransition(S trans, boolean isNew) {
+		//Store the current visible rectangle to keep it after creating the table
+		Rectangle visible = getVisibleRect();
 		myEditingTable = TransitionTableFactory.createTable(trans, myAutomaton,
 				this);
 		myEditingTable.setCellSelectionEnabled(true);
@@ -388,8 +392,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 				(int) center.getY() - tableSize.height / 2);
 
 		myEditingTable.setBounds(new Rectangle(tablePoint, tableSize));
-
 		myEditingTable.requestFocusInWindow();
+		scrollRectToVisible(visible);
 	}
 
 	public void clearTableInfo() {
@@ -444,6 +448,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		myNotes.put(n, n.getText());
 		n.addMouseListener(myTool);
 		n.addMouseMotionListener(myTool);
+	}
+	
+	public void setNoteText(Note n, String text){
+		n.setText(text);
+		if(myNotes.containsKey(n))
+			myNotes.put(n, text);
 	}
 
 	public List<Note> getNotes() {
@@ -685,7 +695,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			Note sLabel = myStateLabels.get(vert);
 			if (sLabel != null) {
 				Rectangle lBounds = sLabel.getBounds();
-
 				maxx = Math.max(maxx, lBounds.getMaxX());
 				maxy = Math.max(maxy, lBounds.getMaxY());
 			}
@@ -693,7 +702,6 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		for (Note n : myNotes.keySet()) {
 			Rectangle r = n.getBounds();
-
 			maxx = Math.max(maxx, r.getMaxX());
 			maxy = Math.max(maxy, r.getMaxY());
 		}

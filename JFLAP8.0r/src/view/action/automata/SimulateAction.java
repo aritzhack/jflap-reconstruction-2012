@@ -37,6 +37,8 @@ import view.automata.views.AutomataView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
+import file.BasicFileChooser;
+import file.TxtFileFilter;
 import file.XMLFileChooser;
 
 public class SimulateAction extends AutomatonAction {
@@ -100,7 +102,7 @@ public class SimulateAction extends AutomatonAction {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser ourChooser = new XMLFileChooser();
+				JFileChooser ourChooser = new BasicFileChooser(new TxtFileFilter());
 				int retval = ourChooser.showOpenDialog(null);
 				File f = null;
 

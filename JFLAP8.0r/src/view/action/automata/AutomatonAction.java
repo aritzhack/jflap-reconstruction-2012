@@ -3,6 +3,7 @@ package view.action.automata;
 import javax.swing.AbstractAction;
 
 import model.automata.Automaton;
+import model.automata.Transition;
 import view.automata.AutomatonEditorPanel;
 import view.automata.views.AutomataView;
 

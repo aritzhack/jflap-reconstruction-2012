@@ -25,6 +25,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Set;
 
+import debug.JFLAPDebug;
+
 /**
  * This class defines an algorithm that lays out a graph.
  * 
@@ -128,14 +130,15 @@ public abstract class LayoutAlgorithm {
 		
 		//Calculate whether the points go off the defined screen minus buffer space, and adjust
 		widthRatio = (maxX - minX) / (size.getWidth() - 2 * buffer.getWidth());
-		heightRatio = (maxY - minY) / (size.getHeight() - 2 * buffer.getHeight());				
-		if (widthRatio > 1.0 || !scaleOnlyOverflow) {
+		heightRatio = (maxY - minY) / (size.getHeight() - 2 * buffer.getHeight());
+
+		if (widthRatio > 1.0 || (!scaleOnlyOverflow && widthRatio > 0)) {
 			for (int i=0; i<vertices.length; i++)
 				graph.moveVertex(vertices[i], new Point2D.Double(					  
 						  graph.pointForVertex(vertices[i]).getX() / widthRatio,
 						  graph.pointForVertex(vertices[i]).getY()));			
 		}
-		if (heightRatio > 1.0 || !scaleOnlyOverflow) {
+		if (heightRatio > 1.0 || (!scaleOnlyOverflow && heightRatio > 0)) {
 			for (int i=0; i<vertices.length; i++)
 				graph.moveVertex(vertices[i], new Point2D.Double(
 					  graph.pointForVertex(vertices[i]).getX(),

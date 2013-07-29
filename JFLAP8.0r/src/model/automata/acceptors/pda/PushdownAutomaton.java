@@ -93,7 +93,7 @@ public class PushdownAutomaton extends Acceptor<PDATransition> {
 				this.getInputAlphabet().copy(), 
 				this.getStackAlphabet().copy(), 
 				this.getTransitions().copy(), 
-				new StartState(this.getStartState().copy()), 
+				new StartState(getStartState() == null ? null : this.getStartState().copy()), 
 				new BottomOfStackSymbol(this.getBottomOfStackSymbol()), 
 				this.getFinalStateSet().copy());
 	}

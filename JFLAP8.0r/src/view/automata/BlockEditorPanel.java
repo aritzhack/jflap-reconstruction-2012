@@ -1,8 +1,6 @@
 package view.automata;
 
-import java.awt.Point;
-
-import debug.JFLAPDebug;
+import java.awt.geom.Point2D;
 
 import model.automata.State;
 import model.automata.turing.MultiTapeTMTransition;
@@ -25,7 +23,7 @@ public class BlockEditorPanel extends
 		setGraph(new BlockTMGraph(m));
 	}
 	
-	public Block addBlock(Block b, Point p){
+	public Block addBlock(Block b, Point2D p){
 		BlockSet blocks = getAutomaton().getStates();
 		if(blocks.getStateWithID(b.getID()) != null)
 			b = b.copy(blocks.getNextUnusedID());

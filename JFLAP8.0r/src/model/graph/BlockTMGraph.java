@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.TreeMap;
 
+import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.automata.TransitionSet;
@@ -78,6 +79,23 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public BlockTMGraph copy() {
+		BlockTMGraph clone = new BlockTMGraph(getAutomaton().copy());
+		BlockTuringMachine auto = getAutomaton();
+
+		for(State s : auto.getStates()){
+			Block b = (Block) s;
+			clone.moveVertex(s, pointForVertex(s));
+			clone.setGraph(b, getGraph(b));
+		}
+		
+		for(BlockTransition trans : auto.getTransitions())
+			clone.setControlPt(getControlPt(trans), trans);
+			
+		return clone;
 	}
 
 }

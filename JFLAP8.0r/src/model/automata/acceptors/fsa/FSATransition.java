@@ -42,9 +42,14 @@ public class FSATransition extends SingleInputTransition<FSATransition> {
 
 	@Override
 	public FSATransition copy() {
-		return new FSATransition(this.getFromState().copy(), 
-									this.getToState().copy(), 
-									new SymbolString(getInput()));
+		return copy(this.getFromState().copy(), this.getToState().copy());
+	}
+
+
+	@Override
+	public FSATransition copy(State from, State to) {
+		return new FSATransition(from, to, 
+				new SymbolString(getInput()));
 	}
 
 	

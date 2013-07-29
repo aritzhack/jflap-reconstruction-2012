@@ -2,18 +2,15 @@ package model.automata.turing.buildingblock;
 
 import java.util.Set;
 
-import debug.JFLAPDebug;
-
-
-import universe.preferences.JFLAPPreferences;
-import util.JFLAPConstants;
-
 import model.automata.AutomatonException;
 import model.automata.InputAlphabet;
 import model.automata.SingleInputTransition;
+import model.automata.State;
 import model.formaldef.components.alphabets.Alphabet;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
+import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
 
 public class BlockTransition extends SingleInputTransition<BlockTransition> implements JFLAPConstants {
 
@@ -52,7 +49,12 @@ public class BlockTransition extends SingleInputTransition<BlockTransition> impl
 
 	@Override
 	public BlockTransition copy() {
-		return new BlockTransition(this.getFromState(), this.getToState(), new SymbolString(this.getInput()));
+		return copy(this.getFromState(), this.getToState());
+	}
+	
+	@Override
+	public BlockTransition copy(State from, State to) {
+		return new BlockTransition((Block) from, (Block) to, new SymbolString(this.getInput()));
 	}
 
 	@Override

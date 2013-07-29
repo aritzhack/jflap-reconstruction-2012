@@ -75,8 +75,12 @@ public class PDATransition extends SingleInputTransition<PDATransition> {
 	
 	@Override
 	public PDATransition copy() {
-		return new PDATransition(this.getFromState().copy(), 
-									this.getToState().copy(), 
+		return copy(this.getFromState().copy(), this.getToState().copy());
+	}
+	
+	@Override
+	public PDATransition copy(State from, State to) {
+		return new PDATransition(from, to, 
 									new SymbolString(getInput()),
 									new SymbolString(this.getPop()), 
 									new SymbolString(this.getPush()));

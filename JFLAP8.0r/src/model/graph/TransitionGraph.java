@@ -16,7 +16,6 @@
 
 package model.graph;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,15 +24,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -41,6 +37,7 @@ import model.change.events.AddEvent;
 import model.change.events.ModifyEvent;
 import model.change.events.RemoveEvent;
 import model.graph.layout.GEMLayoutAlgorithm;
+import util.Copyable;
 import util.JFLAPConstants;
 import util.Point2DAdv;
 import util.arrows.GeometryHelper;
@@ -54,7 +51,7 @@ import util.arrows.GeometryHelper;
  * @param <T>
  */
 public class TransitionGraph<T extends Transition<T>> extends
-		DirectedGraph<State> implements ChangeListener {
+		DirectedGraph<State> implements ChangeListener, Copyable {
 
 	private Map<Integer, List<T>> myOrderedTransitions;
 	private Map<T, Point2D> myCenterMap;
@@ -273,5 +270,17 @@ public class TransitionGraph<T extends Transition<T>> extends
 		Point2D center = getLabelCenterPoint(t, lvl, from, to);
 		myCenterMap.put(t, center);
 		distributeChanged();
+	}
+
+	@Override
+	public TransitionGraph<T> copy() {
+		TransitionGraph<T> clone = new TransitionGraph<T>((Automaton<T>) myAutomaton.copy(), myAlg);
+
+		for(State s : myAutomaton.getStates())
+			clone.moveVertex(s, pointForVertex(s));
+		
+		for(T trans : myAutomaton.getTransitions())
+			clone.setControlPt(getControlPt(trans), trans);
+		return clone;
 	}
 }

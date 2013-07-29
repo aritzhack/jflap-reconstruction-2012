@@ -1,5 +1,6 @@
 package view.automata.undoing;
 
+import debug.JFLAPDebug;
 import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
 import model.undo.IUndoRedo;
@@ -15,13 +16,14 @@ public class NoteRenameEvent extends SingleNoteEvent{
 	
 	@Override
 	public boolean undo() {
-		getNote().setText(myOldText);
+		getPanel().setNoteText(getNote(), myOldText);
 		return true;
 		}
 
 	@Override
 	public boolean redo() {
-		return super.redo();
+		getPanel().setNoteText(getNote(), getToString());
+		return true;
 	}
 
 	@Override

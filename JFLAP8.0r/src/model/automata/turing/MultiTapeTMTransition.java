@@ -96,12 +96,19 @@ public class MultiTapeTMTransition extends Transition<MultiTapeTMTransition> {
 
 	@Override
 	public MultiTapeTMTransition copy() {
-		return new MultiTapeTMTransition(this.getFromState().copy(), 
-									this.getToState().copy(), 
-									copy(myReads),
-									copy(myWrites),
-									myMoves);
+		return copy(this.getFromState().copy(), this.getToState().copy());
 	}
+
+
+	@Override
+	public MultiTapeTMTransition copy(State from, State to) {
+		return new MultiTapeTMTransition(from, 
+										to, 
+										copy(myReads), 
+										copy(myWrites), 
+										myMoves);
+	}
+	
 
 	private Symbol[] copy(Symbol[] in) {
 		Symbol[] newAr = new Symbol[in.length];

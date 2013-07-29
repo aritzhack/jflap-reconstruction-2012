@@ -50,12 +50,13 @@ public abstract class Transducer<T extends OutputFunction<T>> extends Automaton<
 	@Override
 	public Transducer copy() {
 		Class<Transducer> clz = (Class<Transducer>) this.getClass();
-		try {
+		try {StartState start = getStartState() == null ? new StartState() : new StartState(getStartState());
+			
 					return clz.cast(clz.getConstructors()[0].newInstance(this.getStates().copy(),
 																			this.getInputAlphabet().copy(),
 																			this.getOutputAlphabet().copy(),
-																			new TransitionSet<FSATransition>().copy(),
-																			new StartState(this.getStartState().copy()),
+																			this.getTransitions().copy(),
+																			start,
 																			this.getOutputFunctionSet().copy()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);

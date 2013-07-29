@@ -16,10 +16,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.ViewFactory;
 
+import debug.JFLAPDebug;
 import file.xml.graph.AutomatonEditorData;
 import model.algorithms.transform.fsa.AddTrapStateAlgorithm;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import view.automata.AutomatonDisplayPanel;
@@ -103,6 +105,8 @@ public class TrapStatePane extends
 			
 			@Override
 			public void stateChanged(ChangeEvent e) {
+				if(e instanceof AdvancedChangeEvent) 
+					return;
 				update();
 			}
 
