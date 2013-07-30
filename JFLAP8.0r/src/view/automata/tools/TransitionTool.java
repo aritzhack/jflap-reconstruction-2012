@@ -16,7 +16,7 @@ import model.automata.State;
 import model.automata.Transition;
 import util.JFLAPConstants;
 import util.arrows.GeometryHelper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingTool<T, S> {

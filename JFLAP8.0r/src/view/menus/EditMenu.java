@@ -7,15 +7,14 @@ import javax.swing.JMenu;
 
 import model.grammar.StartVariable;
 import model.undo.UndoKeeper;
-
 import util.ISelector;
 import view.EditingPanel;
 import view.action.edit.DeleteAction;
 import view.action.grammar.SortProductionsAction;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.undoing.AutomataRedoAction;
 import view.automata.undoing.AutomataUndoAction;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -67,8 +66,8 @@ public class EditMenu extends JMenu implements TabChangeListener {
 			UndoAction undo = new UndoAction(keeper);
 			RedoAction redo = new RedoAction(keeper);
 			
-			if(view instanceof AutomataView){
-				AutomataView aView = (AutomataView) view;
+			if(view instanceof AutomatonView){
+				AutomatonView aView = (AutomatonView) view;
 				AutomatonEditorPanel panel = (AutomatonEditorPanel) aView.getCentralPanel();
 				
 				undo = new AutomataUndoAction(keeper, panel);

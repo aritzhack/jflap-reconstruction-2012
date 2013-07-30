@@ -1,8 +1,8 @@
 package view.automata.undoing;
 
 import debug.JFLAPDebug;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 import model.undo.IUndoRedo;
 
 public class NoteRenameEvent extends SingleNoteEvent{

@@ -1,9 +1,9 @@
 package view.automata.undoing;
 
 import model.automata.State;
-import view.automata.AutomatonEditorPanel;
-import view.automata.MooreEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.MooreEditorPanel;
 
 public class MooreOutputRenameEvent extends NoteRenameEvent{
 

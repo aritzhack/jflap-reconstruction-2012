@@ -12,7 +12,7 @@ import model.change.events.AddEvent;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
-import view.automata.MooreEditorPanel;
+import view.automata.editing.MooreEditorPanel;
 import view.automata.undoing.StateAddEvent;
 
 /** State tool specific to MooreMachines, deals with Output symbols for States when created.

@@ -7,7 +7,7 @@ import model.automata.State;
 import model.change.events.AddEvent;
 import util.JFLAPConstants;
 import util.view.GraphHelper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * Undoing Event for creating a state at a specific point so that when undone

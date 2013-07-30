@@ -10,7 +10,7 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import universe.JFLAPUniverse;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class TrapStateTool extends StateTool<FiniteStateAcceptor, FSATransition> {
 

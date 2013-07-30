@@ -11,7 +11,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.graph.FSAEqualityChecker;
 import universe.JFLAPUniverse;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.views.FSAView;
 import view.environment.JFLAPEnvironment;
 

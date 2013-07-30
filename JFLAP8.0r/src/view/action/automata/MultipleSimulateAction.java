@@ -56,9 +56,9 @@ import util.view.magnify.MagnifiableScrollPane;
 import util.view.magnify.MagnifiableTable;
 import util.view.magnify.SizeSlider;
 import view.automata.AutomatonDisplayPanel;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TraceWindow;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.grammar.productions.LambdaRemovingEditor;
 import file.XMLFileChooser;
@@ -85,7 +85,7 @@ public class MultipleSimulateAction extends FastSimulateAction {
 	 * @param environment
 	 *            the environment object that we shall add our simulator pane to
 	 */
-	public MultipleSimulateAction(AutomataView view) {
+	public MultipleSimulateAction(AutomatonView view) {
 		super(view);
 		putValue(NAME, "Multiple Run");
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M,

@@ -4,20 +4,20 @@ import javax.swing.AbstractAction;
 
 import model.automata.Automaton;
 import model.automata.Transition;
-import view.automata.AutomatonEditorPanel;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.AutomatonView;
 
 public abstract class AutomatonAction extends AbstractAction{
 
 	public static final int PADDING = 150;
-	private AutomataView myView;
+	private AutomatonView myView;
 
-	public AutomatonAction(String name, AutomataView view){
+	public AutomatonAction(String name, AutomatonView view){
 		super(name);
 		myView = view;
 	}
 	
-	public AutomataView getView() {
+	public AutomatonView getView() {
 		return myView;
 	}
 	

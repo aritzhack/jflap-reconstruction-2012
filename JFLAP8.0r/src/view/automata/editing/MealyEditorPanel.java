@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.editing;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;

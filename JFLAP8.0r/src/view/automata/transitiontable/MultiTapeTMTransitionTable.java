@@ -15,14 +15,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import debug.JFLAPDebug;
-
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;
 import model.symbols.Symbol;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * TransitionTable specific to non-Block Turing Machines

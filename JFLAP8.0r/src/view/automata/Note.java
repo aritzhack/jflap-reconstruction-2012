@@ -9,6 +9,7 @@ import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import view.automata.editing.AutomatonEditorPanel;
 import debug.JFLAPDebug;
 
 public class Note extends JTextArea {

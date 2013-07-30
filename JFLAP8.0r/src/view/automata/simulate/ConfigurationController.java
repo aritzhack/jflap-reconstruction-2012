@@ -14,7 +14,7 @@ import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.Automaton;
 import model.automata.turing.buildingblock.BlockTuringMachine;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /*
  *  JFLAP - Formal Languages and Automata Package

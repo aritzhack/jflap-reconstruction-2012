@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import model.automata.Automaton;
 import model.automata.Transition;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class NonTransitionArrowTool<T extends Automaton<S>, S extends Transition<S>> extends ArrowTool<T, S> {
 

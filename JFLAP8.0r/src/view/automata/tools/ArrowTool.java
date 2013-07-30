@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.StartState;
 import model.automata.State;
@@ -49,9 +50,9 @@ import util.JFLAPConstants;
 import util.Point2DAdv;
 import util.view.GraphHelper;
 import view.ViewFactory;
-import view.automata.AutomatonEditorPanel;
-import view.automata.BlockEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.BlockEditorPanel;
 import view.automata.undoing.ClearSelectionEvent;
 import view.automata.undoing.CompoundMoveEvent;
 import view.automata.undoing.ControlMoveEvent;
@@ -59,7 +60,7 @@ import view.automata.undoing.NoteMoveEvent;
 import view.automata.undoing.StateAddEvent;
 import view.automata.undoing.StateLabelRemoveEvent;
 import view.automata.undoing.StateMoveEvent;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 
 /**
@@ -117,7 +118,6 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 
 			if (myObject != null) {
 				boolean modifierDown = isModified(e);
-				List<Object> selectionList = panel.getSelection();
 				boolean isSelected = myObjectSelected();
 
 				// If not selected and just a normal click, clear other
@@ -256,7 +256,7 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 	}
 
 	/** Returns true if shift or ctrl was down. */
-	private boolean isModified(MouseEvent e) {
+	public boolean isModified(MouseEvent e) {
 		return e.isShiftDown() || e.isControlDown();
 	}
 
@@ -716,7 +716,8 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					Block b = (Block) myObject;
 					
 					TuringMachine m = b.getTuringMachine();
-					AutomataView view = (AutomataView) ViewFactory
+					
+					AutomatonView view = (AutomatonView) ViewFactory
 							.createView(m);
 					AutomatonEditorPanel central = (AutomatonEditorPanel) view.getCentralPanel();
 					central.setGraph(panel.getGraph(b));
@@ -727,8 +728,6 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 					env.setSize(size);
 					env.revalidate();
 					env.update();
-//					((AutomatonEditorPanel) view.getCentralPanel())
-//							.layoutGraph();
 
 				}
 			});

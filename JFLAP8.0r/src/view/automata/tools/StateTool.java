@@ -9,7 +9,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import util.Point2DAdv;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.undoing.StateAddEvent;
 import view.automata.undoing.StateMoveEvent;
 

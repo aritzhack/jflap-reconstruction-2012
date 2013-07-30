@@ -14,14 +14,14 @@ import model.automata.determinism.DeterminismChecker;
 import model.automata.determinism.DeterminismCheckerFactory;
 import universe.JFLAPUniverse;
 import view.automata.AutomatonDisplayPanel;
-import view.automata.AutomatonEditorPanel;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.AutomatonView;
 
 public class HighlightNondeterminismAction extends AutomatonAction {
 
 	private DeterminismChecker myChecker;
 
-	public HighlightNondeterminismAction(AutomataView view) {
+	public HighlightNondeterminismAction(AutomatonView view) {
 		super("Highlight Nondeterminism", view);
 		Automaton auto = (Automaton) view.getDefinition();
 		myChecker = DeterminismCheckerFactory.getChecker(auto);

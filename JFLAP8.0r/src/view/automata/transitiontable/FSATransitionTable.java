@@ -8,7 +8,7 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * TransitionTable specific to FSAs and MooreMachines (though technically, you

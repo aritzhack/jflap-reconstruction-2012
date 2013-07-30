@@ -15,7 +15,7 @@ import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
 import model.undo.IUndoRedo;
 import universe.preferences.JFLAPPreferences;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /** 
  * Transition Table specific to MealyMachines, allows editing of output as well as the transition.

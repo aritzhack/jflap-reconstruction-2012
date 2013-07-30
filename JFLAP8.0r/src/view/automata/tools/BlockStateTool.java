@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import debug.JFLAPDebug;
-
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TapeAlphabet;
@@ -45,7 +44,7 @@ import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
-import view.automata.BlockEditorPanel;
+import view.automata.editing.BlockEditorPanel;
 import view.environment.JFLAPEnvironment;
 import file.FileJFLAPException;
 import file.XMLFileChooser;

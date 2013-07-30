@@ -140,8 +140,8 @@ public class RegularExpression extends FormalDefinition {
 	 * @param exp
 	 * @return true if the exp is properly formatted
 	 */
-	private BooleanWrapper correctFormat(SymbolString exp){
-		if (exp.size() == 0)
+	public BooleanWrapper correctFormat(SymbolString exp){
+		if (exp == null || exp.size() == 0)
 			return new BooleanWrapper(false,
 					"The expression must be nonempty.");
 		if (!isGroupingBalanced(exp))
@@ -155,15 +155,19 @@ public class RegularExpression extends FormalDefinition {
 		Symbol empty = myOperatorAlphabet.getEmptySub();
 		BooleanWrapper poorFormat = new BooleanWrapper(false,
 				"Operators are poorly formatted.");
-
+		BooleanWrapper badLambda = new BooleanWrapper(false,
+				"Lambda character must not cat with anything else.");
+		
 		Symbol c = exp.getFirst();
 		if (c.equals(star))
 			return poorFormat;
-
+		if (c.equals(empty) && exp.size() > 1 && !exp.get(1).equals(union))
+			return badLambda;
+		
 		Symbol p = c;
 		for (int i = 1; i < exp.size(); i++) {
 			c = exp.get(i);
-
+			
 			if (c.equals(union) && i == exp.size()-1){
 				return poorFormat;
 			}
@@ -171,9 +175,7 @@ public class RegularExpression extends FormalDefinition {
 					(p.equals(open)|| p.equals(union))){
 				return poorFormat;
 			}
-			else if(c.equals(empty) ){
-				BooleanWrapper badLambda = new BooleanWrapper(false,
-						"Lambda character must not cat with anything else.");
+			else if(c.equals(empty)){
 				if (!(p.equals(open) || p.equals(union)))
 					return badLambda;
 				if (i == exp.size() - 1)

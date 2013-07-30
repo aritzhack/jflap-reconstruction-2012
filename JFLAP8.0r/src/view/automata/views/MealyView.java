@@ -2,8 +2,7 @@ package view.automata.views;
 
 import javax.swing.JComponent;
 
-import view.automata.MealyEditorPanel;
-
+import view.automata.editing.MealyEditorPanel;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.mealy.MealyOutputFunction;

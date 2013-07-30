@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -21,7 +22,7 @@ import model.change.events.AddEvent;
 import model.change.events.SetToEvent;
 import model.undo.IUndoRedo;
 import universe.preferences.JFLAPPreferences;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.grammar.productions.LambdaRemovingEditor;
 
 /**

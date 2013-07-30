@@ -2,9 +2,8 @@ package view.automata.undoing;
 
 import java.awt.Point;
 
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
-
+import view.automata.editing.AutomatonEditorPanel;
 import model.undo.IUndoRedo;
 
 public class NoteMoveEvent extends SingleNoteEvent{

@@ -33,16 +33,16 @@ import universe.JFLAPUniverse;
 import util.Point2DAdv;
 import view.ViewFactory;
 import view.automata.AutomatonDrawer;
-import view.automata.AutomatonEditorPanel;
-import view.automata.BlockEditorPanel;
-import view.automata.MooreEditorPanel;
 import view.automata.Note;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.BlockEditorPanel;
+import view.automata.editing.MooreEditorPanel;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 
 public class CombineAutomataAction extends AutomatonAction {
 
-	public CombineAutomataAction(AutomataView view) {
+	public CombineAutomataAction(AutomatonView view) {
 		super("Combine Automata", view);
 	}
 
@@ -75,7 +75,7 @@ public class CombineAutomataAction extends AutomatonAction {
 		if (result != JOptionPane.OK_OPTION)
 			return;
 
-		AutomataView otherView = (AutomataView) ((JFLAPEnvironment) combo
+		AutomatonView otherView = (AutomatonView) ((JFLAPEnvironment) combo
 				.getSelectedItem()).getPrimaryView();
 		AutomatonEditorData other = new AutomatonEditorData(
 				(AutomatonEditorPanel) otherView.getCentralPanel());
@@ -90,7 +90,7 @@ public class CombineAutomataAction extends AutomatonAction {
 	 * @param newOne
 	 */
 	private void add(AutomatonEditorData newOne, AutomatonEditorData other) {
-		AutomataView view = ViewFactory.createAutomataView(newOne);
+		AutomatonView view = ViewFactory.createAutomataView(newOne);
 		AutomatonEditorPanel panel = (AutomatonEditorPanel) view
 				.getCentralPanel();
 		Automaton auto = panel.getAutomaton();
@@ -186,9 +186,9 @@ public class CombineAutomataAction extends AutomatonAction {
 	}
 
 	private boolean isValid(Automaton auto, Component primary) {
-		if (!(primary instanceof AutomataView))
+		if (!(primary instanceof AutomatonView))
 			return false;
-		Automaton pAuto = ((AutomataView) primary).getDefinition();
+		Automaton pAuto = ((AutomatonView) primary).getDefinition();
 		if (pAuto instanceof MultiTapeTuringMachine
 				&& auto instanceof MultiTapeTuringMachine)
 			return ((MultiTapeTuringMachine) pAuto).getNumTapes() == ((MultiTapeTuringMachine) auto)

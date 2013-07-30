@@ -4,8 +4,9 @@ import java.awt.Component;
 
 import javax.swing.JComponent;
 
-import view.automata.AutomatonEditorPanel;
-import view.automata.BlockEditorPanel;
+import debug.JFLAPDebug;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.BlockEditorPanel;
 import view.automata.tools.BlockStateTool;
 import view.automata.tools.StateTool;
 import model.automata.turing.buildingblock.BlockTransition;

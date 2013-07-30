@@ -73,5 +73,14 @@ public class OperatorAlphabet extends Alphabet {
 	public OperatorAlphabet copy() {
 		return (OperatorAlphabet) super.copy();
 	}
+	
+	@Override
+	public Symbol getSymbolForString(String cur) {
+		for (Symbol s: this){
+			if (s.getString().equals(cur) || s.toString().equals(cur))
+				return s;
+		}
+		return null;
+	}
 
 }

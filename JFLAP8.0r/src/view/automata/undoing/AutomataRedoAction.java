@@ -3,7 +3,7 @@ package view.automata.undoing;
 import java.awt.event.ActionEvent;
 
 import model.undo.UndoKeeper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.undoing.redo.RedoAction;
 
 public class AutomataRedoAction extends RedoAction {

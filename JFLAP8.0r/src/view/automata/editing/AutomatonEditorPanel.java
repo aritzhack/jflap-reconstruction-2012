@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.editing;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -53,6 +53,11 @@ import util.Point2DAdv;
 import util.arrows.CurvedArrow;
 import util.view.GraphHelper;
 import view.EditingPanel;
+import view.automata.BlockDrawer;
+import view.automata.LabelBounds;
+import view.automata.Note;
+import view.automata.SelectionAutomatonDrawer;
+import view.automata.StateDrawer;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.EditingTool;
 import view.automata.tools.Tool;

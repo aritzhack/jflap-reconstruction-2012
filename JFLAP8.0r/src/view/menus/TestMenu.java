@@ -8,7 +8,7 @@ import view.action.automata.DFAEqualityAction;
 import view.action.automata.HighlightEmptyTransAction;
 import view.action.automata.HighlightNondeterminismAction;
 import view.action.grammar.GrammarTypeTestAction;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
@@ -32,7 +32,7 @@ public class TestMenu extends JMenu implements TabChangeListener {
 		this.removeAll();
 		setVisible(false);
 
-		if (!(view instanceof GrammarView || view instanceof AutomataView))
+		if (!(view instanceof GrammarView || view instanceof AutomatonView))
 			return;
 		setVisible(true);
 
@@ -41,7 +41,7 @@ public class TestMenu extends JMenu implements TabChangeListener {
 			 this.add(new GrammarTypeTestAction(v));
 			 return;
 		}
-		AutomataView v = (AutomataView) view;
+		AutomatonView v = (AutomatonView) view;
 		
 		if (view instanceof FSAView) {
 			this.add(new DFAEqualityAction((FSAView) v));

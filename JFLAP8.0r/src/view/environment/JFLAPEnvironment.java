@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import debug.JFLAPDebug;
 import model.automata.turing.TuringMachine;
 import model.graph.TransitionGraph;
 import universe.preferences.JFLAPPreferences.PREF_CHANGE;
@@ -29,9 +30,9 @@ import universe.preferences.PreferenceChangeListener;
 import util.JFLAPConstants;
 import view.EditingPanel;
 import view.ViewFactory;
-import view.automata.AutomatonEditorPanel;
-import view.automata.BlockEditorPanel;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.BlockEditorPanel;
+import view.automata.views.AutomatonView;
 import view.automata.views.BlockTMView;
 import view.automata.views.TuringMachineView;
 import view.formaldef.FormalDefinitionView;
@@ -203,8 +204,8 @@ public class JFLAPEnvironment extends JFrame implements
 		for (int i = 0; i < myTabbedPane.getTabCount(); i++) {
 			Component c = myTabbedPane.getComponent(i);
 
-			if (c instanceof AutomataView) {
-				return ((AutomataView) c).createData();
+			if (c instanceof AutomatonView) {
+				return ((AutomatonView) c).createData();
 			} else if (c instanceof FormalDefinitionView) {
 				return ((FormalDefinitionView) c).getDefinition();
 			} else if (c instanceof PumpingLemmaInputView) {
@@ -361,7 +362,9 @@ public class JFLAPEnvironment extends JFrame implements
 
 	@Override
 	public String toString() {
-		return "Environment: " + this.getFileName() + " | id: " + this.getID();
+		if(this.getFileName().isEmpty())
+			return "Environment: "+this.getID(); 
+		return "Environment: " + this.getFileName();
 	}
 
 	private void addPLChooser() {
@@ -482,7 +485,7 @@ public class JFLAPEnvironment extends JFrame implements
 				&& current instanceof CYKParseView) {
 			((CYKParseView) current).getRunningView().changeDiagonal(
 					(Boolean) val);
-		} else if (current instanceof AutomataView) {
+		} else if (current instanceof AutomatonView) {
 			if (pref.equals(PREF_CHANGE.lambda_change.toString()))
 				distributeTabChangedEvent();
 

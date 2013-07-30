@@ -2,8 +2,8 @@ package view.automata.undoing;
 
 import model.automata.State;
 import model.undo.IUndoRedo;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class StateLabelRemoveEvent extends EditingEvent{
 

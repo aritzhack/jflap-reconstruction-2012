@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import model.undo.IUndoRedo;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class CompoundMoveEvent extends ClearSelectionEvent {
 

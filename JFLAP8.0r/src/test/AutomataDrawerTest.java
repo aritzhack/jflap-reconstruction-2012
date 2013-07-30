@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import debug.JFLAPDebug;
-
 import model.algorithms.testinput.simulate.AutomatonSimulator;
 import model.algorithms.testinput.simulate.ConfigurationChain;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
@@ -24,10 +23,10 @@ import model.undo.UndoKeeper;
 import util.JFLAPConstants;
 import view.action.automata.SimulateAction;
 import view.automata.AutomatonDrawer;
-import view.automata.AutomatonEditorPanel;
 import view.automata.StateDrawer;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.ConfigurationButton;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.graph.GraphDrawer;
 import file.xml.XMLCodec;
 import file.xml.graph.AutomatonEditorData;
@@ -43,7 +42,7 @@ public class AutomataDrawerTest extends TestHarness implements JFLAPConstants{
 		TransitionGraph graph = a.getGraph();
 		outPrintln("After import:\n" + a.toString());
 		JFrame frame =  new JFrame();
-		AutomataView panel = new AutomataView(graph.getAutomaton(), new UndoKeeper(), true);
+		AutomatonView panel = new AutomatonView(graph.getAutomaton(), new UndoKeeper(), true);
 		((AutomatonEditorPanel) panel.getCentralPanel()).setGraph(graph);
 		
 //		Simu

@@ -36,7 +36,7 @@ public abstract class NewAction<T> extends AbstractAction {
 				new NewGrammarAction(), 
 				new NewSetsAction(),
 				new NewLSystemAction(),
-//				new NewRegexAction(),
+				new NewRegexAction(),
 				new NewRegPumpingLemmaAction(), 
 				new NewCFPumpingLemmaAction() };
 	}

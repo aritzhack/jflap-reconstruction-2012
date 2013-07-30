@@ -8,7 +8,7 @@ import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * Transition Table for PushdownAutomata.

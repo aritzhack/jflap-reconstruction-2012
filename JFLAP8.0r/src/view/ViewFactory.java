@@ -22,9 +22,9 @@ import model.pumping.ContextFreePumpingLemma;
 import model.pumping.PumpingLemma;
 import model.pumping.RegularPumpingLemma;
 import model.regex.RegularExpression;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.AutomatonView;
 import view.automata.views.BlockTMView;
 import view.automata.views.FSAView;
 import view.automata.views.MealyView;
@@ -41,6 +41,7 @@ import view.pumping.HumanRegPumpingLemmaInputView;
 import view.pumping.PumpingLemmaChooserView;
 import view.pumping.PumpingLemmaInputView;
 import view.pumping.RegPumpingLemmaChooser;
+import view.regex.RegexView;
 import debug.JFLAPDebug;
 import file.xml.XMLCodec;
 import file.xml.graph.AutomatonEditorData;
@@ -62,6 +63,7 @@ public class ViewFactory {
 		myClassToComponent.put(MooreMachine.class, MooreView.class);
 		myClassToComponent.put(MultiTapeTuringMachine.class, MultiTapeTMView.class);
 		myClassToComponent.put(BlockTuringMachine.class, BlockTMView.class);
+		myClassToComponent.put(RegularExpression.class, RegexView.class);
 //		myClassToComponent.put(SetsManager.class, SetsView.class);
 
 	}
@@ -112,12 +114,12 @@ public class ViewFactory {
          return inputPane;
 	}
 	
-	public static AutomataView createAutomataView(AutomatonEditorData data){
+	public static AutomatonView createAutomataView(AutomatonEditorData data){
 		TransitionGraph graph = data.getGraph();
 		Map<Point2D, String> labels = data.getLabels(), notes = data.getNotes();
 		
 		Automaton auto = graph.getAutomaton();
-		AutomataView view = (AutomataView) createView(auto);
+		AutomatonView view = (AutomatonView) createView(auto);
 		AutomatonEditorPanel panel = (AutomatonEditorPanel) view.getCentralPanel();
 		
 		panel.setGraph(graph);

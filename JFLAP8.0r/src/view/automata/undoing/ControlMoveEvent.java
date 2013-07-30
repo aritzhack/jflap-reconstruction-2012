@@ -5,10 +5,8 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import debug.JFLAPDebug;
-
 import util.Point2DAdv;
-import view.automata.AutomatonEditorPanel;
-
+import view.automata.editing.AutomatonEditorPanel;
 import model.automata.State;
 import model.graph.ControlPoint;
 import model.undo.IUndoRedo;

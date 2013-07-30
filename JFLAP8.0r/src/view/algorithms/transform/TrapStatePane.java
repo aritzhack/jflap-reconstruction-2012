@@ -25,7 +25,7 @@ import model.change.events.AdvancedChangeEvent;
 import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import view.automata.AutomatonDisplayPanel;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.NonTransitionArrowTool;
 import view.automata.tools.ToolBar;
 import view.automata.tools.TrapStateTool;

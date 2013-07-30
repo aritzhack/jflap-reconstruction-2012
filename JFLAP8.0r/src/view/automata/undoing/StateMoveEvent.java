@@ -3,13 +3,12 @@ package view.automata.undoing;
 import java.awt.geom.Point2D;
 
 import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.undo.IUndoRedo;
 import util.JFLAPConstants;
 import util.view.GraphHelper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * Undoing Event for moving a State from one specific point to another, such that
