@@ -20,12 +20,12 @@ import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import view.automata.AutomatonDisplayPanel;
-import view.automata.AutomatonEditorPanel;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.AutomatonView;
 
 public class HighlightEmptyTransAction extends AutomatonAction {
 
-	public HighlightEmptyTransAction(AutomataView view) {
+	public HighlightEmptyTransAction(AutomatonView view) {
 		super("Highlight "+JFLAPPreferences.getEmptyString()+"-Transitions", view);
 	}
 

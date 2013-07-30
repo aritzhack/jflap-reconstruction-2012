@@ -9,7 +9,7 @@ import javax.swing.KeyStroke;
 import debug.JFLAPDebug;
 import model.undo.UndoKeeper;
 import util.JFLAPConstants;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.undoing.undo.UndoAction;
 
 public class AutomataUndoAction extends UndoAction{

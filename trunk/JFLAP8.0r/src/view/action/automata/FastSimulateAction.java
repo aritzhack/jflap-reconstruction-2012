@@ -27,7 +27,7 @@ import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.symbols.SymbolString;
 import universe.JFLAPUniverse;
 import view.automata.simulate.TraceWindow;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import debug.JFLAPDebug;
 
@@ -52,7 +52,7 @@ public class FastSimulateAction extends SimulateAction {
 	 * @param environment
 	 *            the environment object that we shall add our simulator pane to
 	 */
-	public FastSimulateAction(AutomataView view) {
+	public FastSimulateAction(AutomatonView view) {
 		super(view, false);
 		putValue(NAME, "Fast Run...");
 		putValue(ACCELERATOR_KEY, null);

@@ -31,8 +31,8 @@ import model.automata.turing.MultiTapeTuringMachine;
 import model.graph.LayoutAlgorithm;
 import model.graph.LayoutAlgorithmFactory;
 import util.JFLAPConstants;
-import view.automata.AutomatonEditorPanel;
-import view.automata.views.AutomataView;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.views.AutomatonView;
 
 /**
  * This action allows for a layout algorithm to be applied to an automaton.
@@ -59,7 +59,7 @@ public class LayoutAlgorithmAction<T extends Automaton<S>, S extends Transition<
 	 *     a numerical identifier for the algorithm that will be used.  The constants
 	 *     utilized are stored in automata.graph.LayoutAlgorithmFactory.
 	 */
-	public LayoutAlgorithmAction(String s, AutomataView<T, S> view, int algm) {
+	public LayoutAlgorithmAction(String s, AutomatonView<T, S> view, int algm) {
 		super(s, view);
 		algorithm = algm;
 	}

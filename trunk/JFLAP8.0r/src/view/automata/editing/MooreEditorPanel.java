@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.editing;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,7 +13,6 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import debug.JFLAPDebug;
-
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.OutputFunctionSet;
@@ -25,6 +24,7 @@ import model.symbols.SymbolString;
 import model.undo.UndoKeeper;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
+import view.automata.Note;
 
 public class MooreEditorPanel extends
 		AutomatonEditorPanel<MooreMachine, FSATransition> {

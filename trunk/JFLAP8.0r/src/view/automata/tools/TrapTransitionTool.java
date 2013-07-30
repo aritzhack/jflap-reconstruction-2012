@@ -13,7 +13,7 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.environment.JFLAPEnvironment;
 
 public class TrapTransitionTool extends TransitionTool<FiniteStateAcceptor, FSATransition> {

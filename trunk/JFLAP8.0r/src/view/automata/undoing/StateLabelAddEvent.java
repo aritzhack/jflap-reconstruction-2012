@@ -5,8 +5,8 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
 import model.automata.State;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class StateLabelAddEvent extends EditingEvent{
 	

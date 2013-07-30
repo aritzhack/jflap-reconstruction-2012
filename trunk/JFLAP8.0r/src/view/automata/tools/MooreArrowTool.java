@@ -8,8 +8,8 @@ import javax.swing.SwingUtilities;
 import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.transducers.moore.MooreMachine;
-import view.automata.MooreEditorPanel;
 import view.automata.Note;
+import view.automata.editing.MooreEditorPanel;
 import view.automata.undoing.MooreOutputRenameEvent;
 
 /**

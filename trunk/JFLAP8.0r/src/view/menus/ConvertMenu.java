@@ -6,7 +6,7 @@ import javax.swing.JMenu;
 
 import view.action.automata.CombineAutomataAction;
 import view.action.automata.TrapStateAction;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
@@ -29,7 +29,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		this.removeAll();
 		setVisible(false);
 		
-		if(!(view instanceof GrammarView || view instanceof AutomataView
+		if(!(view instanceof GrammarView || view instanceof AutomatonView
 //				|| view instanceof RegexView
 				))
 			return;
@@ -39,8 +39,8 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 			//TODO: Grammar conversions
 		}
 		
-		if(view instanceof AutomataView){
-			AutomataView v = (AutomataView) view;
+		if(view instanceof AutomatonView){
+			AutomatonView v = (AutomatonView) view;
 			if(view instanceof FSAView)
 				this.add(new TrapStateAction((FSAView) view));
 			this.add(new CombineAutomataAction(v));

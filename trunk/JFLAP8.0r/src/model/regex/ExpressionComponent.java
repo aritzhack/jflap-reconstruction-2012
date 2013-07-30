@@ -38,13 +38,15 @@ public class ExpressionComponent extends FormalDefinitionComponent implements Us
 	public boolean setTo(SymbolString exp){
 		ChangeEvent e = new ExpressionChangedEvent(this, myExpression, exp);
 		if (myExpression == null) myExpression = new SymbolString();
+		if(myExpression.equals(exp))
+			return false;
 		boolean changed = myExpression.setTo(exp);
 		distributeChange(e);
 		return changed;
 	}
 	
 	public SymbolString getExpression(){
-		return new SymbolString(myExpression);
+		return myExpression == null ? null : new SymbolString(myExpression);
 	}
 	
 	@Override

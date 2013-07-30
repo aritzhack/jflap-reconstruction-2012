@@ -2,16 +2,16 @@ package view.automata.views;
 
 import java.awt.Component;
 import java.awt.Dimension;
+
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
 import file.xml.graph.AutomatonEditorData;
-
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.graph.TransitionGraph;
 import model.undo.UndoKeeper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.tools.ArrowTool;
 import view.automata.tools.DeleteTool;
 import view.automata.tools.StateTool;
@@ -24,15 +24,15 @@ import view.undoing.redo.RedoAction;
 import view.undoing.redo.RedoButton;
 import view.undoing.undo.UndoButton;
 
-public class AutomataView<T extends Automaton<S>, S extends Transition<S>>
+public class AutomatonView<T extends Automaton<S>, S extends Transition<S>>
 		extends BasicFormalDefinitionView<T> {
 	private static final Dimension AUTOMATON_SIZE = new Dimension(500, 600);
 
-	public AutomataView(T model) {
+	public AutomatonView(T model) {
 		this(model, new UndoKeeper(), true);
 	}
 	
-	public AutomataView(T model, UndoKeeper keeper, boolean editable) {
+	public AutomatonView(T model, UndoKeeper keeper, boolean editable) {
 		super(model, keeper, editable);
 		setPreferredSize(AUTOMATON_SIZE);
 		

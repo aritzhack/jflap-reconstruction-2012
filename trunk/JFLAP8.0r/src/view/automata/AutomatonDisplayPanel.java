@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
 import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -18,6 +17,8 @@ import model.undo.UndoKeeper;
 import universe.JFLAPUniverse;
 import util.JFLAPConstants;
 import util.view.magnify.MagnifiablePanel;
+import view.automata.editing.AutomatonEditorPanel;
+import view.automata.editing.MooreEditorPanel;
 
 public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends MagnifiablePanel {

@@ -1,7 +1,7 @@
 package view.automata.undoing;
 
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 public abstract class SingleNoteEvent extends EditingEvent {
 

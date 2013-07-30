@@ -8,7 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import debug.JFLAPDebug;
-
 import model.algorithms.testinput.simulate.SingleInputSimulator;
 import model.automata.Automaton;
 import model.automata.Transition;
@@ -17,7 +16,7 @@ import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.view.SplitFactory;
 import view.automata.AutomatonDisplayPanel;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends AutomatonDisplayPanel<T, S> {

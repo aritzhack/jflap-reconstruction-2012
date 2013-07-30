@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import model.undo.IUndoRedo;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class NoteRemoveEvent extends EditingEvent {
 

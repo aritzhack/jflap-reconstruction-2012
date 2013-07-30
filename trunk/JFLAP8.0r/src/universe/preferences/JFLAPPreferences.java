@@ -84,6 +84,7 @@ public class JFLAPPreferences {
 
 	private static String LAMBDA = JFLAPConstants.LAMBDA;
 	private static String EMPTY_SET = JFLAPConstants.EMPTY_SET;
+	private static String EMPTY_SUB = "!";
 
 	private static double DEFAULT_LS_DISTANCE = JFLAPConstants.DEFAULT_LS_DISTANCE;
 	private static double DEFAULT_LS_ANGLE = JFLAPConstants.DEFAULT_LS_ANGLE;
@@ -409,7 +410,11 @@ public class JFLAPPreferences {
 	}
 
 	public static EmptySub getSubForEmptyString() {
-		return new EmptySub("!");
+		return new EmptySub(EMPTY_SUB);
+	}
+	
+	public static String getEmptySubLiteral() {
+		return EMPTY_SUB;
 	}
 
 	public static Terminal getEndOfStringMarker() {

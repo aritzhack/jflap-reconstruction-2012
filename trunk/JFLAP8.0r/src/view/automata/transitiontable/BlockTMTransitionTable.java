@@ -8,7 +8,7 @@ import model.automata.turing.buildingblock.BlockTransition;
 import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * Transition Table for BlockTuringMachines.

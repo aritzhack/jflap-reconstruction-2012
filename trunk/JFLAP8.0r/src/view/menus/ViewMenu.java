@@ -8,7 +8,7 @@ import model.graph.LayoutAlgorithmFactory;
 import model.graph.layout.VertexMover;
 import view.action.automata.LayoutAlgorithmAction;
 import view.action.automata.LayoutStorageAction;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -30,9 +30,9 @@ public class ViewMenu extends JMenu implements TabChangeListener {
 		this.removeAll();
 		setVisible(false);
 		
-		if(currentView instanceof AutomataView){
+		if(currentView instanceof AutomatonView){
 			setVisible(true);
-			AutomataView v = (AutomataView) currentView;
+			AutomatonView v = (AutomatonView) currentView;
 			LayoutStorageAction store = new LayoutStorageAction("Save Current Graph Layout", 
 					"Restore Saved Graph Layout", v);			
 			this.add(store);			

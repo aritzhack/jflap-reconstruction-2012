@@ -1,4 +1,4 @@
-package view.automata;
+package view.automata.editing;
 
 import java.awt.geom.Point2D;
 
@@ -31,9 +31,9 @@ public class BlockEditorPanel extends
 		moveState(b, p);
 		
 		TuringMachine machine = b.getTuringMachine();
-		TransitionGraph graph = machine instanceof BlockTuringMachine ? new BlockTMGraph((BlockTuringMachine) machine) : 
-			new TransitionGraph<MultiTapeTMTransition>((MultiTapeTuringMachine) machine);
-		setGraph(machine, graph);
+//		TransitionGraph graph = machine instanceof BlockTuringMachine ? new BlockTMGraph((BlockTuringMachine) machine) : 
+//			new TransitionGraph<MultiTapeTMTransition>((MultiTapeTuringMachine) machine);
+		setGraph(machine, new TransitionGraph(machine));
 		return b;
 	}
 	

@@ -1,6 +1,6 @@
 package view.automata.undoing;
 
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class ClearSelectionEvent extends EditingEvent {
 

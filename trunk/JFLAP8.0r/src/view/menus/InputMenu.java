@@ -13,7 +13,7 @@ import view.action.grammar.parse.BruteParseAction;
 import view.action.grammar.parse.CYKParseAction;
 import view.action.lsystem.LSystemRenderAction;
 import view.automata.views.AcceptorView;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.automata.views.TuringMachineView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
@@ -60,8 +60,8 @@ public class InputMenu extends JMenu implements TabChangeListener {
 				LSystemInputView v = (LSystemInputView) view;
 				this.add(new LSystemRenderAction(v));
 			}
-			if (view instanceof AutomataView){
-				AutomataView v = (AutomataView) view;
+			if (view instanceof AutomatonView){
+				AutomatonView v = (AutomatonView) view;
 				this.add(new SimulateAction(v, true));
 				
 				if (view instanceof AcceptorView ){

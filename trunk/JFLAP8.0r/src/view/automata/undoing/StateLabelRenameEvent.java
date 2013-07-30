@@ -1,8 +1,8 @@
 package view.automata.undoing;
 
 import model.automata.State;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 public class StateLabelRenameEvent extends NoteRenameEvent {
 	

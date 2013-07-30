@@ -34,13 +34,13 @@ import model.automata.Transition;
 import model.automata.TransitionSet;
 import model.undo.IUndoRedo;
 import util.Point2DAdv;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.undoing.CompoundMoveEvent;
 import view.automata.undoing.ControlMoveEvent;
 import view.automata.undoing.NoteMoveEvent;
 import view.automata.undoing.StateMoveEvent;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 
 /**
  * Action that allows for the current automaton layout to be saved and possibly restored later.
@@ -64,7 +64,7 @@ public class LayoutStorageAction extends AutomatonAction {
 	 * @param restoreString the title of the action that restores the saved layout.
 	 * @param automaton the automaton whose layout will be saved or restored.
 	 */
-	public LayoutStorageAction(String saveString, String restoreString, AutomataView view){
+	public LayoutStorageAction(String saveString, String restoreString, AutomatonView view){
 		super(saveString, view);
 		myObjectsToPoints = new HashMap<Object, Point2D>();
 		

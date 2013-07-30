@@ -1,6 +1,6 @@
 package view.automata.undoing;
 
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.IUndoRedo;

@@ -14,8 +14,8 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import util.JFLAPConstants;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.undoing.NoteRemoveEvent;
 
 /**

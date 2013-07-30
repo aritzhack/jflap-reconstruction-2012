@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import model.automata.Automaton;
 import model.automata.Transition;
 import model.undo.UndoKeeper;
-import view.automata.AutomatonEditorPanel;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
  * Superclass for all Tools that require access to the AutomatonEditorPanel that

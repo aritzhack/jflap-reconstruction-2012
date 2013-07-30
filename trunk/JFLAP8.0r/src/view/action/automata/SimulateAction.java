@@ -33,7 +33,7 @@ import universe.JFLAPUniverse;
 import universe.preferences.JFLAPPreferences;
 import util.JFLAPConstants;
 import view.automata.simulate.SimulatorPanel;
-import view.automata.views.AutomataView;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -45,7 +45,7 @@ public class SimulateAction extends AutomatonAction {
 
 	private boolean myClosure;
 
-	public SimulateAction(AutomataView view, boolean closure) {
+	public SimulateAction(AutomatonView view, boolean closure) {
 		super((closure ? "Step..." : "Step by State..."), view);
 		Automaton auto = getAutomaton();
 		myClosure = closure;
