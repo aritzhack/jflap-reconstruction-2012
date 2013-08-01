@@ -75,14 +75,14 @@ public class ConfigurationController extends JToolBar {
 
 	private void initView() {
 		configurationToTraceWindow = new HashMap<ConfigurationChain, TraceWindow>();
-		this.add(new TooltipAction("Step", "Moves existing valid "
-				+ "myConfigPanel to the next " + "myConfigPanel.") {
+		this.add(new TooltipAction("Step", "Move existing valid "
+				+ "configurations to the next configuration.") {
 			public void actionPerformed(ActionEvent e) {
 				step();
 			}
 		});
 
-		this.add(new TooltipAction("Reset", "Resets the simulation to "
+		this.add(new TooltipAction("Reset", "Reset the simulation to "
 				+ "start conditions.") {
 			public void actionPerformed(ActionEvent e) {
 				reset();
@@ -102,25 +102,25 @@ public class ConfigurationController extends JToolBar {
 //				}
 //			});
 		}
-		this.add(new AbstractAction("Freeze") {
+		this.add(new TooltipAction("Freeze", "Freeze selected configurations.") {
 			public void actionPerformed(ActionEvent e) {
 				freeze();
 			}
 		});
 
-		this.add(new AbstractAction("Thaw") {
+		this.add(new TooltipAction("Thaw", "Thaw selected frozen configurations.") {
 			public void actionPerformed(ActionEvent e) {
 				thaw();
 			}
 		});
 
-		this.add(new AbstractAction("Trace") {
+		this.add(new TooltipAction("Trace", "Open trace windows for selected configurations.") {
 			public void actionPerformed(ActionEvent e) {
 				trace();
 			}
 		});
 
-		this.add(new AbstractAction("Remove") {
+		this.add(new TooltipAction("Remove", "Remove selected configurations.") {
 			public void actionPerformed(ActionEvent e) {
 				remove();
 			}

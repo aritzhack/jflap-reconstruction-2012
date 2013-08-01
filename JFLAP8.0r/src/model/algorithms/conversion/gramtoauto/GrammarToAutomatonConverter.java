@@ -96,7 +96,16 @@ public abstract class GrammarToAutomatonConverter<T extends Automaton<S>, S exte
 		S trans = this.convertProduction(p);
 		boolean success = trans != null && 
 				this.getConvertedAutomaton().getTransitions().add(trans);
-		if (success) myConvertedProductions.add(p);
+		if (success)
+			success = success && myConvertedProductions.add(p);
+		return success;
+	}
+	
+	public boolean addConvertedProduction(Production p) {
+		S trans = this.convertProduction(p);
+		boolean success = trans != null && getConvertedAutomaton().getTransitions().contains(trans);
+		if(success) 
+			success = success && myConvertedProductions.add(p);
 		return success;
 	}
 

@@ -4,7 +4,7 @@ import model.algorithms.conversion.autotogram.PDAVariableMapping;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import view.algorithms.conversion.AutomatonConversionPanel;
+import view.algorithms.conversion.AutoToGramConversionPanel;
 import view.algorithms.conversion.PDAtoCFGPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.PDAView;
@@ -16,7 +16,7 @@ public class PDAtoCFGAction extends AutomatonToGrammarAction<PushdownAutomaton, 
 	}
 
 	@Override
-	public AutomatonConversionPanel createConversionPanel() {
+	public AutoToGramConversionPanel createConversionPanel() {
 
 		PDAtoCFGConverter convert = new PDAtoCFGConverter((PushdownAutomaton) getAutomaton());
 		return new PDAtoCFGPanel(getEditorPanel(), convert);

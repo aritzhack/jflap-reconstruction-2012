@@ -1,14 +1,13 @@
 package model.algorithms.testinput.simulate;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import debug.JFLAPDebug;
-
 import util.Copyable;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.SingleInputTransition;
@@ -44,8 +43,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 		myPrimary = primary;
 		myStrings = strings;
 		this.setState(s);
-		updateAccept();
-		updateReject();
+
 	}
 
 	private LinkedList<T> findValidTransitions() {
@@ -98,8 +96,8 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 				Configuration c = createNextConfiguration(trans);
 				configs.add(c);
 				c.setTransitionTo(trans);
-				c.updateAccept();
-				c.updateReject();
+				c.updateAccept(); 
+				
 			}
 		}
 		
@@ -108,7 +106,7 @@ public abstract class Configuration<S extends Automaton<T>, T extends Transition
 	}
 
 	private boolean checkAccept() {
-		return this.isDone() && this.isInFinalState();
+		return !this.hasNextState() && this.isDone() && this.isInFinalState();
 	}
 
 	protected boolean isInFinalState(){

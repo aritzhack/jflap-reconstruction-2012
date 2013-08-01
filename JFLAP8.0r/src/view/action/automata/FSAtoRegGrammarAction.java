@@ -1,6 +1,6 @@
 package view.action.automata;
 
-import view.algorithms.conversion.AutomatonConversionPanel;
+import view.algorithms.conversion.AutoToGramConversionPanel;
 import view.algorithms.conversion.FSAtoRegGrammarPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
@@ -16,7 +16,7 @@ public class FSAtoRegGrammarAction extends AutomatonToGrammarAction<FiniteStateA
 	}
 
 	@Override
-	public AutomatonConversionPanel<FiniteStateAcceptor, FSATransition, FSAVariableMapping> createConversionPanel() {
+	public AutoToGramConversionPanel<FiniteStateAcceptor, FSATransition, FSAVariableMapping> createConversionPanel() {
 		FSAtoRegGrammarConversion convert = new FSAtoRegGrammarConversion((FiniteStateAcceptor) getAutomaton());
 		return new FSAtoRegGrammarPanel(getEditorPanel(), convert);
 	}
