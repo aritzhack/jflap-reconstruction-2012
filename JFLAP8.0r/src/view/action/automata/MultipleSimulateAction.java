@@ -363,7 +363,7 @@ public class MultipleSimulateAction extends FastSimulateAction {
 
 		public MultiplePane(AutomatonEditorPanel editor, JPanel info) {
 			super(editor, editor.getAutomaton(), "Multiple Run");
-			update();
+			updateSize();
 
 			Dimension size = getPreferredSize(), infoSize = info
 					.getMinimumSize();

@@ -41,13 +41,13 @@ public class TrapStatePane extends
 			AddTrapStateAlgorithm alg) {
 		super(editor, alg.getDFAWithTrapState(), "Adding Trap State");
 		myAlg = alg;
-		update();
+		updateSize();
 		initView();
 	}
 	
 	@Override
-	public void update() {
-		super.update();
+	public void updateSize() {
+		super.updateSize();
 		setPreferredSize(new Dimension(getPreferredSize().width, getPreferredSize().height + 100));
 	}
 

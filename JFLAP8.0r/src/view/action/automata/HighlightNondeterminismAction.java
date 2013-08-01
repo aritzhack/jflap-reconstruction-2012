@@ -53,7 +53,7 @@ public class HighlightNondeterminismAction extends AutomatonAction {
 				panel.selectObject(new State[]{t.getFromState(), t.getToState()});
 			}
 			panel.selectAll(Arrays.asList(states));
-			update();
+			updateSize();
 		}
 
 		

@@ -53,7 +53,7 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 		add(myPanel, BorderLayout.CENTER);
 	}
 
-	public void update() {
+	public void updateSize() {
 		Graphics g = getGraphics();
 		myPanel.updateBounds(g);
 		

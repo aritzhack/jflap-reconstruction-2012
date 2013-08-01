@@ -57,7 +57,7 @@ public class HighlightEmptyTransAction extends AutomatonAction {
 			
 			for(Transition t : lambdas)
 				panel.selectObject(new State[]{t.getFromState(), t.getToState()});
-			update();
+			updateSize();
 		}
 	}
 }

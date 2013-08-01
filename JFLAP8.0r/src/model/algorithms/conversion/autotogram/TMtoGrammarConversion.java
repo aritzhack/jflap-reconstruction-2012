@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
+import debug.JFLAPDebug;
 import model.algorithms.AlgorithmException;
 import model.algorithms.steppable.AlgorithmStep;
 import model.automata.InputAlphabet;
@@ -13,14 +15,14 @@ import model.automata.TransitionSet;
 import model.automata.turing.MultiTapeTMTransition;
 import model.automata.turing.MultiTapeTuringMachine;
 import model.automata.turing.TuringMachineMove;
-import model.symbols.Symbol;
-import model.symbols.SymbolString;
-import model.grammar.Terminal;
-import model.grammar.Variable;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.grammar.VariableAlphabet;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import errors.BooleanWrapper;
 
 /**
@@ -54,6 +56,12 @@ public class TMtoGrammarConversion
 	@Override
 	public boolean isStartMapping(TMVariableMapping mapping) {
 		return false;
+	}
+	
+	@Override
+	public boolean isComplete() {
+		// TODO Auto-generated method stub
+		return super.isComplete() && hasAllAdditionProductions() && finalCopy.isEmpty();
 	}
 
 	@Override
@@ -158,9 +166,10 @@ public class TMtoGrammarConversion
 	 * @param j
 	 *		the final state for which terminal productions are needed.
 	 */
-	private boolean addFinalTransition(State j){
+	public boolean addFinalTransition(State j){
 		ProductionSet productionSet = getConvertedGrammar().getProductionSet();
-		
+		if(!finalCopy.contains(j))
+			return false;
 		MultiTapeTuringMachine tm = getAutomaton();
 		TransitionSet<MultiTapeTMTransition> transitions = tm.getTransitions();
 		
@@ -179,6 +188,7 @@ public class TMtoGrammarConversion
 				}
 			}
 		}
+		finalCopy.remove(j);
 		return true;
 	}
 
@@ -200,6 +210,17 @@ public class TMtoGrammarConversion
 		}
 
 		return bw.toArray(new BooleanWrapper[0]);
+	}
+	
+	public boolean hasAllAdditionProductions() {
+		Symbol blank = getOriginalDefinition().getBlankSymbol();
+		Terminal square = new Terminal(blank.getString());
+		Production squareToLambda = new Production(square, new SymbolString());
+		return getConvertedGrammar().getProductionSet().contains(squareToLambda);
+	}
+	
+	public TreeSet<State> getUnhandledFinalStates() {
+		return new TreeSet<State>(finalCopy);
 	}
 
 	@Override
@@ -228,7 +249,7 @@ public class TMtoGrammarConversion
 
 		@Override
 		public boolean isComplete() {
-			return !getConvertedGrammar().getProductionSet().isEmpty();
+			return hasAllAdditionProductions();
 		}
 
 	}
@@ -249,7 +270,6 @@ public class TMtoGrammarConversion
 		public boolean execute() throws AlgorithmException {
 			List<State> finalList = new ArrayList<State>(finalCopy);
 			State j = finalList.remove(0);
-			finalCopy.remove(j);
 			return addFinalTransition(j);
 		}
 
@@ -265,7 +285,7 @@ public class TMtoGrammarConversion
 	 * from the Linz book. S->T|V__S|SV__, T->TVaa|Va0a for all a in
 	 * <i>inputAlphabet U {square}</i>, square -> lambda
 	 */
-	private boolean addAllExtraProductions() {
+	public boolean addAllExtraProductions() {
 		Grammar gram = getConvertedGrammar();
 		ProductionSet prods = gram.getProductionSet();
 
@@ -283,19 +303,19 @@ public class TMtoGrammarConversion
 		Production startToStartBlank = new Production(S, S, Vblankblank);
 		Production squareToLambda = new Production(square, new SymbolString());
 
-		addAll(prods, startToT, startToBlankStart, startToStartBlank,
+		boolean added = addAll(prods, startToT, startToBlankStart, startToStartBlank,
 				squareToLambda);
 
-		State q0 = getOriginalDefinition().getStates().getStateWithID(0);
+		State q0 = getOriginalDefinition().getStartState();
 
 		for (Symbol a : getAutomaton().getInputAlphabet()) {
 			Production tToTVaa = new Production(T, T, getVariable(a, a));
 			Production tToVa0a = new Production(T, getVariable(a, q0, a));
 
-			addAll(prods, tToTVaa, tToVa0a);
+			added = added && addAll(prods, tToTVaa, tToVa0a);
 		}
 
-		return true;
+		return added;
 	}
 
 	/**
@@ -339,10 +359,13 @@ public class TMtoGrammarConversion
 	/**
 	 * helper method to add multiple items of the same type to one set
 	 */
-	private <T> void addAll(Set<T> set, T... toAdd) {
+	private <T> boolean addAll(Set<T> set, T... toAdd) {
+		boolean added = true;
 		for (T t : toAdd) {
-			set.add(t);
+			if(!set.add(t))
+				added = false;
 		}
+		return added;
 	}
 
 	/**

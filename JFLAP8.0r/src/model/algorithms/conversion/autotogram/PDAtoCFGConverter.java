@@ -143,13 +143,13 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 				errors.add(new BooleanWrapper(false, 
 							"A transition must push 2 or 0 symbols: " + trans.toString()));
 			if (pda.getFinalStateSet().contains(trans.getToState()) &&
-					(!pop[0].equals(pda.getBottomOfStackSymbol()) ||
-							input.length != 0))
+					(pop.length > 0 && (!pop[0].equals(pda.getBottomOfStackSymbol()) ||
+							push.length != 0))){
 				errors.add(new BooleanWrapper(false, 
 												"Upon entering a final state, the stack must be empty." +
 												" Therefore, you must pop the bottom of stack symbol" +
 												" and push on the empty string."));
-			
+			}
 		}
 		
 		
