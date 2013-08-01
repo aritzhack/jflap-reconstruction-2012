@@ -99,6 +99,7 @@ public abstract class Transition<T extends Transition<T>> extends
 	 */
 	@Override
 	public boolean equals(Object o) {
+		if(o == null) return false;
 		if(o.getClass().equals(this.getClass()))
 			return this.compareTo((T) o) == 0;
 		return false;

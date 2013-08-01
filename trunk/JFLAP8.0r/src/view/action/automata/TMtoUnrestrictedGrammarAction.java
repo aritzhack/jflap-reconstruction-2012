@@ -1,6 +1,6 @@
 package view.action.automata;
 
-import view.algorithms.conversion.AutomatonConversionPanel;
+import view.algorithms.conversion.AutoToGramConversionPanel;
 import view.algorithms.conversion.TMtoUGPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.MultiTapeTMView;
@@ -16,7 +16,7 @@ public class TMtoUnrestrictedGrammarAction extends AutomatonToGrammarAction<Mult
 	}
 
 	@Override
-	public AutomatonConversionPanel<MultiTapeTuringMachine, MultiTapeTMTransition, TMVariableMapping> createConversionPanel() {
+	public AutoToGramConversionPanel<MultiTapeTuringMachine, MultiTapeTMTransition, TMVariableMapping> createConversionPanel() {
 		TMtoGrammarConversion convert = new TMtoGrammarConversion((MultiTapeTuringMachine) getAutomaton());
 		return new TMtoUGPanel(getEditorPanel(), convert);
 	}

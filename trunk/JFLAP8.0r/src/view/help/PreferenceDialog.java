@@ -27,6 +27,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
+import debug.JFLAPDebug;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import universe.JFLAPUniverse;
 import universe.preferences.JFLAPMode;
@@ -141,10 +142,10 @@ public class PreferenceDialog extends JDialog {
 		JPanel panel = new JPanel();
 		panel.add(new JLabel("Custom Mode Grouping Pair: "));
 		ButtonGroup group = new ButtonGroup();
-		
-		JRadioButton pointyBrackets = new JRadioButton(new GroupingAction(POINTY_BRACKETS));
-		JRadioButton squareBrackets = new JRadioButton(new GroupingAction(SQUARE_BRACKETS));
+
 		JRadioButton paren = new JRadioButton(new GroupingAction(PARENS));
+		JRadioButton squareBrackets = new JRadioButton(new GroupingAction(SQUARE_BRACKETS));
+		JRadioButton pointyBrackets = new JRadioButton(new GroupingAction(POINTY_BRACKETS));
 		JRadioButton curlyBrackets = new JRadioButton(new GroupingAction(CURLY_BRACKETS));
 		
 		panel.add(pointyBrackets);
@@ -158,6 +159,7 @@ public class PreferenceDialog extends JDialog {
 		group.add(curlyBrackets);
 		
 		GroupingPair selected = JFLAPPreferences.getDefaultGrouping();
+
 		if (selected.equals(new GroupingPair(CURLY_BRACKETS[0], CURLY_BRACKETS[1])))
 			curlyBrackets.doClick();
 		else if (selected.equals(new GroupingPair(PARENS[0], PARENS[1])))

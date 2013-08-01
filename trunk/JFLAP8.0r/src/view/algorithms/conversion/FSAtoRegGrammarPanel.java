@@ -12,7 +12,7 @@ import model.automata.acceptors.Acceptor;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 
-public class FSAtoRegGrammarPanel extends AutomatonConversionPanel<FiniteStateAcceptor, FSATransition, FSAVariableMapping>{
+public class FSAtoRegGrammarPanel extends AutoToGramConversionPanel<FiniteStateAcceptor, FSATransition, FSAVariableMapping>{
 
 	public FSAtoRegGrammarPanel(
 			AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> editor,

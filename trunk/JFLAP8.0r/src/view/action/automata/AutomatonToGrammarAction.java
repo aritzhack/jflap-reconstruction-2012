@@ -9,7 +9,7 @@ import model.algorithms.conversion.autotogram.VariableMapping;
 import model.automata.Automaton;
 import model.automata.Transition;
 import universe.JFLAPUniverse;
-import view.algorithms.conversion.AutomatonConversionPanel;
+import view.algorithms.conversion.AutoToGramConversionPanel;
 import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 
@@ -20,7 +20,7 @@ public abstract class AutomatonToGrammarAction<T extends Automaton<S>, S extends
 		super("Convert to Grammar", view);
 	}
 
-	public abstract AutomatonConversionPanel<T, S, R> createConversionPanel();
+	public abstract AutoToGramConversionPanel<T, S, R> createConversionPanel();
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -34,7 +34,7 @@ public abstract class AutomatonToGrammarAction<T extends Automaton<S>, S extends
 			return;
 		}
 
-		AutomatonConversionPanel<T, S, R> convert = createConversionPanel();
+		AutoToGramConversionPanel<T, S, R> convert = createConversionPanel();
 		env.addSelectedComponent(convert);
 	}
 

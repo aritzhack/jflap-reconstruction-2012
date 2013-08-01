@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import oldnewstuff.main.JFLAP;
 import debug.JFLAPDebug;
-
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -75,9 +75,13 @@ public class SingleInputSimulator extends AutomatonSimulator {
 
 		if (closure) {
 			Configuration next = nextConfigs.pollFirst();
-
-			while (next != null && next.getTransitionTo().isLambdaTransition())
+			
+			while (next != null){
+				Transition trans = next.getTransitionTo();
+				if(trans == null || !trans.isLambdaTransition() || trans.isLoop())
+					break;
 				next = nextConfigs.pollFirst();
+			}
 			if (next != null) {
 				chain.add(next);
 				chains.add(chain);
@@ -88,7 +92,9 @@ public class SingleInputSimulator extends AutomatonSimulator {
 			}
 
 			for (Configuration c : nextConfigs) {
-				if (!c.getTransitionTo().isLambdaTransition()) {
+				Transition trans = c.getTransitionTo();
+				
+				if (trans == null || !trans.isLambdaTransition()) {
 					String nextID = chain.getID() + chain.getNumChildren();
 					
 					ConfigurationChain newChain = new ConfigurationChain(c,
@@ -271,7 +277,8 @@ public class SingleInputSimulator extends AutomatonSimulator {
 		// by default, we want non-lambda transitions to continue the current
 		// chain
 		for (Configuration config : next) {
-			if (!config.getTransitionTo().isLambdaTransition())
+			Transition trans = config.getTransitionTo();
+			if (trans == null || !trans.isLambdaTransition() || trans.isLoop())
 				allLambda = false;
 		}
 
@@ -303,7 +310,7 @@ public class SingleInputSimulator extends AutomatonSimulator {
 		for (Configuration nextConfig : next) {
 			Transition trans = nextConfig.getTransitionTo();
 
-			if (trans.isLambdaTransition()) {
+			if (trans != null && trans.isLambdaTransition()) {
 				State s = nextConfig.getState();
 
 				if (!trans.isLoop() && !seen.contains(s)) {
@@ -321,7 +328,7 @@ public class SingleInputSimulator extends AutomatonSimulator {
 			}
 		}
 		seen.remove(current.getState());
-		if (numLambda != 0 && numLambda == size && !chain.isHalted())
+		if (numLambda != 0 && allLambda && !chain.isHalted())
 			chains.remove(chain);
 	}
 }

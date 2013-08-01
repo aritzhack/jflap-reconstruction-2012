@@ -15,7 +15,7 @@ import model.automata.turing.MultiTapeTuringMachine;
 import universe.JFLAPUniverse;
 import view.automata.editing.AutomatonEditorPanel;
 
-public class TMtoUGPanel extends AutomatonConversionPanel<MultiTapeTuringMachine, MultiTapeTMTransition, TMVariableMapping>{
+public class TMtoUGPanel extends AutoToGramConversionPanel<MultiTapeTuringMachine, MultiTapeTMTransition, TMVariableMapping>{
 
 	public TMtoUGPanel(AutomatonEditorPanel<MultiTapeTuringMachine, MultiTapeTMTransition> editor,
 			TMtoGrammarConversion convert) {

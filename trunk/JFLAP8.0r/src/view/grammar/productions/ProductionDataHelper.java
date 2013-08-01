@@ -136,14 +136,12 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 //					"The RHS of this production has a bad character at index " + RHS.toString().length() + "."));
 //			return null;
 //		}
-		boolean lhsIsString = input[0] instanceof String,
-				rhsIsString = input[2] instanceof String;
-		if (lhsIsString && isEmptyString((String) input[0]))
+		if (isEmptyString((String) input[0]))
 			input[0] = "";
-		if (rhsIsString && isEmptyString((String) input[2]))
+		if (isEmptyString((String) input[2]))
 			input[2] = "";
-		SymbolString LHS = lhsIsString ? Symbolizers.symbolize((String) input[0], myGrammar) : new SymbolString((Symbol[]) input[0]),
-				RHS = rhsIsString ? Symbolizers.symbolize((String) input[2], myGrammar) : new SymbolString((Symbol[]) input[2]);
+		SymbolString LHS = Symbolizers.symbolize((String) input[0], myGrammar),
+				RHS = Symbolizers.symbolize((String) input[2], myGrammar);
 		return new Production(LHS, RHS);
 	}
 

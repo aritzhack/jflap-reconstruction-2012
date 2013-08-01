@@ -9,6 +9,7 @@ import view.action.automata.FSAtoRegGrammarAction;
 import view.action.automata.PDAtoCFGAction;
 import view.action.automata.TMtoUnrestrictedGrammarAction;
 import view.action.automata.TrapStateAction;
+import view.action.grammar.conversion.RegGrammarToFSAAction;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 import view.automata.views.MultiTapeTMView;
@@ -41,7 +42,8 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		setVisible(true);
 		
 		if(view instanceof GrammarView){
-			//TODO: Grammar conversions
+			GrammarView v = (GrammarView) view;
+			this.add(new RegGrammarToFSAAction(v));
 		}
 		
 		if(view instanceof AutomatonView){

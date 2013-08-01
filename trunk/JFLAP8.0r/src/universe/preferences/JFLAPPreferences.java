@@ -459,7 +459,7 @@ public class JFLAPPreferences {
 	}
 
 	public static GroupingPair getDefaultGrouping() {
-		return new GroupingPair('<', '>');
+		return DEFAULT_GROUPING_PAIR;
 	}
 	
 	public static void setDefaultGrouping(GroupingPair pair){

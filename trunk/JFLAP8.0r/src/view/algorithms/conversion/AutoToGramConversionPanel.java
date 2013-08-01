@@ -40,18 +40,18 @@ import view.grammar.GrammarView;
 import view.grammar.productions.ProductionTable;
 import view.grammar.productions.ProductionTableModel;
 
-public abstract class AutomatonConversionPanel<T extends Automaton<S>, S extends Transition<S>, R extends VariableMapping>
+public abstract class AutoToGramConversionPanel<T extends Automaton<S>, S extends Transition<S>, R extends VariableMapping>
 		extends AutomatonDisplayPanel<T, S> {
 
 	private AutomatonToGrammarConversion<T, R, S> myAlg;
 	private ProductionTable myTable;
 	private Map<Integer, Object> myObjectMap;
 
-	public AutomatonConversionPanel(AutomatonEditorPanel<T, S> editor,
+	public AutoToGramConversionPanel(AutomatonEditorPanel<T, S> editor,
 			AutomatonToGrammarConversion<T, R, S> convert) {
 		super(editor, convert.getAutomaton(), "Convert to Grammar");
 		myAlg = convert;
-		//This is temporary
+		//This is temporary?
 		myAlg.doAllAutomaticVariableMappings();
 		
 		myObjectMap = new TreeMap<Integer, Object>();

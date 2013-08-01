@@ -246,8 +246,13 @@ public class Grammar extends FormalDefinition{
 		VariableAlphabet vars = getVariables().copy();
 		TerminalAlphabet terms = getTerminals().copy();
 		ProductionSet p = getProductionSet().copy();
-		StartVariable var = new StartVariable(getStartVariable());
+		
+		Variable start = getStartVariable();
+		StartVariable var = start == null ? new StartVariable() : new StartVariable((Variable) start.copy());
+		
 		Grammar g = new Grammar(vars, terms, p, var);
+		if(usingGrouping())
+			g.setVariableGrouping(myGrouping);
 		return g;
 	}
 

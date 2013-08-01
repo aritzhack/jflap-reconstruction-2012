@@ -10,7 +10,7 @@ import model.automata.State;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
 
-public class PDAtoCFGPanel extends AutomatonConversionPanel<PushdownAutomaton, PDATransition, PDAVariableMapping>{
+public class PDAtoCFGPanel extends AutoToGramConversionPanel<PushdownAutomaton, PDATransition, PDAVariableMapping>{
 
 	public PDAtoCFGPanel(
 			AutomatonEditorPanel<PushdownAutomaton, PDATransition> editor, PDAtoCFGConverter convert) {
