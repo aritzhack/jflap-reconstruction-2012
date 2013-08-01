@@ -75,6 +75,7 @@ public class ProductionTable extends HighlightTable
 		//set up LHS column
 		TableColumn lhs = getColumnModel().getColumn(0);
 		lhs.setPreferredWidth(70);
+		lhs.setMinWidth(70);
 		lhs.setMaxWidth(200);
 		lhs.setCellEditor(createEditor());
 
@@ -87,6 +88,7 @@ public class ProductionTable extends HighlightTable
 		//set up RHS column
 		TableColumn rhs = getColumnModel().getColumn(2);
 		rhs.setCellEditor(createEditor());
+		rhs.setMinWidth(70);
 
 
 		setShowGrid(true);

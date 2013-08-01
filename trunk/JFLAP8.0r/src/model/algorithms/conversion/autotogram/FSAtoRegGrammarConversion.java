@@ -100,6 +100,12 @@ public class FSAtoRegGrammarConversion extends AutomatonToGrammarConversion<Fini
 		finalStates.removeAll(finalStatesHandled);
 		return finalStates.isEmpty();
 	}
+	
+	public Set<State> getUnhandledStates() {
+		Set<State> finalStates = new HashSet<State>(this.getAutomaton().getFinalStateSet());
+		finalStates.removeAll(finalStatesHandled);
+		return finalStates;
+	}
 
 	@Override
 	public boolean reset() throws AlgorithmException {

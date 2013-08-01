@@ -38,9 +38,8 @@ public abstract class MetaTransducer<T> extends StructureTransducer<T> {
 
 	@Override
 	public Element appendComponentsToRoot(Document doc, T structure, Element root) {
-		
 		Map<Object, XMLTransducer> transMap = createTransducerMap(structure);
-		
+
 		for(Entry<Object, XMLTransducer> e: transMap.entrySet()){
 			root.appendChild(e.getValue().toXMLTree(doc, e.getKey()));
 		}

@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.TreeMap;
 
+import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -30,7 +31,11 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 
 		for (State s : blocks) {
 			Block b = (Block) s;
-			setGraph(b, new TransitionGraph(b.getTuringMachine()));
+			TuringMachine blockMachine = b.getTuringMachine();
+			TransitionGraph<BlockTransition> graph = blockMachine instanceof BlockTuringMachine ? new BlockTMGraph(
+					(BlockTuringMachine) blockMachine)
+					: new TransitionGraph<BlockTransition>(blockMachine);
+			setGraph(b, graph);
 		}
 	}
 
@@ -41,7 +46,8 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 
 	public void setGraph(Block b, TransitionGraph transitionGraph) {
 		TransitionGraph current = blockGraphs.get(b.getID());
-		if (current == null || !current.getClass().equals(transitionGraph.getClass()))
+		if (current == null
+				|| !current.getClass().equals(transitionGraph.getClass()))
 			blockGraphs.put(b.getID(), transitionGraph);
 		else {
 			TuringMachine auto = b.getTuringMachine();
@@ -53,7 +59,6 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 			for (Transition t : transitions)
 				current.setControlPt(transitionGraph.getControlPt(t), t);
 		}
-		// blockGraphs.put(b.getID(), transitionGraph);
 		distributeChanged();
 	}
 
@@ -80,21 +85,21 @@ public class BlockTMGraph extends TransitionGraph<BlockTransition> {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public BlockTMGraph copy() {
 		BlockTMGraph clone = new BlockTMGraph(getAutomaton().copy());
 		BlockTuringMachine auto = getAutomaton();
 
-		for(State s : auto.getStates()){
+		for (State s : auto.getStates()) {
 			Block b = (Block) s;
 			clone.moveVertex(s, pointForVertex(s));
 			clone.setGraph(b, getGraph(b));
 		}
-		
-		for(BlockTransition trans : auto.getTransitions())
+
+		for (BlockTransition trans : auto.getTransitions())
 			clone.setControlPt(getControlPt(trans), trans);
-			
+
 		return clone;
 	}
 

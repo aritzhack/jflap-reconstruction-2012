@@ -35,14 +35,14 @@ public class SimulatorPanel<T extends Automaton<S>, S extends Transition<S>>
 				.darker().darker());
 		simulator.beginSimulation(input);
 
-		super.update();
+		super.updateSize();
 		initView();
-		update();
+		updateSize();
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void updateSize() {
+		super.updateSize();
 		if (scroller != null) {
 			scroller.revalidate();
 			

@@ -294,7 +294,7 @@ public class ConfigurationController extends JToolBar {
 		myConfigPanel.repaint();
 		// Change them darned selections.
 		changeSelection();
-		mySimPanel.update();
+		mySimPanel.updateSize();
 	}
 
 	/**

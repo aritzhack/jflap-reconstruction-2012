@@ -31,16 +31,15 @@ public class EmptyBlockTMUpdatingBlock extends UpdatingBlock {
 	@Override
 	public void updateTuringMachine(TapeAlphabet tape) {
 		BlockSet blocks = (BlockSet) getTuringMachine().getStates();
-
 		for (State block : blocks) {
-			if (block instanceof UpdatingBlock)
+			if (block instanceof UpdatingBlock){
 				((UpdatingBlock) block).updateTuringMachine(tape);
+			}
 		}
 	}
 	
 	@Override
 	public Block copy() {
-		// TODO Auto-generated method stub
 		return new EmptyBlockTMUpdatingBlock((BlockTuringMachine) getTuringMachine().copy(), myParentAlph, getName(), getID(), myArg);
 	}
 	

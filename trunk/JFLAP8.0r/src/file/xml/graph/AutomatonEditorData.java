@@ -10,11 +10,11 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import model.graph.TransitionGraph;
-import view.automata.AutomatonEditorPanel;
 import view.automata.Note;
+import view.automata.editing.AutomatonEditorPanel;
 
 /**
- * Class for holding all of the relevent data of an AutomatonEditorPanel for
+ * Class for holding all of the relevant data of an AutomatonEditorPanel for
  * saving/loading without having to deal with the panel itself (so that the data
  * can be distributed wherever it is needed).
  * 

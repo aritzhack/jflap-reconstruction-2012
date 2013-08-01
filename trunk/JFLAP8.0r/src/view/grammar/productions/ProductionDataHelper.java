@@ -2,17 +2,8 @@ package view.grammar.productions;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import debug.JFLAPDebug;
-
-import universe.preferences.JFLAPPreferences;
-import util.JFLAPConstants;
-
-
-import errors.BooleanWrapper;
 
 import model.change.events.AddEvent;
 import model.change.events.RemoveEvent;
@@ -20,10 +11,14 @@ import model.change.events.SetToEvent;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import model.undo.CompoundUndoRedo;
 import model.undo.UndoKeeper;
+import universe.preferences.JFLAPPreferences;
+import util.JFLAPConstants;
+import errors.BooleanWrapper;
 
 
 
@@ -78,7 +73,7 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 		return old;
 	}
 
-	private boolean isValid(Production p) {
+	public boolean isValid(Production p) {
 		return !(p == null || p.isEmpty());
 	}
 
@@ -141,12 +136,14 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 //					"The RHS of this production has a bad character at index " + RHS.toString().length() + "."));
 //			return null;
 //		}
-		if (isEmptyString((String) input[0]))
+		boolean lhsIsString = input[0] instanceof String,
+				rhsIsString = input[2] instanceof String;
+		if (lhsIsString && isEmptyString((String) input[0]))
 			input[0] = "";
-		if (isEmptyString((String) input[2]))
+		if (rhsIsString && isEmptyString((String) input[2]))
 			input[2] = "";
-		SymbolString LHS = Symbolizers.symbolize((String) input[0], myGrammar),
-				RHS = Symbolizers.symbolize((String) input[2], myGrammar);
+		SymbolString LHS = lhsIsString ? Symbolizers.symbolize((String) input[0], myGrammar) : new SymbolString((Symbol[]) input[0]),
+				RHS = rhsIsString ? Symbolizers.symbolize((String) input[2], myGrammar) : new SymbolString((Symbol[]) input[2]);
 		return new Production(LHS, RHS);
 	}
 
@@ -157,6 +154,10 @@ public class ProductionDataHelper extends ArrayList<Object[]>
 
 	public Production[] getOrderedProductions() {
 		return myOrderedProductions.toArray(new Production[0]);
+	}
+	
+	protected void addProduction(int i, Production p){
+		myOrderedProductions.add(i, p);
 	}
 	
 	public boolean applyOrdering(Production[] order){

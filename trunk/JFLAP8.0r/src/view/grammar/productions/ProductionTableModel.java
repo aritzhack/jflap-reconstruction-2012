@@ -61,6 +61,9 @@ import model.undo.UndoKeeper;
 public class ProductionTableModel extends GrowableTableModel 
 implements JFLAPConstants{
 
+	/** Constants to be used for columns**/
+	private static final int LHS_COLUMN = 0, RHS_COLUMN = 2;
+
 
 	private Grammar myGrammar;
 
@@ -195,11 +198,6 @@ implements JFLAPConstants{
 				(this.getValueAt(row, 2).toString().length() == 0 ||
 				this.getValueAt(row, 2).toString() == JFLAPPreferences.getEmptyString());
 	}
-
-
-	/** Constants to be used for columns**/
-	private static final int LHS_COLUMN = 0, RHS_COLUMN = 2;
-
 
 	public boolean remove(int i) {
 		return this.getData().remove(i) != null;
