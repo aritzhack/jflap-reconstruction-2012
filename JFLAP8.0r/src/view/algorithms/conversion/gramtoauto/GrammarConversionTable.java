@@ -1,5 +1,6 @@
-package view.algorithms.conversion;
+package view.algorithms.conversion.gramtoauto;
 
+import java.awt.Dimension;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,6 +13,7 @@ import util.view.magnify.MagnifiableTable;
 
 public class GrammarConversionTable extends MagnifiableTable {
 
+	private static final Dimension CONVERSION_TABLE_SIZE = new Dimension(200, 200);
 	private Grammar myGrammar;
 	private Object[][] myData;
 	private Map<Production, Integer> productionToRow;
@@ -34,6 +36,7 @@ public class GrammarConversionTable extends MagnifiableTable {
 		}
 		DefaultTableModel model = (DefaultTableModel) getModel();
 		model.setDataVector(myData, columnNames);
+		setMinimumSize(CONVERSION_TABLE_SIZE);
 	}
 	
 	public Production[] getSelected() {

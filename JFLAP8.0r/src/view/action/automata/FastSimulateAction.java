@@ -17,6 +17,7 @@
 package view.action.automata;
 
 import java.awt.Component;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -43,6 +44,7 @@ public class FastSimulateAction extends SimulateAction {
 
 	/** The steps in warnings. */
 	protected static final int WARNING_STEP = 500;
+	private Object config;
 
 	/**
 	 * Instantiates a new <CODE>NoInteractionSimulateAction</CODE>.
@@ -76,7 +78,7 @@ public class FastSimulateAction extends SimulateAction {
 		int result = JOptionPane.showOptionDialog(component, past,
 				"Accepting configuration found!", JOptionPane.YES_NO_OPTION,
 				JOptionPane.INFORMATION_MESSAGE, null, options, null);
-		return result == 0;
+		return result == JOptionPane.YES_OPTION;
 	}
 
 	/**
@@ -106,10 +108,10 @@ public class FastSimulateAction extends SimulateAction {
 		int numberAccepted = 0;
 
 		simulator.beginSimulation(symbols);
-		Set<ConfigurationChain> configs;
+		ConfigurationChain[] configs = simulator.getChains().toArray(new ConfigurationChain[0]);
 
-		while (!(configs = simulator.getChains()).isEmpty()) {
-			numberGenerated += configs.size();
+		while (configs.length > 0) {
+			numberGenerated += configs.length;
 			// Make sure we should continue.
 			if (numberGenerated >= warningGenerated) {
 				if (!confirmContinue(numberGenerated, env))
@@ -125,7 +127,7 @@ public class FastSimulateAction extends SimulateAction {
 						return;
 				}
 			}
-			simulator.step();
+			configs = simulator.step();
 		}
 		if (numberAccepted == 0) {
 			JOptionPane.showMessageDialog(env, "The input was rejected.");

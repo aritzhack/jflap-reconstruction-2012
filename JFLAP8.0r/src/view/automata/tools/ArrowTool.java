@@ -915,8 +915,10 @@ public class ArrowTool<T extends Automaton<S>, S extends Transition<S>> extends
 											JFLAPConstants.STATE_RADIUS + 5,
 											JFLAPConstants.STATE_RADIUS + 5),
 									vertexBuffer);
+					LayoutAlgorithm current = panel.getLayoutAlgorithm();
 					panel.setLayoutAlgorithm(layout);
 					panel.layoutGraph();
+					panel.setLayoutAlgorithm(current);
 				}
 			});
 			this.add(autoZoom);

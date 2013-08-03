@@ -9,7 +9,7 @@ import model.algorithms.conversion.autotogram.VariableMapping;
 import model.automata.Automaton;
 import model.automata.Transition;
 import universe.JFLAPUniverse;
-import view.algorithms.conversion.AutoToGramConversionPanel;
+import view.algorithms.conversion.autotogram.AutoToGramConversionPanel;
 import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 

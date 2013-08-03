@@ -53,14 +53,14 @@ public class SingleInputSimulator extends AutomatonSimulator {
 			if (chain.isFrozen())
 				myChains.add(chain);
 			else if (chain.isFinished()) {
-				// myChains.remove(chain);
+				 myChains.remove(chain);
 				// As myChains is clear, don't do anything, just ignore it
 			} else {
 				myChains.addAll(stepAndFork(chain));
 			}
 		}
 
-		updateSelectedStates();
+//		updateSelectedStates();
 		// JFLAPDebug.print(myChains);
 
 		return myChains.toArray(new ConfigurationChain[0]);

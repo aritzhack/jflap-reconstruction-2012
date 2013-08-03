@@ -1,7 +1,7 @@
 package view.action.automata;
 
-import view.algorithms.conversion.AutoToGramConversionPanel;
-import view.algorithms.conversion.TMtoUGPanel;
+import view.algorithms.conversion.autotogram.AutoToGramConversionPanel;
+import view.algorithms.conversion.autotogram.TMtoUGPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.MultiTapeTMView;
 import model.algorithms.conversion.autotogram.TMVariableMapping;
