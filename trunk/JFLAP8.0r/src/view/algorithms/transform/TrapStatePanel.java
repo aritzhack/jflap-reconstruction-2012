@@ -31,12 +31,12 @@ import view.automata.tools.ToolBar;
 import view.automata.tools.TrapStateTool;
 import view.automata.tools.TrapTransitionTool;
 
-public class TrapStatePane extends
+public class TrapStatePanel extends
 		AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition>{
 
 	private AddTrapStateAlgorithm myAlg;
 
-	public TrapStatePane(
+	public TrapStatePanel(
 			AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> editor,
 			AddTrapStateAlgorithm alg) {
 		super(editor, alg.getDFAWithTrapState(), "Adding Trap State");
@@ -79,7 +79,7 @@ public class TrapStatePane extends
 		tools.add(new JButton(new AbstractAction("Do All") {
 			public void actionPerformed(ActionEvent e) {
 				if(!myAlg.hasTrapState())
-					JOptionPane.showMessageDialog(TrapStatePane.this,
+					JOptionPane.showMessageDialog(TrapStatePanel.this,
 							"Just create a state.\nI believe in you.",
 							"Create the State", JOptionPane.ERROR_MESSAGE);
 				else

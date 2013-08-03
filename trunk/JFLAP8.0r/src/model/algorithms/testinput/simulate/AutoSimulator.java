@@ -63,7 +63,7 @@ public class AutoSimulator extends AutomatonSimulator {
 	public List<ConfigurationChain> getNextHalt() {
 		while (!mySimulator.getChains().isEmpty()) {
 			ConfigurationChain[] chains = mySimulator.step();
-			JFLAPDebug.print(chains);
+			
 			List<ConfigurationChain> toReturn = new ArrayList<ConfigurationChain>();
 			for (ConfigurationChain chain : chains) {
 				if (chain.isFinished())

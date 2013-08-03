@@ -1,4 +1,4 @@
-package view.algorithms.conversion;
+package view.algorithms.conversion.autotogram;
 
 import javax.swing.JOptionPane;
 

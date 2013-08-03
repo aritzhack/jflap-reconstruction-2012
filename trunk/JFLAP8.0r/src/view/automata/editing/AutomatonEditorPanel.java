@@ -550,6 +550,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void setLayoutAlgorithm(LayoutAlgorithm alg) {
 		myGraph.setLayoutAlgorithm(alg);
 	}
+	
+	public LayoutAlgorithm getLayoutAlgorithm() {
+		return myGraph.getLayoutAlgorithm();
+	}
 
 	public void layoutGraph() {
 		StateSet states = myAutomaton.getStates();
@@ -599,8 +603,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public void resizeGraph(Rectangle visible) {
 		updateBounds(getGraphics());
 		Rectangle b = new Rectangle(getPreferredSize());
-
-		if (!visible.contains(b)) {
+//		JFLAPDebug.print(visible+" "+b);
+		if (!visible.contains(b) && !visible.equals(b)) {
 			int bounds = (int) getStateBounds();
 			visible = new Rectangle(visible.x + bounds, visible.y + bounds,
 					visible.width - 2 * bounds, visible.height - 2 * bounds);

@@ -107,9 +107,9 @@ public abstract class CFGtoPDAConverter extends GrammarToAutomatonConverter<Push
 		FinalStateSet finalStates = this.getConvertedAutomaton().getFinalStateSet();
 		finalStates.add(myFinalState);
 		//Add all of these states to the automaton
-		Symbol symbol = 
-				SpecialSymbolFactory.getReccomendedBOSSymbol(this.getConvertedAutomaton().getStackAlphabet());
-		this.getConvertedAutomaton().setBottomOfStackSymbol(symbol);
+//		Symbol symbol = 
+//				SpecialSymbolFactory.getReccomendedBOSSymbol(this.getConvertedAutomaton().getStackAlphabet());
+//		this.getConvertedAutomaton().setBottomOfStackSymbol(symbol);
 		
 		return this.setUpTransitions();
 	}

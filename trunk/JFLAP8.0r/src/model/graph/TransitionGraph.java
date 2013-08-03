@@ -154,6 +154,10 @@ public class TransitionGraph<T extends Transition<T>> extends
 	public void setLayoutAlgorithm(LayoutAlgorithm layout) {
 		myAlg = layout;
 	}
+	
+	public LayoutAlgorithm getLayoutAlgorithm() {
+		return myAlg;
+	}
 
 	/**
 	 * Returns the location of the center point of the label of the given

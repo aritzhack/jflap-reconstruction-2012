@@ -110,4 +110,8 @@ public class TransitionTool<T extends Automaton<S>, S extends Transition<S>>
 	public boolean hasFrom() {
 		return from != null;
 	}
+	
+	public State getFrom() {
+		return from;
+	}
 }

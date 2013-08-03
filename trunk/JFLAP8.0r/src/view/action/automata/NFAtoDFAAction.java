@@ -1,0 +1,26 @@
+package view.action.automata;
+
+import java.awt.event.ActionEvent;
+
+import model.algorithms.transform.fsa.NFAtoDFAConverter;
+import model.automata.acceptors.fsa.FiniteStateAcceptor;
+import universe.JFLAPUniverse;
+import view.algorithms.transform.NFAtoDFAPanel;
+import view.automata.views.AutomatonView;
+import view.automata.views.FSAView;
+
+public class NFAtoDFAAction extends AutomatonAction{
+
+	public NFAtoDFAAction(FSAView view) {
+		super("NFA to DFA", view);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		NFAtoDFAConverter convert = new NFAtoDFAConverter((FiniteStateAcceptor) getAutomaton());
+		NFAtoDFAPanel panel = new NFAtoDFAPanel(getEditorPanel(), convert);
+		
+		JFLAPUniverse.getActiveEnvironment().addSelectedComponent(panel);
+	}
+
+}

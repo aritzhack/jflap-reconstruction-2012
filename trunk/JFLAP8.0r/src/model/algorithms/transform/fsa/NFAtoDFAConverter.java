@@ -90,11 +90,14 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		return new BooleanWrapper(true);
 	}
 
+	public State[] getExpansionForState(State from, Symbol sym){
+		return myStatesToSymbolsMap.get(from).getStatesForSymbol(sym);
+	}
 
 
 	public BooleanWrapper expandFromState(State from, Symbol sym, State ... array) {
 		
-		State[] expand = myStatesToSymbolsMap.get(from).getStatesForSymbol(sym);
+		State[] expand = getExpansionForState(from, sym);
 		ArrayList<State> temp1 = new ArrayList<State>(Arrays.asList(expand));
 		temp1.removeAll(Arrays.asList(array));
 		if (!temp1.isEmpty() || expand.length != array.length){
@@ -123,7 +126,7 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		return myDFA;
 	}
 
-	private State getDFAStateForNFAStates(State[] array) {
+	public State getDFAStateForNFAStates(State[] array) {
 		for (Entry<State, State[]> entry: myStateToStatesMap.entrySet()){
 			List<State> temp1 = new ArrayList<State>(Arrays.asList(entry.getValue()));
 			if (temp1.size() == array.length && 
@@ -208,6 +211,16 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 			}
 		}
 		return null;
+	}
+	
+	public int numUnexpandedStates() {
+		int n = 0;
+		for (Entry<State, MappingWrapper> entry : myStatesToSymbolsMap.entrySet()){
+			if (!entry.getValue().isFullyExpanded()){
+				n++;
+			}
+		}
+		return n;
 	}
 	
 	

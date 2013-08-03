@@ -1,7 +1,7 @@
 package view.action.automata;
 
-import view.algorithms.conversion.AutoToGramConversionPanel;
-import view.algorithms.conversion.FSAtoRegGrammarPanel;
+import view.algorithms.conversion.autotogram.AutoToGramConversionPanel;
+import view.algorithms.conversion.autotogram.FSAtoRegGrammarPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 import model.algorithms.conversion.autotogram.FSAVariableMapping;

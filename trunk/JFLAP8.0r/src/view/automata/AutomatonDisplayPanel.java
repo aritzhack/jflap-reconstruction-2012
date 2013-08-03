@@ -25,7 +25,7 @@ public class AutomatonDisplayPanel<T extends Automaton<S>, S extends Transition<
 	
 	private static final int MAX_HEIGHT = 400;
 	private static final int MAX_WIDTH = 700;
-	private static final int PADDING = 150;
+	public static final int PADDING = 150;
 	private AutomatonEditorPanel<T, S> myPanel;
 
 	public AutomatonDisplayPanel(AutomatonEditorPanel<T, S> editor, T auto, String name) {

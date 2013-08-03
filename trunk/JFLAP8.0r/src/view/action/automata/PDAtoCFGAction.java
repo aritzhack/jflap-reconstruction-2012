@@ -4,8 +4,8 @@ import model.algorithms.conversion.autotogram.PDAVariableMapping;
 import model.algorithms.conversion.autotogram.PDAtoCFGConverter;
 import model.automata.acceptors.pda.PDATransition;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import view.algorithms.conversion.AutoToGramConversionPanel;
-import view.algorithms.conversion.PDAtoCFGPanel;
+import view.algorithms.conversion.autotogram.AutoToGramConversionPanel;
+import view.algorithms.conversion.autotogram.PDAtoCFGPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.PDAView;
 

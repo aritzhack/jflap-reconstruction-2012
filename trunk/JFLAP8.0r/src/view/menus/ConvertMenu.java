@@ -6,9 +6,12 @@ import javax.swing.JMenu;
 
 import view.action.automata.CombineAutomataAction;
 import view.action.automata.FSAtoRegGrammarAction;
+import view.action.automata.NFAtoDFAAction;
 import view.action.automata.PDAtoCFGAction;
 import view.action.automata.TMtoUnrestrictedGrammarAction;
 import view.action.automata.TrapStateAction;
+import view.action.grammar.conversion.CFGtoPDALLAction;
+import view.action.grammar.conversion.CFGtoPDALRAction;
 import view.action.grammar.conversion.RegGrammarToFSAAction;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
@@ -43,12 +46,15 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		
 		if(view instanceof GrammarView){
 			GrammarView v = (GrammarView) view;
+			this.add(new CFGtoPDALLAction(v));
+			this.add(new CFGtoPDALRAction(v));
 			this.add(new RegGrammarToFSAAction(v));
 		}
 		
 		if(view instanceof AutomatonView){
 			AutomatonView v = (AutomatonView) view;
 			if(view instanceof FSAView){
+				this.add(new NFAtoDFAAction((FSAView) v));
 				this.add(new TrapStateAction((FSAView) v));
 				this.add(new FSAtoRegGrammarAction((FSAView) v));
 			}

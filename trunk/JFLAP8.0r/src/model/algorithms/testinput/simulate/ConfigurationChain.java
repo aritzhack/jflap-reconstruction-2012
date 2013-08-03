@@ -79,7 +79,7 @@ public class ConfigurationChain extends LinkedList<Configuration>{
 
 	@Override
 	public int hashCode() {
-		return Integer.parseInt(myID);
+		return myID.hashCode();
 	}
 	
 	

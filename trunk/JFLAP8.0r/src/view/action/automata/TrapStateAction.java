@@ -9,7 +9,7 @@ import model.algorithms.transform.fsa.AddTrapStateAlgorithm;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import model.automata.determinism.FSADeterminismChecker;
 import universe.JFLAPUniverse;
-import view.algorithms.transform.TrapStatePane;
+import view.algorithms.transform.TrapStatePanel;
 import view.automata.views.FSAView;
 import view.environment.JFLAPEnvironment;
 
@@ -43,7 +43,7 @@ public class TrapStateAction extends AutomatonAction{
 			return;
 		}
 		AddTrapStateAlgorithm alg = new AddTrapStateAlgorithm(auto);
-		TrapStatePane trapPane = new TrapStatePane(getEditorPanel(), alg);
+		TrapStatePanel trapPane = new TrapStatePanel(getEditorPanel(), alg);
 		env.addSelectedComponent(trapPane);
 	}
 }
