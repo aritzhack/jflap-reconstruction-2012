@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;

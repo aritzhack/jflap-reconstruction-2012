@@ -8,11 +8,13 @@ import view.action.automata.CombineAutomataAction;
 import view.action.automata.FSAtoRegGrammarAction;
 import view.action.automata.NFAtoDFAAction;
 import view.action.automata.PDAtoCFGAction;
+import view.action.automata.StayOptionRemoveAction;
 import view.action.automata.TMtoUnrestrictedGrammarAction;
 import view.action.automata.TrapStateAction;
 import view.action.grammar.conversion.CFGtoPDALLAction;
 import view.action.grammar.conversion.CFGtoPDALRAction;
 import view.action.grammar.conversion.RegGrammarToFSAAction;
+import view.action.regex.REtoFAAction;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 import view.automata.views.MultiTapeTMView;
@@ -21,6 +23,7 @@ import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
 import view.grammar.GrammarView;
+import view.regex.RegexView;
 
 public class ConvertMenu extends JMenu implements TabChangeListener {
 
@@ -39,7 +42,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 		setVisible(false);
 		
 		if(!(view instanceof GrammarView || view instanceof AutomatonView
-//				|| view instanceof RegexView
+				|| view instanceof RegexView
 				))
 			return;
 		setVisible(true);
@@ -60,13 +63,18 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 			}
 			if(view instanceof PDAView)
 				this.add(new PDAtoCFGAction((PDAView) v));
-			if(view instanceof MultiTapeTMView)
-				this.add(new TMtoUnrestrictedGrammarAction((MultiTapeTMView) v));
+			if(view instanceof MultiTapeTMView){
+				MultiTapeTMView mtv = (MultiTapeTMView) v;
+				this.add(new TMtoUnrestrictedGrammarAction(mtv));
+				
+				if(mtv.getDefinition().getNumTapes() == 1)
+					this.add(new StayOptionRemoveAction(mtv));
+			}
 			this.add(new CombineAutomataAction(v));
 		}
 		
-//		if(view instanceof RegexView){
-//			
-//		}
+		if(view instanceof RegexView){
+			this.add(new REtoFAAction((RegexView) view));
+		}
 	}
 }

@@ -90,7 +90,7 @@ public class StayOptionRemover extends
 
 		@Override
 		public boolean execute() throws AlgorithmException {
-			return replaceStayTransitions();
+			return replaceStayTransition();
 		}
 
 		@Override
@@ -100,36 +100,43 @@ public class StayOptionRemover extends
 
 	}
 
-	/**
-	 * Removes a single Stay transition (one step in the algorithm) and replaces
-	 * it with one right move on the previous read and write terminals, and a
-	 * left transition for each terminal in the tape alphabet.
-	 */
-	public boolean replaceStayTransitions() {
+	public boolean replaceStayTransition(MultiTapeTMTransition trans){
 		MultiTapeTuringMachine tm = getTransformedDefinition();
 		TransitionSet<MultiTapeTMTransition> transitionSet = tm
 				.getTransitions();
 		StateSet states = tm.getStates();
-
-		MultiTapeTMTransition transition = stayTransitions.remove(0);
-
-		transitionSet.remove(transition);
+		if(!stayTransitions.contains(trans))
+			return false;
+		
+		stayTransitions.remove(trans);
+		transitionSet.remove(trans);
 
 		State newState = states.createAndAddState();
 		MultiTapeTMTransition rightReplacement = createRightReplacement(
-				transition, newState);
+				trans, newState);
 
 		transitionSet.add(rightReplacement);
 
 		for (Symbol c : getOriginalDefinition().getTapeAlphabet()) {
 			MultiTapeTMTransition leftReplacement = createLeftReplacement(
-					transition, newState, c);
+					trans, newState, c);
 
 			transitionSet.add(leftReplacement);
 		}
 		return true;
 	}
+	/**
+	 * Removes a single Stay transition (one step in the algorithm) and replaces
+	 * it with one right move on the previous read and write terminals, and a
+	 * left transition for each terminal in the tape alphabet.
+	 */
+	public boolean replaceStayTransition() {
+		return replaceStayTransition(stayTransitions.get(0));
+	}
 
+	public int getNumUnconverted() {
+		return stayTransitions.size();
+	}
 	/**
 	 * Helper method to create the single right replacement needed
 	 */
@@ -151,5 +158,9 @@ public class StayOptionRemover extends
 		TuringMachineMove move = TuringMachineMove.LEFT;
 
 		return new MultiTapeTMTransition(newState, to, c, c, move);
+	}
+
+	public MultiTapeTMTransition getFirstTransition() {
+		return stayTransitions.isEmpty() ? null : stayTransitions.get(0);
 	}
 }

@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import debug.JFLAPDebug;
 import model.algorithms.testinput.simulate.Configuration;
 
 /**
@@ -83,8 +84,6 @@ public class ConfigurationPanel extends JPanel implements ActionListener {
 		configurationToButtonMap.put(configuration, button);
 		add(button);
 		button.addActionListener(this);
-		Dimension size = getPreferredSize();
-		setPreferredSize(new Dimension(size.width, button.getPreferredSize().height));
 	}
 
 	/**

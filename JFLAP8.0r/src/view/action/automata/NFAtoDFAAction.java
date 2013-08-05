@@ -2,10 +2,13 @@ package view.action.automata;
 
 import java.awt.event.ActionEvent;
 
+import debug.JFLAPDebug;
 import model.algorithms.transform.fsa.NFAtoDFAConverter;
+import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import universe.JFLAPUniverse;
 import view.algorithms.transform.NFAtoDFAPanel;
+import view.automata.editing.AutomatonEditorPanel;
 import view.automata.views.AutomatonView;
 import view.automata.views.FSAView;
 

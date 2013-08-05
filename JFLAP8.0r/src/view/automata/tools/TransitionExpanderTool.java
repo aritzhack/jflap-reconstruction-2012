@@ -44,8 +44,8 @@ public class TransitionExpanderTool extends
 		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> panel = getPanel();
 		String terminal = JOptionPane.showInputDialog(panel,
 				"Expand on what terminal?");
-
-		if (terminal == null || terminal.equals("")) {
+		if (terminal == null) return;
+		if (terminal.equals("")) {
 			JOptionPane.showMessageDialog(panel,
 					"One can't have lambda in the DFA!", "Improper terminal",
 					JOptionPane.ERROR_MESSAGE);
