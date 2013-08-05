@@ -98,7 +98,7 @@ public class RegularExpressionToNFAConversion extends ConversionAlgorithm<Regula
 		}
 	}
 
-	private GeneralizedTransitionGraph getGTG() {
+	public GeneralizedTransitionGraph getGTG() {
 		return (GeneralizedTransitionGraph) super.getConvertedDefinition();
 	}
 

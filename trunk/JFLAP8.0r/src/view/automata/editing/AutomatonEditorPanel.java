@@ -77,6 +77,8 @@ import view.automata.undoing.StateMoveEvent;
 public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S>>
 		extends EditingPanel implements ToolListener, ChangeListener {
 
+	private static final int PADDING = 5;
+
 	public static final String DELETE = "delete";
 	
 	private EditingTool<T, S> myTool;
@@ -554,8 +556,12 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	public LayoutAlgorithm getLayoutAlgorithm() {
 		return myGraph.getLayoutAlgorithm();
 	}
+	
+	public void layoutGraph(){
+		layoutGraph(new HashSet<State>());
+	}
 
-	public void layoutGraph() {
+	public void layoutGraph(Set<State> unmoving) {
 		StateSet states = myAutomaton.getStates();
 		TransitionSet<S> transitions = myAutomaton.getTransitions();
 
@@ -572,7 +578,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 			}
 
 		}
-		myGraph.layout();
+		myGraph.layout(unmoving);
 		resizeGraph(getVisibleRect());
 
 		List<StateMoveEvent> move = new ArrayList<StateMoveEvent>();
@@ -796,8 +802,8 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 	 * Returns the radius of the vertex drawer with some additional padding for
 	 * bounds.
 	 */
-	private double getStateBounds() {
-		return getStateRadius() + 5;
+	public double getStateBounds() {
+		return getStateRadius() + PADDING;
 	}
 
 	private IUndoRedo createTransitionRemove(S... trans) {

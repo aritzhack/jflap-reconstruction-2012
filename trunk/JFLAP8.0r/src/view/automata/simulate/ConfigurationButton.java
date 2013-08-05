@@ -76,8 +76,10 @@ public class ConfigurationButton extends JToggleButton {
 		this.setVerticalTextPosition(TOP);
 
 		this.setState(state);
-		this.setPreferredSize(new Dimension(0, PADDING * 2
-				+ icon.getIconHeight()));
+		Dimension size = new Dimension(0, PADDING * 2
+				+ icon.getIconHeight());
+		this.setPreferredSize(size);
+		this.setMinimumSize(size);
 	}
 
 	/**

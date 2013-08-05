@@ -24,12 +24,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import debug.JFLAPDebug;
 import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
@@ -195,9 +195,9 @@ public class TransitionGraph<T extends Transition<T>> extends
 	public Automaton<T> getAutomaton (){
 		return myAutomaton;
 	}
-	
-	public void layout() {
-		myAlg.layout(this, new HashSet<State>());
+
+	public void layout(Set<State> unmoving){
+		myAlg.layout(this, unmoving);
 	}
 
 	/**

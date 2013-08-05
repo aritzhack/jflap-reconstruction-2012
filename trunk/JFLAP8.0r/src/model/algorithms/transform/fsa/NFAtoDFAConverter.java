@@ -213,11 +213,28 @@ public class NFAtoDFAConverter extends FormalDefinitionAlgorithm<FiniteStateAcce
 		return null;
 	}
 	
-	public int numUnexpandedStates() {
+	public Set<State> getUnexpandedStates() {
+		Set<State> unexpanded = new TreeSet<State>();
+		for (Entry<State, MappingWrapper> entry : myStatesToSymbolsMap.entrySet()){
+			if (!entry.getValue().isFullyExpanded()){
+				unexpanded.add(entry.getKey());
+			}
+		}
+		return unexpanded;
+	}
+	
+	public int numTransitionsNeeded() {
 		int n = 0;
 		for (Entry<State, MappingWrapper> entry : myStatesToSymbolsMap.entrySet()){
 			if (!entry.getValue().isFullyExpanded()){
-				n++;
+				State from = entry.getKey();
+				
+				for (Symbol sym: getNFA().getInputAlphabet()){
+					State[] expand = myStatesToSymbolsMap.get(from).getStatesForSymbol(sym);
+					if (expand.length > 0)
+						n++;
+				}
+						
 			}
 		}
 		return n;
