@@ -16,19 +16,18 @@
 
 package model.graph;
 
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
-import debug.JFLAPDebug;
-import util.JFLAPConstants;
-import util.arrows.GeometryHelper;
 import model.change.ChangingObject;
+import util.JFLAPConstants;
+import util.Point2DAdv;
+import util.arrows.GeometryHelper;
 
 /**
  * A graph data structure. The idea behind the graph data structure is that a
@@ -46,8 +45,8 @@ public abstract class Graph<T> extends ChangingObject {
 	private Map<T, Set<T>> verticesToNeighbors = new HashMap<T, Set<T>>();
 
 	public Graph() {
-		myEdgeIDs = new TreeMap<T, Map<T, Integer>>();
-		myCtrlPoints = new HashMap<Integer, ControlPoint>();
+		myEdgeIDs = new HashMap<T, Map<T, Integer>>();
+		myCtrlPoints = new TreeMap<Integer, ControlPoint>();
 	}
 
 	public abstract boolean isDirected();
@@ -142,7 +141,7 @@ public abstract class Graph<T> extends ChangingObject {
 		if (this.hasVertex(vertex))
 			return false;
 		myEdgeIDs.put(vertex, new TreeMap<T, Integer>());
-		verticesToPoints.put(vertex, (Point2D) point.clone());
+		verticesToPoints.put(vertex, new Point2DAdv(point));
 		distributeChanged();
 		return true;
 	}
@@ -248,6 +247,7 @@ public abstract class Graph<T> extends ChangingObject {
 			myEdgeIDs.get(vertex2).remove(vertex1);
 		} else if (hasEdge(vertex2, vertex1) && isAutoBent(vertex2, vertex1))
 			undoAutoBend(vertex2, vertex1);
+
 		myCtrlPoints.remove(getID(vertex1, vertex2));
 		myEdgeIDs.get(vertex1).remove(vertex2);
 

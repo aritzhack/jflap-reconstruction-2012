@@ -13,11 +13,10 @@ import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 
-public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Transition<T>> 
-														extends Configuration<S,T> {
+public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Transition<T>>
+		extends Configuration<S, T> {
 
-	public TMConfiguration(S tm, State s, int[] pos,
-			SymbolString ... tapes) {
+	public TMConfiguration(S tm, State s, int[] pos, SymbolString... tapes) {
 		super(tm, s, 0, null, pos, tapes);
 	}
 
@@ -28,26 +27,26 @@ public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Tran
 
 	@Override
 	protected String getPrimaryPresentationName() {
-		//primary is not used
+		// primary is not used
 		return null;
 	}
 
 	@Override
 	protected int getNextPrimaryPosition(T label) {
-		//primary is not used
+		// primary is not used
 		return 0;
 	}
 
 	@Override
 	protected boolean shouldFindValidTransitions() {
-		//Turing machine is never "done". if a valid transitions
-		//from a state exists, it should be moved on.
+		// Turing machine is never "done". if a valid transitions
+		// from a state exists, it should be moved on.
 		return true;
 	}
 
 	@Override
 	protected boolean isDone() {
-		//a Turing machine is done iff it does not have a next state
+		// a Turing machine is done iff it does not have a next state
 		return !this.hasNextState();
 	}
 
@@ -55,43 +54,46 @@ public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Tran
 	protected String getStringPresentationName(int i) {
 		return "Tape " + i;
 	}
-	
-	public Symbol getReadForTape(int i){
+
+	public Symbol getReadForTape(int i) {
 		return getStringForIndex(i).get(getPositionForIndex(i));
 	}
 
-
-	public static int updateTape(TuringMachineMove move, int pos, SymbolString tape) {
-		if (pos == tape.size()-1){
-			tape.add(JFLAPPreferences.getTMBlankSymbol());
-		}
-		else if (pos == 0 && move == TuringMachineMove.LEFT){
-			tape.addFirst(JFLAPPreferences.getTMBlankSymbol());
-			return 1;
-		}
+	public static int updateTape(TuringMachineMove move, int pos,
+			SymbolString tape) {
+		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
+		int bufferSize = JFLAPPreferences.getDefaultTMBufferSize();
+		for (int i = 0; i < bufferSize; i++)
+			if (pos == tape.size() - 1) {
+				tape.add(JFLAPPreferences.getTMBlankSymbol());
+			} else if (pos == 0 && move == TuringMachineMove.LEFT) {
+				tape.addFirst(JFLAPPreferences.getTMBlankSymbol());
+				return 1;
+			}
 		return 0;
 	}
-	
-	public static int reBufferString(SymbolString input, int pos, int bufferSize){
+
+	public static int reBufferString(SymbolString input, int pos, int bufferSize) {
 		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
-		while(input.getFirst().equals(blank) && pos > 0){
+		while (input.getFirst().equals(blank) && pos > 0) {
 			input.removeFirst();
 			pos--;
 		}
-		while(input.getLast().equals(blank)){
+		while (input.getLast().equals(blank)) {
 			input.removeLast();
 		}
-		
+
 		input = TMConfiguration.createBlankBufferedString(input, bufferSize);
-		
-		pos+=bufferSize;
+
+		pos += bufferSize;
 
 		return pos;
 	}
-	
-	public static SymbolString createBlankBufferedString(SymbolString input, int n) {
+
+	public static SymbolString createBlankBufferedString(SymbolString input,
+			int n) {
 		input = new SymbolString(input);
-		input.addAll(0,createBlankTape(n));
+		input.addAll(0, createBlankTape(n));
 		input.addAll(createBlankTape(n));
 		return input;
 	}
@@ -99,7 +101,7 @@ public abstract class TMConfiguration<S extends TuringMachine<T>, T extends Tran
 	public static SymbolString createBlankTape(int size) {
 		Symbol blank = JFLAPPreferences.getTMBlankSymbol();
 		SymbolString blanks = new SymbolString();
-		for (int i = 0; i< size; i++){
+		for (int i = 0; i < size; i++) {
 			blanks.add(blank);
 		}
 		return blanks;

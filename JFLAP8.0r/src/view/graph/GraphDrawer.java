@@ -12,8 +12,6 @@ import util.arrows.CurvedArrow;
 import util.arrows.GeometryHelper;
 import util.view.GraphHelper;
 
-import debug.JFLAPDebug;
-
 import model.graph.Graph;
 
 public class GraphDrawer<T> implements JFLAPConstants {

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.swing.event.ChangeEvent;
 
+import debug.JFLAPDebug;
 import util.Copyable;
 import model.change.events.SetToEvent;
 import model.formaldef.Describable;

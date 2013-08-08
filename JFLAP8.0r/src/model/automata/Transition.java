@@ -33,25 +33,25 @@ public abstract class Transition<T extends Transition<T>> extends
 		return this.myTo;
 	}
 
-//	/**
-//	 * Sets the state the transition starts at.
-//	 * 
-//	 * @param newFrom
-//	 *            the state the transition starts at
-//	 */
-//	public void setFromState(State newFrom) {
-//		this.myFrom = newFrom;
-//	}
-//
-//	/**
-//	 * Sets the state the transition goes to.
-//	 * 
-//	 * @param newTo
-//	 *            the state the transition goes to
-//	 */
-//	public void setToState(State newTo) {
-//		this.myTo = newTo;
-//	}
+	/**
+	 * Sets the state the transition starts at.
+	 * 
+	 * @param newFrom
+	 *            the state the transition starts at
+	 */
+	public void setFromState(State newFrom) {
+		this.myFrom = newFrom;
+	}
+
+	/**
+	 * Sets the state the transition goes to.
+	 * 
+	 * @param newTo
+	 *            the state the transition goes to
+	 */
+	public void setToState(State newTo) {
+		this.myTo = newTo;
+	}
 
 	/**
 	 * Checks if this transition is a loop, i.e. if its from state is the same

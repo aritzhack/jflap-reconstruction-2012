@@ -20,10 +20,10 @@
 
 package util.view.tables;
 
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import debug.JFLAPDebug;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,7 +151,6 @@ public abstract class GrowableTableModel extends AbstractTableModel implements
 	public boolean deleteRow(int row) {
 		if (row < 0 || row > getData().size() - 2)
 			return false;
-		getData().remove(row);
 		fireTableRowsDeleted(row, row);
 		return true;
 	}
@@ -213,6 +212,7 @@ public abstract class GrowableTableModel extends AbstractTableModel implements
 		for (int c = 0; c < this.getColumnCount(); c++)
 			current[c] = this.getValueAt(row, c);
 		current[column] = newdata;
+		fireTableCellUpdated(row, column);
 		return current;
 	}
 

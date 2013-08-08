@@ -32,7 +32,10 @@ import javax.swing.event.ChangeListener;
 
 import model.automata.Automaton;
 import model.automata.State;
+import model.automata.StateSet;
 import model.automata.Transition;
+import model.automata.acceptors.Acceptor;
+import model.automata.acceptors.FinalStateSet;
 import model.change.events.AddEvent;
 import model.change.events.ModifyEvent;
 import model.change.events.RemoveEvent;
@@ -41,6 +44,7 @@ import util.Copyable;
 import util.JFLAPConstants;
 import util.Point2DAdv;
 import util.arrows.GeometryHelper;
+import debug.JFLAPDebug;
 
 /**
  * Constructs a transition graph associated with the passed in automaton this
@@ -68,12 +72,32 @@ public class TransitionGraph<T extends Transition<T>> extends
 		myAutomaton = a;
 		myAutomaton.addListener(this);
 		myAlg = alg;
-		
-		for (State s : a.getStates())
+
+		for (State s : a.getStates()){
 			this.addVertex(s, new Point2DAdv());
+			//For some reason, when you use an existing automaton, the States may be "equal" but not "==", so
+			//changes (ie. renaming) to a state may not affect the startstate, finalstates, transitions, etc.
+			updateEquivalence(a, s);
+		}
 		alg.layout(this, new HashSet<State>());
 		for (T t : a.getTransitions()) {
 			addTransition(t);
+		}
+	}
+
+	private void updateEquivalence(Automaton<T> a, State s) {
+		if(a.getStartState() != null && a.getStartState().getID() == s.getID())
+			a.setStartState(s);
+		if(a instanceof Acceptor){
+			Acceptor accept = (Acceptor) a;
+			FinalStateSet fStates = accept.getFinalStateSet();
+			
+			for(State state : fStates){
+				if(s.getID() == state.getID() && s != state){
+					fStates.remove(state);
+					fStates.add(s);
+				}
+			}
 		}
 	}
 
@@ -99,7 +123,8 @@ public class TransitionGraph<T extends Transition<T>> extends
 			it = col.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
-				if (o instanceof State && event.getSource().equals(myAutomaton.getStates())) {
+				if (o instanceof State
+						&& event.getSource().equals(myAutomaton.getStates())) {
 					addVertex((State) o, new Point2DAdv());
 				} else if (o instanceof Transition)
 					addTransition((T) o);
@@ -112,7 +137,8 @@ public class TransitionGraph<T extends Transition<T>> extends
 			it = col.iterator();
 			while (it.hasNext()) {
 				Object o = it.next();
-				if (o instanceof State && event.getSource().equals(myAutomaton.getStates())) {
+				if (o instanceof State
+						&& event.getSource().equals(myAutomaton.getStates())) {
 					removeVertex((State) o);
 				} else if (o instanceof Transition)
 					removeTransition((T) o);
@@ -123,10 +149,28 @@ public class TransitionGraph<T extends Transition<T>> extends
 			if (to instanceof Transition) {
 				updateLabelCenter((T) to);
 			}
+
+			if (to instanceof State
+					&& event.getSource().equals(myAutomaton.getStates())) {
+				renameState((State) e.getEventSource(), (State) to);
+			}
+
 		}
 		distributeChange(event);
 	}
-	
+
+	private void renameState(State from, State to) {
+		if (from != to) {
+//			if (Automaton.isStartState(myAutomaton, from))
+//				myAutomaton.setStartState(to);
+//			if (myAutomaton instanceof Acceptor
+//					&& Acceptor.isFinalState((Acceptor) myAutomaton, from)) {
+//				((Acceptor) myAutomaton).getFinalStateSet().remove(from);
+//				((Acceptor) myAutomaton).getFinalStateSet().add(to);
+//			}
+		}
+	}
+
 	@Override
 	public void update(State from, State to) {
 		updateLabelCenters(from, to);
@@ -154,7 +198,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 	public void setLayoutAlgorithm(LayoutAlgorithm layout) {
 		myAlg = layout;
 	}
-	
+
 	public LayoutAlgorithm getLayoutAlgorithm() {
 		return myAlg;
 	}
@@ -166,7 +210,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 	public Point2D getLabelCenter(T t) {
 		return myCenterMap.get(t);
 	}
-	
+
 	/**
 	 * Returns the ControlPoint for the edge specified by the given transition
 	 */
@@ -175,7 +219,8 @@ public class TransitionGraph<T extends Transition<T>> extends
 	}
 
 	/**
-	 * Returns the center point for the label specified by the transition based on when it was added (lvl).
+	 * Returns the center point for the label specified by the transition based
+	 * on when it was added (lvl).
 	 */
 	public Point2D getLabelCenterPoint(T t, int lvl, State from, State to) {
 		double d = -(lvl + 1) * JFLAPConstants.EDITOR_CELL_HEIGHT;
@@ -191,12 +236,12 @@ public class TransitionGraph<T extends Transition<T>> extends
 			GeometryHelper.translatePerpendicular(center, d, pFrom, pTo);
 		return center;
 	}
-	
-	public Automaton<T> getAutomaton (){
+
+	public Automaton<T> getAutomaton() {
 		return myAutomaton;
 	}
 
-	public void layout(Set<State> unmoving){
+	public void layout(Set<State> unmoving) {
 		myAlg.layout(this, unmoving);
 	}
 
@@ -207,6 +252,12 @@ public class TransitionGraph<T extends Transition<T>> extends
 	private void addTransition(T t) {
 		State from = t.getFromState();
 		State to = t.getToState();
+
+		StateSet states = getAutomaton().getStates();
+		from = states.getStateWithID(from.getID());
+		to = states.getStateWithID(to.getID());
+		t.setFromState(from);
+		t.setToState(to);
 
 		if (!this.hasEdge(from, to)) {
 			boolean changed = addEdge(from, to);
@@ -245,7 +296,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 		// if there are no more transition to/from these states
 		if (order.isEmpty()) {
 			removeEdge(from, to);
-		} else{
+		} else {
 			updateLabelCenters(from, to);
 			super.distributeChanged();
 		}
@@ -257,7 +308,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 		int edgeID = getID(from, to);
 		List<T> stack = myOrderedTransitions.get(edgeID);
 		int lvl = stack.indexOf(t);
-		
+
 		updateLabelCenter(t, lvl, from, to);
 	}
 
@@ -269,7 +320,10 @@ public class TransitionGraph<T extends Transition<T>> extends
 		}
 	}
 
-	/** Updates the label center for the given transition based off when it was added (its lvl). */
+	/**
+	 * Updates the label center for the given transition based off when it was
+	 * added (its lvl).
+	 */
 	private void updateLabelCenter(T t, int lvl, State from, State to) {
 		Point2D center = getLabelCenterPoint(t, lvl, from, to);
 		myCenterMap.put(t, center);
@@ -278,13 +332,15 @@ public class TransitionGraph<T extends Transition<T>> extends
 
 	@Override
 	public TransitionGraph<T> copy() {
-		TransitionGraph<T> clone = new TransitionGraph<T>((Automaton<T>) myAutomaton.copy(), myAlg);
+		TransitionGraph<T> clone = new TransitionGraph<T>(
+				(Automaton<T>) myAutomaton.copy(), myAlg);
 
-		for(State s : myAutomaton.getStates())
-			clone.moveVertex(s, pointForVertex(s));
-		
-		for(T trans : myAutomaton.getTransitions())
-			clone.setControlPt(getControlPt(trans), trans);
+		for (State s : myAutomaton.getStates()) {
+			JFLAPDebug.print(s + " " + clone.hasVertex(s));
+			clone.moveVertex(s, new Point2DAdv(pointForVertex(s)));
+		}
+		for (T trans : myAutomaton.getTransitions())
+			clone.setControlPt(new Point2DAdv(getControlPt(trans)), trans);
 		return clone;
 	}
 }
