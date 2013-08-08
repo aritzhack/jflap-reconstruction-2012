@@ -53,14 +53,13 @@ public class UnrestrictedBruteParser extends Parser {
 		if (new ContextFreeChecker().matchesGrammar(g)) {
 			return new RestrictedBruteParser(g);
 		}
-		return new UnrestrictedBruteParser(optimize(g));
+		return new UnrestrictedBruteParser(g);
 	}
 
 	public UnrestrictedBruteParser(Grammar g) {
 		super(g);
 		mySmallerSet = Collections.unmodifiableSet(smallerSymbols(g));
 		maxLHSsize = g.getProductionSet().getMaxLHSLength();
-
 	}
 
 	@Override
@@ -124,9 +123,7 @@ public class UnrestrictedBruteParser extends Parser {
 			distributeChange(new AdvancedChangeEvent(this, MAX_REACHED,
 					myCapacity));
 		}
-		//returns false so that the new distributed changes
-		//are done instead of the one in SteppableAlgorithm.step()
-		return false;
+		return true;
 	}
 
 	/**
@@ -339,11 +336,11 @@ public class UnrestrictedBruteParser extends Parser {
 	/**
 	 * Removes useless productions for Unrestricted grammars, as a way to
 	 * optimize the grammar as much as possible.
-	 */
-	private static Grammar optimize(Grammar g) {
-		UselessProductionRemover remover = new UselessProductionRemover(g);
-		remover.stepToCompletion();
-		return remover.getTransformedDefinition();
-	}
+//	 */
+//	private static Grammar optimize(Grammar g) {
+//		UselessProductionRemover remover = new UselessProductionRemover(g);
+//		remover.stepToCompletion();
+//		return remover.getTransformedDefinition();
+//	}
 
 }

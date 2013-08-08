@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import universe.JFLAPUniverse;
+import view.automata.views.AutomatonView;
 import view.environment.JFLAPEnvironment;
 import view.help.ImageDisplayComponent;
 import view.lsystem.LSystemRenderView;
@@ -126,6 +127,8 @@ public class SaveImageUtility {
 		// }
 		if(view instanceof LSystemRenderView)	
 			return ((LSystemRenderView) view).getDisplayComponent();
+		if(view instanceof AutomatonView)
+			return ((AutomatonView) view).getCentralPanel();
 		return view;
 	}
 

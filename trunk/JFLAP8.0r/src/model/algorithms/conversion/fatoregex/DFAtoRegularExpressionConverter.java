@@ -1,4 +1,4 @@
-package model.algorithms.transform.fsa;
+package model.algorithms.conversion.fatoregex;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -138,12 +138,16 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return finalStates.add(newFinal);
 	}
 
-	private boolean hasSingleFinal() {
+	public boolean hasSingleFinal() {
 		return getGTG().getFinalStateSet().size() == 1;
 	}
 
 	private FiniteStateAcceptor getFA() {
 		return getOriginalDefinition();
+	}
+	
+	public boolean needsTranstitionsCollapsed(){
+		return !getTransitionCollapseList().isEmpty();
 	}
 
 	private List<FSATransition> getTransitionCollapseList() {
@@ -161,6 +165,10 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return collapseTo;
 	}
 
+	public boolean needsEmptyTransitions() {
+		return !getEmptyTransitionsNeeded().isEmpty();
+	}
+	
 	private List<FSATransition> getEmptyTransitionsNeeded() {
 		StateSet states = getGTG().getStates();
 		ArrayList<FSATransition> toAdd = new ArrayList<FSATransition>();

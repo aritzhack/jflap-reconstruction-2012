@@ -46,8 +46,7 @@ public class UselessProductionRemover extends GrammarTransformAlgorithm {
 
 	@Override
 	public String getDescriptionName() {
-		return "Removes all useless productions in a grammar. A" +
-				"look musi d";
+		return "Removes all useless productions in a grammar.";
 	}
 
 	@Override

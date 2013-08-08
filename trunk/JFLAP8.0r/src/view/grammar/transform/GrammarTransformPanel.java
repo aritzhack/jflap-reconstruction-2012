@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
@@ -22,6 +23,8 @@ public abstract class GrammarTransformPanel extends MagnifiablePanel {
 
 	private Grammar myGrammar;
 	private ProductionTable myProdTable;
+	private JLabel mainLabel;
+	private JLabel detailLabel;
 
 	public GrammarTransformPanel(Grammar g, String name) {
 		super(new BorderLayout());
@@ -33,6 +36,13 @@ public abstract class GrammarTransformPanel extends MagnifiablePanel {
 		initProductionTable();
 		JScrollPane lScroll = new JScrollPane(myProdTable);
 		lScroll.setMinimumSize(myProdTable.getMinimumSize());
+		
+
+		mainLabel = new JLabel(" ");
+		detailLabel = new JLabel(" ");
+
+		mainLabel.setAlignmentX(0.0f);
+		detailLabel.setAlignmentX(0.0f);
 		
 		MagnifiablePanel panel = initRightPanel();
 		MagnifiableSplitPane split = new MagnifiableSplitPane(JSplitPane.HORIZONTAL_SPLIT, lScroll, panel);
@@ -81,4 +91,23 @@ public abstract class GrammarTransformPanel extends MagnifiablePanel {
 
 	public abstract void productionClicked(Production p);
 	public abstract MagnifiablePanel initRightPanel();
+	
+
+
+	public void setMainText(String text) {
+		mainLabel.setText(text);
+	}
+
+	public void setDetailText(String text) {
+		detailLabel.setText(text);
+	}
+
+	public JLabel getMainLabel() {
+		return mainLabel;
+	}
+
+	public JLabel getDetailLabel() {
+		return detailLabel;
+	}
+
 }

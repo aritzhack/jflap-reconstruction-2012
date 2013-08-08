@@ -164,6 +164,14 @@ public class PDAtoCFGConverter extends AutomatonToGrammarConversion<PushdownAuto
 		return steps.toArray(new AlgorithmStep[0]);
 	}
 	
+	@Override
+	public boolean isComplete() {
+		JFLAPDebug.print(variableMappingsComplete());
+		JFLAPDebug.print(allTransitionsConverted());
+		JFLAPDebug.print(getConvertedGrammar().isComplete()[0]);
+		return super.isComplete();
+	}
+	
 	
 	
 	/**

@@ -42,8 +42,6 @@ import errors.BooleanWrapper;
 public class LambdaPanel extends GrammarTransformPanel {
 
 	private LambdaProductionRemover myAlg;
-	private JLabel mainLabel;
-	private JLabel detailLabel;
 	private JLabel lambdaDerivingLabel;
 	private int editingRow;
 	private boolean editingColumn[];
@@ -89,7 +87,7 @@ public class LambdaPanel extends GrammarTransformPanel {
 				setDetailText(p.toString() + " does not derive " + empty
 						+ "!\n");
 
-			setDetailText(" " + detailLabel.getText()
+			setDetailText(" " + getDetailLabel().getText()
 					+ myAlg.getNumberUnidentifiedTargets()
 					+ " more production(s) needed.");
 			if (myAlg.getNumberUnidentifiedTargets() == 0)
@@ -101,18 +99,13 @@ public class LambdaPanel extends GrammarTransformPanel {
 	public MagnifiablePanel initRightPanel() {
 		MagnifiablePanel right = new MagnifiablePanel(new BorderLayout());
 
-		mainLabel = new JLabel(" ");
-		detailLabel = new JLabel(" ");
 		lambdaDerivingLabel = new JLabel(" ");
-
-		mainLabel.setAlignmentX(0.0f);
-		detailLabel.setAlignmentX(0.0f);
 		lambdaDerivingLabel.setAlignmentX(0.0f);
 
 		MagnifiablePanel panel = new MagnifiablePanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(mainLabel);
-		panel.add(detailLabel);
+		panel.add(getMainLabel());
+		panel.add(getDetailLabel());
 		panel.add(lambdaDerivingLabel);
 		initEditingProductionTable();
 
@@ -311,15 +304,7 @@ public class LambdaPanel extends GrammarTransformPanel {
 			editingRow = -1;
 		}
 	}
-
-	public void setMainText(String text) {
-		mainLabel.setText(text);
-	}
-
-	public void setDetailText(String text) {
-		detailLabel.setText(text);
-	}
-
+	
 	public void setDeleteEnabled(boolean b) {
 		deleteAction.setEnabled(b);
 	}

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeSet;
 
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
@@ -125,7 +126,8 @@ public class BruteLanguageGenerator extends LanguageGenerator {
 	}
 	
 	private void makeLengthAdjustments(int length){
-		for(SymbolString string : getStringsInLanguage()){
+		Set<SymbolString> inLang = new TreeSet<SymbolString>(getStringsInLanguage());
+		for(SymbolString string : inLang){
 			if(string.size() != length)
 				getStringsInLanguage().remove(string);
 		}

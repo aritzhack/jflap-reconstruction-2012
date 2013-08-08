@@ -10,9 +10,7 @@ import javax.swing.event.ChangeEvent;
 import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
 import util.UtilFunctions;
-
 import debug.JFLAPDebug;
-
 import errors.BooleanWrapper;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.FormalDefinition;
@@ -281,16 +279,19 @@ public class Grammar extends FormalDefinition{
 
 	@Override
 	public Symbol createSymbol(String sym) {
-		
 		JFLAPMode mode = getMode();
 		switch(mode){
 		case CUSTOM:
 			if (VariableGroupingRule.checkExternalGrouping(sym, myGrouping) &&
 					!TerminalGroupingRule.containsGrouping(sym.substring(1,sym.length()-1), myGrouping))
 				return new Variable(sym);
-			else if (!TerminalGroupingRule.containsGrouping(sym, myGrouping))
+//			else if (!TerminalGroupingRule.containsGrouping(sym, myGrouping))
 				return new Terminal(sym);
-			else return null;
+//			else return null;
+		case MULTI_CHAR_DEFAULT:
+			if (UtilFunctions.isAllUpperCase(sym)) return new Variable(sym);
+			if (UtilFunctions.isAllNonUpperCase(sym)) return new Terminal(sym);
+			return null;
 		default:
 			return super.createSymbol(sym);
 		}

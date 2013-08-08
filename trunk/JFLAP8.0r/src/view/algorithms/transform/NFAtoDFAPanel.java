@@ -48,6 +48,7 @@ public class NFAtoDFAPanel extends
 		AutomatonEditorPanel<FiniteStateAcceptor, FSATransition> nfa = getEditorPanel();
 		myDFApanel = new AutomatonEditorPanel<FiniteStateAcceptor, FSATransition>(
 				myAlg.getDFA(), new UndoKeeper(), true);
+		myDFApanel.getActionMap().put(AutomatonEditorPanel.DELETE, null);
 		myDFApanel.updateBounds(getGraphics());
 
 		MagnifiableScrollPane nScroll = new MagnifiableScrollPane(nfa), dScroll = new MagnifiableScrollPane(

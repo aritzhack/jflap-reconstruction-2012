@@ -6,14 +6,14 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import model.algorithms.transform.grammar.CNFConverter;
 import model.algorithms.transform.grammar.LambdaProductionRemover;
+import model.algorithms.transform.grammar.UnitProductionRemover;
 import model.grammar.Grammar;
 import model.grammar.Production;
 import universe.JFLAPUniverse;
-import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.transform.LambdaPanel;
+import view.grammar.transform.UnitRemovalPanel;
 
 public class CNFTransformAction extends AbstractAction {
 
@@ -52,6 +52,16 @@ public class CNFTransformAction extends AbstractAction {
 	}
 
 	public static void hypothesizeUnit(Grammar g) {
+		UnitProductionRemover remover = new UnitProductionRemover(g);
+		Set<Production> unit = remover.getAllIdentifyTargets();
+		if(!unit.isEmpty()){
+			UnitRemovalPanel urp = new UnitRemovalPanel(g, remover);
+			JFLAPUniverse.getActiveEnvironment().addSelectedComponent(urp);
+		}
+		hypothesizeUseless(g);
+	}
+
+	public static void hypothesizeUseless(Grammar g) {
 		// TODO Auto-generated method stub
 		
 	}
