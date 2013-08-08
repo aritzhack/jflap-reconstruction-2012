@@ -121,6 +121,7 @@ public class SimpleSymbolizer implements Symbolizer {
 			temp.addAll(extractSymbols(right));
 			options.add(temp);
 		}
+		if(options.isEmpty()) return new ArrayList<Object>();
 		
 		List<Object> best = getBest(options);
 		myMap.put(in, best);

@@ -7,7 +7,7 @@ public class FinalStateSet extends StateSet {
 
 	@Override
 	public String getDescriptionName() {
-		return "Final States";
+		return "Final State Set";
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class FinalStateSet extends StateSet {
 	@Override
 	public BooleanWrapper isComplete() {
 		return new BooleanWrapper(!isEmpty(), 
-				"Your Automaton requires a " + this.getDescriptionName());
+				"Your Automaton requires a non-empty " + this.getDescriptionName());
 	}
 	
 	@Override

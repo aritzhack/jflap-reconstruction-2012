@@ -47,6 +47,7 @@ public class StayOptionRemovalPanel extends AutomatonDisplayPanel<MultiTapeTurin
 		AutomatonEditorPanel<MultiTapeTuringMachine, MultiTapeTMTransition> oldTM = getEditorPanel();
 		myNewTMpanel = new AutomatonEditorPanel<MultiTapeTuringMachine, MultiTapeTMTransition>(
 				myAlg.getTransformedDefinition(), new UndoKeeper(), true);
+		myNewTMpanel.getActionMap().put(AutomatonEditorPanel.DELETE, null);
 		resetGraph(oldTM);
 
 		MagnifiableScrollPane oldScroll = new MagnifiableScrollPane(oldTM), newScroll = new MagnifiableScrollPane(

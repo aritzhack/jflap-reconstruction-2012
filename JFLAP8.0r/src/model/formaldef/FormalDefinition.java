@@ -294,11 +294,9 @@ Copyable{
 		switch(mode){			
 		case DEFAULT: if (sym.length()>1) return null;
 		case MULTI_CHAR_DEFAULT: //do nothing
-		case CUSTOM: //treat the same as Multi-char
+		case CUSTOM: //treat the same as Multi-char, will be overridden in Grammar
 		default:
-			if (UtilFunctions.isAllUpperCase(sym)) return new Variable(sym);
-			if (UtilFunctions.isAllNonUpperCase(sym)) return new Terminal(sym);
-			return null;
+			return new Symbol(sym);
 		}
 	}
 	

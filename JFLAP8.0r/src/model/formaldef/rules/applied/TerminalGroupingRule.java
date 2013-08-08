@@ -1,5 +1,6 @@
 package model.formaldef.rules.applied;
 
+import debug.JFLAPDebug;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.formaldef.rules.GroupingRule;
@@ -20,8 +21,8 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 
 	@Override
 	public String getDescription() {
-		return "This rule prevents any symbols from being added to the terminal alphabet if " +
-				"they contain any characters used for group in the Variable Alphabet.";
+		return "This rule prevents any symbols from being added to the terminal alphabet if "
+				+ "they contain any characters used for group in the Variable Alphabet.";
 	}
 
 	@Override
@@ -32,9 +33,10 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 
 	@Override
 	public BooleanWrapper canAdd(TerminalAlphabet a, Symbol newSymbol) {
-		return new BooleanWrapper(!containsGrouping(newSymbol), 
-									"A Terminal cannot contain the characters currently " +
-									"used for grouping in the Variable Alphabet - " + this.getGroupingPair());
+		return new BooleanWrapper(!containsGrouping(newSymbol),
+				"A Terminal cannot contain the characters currently "
+						+ "used for grouping in the Variable Alphabet - "
+						+ this.getGroupingPair());
 	}
 
 	private boolean containsGrouping(Symbol newSymbol) {
@@ -42,9 +44,8 @@ public class TerminalGroupingRule extends GroupingRule<TerminalAlphabet> {
 	}
 
 	public static boolean containsGrouping(String string, GroupingPair gp) {
-		return string.contains(gp.getOpenGroup().toString()) ||	
-				string.contains(gp.getCloseGroup().toString());
+		return string.contains(gp.getOpenGroup().toString())
+				|| string.contains(gp.getCloseGroup().toString());
 	}
-
 
 }

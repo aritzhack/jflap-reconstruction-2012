@@ -336,7 +336,6 @@ public class TransitionGraph<T extends Transition<T>> extends
 				(Automaton<T>) myAutomaton.copy(), myAlg);
 
 		for (State s : myAutomaton.getStates()) {
-			JFLAPDebug.print(s + " " + clone.hasVertex(s));
 			clone.moveVertex(s, new Point2DAdv(pointForVertex(s)));
 		}
 		for (T trans : myAutomaton.getTransitions())

@@ -4,15 +4,13 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import debug.JFLAPDebug;
-
 import file.xml.XMLCodec;
-
 import model.algorithms.conversion.autotogram.FSAtoRegGrammarConversion;
+import model.algorithms.conversion.fatoregex.DFAtoRegularExpressionConverter;
 import model.algorithms.conversion.regextofa.RegularExpressionToNFAConversion;
 import model.algorithms.testinput.simulate.AutoSimulator;
 import model.algorithms.testinput.simulate.AutomatonSimulator;
 import model.algorithms.testinput.simulate.SingleInputSimulator;
-import model.algorithms.transform.fsa.DFAtoRegularExpressionConverter;
 import model.algorithms.transform.fsa.NFAtoDFAConverter;
 import model.algorithms.transform.fsa.minimizer.MinimizeDFAAlgorithm;
 import model.algorithms.transform.grammar.CNFConverter;
