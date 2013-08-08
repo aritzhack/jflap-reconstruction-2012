@@ -21,6 +21,10 @@ public class ModifyEvent<T extends SetSubComponent<T>> extends AdvancedUndoableE
 	public boolean redo() {
 		return myEvent.redo();
 	}
+	
+	public Object getEventSource() {
+		return myEvent.getSource();
+	}
 
 	@Override
 	public Object getArg(int i) {

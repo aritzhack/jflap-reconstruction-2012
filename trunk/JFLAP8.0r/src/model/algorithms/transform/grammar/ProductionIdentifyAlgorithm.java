@@ -20,7 +20,8 @@ import model.grammar.Production;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 
-public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgorithm {
+public abstract class ProductionIdentifyAlgorithm extends
+		GrammarTransformAlgorithm {
 
 	private Set<IdentifyWrapper> myIdentifyMap;
 	private Set<Production> myToAddSet;
@@ -38,18 +39,16 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 	}
 
 	private void populateIdentifyMap() {
-		for (Production p: this.getOriginalGrammar().getProductionSet()){
-			if(isOfTargetForm(p)){
-				myIdentifyMap.add(new IdentifyWrapper(p,
-						shouldRemove(p)));
+		for (Production p : this.getOriginalGrammar().getProductionSet()) {
+			if (isOfTargetForm(p)) {
+				myIdentifyMap.add(new IdentifyWrapper(p, shouldRemove(p)));
 			}
 		}
 	}
 
 	/**
-	 * Override in subclasses if some productions that
-	 * are identified should NOT be removed. By default, all
-	 * identified productions will be removed.
+	 * Override in subclasses if some productions that are identified should NOT
+	 * be removed. By default, all identified productions will be removed.
 	 * 
 	 * @param p
 	 * @return
@@ -60,28 +59,34 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	@Override
 	public AlgorithmStep[] initializeAllSteps() {
-		return new AlgorithmStep[]{new IdentifyRemovesStep(),
-				new AdjustGrammarStep()};
+		return new AlgorithmStep[] { new IdentifyRemovesStep(),
+				new AdjustGrammarStep() };
 	}
 
 	public int getNumberUnidentifiedTargets() {
 		return getUnidentifiedTargets().size();
 	}
 
-	public Set<Production> getAllIdentifyTargets(){
+	public Set<Production> getAllIdentifyTargets() {
 		Set<Production> targets = new TreeSet<Production>();
-		for (IdentifyWrapper wrap: myIdentifyMap)
+		for (IdentifyWrapper wrap : myIdentifyMap)
 			targets.add(wrap.prod);
 		return targets;
 	}
 
 	public Set<Production> getUnidentifiedTargets() {
 		Set<Production> unID = getAllIdentifyTargets();
-		for (Production p : unID.toArray(new Production[0])){
-			if(isIdentified(p)) //if has been identified
+		for (Production p : unID.toArray(new Production[0])) {
+			if (isIdentified(p)) // if has been identified
 				unID.remove(p);
 		}
 		return unID;
+	}
+
+	public Set<Production> getIdentifiedTargets() {
+		Set<Production> id = new TreeSet<Production>(getAllIdentifyTargets());
+		id.removeAll(getUnidentifiedTargets());
+		return id;
 	}
 
 	private boolean isIdentified(Production p) {
@@ -89,7 +94,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 	}
 
 	private IdentifyWrapper getWrapperForProduction(Production p) {
-		for (IdentifyWrapper wrap: myIdentifyMap)
+		for (IdentifyWrapper wrap : myIdentifyMap)
 			if (wrap.prod.equals(p))
 				return wrap;
 		return null;
@@ -97,14 +102,13 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	public BooleanWrapper identifyProductionToBeRemoved(Production p) {
 		IdentifyWrapper prod = getWrapperForProduction(p);
-		if(prod == null)
-			return new BooleanWrapper(false,
-					"The production " + p + "is not of the desired form.");
+		if (prod == null)
+			return new BooleanWrapper(false, "The production " + p
+					+ "is not of the desired form.");
 
-		if(prod.hasBeedIDed)
-			return new BooleanWrapper(false,
-					"The production " + p + " has already been identified.");
-
+		if (prod.hasBeedIDed)
+			return new BooleanWrapper(false, "The production " + p
+					+ " has already been identified.");
 
 		prod.hasBeedIDed = true;
 
@@ -125,25 +129,21 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	public Set<Production> getAllRemovesLeft() {
 		Set<Production> toRemove = new TreeSet<Production>();
-		for (IdentifyWrapper wrap: myIdentifyMap){
+		for (IdentifyWrapper wrap : myIdentifyMap) {
 			toRemove.add(wrap.prod);
 		}
 		return toRemove;
 	}
 
 	private void identifyAllRemaining() {
-		for (IdentifyWrapper p: myIdentifyMap)
+		for (IdentifyWrapper p : myIdentifyMap)
 			identifyProductionToBeRemoved(p.prod);
 	}
 
-
 	private BooleanWrapper doOneFullRemoveAdd() {
 		BooleanWrapper bw = new BooleanWrapper(true);
-		if (getNumAddsRemaining() == 0){
-			IdentifyWrapper p = myIdentifyMap.toArray(new IdentifyWrapper[0])[0];
-			bw = performRemove(p.prod);
-			if (bw.isError())
-				return bw;
+		if (getNumAddsRemaining() == 0) {
+			return performRemove(getFirstRemove());
 		}
 		for (Production p : getAddsRemaining()) {
 			bw = performAdd(p);
@@ -153,11 +153,21 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 		return bw;
 	}
 
+	public Production getFirstRemove() {
+		IdentifyWrapper p = myIdentifyMap.toArray(new IdentifyWrapper[0])[0];
+		return p.prod;
+	}
+	
+	public Production getFirstAdd() {
+		Production add = getAddsRemaining().toArray(new Production[0])[0];
+		return add;
+	}
+
 	public BooleanWrapper performAdd(Production p) {
 		if (!myToAddSet.contains(p))
-			return new BooleanWrapper(false,
-					"The production " + p + " is not a valid production to be " +
-					"added to the transformed grammar.");
+			return new BooleanWrapper(false, "The production " + p
+					+ " is not a valid production to be "
+					+ "added to the transformed grammar.");
 		myToAddSet.remove(p);
 		this.getTransformedGrammar().getProductionSet().add(p);
 		return new BooleanWrapper(true);
@@ -166,9 +176,9 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 	public BooleanWrapper performRemove(Production p) {
 		IdentifyWrapper prod = getWrapperForProduction(p);
 		if (prod == null)
-			return new BooleanWrapper(false, 
-					"The production " + p + " does not need to be removed.");
-		
+			return new BooleanWrapper(false, "The production " + p
+					+ " does not need to be removed.");
+
 		myIdentifyMap.remove(prod);
 		myToAddSet.addAll(getProductionsToAddForRemoval(p));
 		if (prod.shouldRemove)
@@ -182,13 +192,12 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	public abstract String getIdentifyStepName();
 
-	private class IdentifyWrapper implements Comparable<IdentifyWrapper>{
+	private class IdentifyWrapper implements Comparable<IdentifyWrapper> {
 		public Production prod;
 		public boolean hasBeedIDed;
 		public boolean shouldRemove;
 
-		public IdentifyWrapper(Production p, 
-				boolean remove){
+		public IdentifyWrapper(Production p, boolean remove) {
 			prod = p;
 			this.hasBeedIDed = false;
 			this.shouldRemove = remove;
@@ -200,7 +209,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 		}
 	}
 
-	private class IdentifyRemovesStep implements AlgorithmStep{
+	private class IdentifyRemovesStep implements AlgorithmStep {
 
 		@Override
 		public String getDescriptionName() {
@@ -226,7 +235,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 	}
 
-	private class AdjustGrammarStep implements AlgorithmStep{
+	private class AdjustGrammarStep implements AlgorithmStep {
 
 		@Override
 		public String getDescriptionName() {
@@ -249,7 +258,7 @@ public abstract class ProductionIdentifyAlgorithm extends GrammarTransformAlgori
 
 		@Override
 		public boolean isComplete() {
-			return getNumRemovesRemaining()+getNumAddsRemaining() == 0;
+			return getNumRemovesRemaining() + getNumAddsRemaining() == 0;
 		}
 
 	}

@@ -1,5 +1,6 @@
 package model.automata.acceptors.fsa;
 
+import debug.JFLAPDebug;
 import model.automata.InputAlphabet;
 import model.automata.StartState;
 import model.automata.State;

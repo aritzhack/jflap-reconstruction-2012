@@ -17,13 +17,12 @@ import javax.swing.event.ChangeListener;
 
 
 
-import debug.JFLAPDebug;
 
 import universe.preferences.JFLAPMode;
 import universe.preferences.JFLAPPreferences;
 import util.Copyable;
 import util.JFLAPConstants;
-
+import util.UtilFunctions;
 import model.change.ChangingObject;
 import model.change.events.AdvancedChangeEvent;
 import model.formaldef.components.ChangeTypes;
@@ -32,6 +31,10 @@ import model.formaldef.components.FormalDefinitionComponent;
 import model.formaldef.components.alphabets.Alphabet;
 import model.formaldef.components.functionset.FunctionSet;
 import model.formaldef.rules.applied.DisallowedCharacterRule;
+import model.formaldef.rules.applied.TerminalGroupingRule;
+import model.formaldef.rules.applied.VariableGroupingRule;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.symbols.SpecialSymbol;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
@@ -287,7 +290,16 @@ Copyable{
 	}
 	
 	public Symbol createSymbol(String sym) {
-		return new Symbol(sym);
+		JFLAPMode mode = getMode();
+		switch(mode){			
+		case DEFAULT: if (sym.length()>1) return null;
+		case MULTI_CHAR_DEFAULT: //do nothing
+		case CUSTOM: //treat the same as Multi-char
+		default:
+			if (UtilFunctions.isAllUpperCase(sym)) return new Variable(sym);
+			if (UtilFunctions.isAllNonUpperCase(sym)) return new Terminal(sym);
+			return null;
+		}
 	}
 	
 	public boolean isValidSymbol(String sym){

@@ -13,6 +13,7 @@ import view.action.automata.TMtoUnrestrictedGrammarAction;
 import view.action.automata.TrapStateAction;
 import view.action.grammar.conversion.CFGtoPDALLAction;
 import view.action.grammar.conversion.CFGtoPDALRAction;
+import view.action.grammar.conversion.CNFTransformAction;
 import view.action.grammar.conversion.RegGrammarToFSAAction;
 import view.action.regex.REtoFAAction;
 import view.automata.views.AutomatonView;
@@ -52,6 +53,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 			this.add(new CFGtoPDALLAction(v));
 			this.add(new CFGtoPDALRAction(v));
 			this.add(new RegGrammarToFSAAction(v));
+			this.add(new CNFTransformAction(v));
 		}
 		
 		if(view instanceof AutomatonView){

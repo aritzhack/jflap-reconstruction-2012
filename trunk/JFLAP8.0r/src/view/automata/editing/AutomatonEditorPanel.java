@@ -234,6 +234,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	public void setGraph(TransitionGraph<S> graph) {
 		myGraph.removeListener(this);
+		myAutomaton.removeListener(myGraph);
 		myGraph = graph;
 		myGraph.addListener(this);
 		repaint();
