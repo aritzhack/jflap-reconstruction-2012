@@ -92,7 +92,7 @@ public class TransitionGraph<T extends Transition<T>> extends
 			Acceptor accept = (Acceptor) a;
 			FinalStateSet fStates = accept.getFinalStateSet();
 			
-			for(State state : fStates){
+			for(State state : fStates.toCopiedSet()){
 				if(s.getID() == state.getID() && s != state){
 					fStates.remove(state);
 					fStates.add(s);

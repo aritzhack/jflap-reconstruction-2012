@@ -1,4 +1,4 @@
-package view.automata.tools;
+package view.automata.tools.algorithm;
 
 import java.awt.event.MouseEvent;
 
@@ -8,6 +8,7 @@ import model.automata.Automaton;
 import model.automata.State;
 import model.automata.Transition;
 import view.automata.editing.AutomatonEditorPanel;
+import view.automata.tools.ArrowTool;
 
 public class ArrowDisplayOnlyTool<T extends Automaton<S>, S extends Transition<S>> extends ArrowTool<T, S> {
 

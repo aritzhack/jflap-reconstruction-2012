@@ -1,4 +1,4 @@
-package view.automata.tools;
+package view.automata.tools.algorithm;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -16,6 +16,7 @@ import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import util.Point2DAdv;
 import view.algorithms.conversion.regextofa.RegularExpressionToFAPanel;
 import view.automata.editing.AutomatonEditorPanel;
+import view.automata.tools.EditingTool;
 
 public class DeexpressionTransitionTool extends
 		EditingTool<FiniteStateAcceptor, FSATransition> {

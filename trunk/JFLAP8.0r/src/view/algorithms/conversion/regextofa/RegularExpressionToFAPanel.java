@@ -24,10 +24,10 @@ import view.ViewFactory;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TooltipAction;
-import view.automata.tools.DeexpressionTransitionTool;
-import view.automata.tools.NonTransitionArrowTool;
-import view.automata.tools.REtoFATransitionTool;
 import view.automata.tools.ToolBar;
+import view.automata.tools.algorithm.DeexpressionTransitionTool;
+import view.automata.tools.algorithm.NonTransitionArrowTool;
+import view.automata.tools.algorithm.REtoFATransitionTool;
 import view.environment.JFLAPEnvironment;
 
 public class RegularExpressionToFAPanel extends AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition>{

@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import universe.preferences.JFLAPPreferences;
-
 import debug.JFLAPDebug;
-
 import errors.BooleanWrapper;
 import model.algorithms.AlgorithmException;
 import model.algorithms.FormalDefinitionAlgorithm;
@@ -25,6 +23,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.determinism.FSADeterminismChecker;
 import model.formaldef.components.SetComponent;
 import model.formaldef.components.alphabets.Alphabet;
+import model.regex.EmptySub;
 import model.regex.GeneralizedTransitionGraph;
 import model.regex.OperatorAlphabet;
 import model.regex.RegularExpression;
@@ -42,6 +41,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	private List<FSATransition> newLambdaTransitions;
 	private List<FSATransition> myCollapseList;
 	public List<State> myStatesToCollapse;
+	private State newFinal;
 
 
 	public DFAtoRegularExpressionConverter (FiniteStateAcceptor fsa){
@@ -107,14 +107,21 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		FSATransition t1 = transitions.getTransitionsFromStateToState(start, start).iterator().next();
 		FSATransition t2 = transitions.getTransitionsFromStateToState(start, end).iterator().next();
 		FSATransition t3 = transitions.getTransitionsFromStateToState(end, end).iterator().next();
+		FSATransition t4 = transitions.getTransitionsFromStateToState(end, start).iterator().next();
 		
 		SymbolString exp = new SymbolString(t2.getInput());
 		if (!isEmptySetTransition(t1)){
-			exp.addAll(0,star(t1.getInput()));
+			exp = concat(star(t1.getInput()), exp);
 		}
 		
 		if (!isEmptySetTransition(t3)){
-			exp.addAll(star(t3.getInput()));
+			exp = concat(exp, star(t3.getInput()));
+		}
+		
+		if (!isEmptySetTransition(t4)){
+			SymbolString expCopy = exp.copy();
+			expCopy = concat(expCopy, new SymbolString(t4.getInput()));
+			exp = concat(star(expCopy.toArray(new Symbol[0])), exp);
 		}
 		myRegEx.setTo(exp);
 		return myRegEx;
@@ -129,7 +136,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	 */
 	public boolean createSingleFinalState() {
 
-		State newFinal = myGTG.getStates().createAndAddState();
+		newFinal = myGTG.getStates().createAndAddState();
 		FinalStateSet finalStates = myGTG.getFinalStateSet();
 		for(State s: finalStates){
 			newLambdaTransitions.add(new FSATransition(s, newFinal, myRegEx.getOperators().getEmptySub()));
@@ -139,7 +146,12 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 	}
 
 	public boolean hasSingleFinal() {
-		return getGTG().getFinalStateSet().size() == 1;
+		FinalStateSet finalStates = getGTG().getFinalStateSet();
+		return finalStates.size() == 1 && !finalStates.contains(getGTG().getStartState()) ;
+	}
+	
+	public State getSingleFinal() {
+		return newFinal;
 	}
 
 	private FiniteStateAcceptor getFA() {
@@ -225,6 +237,10 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		return getGTG().getStates().remove(s) && doTransitionAdditions(toAdd);
 		
+	}
+	
+	public boolean needsStatesCollaped() {
+		return !myStatesToCollapse.isEmpty();
 	}
 
 	private boolean doTransitionAdditions(Collection<FSATransition> toAdd) {
@@ -346,7 +362,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 			symbols.addFirst(ops.getOpenGroup());
 			symbols.addLast(ops.getCloseGroup());
 		}
-			
+		
 		symbols.add(star);
 		
 		return symbols;
@@ -417,8 +433,26 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 
 		return added;
 	}
+	
+	public boolean addTransitionToFinal(State from, State to){
+		GeneralizedTransitionGraph gtg = getGTG();
+		boolean added = false;
+		List<FSATransition> copy = new ArrayList<FSATransition>(newLambdaTransitions);
+		
+		for(FSATransition t : copy)
+			if(t.getFromState().equals(from) && t.getToState().equals(to)){
+				added = true;
+				gtg.getTransitions().add(t);
+				gtg.getFinalStateSet().remove(from);
+				newLambdaTransitions.remove(t);
+			}
+		
+		return added;
+	}
 
-
+	public boolean needsFinalTransitions() {
+		return !newLambdaTransitions.isEmpty();
+	}
 
 	private boolean collapseAllTransitions() {
 		if (myCollapseList.isEmpty()) return false;
@@ -463,6 +497,19 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		return transSet.add(collapsed);
 	}
 
+	public int numTransCollapsesNeeded() {
+		return myCollapseList.size();
+	}
+
+	public int numEmptyNeeded() {
+		return getEmptyTransitionsNeeded().size();
+	}
+	
+	public int numStateCollapsesNeeded() {
+		return myStatesToCollapse.size();
+	}
+
+
 	private boolean isLambdaTransition(FSATransition t) {
 		return t.getInput().length == 0;
 	}
@@ -500,7 +547,7 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		@Override
 		public boolean execute() throws AlgorithmException {
 
-			if (getGTG().getFinalStateSet().size() > 1)
+			if (!hasSingleFinal() && getSingleFinal() == null)
 				createSingleFinalState();
 
 			return addAllTransitionsToFinal();
@@ -589,5 +636,4 @@ public class DFAtoRegularExpressionConverter extends FormalDefinitionAlgorithm<F
 		}
 
 	}
-
 }

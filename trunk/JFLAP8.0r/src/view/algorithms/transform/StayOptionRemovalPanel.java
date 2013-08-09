@@ -25,7 +25,7 @@ import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TooltipAction;
 import view.automata.tools.ToolBar;
-import view.automata.tools.TransitionSelectionTool;
+import view.automata.tools.algorithm.TransitionSelectionTool;
 import view.environment.JFLAPEnvironment;
 import file.xml.graph.AutomatonEditorData;
 

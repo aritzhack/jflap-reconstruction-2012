@@ -23,10 +23,10 @@ import view.ViewFactory;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TooltipAction;
-import view.automata.tools.NonTransitionArrowTool;
-import view.automata.tools.StateExpanderTool;
 import view.automata.tools.ToolBar;
-import view.automata.tools.TransitionExpanderTool;
+import view.automata.tools.algorithm.NonTransitionArrowTool;
+import view.automata.tools.algorithm.StateExpanderTool;
+import view.automata.tools.algorithm.TransitionExpanderTool;
 import view.automata.views.FSAView;
 
 public class NFAtoDFAPanel extends

@@ -31,9 +31,9 @@ import util.view.magnify.SizeSlider;
 import view.ViewFactory;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
-import view.automata.tools.NonTransitionArrowTool;
 import view.automata.tools.ToolBar;
 import view.automata.tools.TransitionTool;
+import view.automata.tools.algorithm.NonTransitionArrowTool;
 import view.automata.views.AutomatonView;
 import file.xml.graph.AutomatonEditorData;
 

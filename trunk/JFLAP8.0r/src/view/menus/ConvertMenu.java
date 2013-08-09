@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.JMenu;
 
 import view.action.automata.CombineAutomataAction;
+import view.action.automata.DFAtoREAction;
 import view.action.automata.FSAtoRegGrammarAction;
 import view.action.automata.NFAtoDFAAction;
 import view.action.automata.PDAtoCFGAction;
@@ -60,8 +61,9 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 			AutomatonView v = (AutomatonView) view;
 			if(view instanceof FSAView){
 				this.add(new NFAtoDFAAction((FSAView) v));
-				this.add(new TrapStateAction((FSAView) v));
 				this.add(new FSAtoRegGrammarAction((FSAView) v));
+				this.add(new DFAtoREAction((FSAView) v));
+				this.add(new TrapStateAction((FSAView) v));
 			}
 			if(view instanceof PDAView)
 				this.add(new PDAtoCFGAction((PDAView) v));

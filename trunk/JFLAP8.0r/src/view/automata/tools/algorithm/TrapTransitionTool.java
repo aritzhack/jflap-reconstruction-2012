@@ -1,4 +1,4 @@
-package view.automata.tools;
+package view.automata.tools.algorithm;
 
 import java.awt.event.MouseEvent;
 
@@ -14,6 +14,7 @@ import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
 import universe.JFLAPUniverse;
 import view.automata.editing.AutomatonEditorPanel;
+import view.automata.tools.TransitionTool;
 import view.environment.JFLAPEnvironment;
 
 public class TrapTransitionTool extends TransitionTool<FiniteStateAcceptor, FSATransition> {

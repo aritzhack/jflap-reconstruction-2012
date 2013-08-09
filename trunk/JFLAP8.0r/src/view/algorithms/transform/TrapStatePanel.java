@@ -26,10 +26,10 @@ import model.symbols.Symbol;
 import universe.JFLAPUniverse;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
-import view.automata.tools.NonTransitionArrowTool;
 import view.automata.tools.ToolBar;
-import view.automata.tools.TrapStateTool;
-import view.automata.tools.TrapTransitionTool;
+import view.automata.tools.algorithm.NonTransitionArrowTool;
+import view.automata.tools.algorithm.TrapStateTool;
+import view.automata.tools.algorithm.TrapTransitionTool;
 
 public class TrapStatePanel extends
 		AutomatonDisplayPanel<FiniteStateAcceptor, FSATransition>{
