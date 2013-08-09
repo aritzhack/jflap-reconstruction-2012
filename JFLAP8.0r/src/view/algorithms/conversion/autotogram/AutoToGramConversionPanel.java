@@ -34,7 +34,7 @@ import util.view.magnify.SizeSlider;
 import view.automata.AutomatonDisplayPanel;
 import view.automata.editing.AutomatonEditorPanel;
 import view.automata.simulate.TooltipAction;
-import view.automata.tools.ArrowDisplayOnlyTool;
+import view.automata.tools.algorithm.ArrowDisplayOnlyTool;
 import view.environment.JFLAPEnvironment;
 import view.grammar.GrammarView;
 import view.grammar.productions.ProductionTable;

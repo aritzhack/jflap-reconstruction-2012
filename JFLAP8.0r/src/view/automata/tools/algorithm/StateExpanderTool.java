@@ -1,4 +1,4 @@
-package view.automata.tools;
+package view.automata.tools.algorithm;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -12,6 +12,7 @@ import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import util.Point2DAdv;
 import view.automata.editing.AutomatonEditorPanel;
+import view.automata.tools.EditingTool;
 import errors.BooleanWrapper;
 
 public class StateExpanderTool extends EditingTool<FiniteStateAcceptor, FSATransition>{

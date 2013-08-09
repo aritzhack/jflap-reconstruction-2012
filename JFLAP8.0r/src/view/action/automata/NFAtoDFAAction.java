@@ -15,7 +15,7 @@ import view.automata.views.FSAView;
 public class NFAtoDFAAction extends AutomatonAction{
 
 	public NFAtoDFAAction(FSAView view) {
-		super("NFA to DFA", view);
+		super("Convert to DFA", view);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package view.automata.tools;
+package view.automata.tools.algorithm;
 
 import java.awt.event.MouseEvent;
 
@@ -7,6 +7,7 @@ import model.automata.State;
 import model.automata.acceptors.fsa.FSATransition;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
 import view.automata.editing.AutomatonEditorPanel;
+import view.automata.tools.TransitionTool;
 
 public class REtoFATransitionTool extends TransitionTool<FiniteStateAcceptor, FSATransition>{
 
