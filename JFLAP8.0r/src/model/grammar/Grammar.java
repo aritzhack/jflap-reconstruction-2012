@@ -288,13 +288,13 @@ public class Grammar extends FormalDefinition{
 //			else if (!TerminalGroupingRule.containsGrouping(sym, myGrouping))
 				return new Terminal(sym);
 //			else return null;
+		case DEFAULT:
+			if (sym.length()>1) return null;
 		case MULTI_CHAR_DEFAULT:
 			if (UtilFunctions.isAllUpperCase(sym)) return new Variable(sym);
 			if (UtilFunctions.isAllNonUpperCase(sym)) return new Terminal(sym);
-			return null;
-		default:
-			return super.createSymbol(sym);
 		}
+		return null;
 	}	
 
 }
