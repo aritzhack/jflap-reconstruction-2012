@@ -20,25 +20,37 @@ package oldnewstuff.view.tree;
 
 
 
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
-class UnrestrictedTreeNode extends DefaultMutableTreeNode {
+import universe.preferences.JFLAPPreferences;
+import model.symbols.Symbol;
+import model.symbols.SymbolString;
+
+public class UnrestrictedTreeNode extends DefaultMutableTreeNode {
 	/**
 	 * Creates a new unrestricted tree node.
 	 * 
 	 * @param text
 	 *            the label for this unrestricted tree node
 	 */
-	public UnrestrictedTreeNode(String text) {
+	public UnrestrictedTreeNode(SymbolString text) {
 		super(text);
 		this.text = text;
+	}
+	
+	public UnrestrictedTreeNode(Symbol s) {
+		this(new SymbolString(s));
+	}
+	
+	public UnrestrictedTreeNode() {
+		this(new Symbol(""));
 	}
 
 	/**
 	 * Returns the length of this node, which is the length of the text.
 	 */
 	public int length() {
-		return text.length();
+		return text.size();
 	}
 
 	/**
@@ -46,7 +58,7 @@ class UnrestrictedTreeNode extends DefaultMutableTreeNode {
 	 * 
 	 * @return the text
 	 */
-	public String getText() {
+	public SymbolString getText() {
 		return text;
 	}
 
@@ -61,7 +73,7 @@ class UnrestrictedTreeNode extends DefaultMutableTreeNode {
 	}
 
 	/** The text! */
-	private String text;
+	private SymbolString text;
 
 	/** The weight. */
 	public double weight = 1.0;

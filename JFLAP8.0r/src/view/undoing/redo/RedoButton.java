@@ -61,7 +61,7 @@ public class RedoButton extends UndoRelatedButton implements UndoKeeperListener 
 
 	@Override
 	public String getIconFilename() {
-		return "redo.jpg";
+		return "/ICON/redo.jpg";
 	}
 
 }

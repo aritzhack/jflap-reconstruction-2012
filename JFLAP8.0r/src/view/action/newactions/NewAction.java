@@ -34,7 +34,7 @@ public abstract class NewAction<T> extends AbstractAction {
 				new NewMultiTapeTMAction(),
 				new NewBlockTMAction(),
 				new NewGrammarAction(), 
-				new NewSetsAction(),
+//				new NewSetsAction(),
 				new NewLSystemAction(),
 				new NewRegexAction(),
 				new NewRegPumpingLemmaAction(), 

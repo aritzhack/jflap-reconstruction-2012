@@ -20,14 +20,32 @@
 
 package model.algorithms.testinput.parse;
 
-import javax.swing.tree.*;
+/*
+ *  JFLAP - Formal Languages and Automata Package
+ * 
+ * 
+ *  Susan H. Rodger
+ *  Computer Science Department
+ *  Duke University
+ *  August 27, 2009
 
-import model.grammar.Production;
-import model.symbols.SymbolString;
+ *  Copyright (c) 2002-2009
+ *  All rights reserved.
+
+ *  JFLAP is open source software. Please see the LICENSE for terms.
+ *
+ */
+
 
 
 
 import java.util.Arrays;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import model.algorithms.testinput.parse.Derivation;
+import model.grammar.Production;
+import model.symbols.SymbolString;
 
 /**
  * A parse node is used as an aide for brute force parsing. It contains a
@@ -46,25 +64,13 @@ import java.util.Arrays;
 
 public class ParseNode extends DefaultMutableTreeNode {
 
-	/**
-	 * Instantiates a new parse node.
-	 * 
-	 * @param a
-	 *            the derivation of this rule
-	 * @param productions
-	 *            the productions that led to this derivation
-	 * @param substitutions
-	 *            the positions in the parent string derivation that the
-	 *            productions were substituted in to achieve this derivation
-	 */
-	public ParseNode(SymbolString a, Production[] productions,
-			int[] substitutions) {
-		this.derivation = a;
-		if (productions.length != substitutions.length)
-			throw new IllegalArgumentException(
-					"Production and substitution array sizes mismatch!");
-		this.productions = productions;
-		this.subs = substitutions;
+	private Derivation derivation;
+	
+	public ParseNode(Derivation derivation) {
+		this.derivation = derivation;
+//		if (productions.length != substitutions.length)
+//			throw new IllegalArgumentException(
+//					"Production and substitution array sizes mismatch!");
 	}
 
 	/**
@@ -74,7 +80,7 @@ public class ParseNode extends DefaultMutableTreeNode {
 	 *            the parse node to copy
 	 */
 	public ParseNode(ParseNode node) {
-		this(node.derivation, node.productions, node.subs);
+		this(node.derivation);
 	}
 
 	/**
@@ -83,7 +89,7 @@ public class ParseNode extends DefaultMutableTreeNode {
 	 * @return the derivation string
 	 */
 	public SymbolString getDerivation() {
-		return derivation;
+		return derivation.createResult();
 	}
 
 	/**
@@ -94,7 +100,7 @@ public class ParseNode extends DefaultMutableTreeNode {
 	 *         derivation
 	 */
 	public Production[] getProductions() {
-		return productions;
+		return derivation.getProductionArray();
 	}
 
 	/**
@@ -104,8 +110,8 @@ public class ParseNode extends DefaultMutableTreeNode {
 	 * @return the positions for the substitutions of the productions in the
 	 *         parent derivation that led to this current derivation
 	 */
-	public int[] getSubstitutions() {
-		return subs;
+	public Integer[] getSubstitutions() {
+		return derivation.getSubstitutionArray();
 	}
 
 	/**
@@ -114,25 +120,6 @@ public class ParseNode extends DefaultMutableTreeNode {
 	 * @return a string representation of those object
 	 */
 	public String toString() {
-		StringBuffer sb = new StringBuffer(derivation.toString());
-		sb.append(", ");
-		sb.append(Arrays.asList(productions) + ", ");
-		sb.append('[');
-		for (int j = 0; j < subs.length; j++) {
-			if (j != 0)
-				sb.append(", ");
-			sb.append(subs[j]);
-		}
-		sb.append(']');
-		return sb.toString();
+		return derivation.toString();
 	}
-
-	/** The current string derivation. */
-	private SymbolString derivation;
-
-	/** The grammar rules used to achieve this derivation. */
-	private Production[] productions;
-
-	/** The positions at which substitutions were attempted. */
-	private int[] subs;
 }

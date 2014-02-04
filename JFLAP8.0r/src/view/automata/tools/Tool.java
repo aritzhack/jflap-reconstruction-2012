@@ -78,8 +78,8 @@ public abstract class Tool extends MouseAdapter {
 	 * @return the default tool icon
 	 */
 	public Image getImage() {
-		String filename = JFLAPConstants.RESOURCE_ROOT+getImageURLString();
-		return  Toolkit.getDefaultToolkit().getImage(filename);
+		URL url = getClass().getResource(getImageURLString());
+		return  Toolkit.getDefaultToolkit().getImage(url);
 	}
 	
 	public Icon getIcon(){
