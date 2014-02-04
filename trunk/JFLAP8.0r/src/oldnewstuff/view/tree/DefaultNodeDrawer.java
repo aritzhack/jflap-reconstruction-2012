@@ -52,7 +52,7 @@ public class DefaultNodeDrawer implements NodeDrawer {
 		if (s == null)
 			s = "null";
 		if (s.length() == 0)
-			s = JFLAPPreferences.getEmptyStringSymbol();
+			s = JFLAPPreferences.getEmptyString();
 		Rectangle2D bounds = getBounds(g, s);
 		// Draw the label for the node.
 		int dx = ((int) bounds.getWidth()) >> 1;
@@ -75,7 +75,7 @@ public class DefaultNodeDrawer implements NodeDrawer {
 		if (s == null)
 			s = "null";
 		if (s.length() == 0)
-			s = JFLAPPreferences.getEmptyStringSymbol();
+			s = JFLAPPreferences.getEmptyString();
 		Rectangle2D bounds = getBounds(g, s);
 		// Draw the label for the node.
 		int dx = ((int) bounds.getWidth()) >> 2;

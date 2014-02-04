@@ -1,13 +1,15 @@
 package view.undoing;
 
-import javax.swing.Action;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import model.undo.UndoKeeper;
 import model.undo.UndoKeeperListener;
-import util.JFLAPConstants;
 import util.view.ActionLinkedButton;
+import debug.JFLAPDebug;
 
 public abstract class UndoRelatedButton extends ActionLinkedButton implements UndoKeeperListener {
 
@@ -34,8 +36,9 @@ public abstract class UndoRelatedButton extends ActionLinkedButton implements Un
 		if (!amUsingIcon)
 			return null;
 		if (myIcon == null){
-			String url = JFLAPConstants.RESOURCE_ROOT + "/ICON/" + getIconFilename();
-			myIcon = new ImageIcon(url);
+			URL url = getClass().getResource(getIconFilename());
+			Image img = Toolkit.getDefaultToolkit().getImage(url);
+			myIcon = new ImageIcon(img);
 		}
 		return myIcon;
 	}

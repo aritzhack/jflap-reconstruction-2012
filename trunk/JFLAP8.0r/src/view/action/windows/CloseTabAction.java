@@ -21,17 +21,18 @@
 package view.action.windows;
 
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.net.URL;
+
 import javax.swing.AbstractAction;
-import javax.swing.Icon;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import oldnewstuff.controller.menus.MenuConstants;
-import util.JFLAPConstants;
 import view.environment.JFLAPEnvironment;
 import view.environment.TabChangeListener;
 import view.environment.TabChangedEvent;
@@ -61,7 +62,8 @@ public class CloseTabAction extends AbstractAction implements TabChangeListener{
 	 *            the environment to handle the closing for
 	 */
 	public CloseTabAction(JFLAPEnvironment e, boolean usingIcon) {
-		super("Dismiss Tab", getIcon(usingIcon));
+		super("Dismiss Tab");
+		setIcon(usingIcon);
 		putValue(ACCELERATOR_KEY, 
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, MenuConstants.getMainMenuMask()));
 		myEnvironment = e;
@@ -69,8 +71,11 @@ public class CloseTabAction extends AbstractAction implements TabChangeListener{
 	}
 
 
-	private static Icon getIcon(boolean usingIcon) {
-		return usingIcon ? new ImageIcon(JFLAPConstants.RESOURCE_ROOT + "/ICON/x.gif") : null;
+	private void setIcon(boolean usingIcon) {
+		if(!usingIcon) return;
+		URL url = getClass().getResource("/ICON/x.gif");
+		Image img = Toolkit.getDefaultToolkit().getImage(url);
+        putValue(Action.SMALL_ICON, new ImageIcon(img));
 	}
 
 

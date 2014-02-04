@@ -36,7 +36,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import debug.JFLAPDebug;
-
 import model.algorithms.testinput.parse.ParseNode;
 import model.grammar.Production;
 import universe.preferences.JFLAPPreferences;
@@ -51,40 +50,28 @@ import view.grammar.parsing.brute.BruteParserView;
 
 public class UnrestrictedTreePanel extends TreePanel {
 	
-	private HashMap <String, String> myVariableMap;
-	/**
-	 * Instantiates an unrestricted tree panel.
-	 * 
-	 * @param pane
-	 *            the brute parse pane
-	 */
-	public UnrestrictedTreePanel(BruteParserView pane) {
-		super(new DefaultTreeModel(new DefaultMutableTreeNode("")));
-		this.brutePane = pane;
-	}
+	private static final Color 
+			INNER = new Color(100, 200, 120),
+			LEAF = new Color(255, 255, 100),
+			BRACKET = new Color(150, 150, 255), 
+			BRACKET_OUT = BRACKET.darker().darker();
 	
-	public UnrestrictedTreePanel(BruteParserView pane, HashMap <String, String> map) {
-		super(new DefaultTreeModel(new DefaultMutableTreeNode("")));
-		this.brutePane = pane;
-		this.myVariableMap=map;
-	}
+	private HashMap <String, String> myVariableMap;
+	private ParseNode[] solutionParseNodes;
+	private UnrestrictedTreeNode[][][] top = null;
+	private UnrestrictedTreeNode[][][] bottom = null;
 
-	/**
-	 * Returns the string representation of the tops and bottoms.
-	 */
-	public String getTB() {
-		StringBuffer total = new StringBuffer();
-		for (int i = 0; i < top.length; i++) {
-			List t = new LinkedList();
-			List b = new LinkedList();
-			for (int j = 0; j < top[i].length; j++)
-				t.add(Arrays.asList(top[i][j]));
-			for (int j = 0; j < bottom[i].length; j++)
-				b.add(Arrays.asList(bottom[i][j]));
-			total.append("T." + i + ": " + t + "\n");
-			total.append("B." + i + ": " + b + "\n");
-		}
-		return total.toString();
+	private Map nodeToParentWeights = new HashMap();
+	private Map nodeToParentGroup = new HashMap();
+	private Map nodeToPoint;
+	private DefaultNodeDrawer nodeDrawer = new DefaultNodeDrawer();
+	
+	int level = 0;
+	int group = 0;
+	int production = -1;
+	
+	public UnrestrictedTreePanel() {
+		super(new DefaultTreeModel(new DefaultMutableTreeNode("")));
 	}
 
 	private UnrestrictedTreeNode[] levelNodes(int level) {
@@ -101,7 +88,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 	private void bridgeTo(int level) {
 		UnrestrictedTreeNode[] prev = levelNodes(level - 1);
 		Production[] prods = solutionParseNodes[level].getProductions();
-		int[] prodStarts = solutionParseNodes[level].getSubstitutions();
+		Integer[] prodStarts = solutionParseNodes[level].getSubstitutions();
 		int length = 0, prodNum = 0;
 		List bottomList = new LinkedList();
 		List topList = new LinkedList();
@@ -260,7 +247,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 			top = null;
 			return;
 		}
-		JFLAPDebug.print(answer.getLevel());
+		
 		metaWidth = -1.0;
 		solutionParseNodes = new ParseNode[answer.getLevel() + 1];
 		for (; answer != null; answer = (ParseNode) answer.getParent())
@@ -289,9 +276,6 @@ public class UnrestrictedTreePanel extends TreePanel {
 				changed |= assignWeights(i, need);
 		}
 		level = group = 0;
-		brutePane.getDerivationModel().setRowCount(0);
-		brutePane.getDerivationModel().addRow(new String[] { "",
-				solutionParseNodes[0].getDerivation().toString() });
 		return;
 	}
 
@@ -341,7 +325,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 	 * @param point
 	 *            the point to store the result in
 	 */
-	protected Point2D getPoint(int row, double weight, Point2D p) {
+	private Point2D getPoint(int row, double weight, Point2D p) {
 		if (p == null)
 			p = new Point2D.Double();
 		p.setLocation(realWidth * weight / metaWidth, realHeight
@@ -349,7 +333,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 		return p;
 	}
 
-	protected void setMetaWidth() {
+	private void setMetaWidth() {
 		for (int i = 0; i < top.length; i++) {
 			UnrestrictedTreeNode[] nodes = levelNodes(i);
 			double total = 0.0;
@@ -500,7 +484,7 @@ public class UnrestrictedTreePanel extends TreePanel {
 	private String getDerivation(int level, int num) {
 		StringBuffer b = new StringBuffer(solutionParseNodes[level - 1]
 				.getDerivation().toString());
-		int[] subs = solutionParseNodes[level].getSubstitutions();
+		Integer[] subs = solutionParseNodes[level].getSubstitutions();
 		Production[] ps = solutionParseNodes[level].getProductions();
 		do {
 			b.delete(subs[num], subs[num] + ps[num].getLHS().length);
@@ -548,11 +532,6 @@ public class UnrestrictedTreePanel extends TreePanel {
 				else
 					new_rhs=new_rhs+rhs[i];
 			}
-			brutePane.getDerivationModel().addRow(new String[] { new_lhs + "", new_rhs });
-		}
-		else
-		{
-			brutePane.getDerivationModel().addRow(new String[] { p + "", derivation });
 		}
 		do {
 			group++;
@@ -570,15 +549,15 @@ public class UnrestrictedTreePanel extends TreePanel {
 		} while (!begins(level, group));
 		String lhs = p.getRHS().toString();
 		if (lhs.length() == 0)
-			lhs = JFLAPPreferences.getEmptyStringSymbol();
+			lhs = JFLAPPreferences.getEmptyString();
 		String text = "Derived " + lhs + " from " + p.getLHS() + ".";
 		if (level == top.length - 1
 				&& production == solutionParseNodes[level].getProductions().length - 1) {
 			text += "  Derivations complete.";
-			brutePane.getStatusDisplay().setText(text);
+//			brutePane.getStatusDisplay().setText(text);
 			return true;
 		}
-		brutePane.getStatusDisplay().setText(text);
+//		brutePane.getStatusDisplay().setText(text);
 
 		return false;
 	}
@@ -602,46 +581,4 @@ public class UnrestrictedTreePanel extends TreePanel {
 			paintTree(g);
 		g.dispose();
 	}
-	
-
-
-	/** The brute parse pane. */
-	protected BruteParserView brutePane;
-
-	/** The parse nodes. */
-	protected ParseNode[] solutionParseNodes;
-
-	/** The tops. */
-	protected UnrestrictedTreeNode[][][] top = null;
-
-	/** The bottoms. */
-	protected UnrestrictedTreeNode[][][] bottom = null;
-
-	/** The mapping of nodes to the center weight points of parent edges. */
-	protected Map nodeToParentWeights = new HashMap();
-
-	/** The mapping of nodes to their parent group. */
-	protected Map nodeToParentGroup = new HashMap();
-
-	
-	protected Map nodeToPoint;
-	
-	
-	/** The node drawer. */
-	protected DefaultNodeDrawer nodeDrawer = new DefaultNodeDrawer();
-
-	/** Colors. */
-	protected static final Color INNER = new Color(100, 200, 120),
-			LEAF = new Color(255, 255, 100),
-			BRACKET = new Color(150, 150, 255), BRACKET_OUT = BRACKET.darker()
-					.darker();
-
-	/** Current level. */
-	int level = 0;
-
-	/** Current group. */
-	int group = 0;
-
-	/** Current production. */
-	int production = -1;
 }

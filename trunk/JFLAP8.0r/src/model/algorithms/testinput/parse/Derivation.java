@@ -129,9 +129,17 @@ public class Derivation implements Copyable {
 	public Production getProduction(int i) {
 		return myProductions.get(i);
 	}
+	
+	public Production[] getProductionArray() {
+		return myProductions.toArray(new Production[0]);
+	}
 
 	public int getSubstitution(int i) {
 		return mySubstitutions.get(i);
+	}
+	
+	public Integer[] getSubstitutionArray() {
+		return mySubstitutions.toArray(new Integer[0]);
 	}
 	
 	@Override
