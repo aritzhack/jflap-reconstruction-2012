@@ -21,7 +21,8 @@ import model.symbols.Symbol;
 
 public interface JFLAPConstants {
 
-	public static final String JFF_SUFFIX = ".jff",
+	public static final String JFLAP_SUFFIX = ".jflap",
+						JFF_SUFFIX = ".jff",
 						LAMBDA = "\u03BB",
 						UPPER_LAMBDA = "\u039B",
 						EPSILON = "\u03B5",

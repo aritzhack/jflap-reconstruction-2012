@@ -6,7 +6,7 @@ import file.xml.StructureTransducer;
 
 public abstract class PumpingLemmaTransducer extends StructureTransducer<PumpingLemma>
 {
-    public static String LEMMA_NAME = "lemma_name";
+    public static String LEMMA_NAME = "name";
     public static String FIRST_PLAYER = "first_player";
     public static String M_NAME = "m";
     public static String W_NAME = "w";

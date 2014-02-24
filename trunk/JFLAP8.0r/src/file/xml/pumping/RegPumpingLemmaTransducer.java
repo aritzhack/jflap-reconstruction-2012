@@ -19,7 +19,7 @@ import file.xml.XMLHelper;
  */
 public class RegPumpingLemmaTransducer extends PumpingLemmaTransducer {
 
-	public static final String REG_LEMMA_TAG = "regular_pumping_lemma";
+	public static final String REG_LEMMA_TAG = "regular pumping lemma";
 
 	@Override
 	public String getTag() {

@@ -20,19 +20,13 @@
 
 package file.xml;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import debug.JFLAPDebug;
-
-import file.DataException;
 
 
 /**
@@ -103,6 +97,13 @@ public abstract class StructureTransducer<T> extends BasicTransducer<T> {
 	public static StructureTransducer getStructureTransducer(Element root) {
 		String tag = retrieveTypeTag(root);
 		return (StructureTransducer) TransducerFactory.getTransducerForTag(tag);
+		
+	}
+	
+	public static StructureTransducer getJFFStructureTransducer(Element root) {
+		Element tag_elem = XMLHelper.getChildrenWithTag(root, STRUCTURE_TYPE_ATTR).get(0);
+		String tag = XMLHelper.containedText(tag_elem);
+		return (StructureTransducer) JFFTransducerFactory.getTransducerForTag(tag);
 		
 	}
 }

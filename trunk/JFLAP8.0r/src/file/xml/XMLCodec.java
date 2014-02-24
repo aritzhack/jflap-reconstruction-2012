@@ -86,7 +86,13 @@ public class XMLCodec extends Codec {
 	public Object decode(File file) {
 		try {
 			Document doc = XMLHelper.parse(file);
-			XMLTransducer transducer = getRootTransducer(doc.getDocumentElement());
+			XMLTransducer transducer;
+			
+			if(file.getName().endsWith(JFLAPConstants.JFF_SUFFIX)){
+				transducer = getJFFRootTransducer(doc.getDocumentElement());
+			}
+			else
+				transducer = getRootTransducer(doc.getDocumentElement());
 			return transducer.fromStructureRoot(doc.getDocumentElement());
 		} catch (Exception e) {
 			if(e instanceof IOException)
@@ -185,6 +191,9 @@ public class XMLCodec extends Codec {
 		
 	}
 	
+	private StructureTransducer getJFFRootTransducer(Element root) {
+		return StructureTransducer.getJFFStructureTransducer(root);
+	}
 	/**
 	 * Given a proposed filename, returns a new suggested filename. JFLAP 4
 	 * saved files have the suffix <CODE>.jff</CODE> appended to them.
@@ -202,17 +211,34 @@ public class XMLCodec extends Codec {
 		return filename;
 	}
 
-	public static FileFilter getJFFfileFilter(){
+	public static FileFilter getSaveFileFilter(){
 		return new FileFilter() {
 
 			@Override
 			public String getDescription() {
-				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFF_SUFFIX+")";
+				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFLAP_SUFFIX+")";
 			}
 
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith(JFLAPConstants.JFF_SUFFIX) || f.isDirectory();
+				return f.getName().endsWith(JFLAPConstants.JFLAP_SUFFIX) || f.isDirectory();
+
+			}
+		};
+	}
+	
+	public static FileFilter getOpenFileFilter(){
+		return new FileFilter() {
+
+			@Override
+			public String getDescription() {
+				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFLAP_SUFFIX+")";
+			}
+
+			@Override
+			public boolean accept(File f) {
+				String name = f.getName();
+				return name.endsWith(JFLAPConstants.JFF_SUFFIX) || name.endsWith(JFLAPConstants.JFLAP_SUFFIX)|| f.isDirectory();
 
 			}
 		};
