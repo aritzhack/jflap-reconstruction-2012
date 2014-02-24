@@ -201,7 +201,7 @@ public class MultipleSimulateAction extends FastSimulateAction {
 			// We weren't editing anything, so we're OK.
 		}
 		InputTableModel model = (InputTableModel) table.getModel();
-		JFileChooser ourChooser = new XMLFileChooser();
+		JFileChooser ourChooser = new XMLFileChooser(false);
 
 		int retval = ourChooser.showOpenDialog(null);
 

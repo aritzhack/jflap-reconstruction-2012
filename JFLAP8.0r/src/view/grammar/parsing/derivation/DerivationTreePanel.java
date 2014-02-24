@@ -163,7 +163,7 @@ public class DerivationTreePanel extends DerivationPanel {
 			int maxLevel = 0;
 			for (int j = 0; j < lhs.length; j++) {
 				UnrestrictedTreeNode node = prev.get(sub + j);
-				current.remove(sub + j);
+				current.remove(sub);
 				maxLevel = Math.max(maxLevel, node.highest);
 			}
 

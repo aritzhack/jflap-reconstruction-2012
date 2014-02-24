@@ -152,7 +152,7 @@ public class JFLAPEnvironment extends JFrame implements
 		// The getSavableObject() may need to be modified
 		Object obj = getSavableObject();
 
-		XMLFileChooser chooser = new XMLFileChooser();
+		XMLFileChooser chooser = new XMLFileChooser(true);
 		chooser.setSelectedFile(myFile);
 		int n = JFileChooser.APPROVE_OPTION;
 
@@ -164,7 +164,7 @@ public class JFLAPEnvironment extends JFrame implements
 			myFile = chooser.getSelectedFile();
 
 			if (!chooser.accept(myFile))
-				myFile = new File(myFile.getAbsolutePath() + ".jff");
+				myFile = new File(myFile.getAbsolutePath() + JFLAPConstants.JFLAP_SUFFIX);
 
 			if (myFile.exists()) {
 				int confirm = showConfirmDialog("File exists. Overwrite file?");

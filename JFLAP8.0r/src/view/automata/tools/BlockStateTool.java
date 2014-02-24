@@ -105,7 +105,7 @@ public class BlockStateTool extends
 	}
 
 	private TransitionGraph importFromFile() {
-		XMLFileChooser chooser = new XMLFileChooser();
+		XMLFileChooser chooser = new XMLFileChooser(false);
 
 		int n = chooser.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION)

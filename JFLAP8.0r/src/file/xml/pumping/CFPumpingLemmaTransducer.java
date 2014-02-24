@@ -22,7 +22,7 @@ import file.xml.XMLHelper;
  */
 public class CFPumpingLemmaTransducer extends PumpingLemmaTransducer{
 	
-	public static final String CF_LEMMA_TAG = "context-free_pumping_lemma";
+	public static final String CF_LEMMA_TAG = "context-free pumping lemma";
     private static final String U_NAME = "uLength";
     private static final String V_NAME = "vLength";
     private static final String CASE_NAME = "case";

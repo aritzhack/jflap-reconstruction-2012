@@ -24,7 +24,7 @@ public class OpenAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		XMLFileChooser chooser = new XMLFileChooser();
+		XMLFileChooser chooser = new XMLFileChooser(false);
 		
 		int n = chooser.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) return;
