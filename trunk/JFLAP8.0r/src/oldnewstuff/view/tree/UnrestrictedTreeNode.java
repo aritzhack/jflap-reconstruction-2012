@@ -43,7 +43,7 @@ public class UnrestrictedTreeNode extends DefaultMutableTreeNode {
 	}
 	
 	public UnrestrictedTreeNode() {
-		this(new Symbol(""));
+		this(new SymbolString());
 	}
 
 	/**

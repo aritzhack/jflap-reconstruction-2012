@@ -23,6 +23,7 @@ import debug.JFLAPDebug;
 import model.algorithms.testinput.parse.Derivation;
 import model.grammar.Production;
 import model.symbols.Symbol;
+import model.symbols.SymbolString;
 import oldnewstuff.view.tree.DefaultNodeDrawer;
 import oldnewstuff.view.tree.DefaultTreeDrawer;
 import oldnewstuff.view.tree.TreeDrawer;
@@ -106,7 +107,7 @@ public class DerivationTreePanel extends DerivationPanel {
 			top = null;
 			return;
 		}
-		initializeTree(answer);
+		//initializeTree(answer);
 
 		top = new UnrestrictedTreeNode[answer.length()+1][][];
 		bottom = new UnrestrictedTreeNode[answer.length()+1][][];
@@ -208,6 +209,12 @@ public class DerivationTreePanel extends DerivationPanel {
 		int sub = myAnswer.getSubstitution(level - 1);
 
 		for (int i = 0; i < prev.size(); i++) {
+			UnrestrictedTreeNode node = prev.get(i);
+			SymbolString text = node.getText();
+
+			if(text.isEmpty() && i <= sub)
+				sub++;
+			
 			if (i == sub) {
 				Symbol[] lhs = prod.getLHS();
 				Symbol[] rhs = prod.getRHS();
@@ -221,13 +228,13 @@ public class DerivationTreePanel extends DerivationPanel {
 				// maxLevel = Math.max(maxLevel, node.highest);
 				// }
 
-				for (UnrestrictedTreeNode node : parents) {
-					node.lowest = level - 1;
+				for (UnrestrictedTreeNode p : parents) {
+					p.lowest = level - 1;
 				}
 				List<UnrestrictedTreeNode> tempTop = new ArrayList<UnrestrictedTreeNode>();
 
 				for (int j = 0; j < rhs.length; j++) {
-					UnrestrictedTreeNode node = new UnrestrictedTreeNode(rhs[j]);
+					node = new UnrestrictedTreeNode(rhs[j]);
 					node.highest = node.lowest = level;
 					tempTop.add(node);
 					current.add(node);
@@ -237,7 +244,7 @@ public class DerivationTreePanel extends DerivationPanel {
 				}
 
 				if (rhs.length == 0) {
-					UnrestrictedTreeNode node = new UnrestrictedTreeNode();
+					node = new UnrestrictedTreeNode();
 					node.highest = node.lowest = level;
 
 					nodeToParentGroup.put(node, parents);
@@ -247,8 +254,8 @@ public class DerivationTreePanel extends DerivationPanel {
 				topList.add(tempTop.toArray(new UnrestrictedTreeNode[0]));
 				bottomList.add(parents.toArray(new UnrestrictedTreeNode[0]));
 				i += lhs.length - 1;
-			} else {
-				UnrestrictedTreeNode node = prev.get(i);
+			} 
+			else {
 				node.lowest = level;
 
 				current.add(node);
