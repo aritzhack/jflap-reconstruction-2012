@@ -60,14 +60,14 @@ import javax.xml.transform.stream.StreamResult;
 public class XMLCodec extends Codec {
 
 	/**
-	 * Determines which files this FileFilter will allow. We are only allowing files with extension XML and jff.
+	 * Determines which files this FileFilter will allow. We are only allowing files with extension XML jff or jflap.
 	 * 
 	 */
 	@Override
 	public boolean accept(File f){
 		if (f.isDirectory()) return true;
 		boolean b = false;
-		for (String s: new String[]{JFLAPConstants.JFF_SUFFIX,".jdef"})
+		for (String s: new String[]{JFLAPConstants.JFF_SUFFIX, JFLAPConstants.JFLAP_SUFFIX, ".jdef"})
 			b = (b || f.getName().endsWith(s));
 		return true;
 	} 
@@ -194,22 +194,6 @@ public class XMLCodec extends Codec {
 	private StructureTransducer getJFFRootTransducer(Element root) {
 		return StructureTransducer.getJFFStructureTransducer(root);
 	}
-	/**
-	 * Given a proposed filename, returns a new suggested filename. JFLAP 4
-	 * saved files have the suffix <CODE>.jff</CODE> appended to them.
-	 * 
-	 * @param filename
-	 *            the proposed name
-	 * @param structure
-	 *            the structure that will be saved
-	 * @return the new suggestion for a name
-	 */
-	public String proposeFilename(String filename, Serializable structure) {
-		String suffix = JFLAPConstants.JFF_SUFFIX;
-		if (!filename.endsWith(suffix)) filename += suffix;
-
-		return filename;
-	}
 
 	public static FileFilter getSaveFileFilter(){
 		return new FileFilter() {
@@ -232,7 +216,7 @@ public class XMLCodec extends Codec {
 
 			@Override
 			public String getDescription() {
-				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFLAP_SUFFIX+")";
+				return "JFLAP "+ JFLAPConstants.VERSION + " files ("+JFLAPConstants.JFLAP_SUFFIX+"/"+JFLAPConstants.JFF_SUFFIX+")";
 			}
 
 			@Override
@@ -246,7 +230,7 @@ public class XMLCodec extends Codec {
 
 	@Override
 	public String getDescription() {
-		return "A codec for XML/.jff format files";
+		return "A codec for XML/.jff/.jflap format files";
 	}
 
 	public static <T> T decode(File f, Class<T> class1) {

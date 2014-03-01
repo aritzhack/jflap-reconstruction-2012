@@ -163,9 +163,12 @@ public class JFLAPEnvironment extends JFrame implements
 		while (n == JFileChooser.APPROVE_OPTION) {
 			myFile = chooser.getSelectedFile();
 
-			if (!chooser.accept(myFile))
-				myFile = new File(myFile.getAbsolutePath() + JFLAPConstants.JFLAP_SUFFIX);
-
+			if (!chooser.accept(myFile)){
+				String path = myFile.getAbsolutePath();
+				if(path.endsWith(JFLAPConstants.JFF_SUFFIX))
+					path = path.substring(0, path.length() - JFLAPConstants.JFF_SUFFIX.length());
+				myFile = new File(path + JFLAPConstants.JFLAP_SUFFIX);
+			}
 			if (myFile.exists()) {
 				int confirm = showConfirmDialog("File exists. Overwrite file?");
 
@@ -317,8 +320,12 @@ public class JFLAPEnvironment extends JFrame implements
 	@Override
 	public String getName() {
 		String file = "";
-		if (myFile != null)
-			file = " (" + myFile.getName() + ")";
+		if (myFile != null){
+			String name = myFile.getName();
+			if(name.endsWith(JFLAPConstants.JFF_SUFFIX))
+				name = name.substring(0, name.length() - JFLAPConstants.JFF_SUFFIX.length());
+			file = " (" + name + ")";
+		}
 		return super.getName() + file;
 	}
 
@@ -353,7 +360,10 @@ public class JFLAPEnvironment extends JFrame implements
 	public String getFileName() {
 		if (!hasFile())
 			return "";
-		return myFile.getName();
+		String name = myFile.getName();
+		if(name.endsWith(JFLAPConstants.JFF_SUFFIX))
+			name = name.substring(0, name.length() - JFLAPConstants.JFF_SUFFIX.length());
+		return name;
 	}
 
 	public Component getCurrentView() {
