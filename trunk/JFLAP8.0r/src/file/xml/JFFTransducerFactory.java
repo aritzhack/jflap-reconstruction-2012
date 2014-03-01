@@ -1,33 +1,17 @@
 package file.xml;
 
-import java.lang.Thread.State;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import model.automata.InputAlphabet;
-import model.automata.StartState;
-import model.automata.StateSet;
-import model.automata.acceptors.FinalStateSet;
+import debug.JFLAPDebug;
 import model.automata.acceptors.fsa.FiniteStateAcceptor;
-import model.automata.acceptors.pda.BottomOfStackSymbol;
 import model.automata.acceptors.pda.PushdownAutomaton;
-import model.automata.acceptors.pda.StackAlphabet;
-import model.automata.transducers.OutputAlphabet;
 import model.automata.transducers.mealy.MealyMachine;
 import model.automata.transducers.moore.MooreMachine;
-import model.automata.turing.BlankSymbol;
 import model.automata.turing.MultiTapeTuringMachine;
-import model.automata.turing.TapeAlphabet;
-import model.automata.turing.buildingblock.BlockSet;
-import model.automata.turing.buildingblock.BlockTuringMachine;
 import model.grammar.Grammar;
-import model.grammar.StartVariable;
-import model.grammar.TerminalAlphabet;
-import model.grammar.VariableAlphabet;
-import model.graph.BlockTMGraph;
-import model.graph.TransitionGraph;
 import model.lsystem.LSystem;
 import model.pumping.cf.AiBjCk;
 import model.pumping.cf.AkBnCnDj;
@@ -54,48 +38,15 @@ import model.pumping.reg.BkABnBAn;
 import model.pumping.reg.NaNb;
 import model.pumping.reg.Palindrome;
 import model.regex.RegularExpression;
-import view.lsystem.helperclasses.Axiom;
-import view.lsystem.helperclasses.Parameter;
-import view.lsystem.helperclasses.ParameterMap;
-import view.lsystem.helperclasses.ParameterName;
-import view.lsystem.helperclasses.ParameterValue;
-import file.xml.formaldef.automata.BlockTMTransducer;
-import file.xml.formaldef.automata.FSATransducer;
-import file.xml.formaldef.automata.MealyMachineTransducer;
-import file.xml.formaldef.automata.MooreMachineTransducer;
-import file.xml.formaldef.automata.MultiTapeTMTransducer;
-import file.xml.formaldef.automata.PDATransducer;
-import file.xml.formaldef.components.alphabet.InputAlphabetTransducer;
-import file.xml.formaldef.components.alphabet.OutputAlphabetTransducer;
-import file.xml.formaldef.components.alphabet.StackAlphabetTransducer;
-import file.xml.formaldef.components.alphabet.TapeAlphabetTransducer;
-import file.xml.formaldef.components.alphabet.TerminalsTransducer;
-import file.xml.formaldef.components.alphabet.VariablesTransducer;
-import file.xml.formaldef.components.states.BlockSetTransducer;
-import file.xml.formaldef.components.states.FinalStateSetTransducer;
-import file.xml.formaldef.components.states.FromStateTransducer;
-import file.xml.formaldef.components.states.StartStateTransducer;
-import file.xml.formaldef.components.states.StateSetTransducer;
-import file.xml.formaldef.components.states.StateTransducer;
-import file.xml.formaldef.components.states.ToStateTransducer;
-import file.xml.formaldef.components.symbols.BlankSymbolTransducer;
-import file.xml.formaldef.components.symbols.BottomOfStackSymbolTransducer;
-import file.xml.formaldef.components.symbols.StartVariableTransducer;
-import file.xml.formaldef.grammar.GrammarTransducer;
-import file.xml.formaldef.lsystem.AxiomTransducer;
-import file.xml.formaldef.lsystem.LSystemTransducer;
-import file.xml.formaldef.lsystem.ParameterMapTransducer;
-import file.xml.formaldef.lsystem.ParameterNameTransducer;
-import file.xml.formaldef.lsystem.ParameterTransducer;
-import file.xml.formaldef.lsystem.ParameterValueTransducer;
-import file.xml.formaldef.regex.RegExTransducer;
 import file.xml.graph.AutomatonEditorData;
-import file.xml.graph.AutomatonEditorTransducer;
-import file.xml.graph.BlockTMGraphTransducer;
-import file.xml.graph.TransitionGraphTransducer;
+import file.xml.jff.JFFFSATransducer;
 import file.xml.jff.JFFGrammarTransducer;
 import file.xml.jff.JFFLSystemTransducer;
+import file.xml.jff.JFFMealyTransducer;
+import file.xml.jff.JFFMooreTransducer;
+import file.xml.jff.JFFPDATransducer;
 import file.xml.jff.JFFRETransducer;
+import file.xml.jff.JFFTMTransducer;
 import file.xml.pumping.CFPumpingLemmaTransducer;
 import file.xml.pumping.RegPumpingLemmaTransducer;
 
@@ -105,33 +56,15 @@ private static Map<Class, LinkedHashSet<XMLTransducer>> myClassToTransducerMap;
 	
 	static{
 		myClassToTransducerMap = new HashMap<Class, LinkedHashSet<XMLTransducer>>();
-//		//FSA
-//		addMapping(FiniteStateAcceptor.class, new FSATransducer());
-//		addMapping(FinalStateSet.class, new FinalStateSetTransducer());
-//		addMapping(InputAlphabet.class, new InputAlphabetTransducer());
-//		addMapping(StateSet.class, new StateSetTransducer());
-//		addMapping(StartState.class, new StartStateTransducer());
-//		addMapping(State.class, new StateTransducer(),
-//								new FromStateTransducer(), 
-//								new ToStateTransducer());
-//		//PDA
-//		addMapping(PushdownAutomaton.class, new PDATransducer());
-//		addMapping(StackAlphabet.class, new StackAlphabetTransducer());
-//		addMapping(BottomOfStackSymbol.class, new BottomOfStackSymbolTransducer());
-//		
-//		//Moore and Mealy
-//		addMapping(MooreMachine.class, new MooreMachineTransducer());
-//		addMapping(MealyMachine.class, new MealyMachineTransducer());
-//		addMapping(OutputAlphabet.class, new OutputAlphabetTransducer());
-//		
-//		//TM 
-//		addMapping(MultiTapeTuringMachine.class, new MultiTapeTMTransducer());
-//		addMapping(BlankSymbol.class, new BlankSymbolTransducer());
-//		addMapping(TapeAlphabet.class, new TapeAlphabetTransducer());
-//		
+		//FSA
+		addMapping(AutomatonEditorData.class, new JFFFSATransducer(), 
+											  new JFFPDATransducer(),
+											  new JFFMooreTransducer(),
+											  new JFFMealyTransducer(),
+											  new JFFTMTransducer());
+		
 //		//TM Block stuff
 //		addMapping(BlockTuringMachine.class, new BlockTMTransducer());
-//		addMapping(BlockSet.class, new BlockSetTransducer());
 		
 		//Grammar
 		addMapping(Grammar.class, new JFFGrammarTransducer());
@@ -186,6 +119,7 @@ private static Map<Class, LinkedHashSet<XMLTransducer>> myClassToTransducerMap;
 					return trans;
 			}
 		}
+		
 		return null;
 	}
 
