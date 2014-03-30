@@ -82,15 +82,13 @@ public class CYKParser extends Parser {
 		int size = getInput().size();
 		if (myIncrement >= size)
 			return false;
-
+		
 		for (int i = 0; i < size; i++) {
-			for (int j = i + myIncrement; j < size; j++) {
-				// already filled out this cell
-				if (!myNodeTable[i][j].isEmpty())
-					continue;
-
-				findAllProductions(i, j);
-			}
+			int j =  i + myIncrement;
+				// haven't filled out this cell
+				if (j < size && myNodeTable[i][j].isEmpty())
+					findAllProductions(i, j);
+			
 		}
 		return true;
 	}
@@ -100,15 +98,17 @@ public class CYKParser extends Parser {
 	 * of the original input, by calculating all possible k: i <= k < j.
 	 */
 	private void findAllProductions(int i, int j) {
+		Grammar g = getGrammar();
+		ProductionSet prods = g.getProductionSet();
+		
 		for (int k = i; k < j; k++) {
 			for (Symbol A : getLHSVariablesForNode(i, k)) {
+				
 				for (Symbol B : getLHSVariablesForNode(k + 1, j)) {
 					SymbolString concat = new SymbolString(A, B);
-
-					for (Production p : getGrammar().getProductionSet()) {
+					for (Production p : prods) {
 						if (p.equalsRHS(concat)) {
 							CYKParseNode node = new CYKParseNode(p, k);
-
 							myNodeTable[i][j].add(node);
 						}
 					}

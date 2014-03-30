@@ -1,13 +1,16 @@
 package file.xml.jff;
 
 import java.util.List;
-import model.formaldef.components.alphabets.Alphabet;
+
 import model.grammar.Grammar;
 import model.grammar.Production;
 import model.grammar.ProductionSet;
+import model.grammar.Variable;
 import model.symbols.symbolizer.Symbolizers;
 
 import org.w3c.dom.Element;
+
+import util.JFLAPConstants;
 import file.xml.XMLHelper;
 
 public class JFFGrammarTransducer extends JFFTransducer<Grammar>{
@@ -44,7 +47,9 @@ public class JFFGrammarTransducer extends JFFTransducer<Grammar>{
 			Production p = new Production(Symbolizers.symbolize(left, g), Symbolizers.symbolize(right, g));
 			prods.add(p);
 		}
-		
+		Variable s = JFLAPConstants.JFF_START_SYMBOL;
+		if(g.getVariables().contains(s))
+			g.setStartVariable(s);
 		return g;
 	}
 	
