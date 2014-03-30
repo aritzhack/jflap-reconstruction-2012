@@ -5,9 +5,11 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
 import model.automata.Automaton;
@@ -43,6 +45,7 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 
 	@Override
 	public String getImageURLString() {
+		
 		return "/ICON/delete.gif";
 	}
 
@@ -78,11 +81,11 @@ public class DeleteTool<T extends Automaton<S>, S extends Transition<S>>
 		if(active){
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-			String del = JFLAPConstants.RESOURCE_ROOT
-					+ "/ICON/deletecursor.gif";
-			Image image = toolkit.getImage(del);
+			String del = "/ICON/deletecursor.gif";
+			URL url = getClass().getResource(del);
+			Image img = Toolkit.getDefaultToolkit().getImage(url);
 			Point hotSpot = new Point(5, 5);
-			cursor = toolkit.createCustomCursor(image, hotSpot, "Delete");
+			cursor = toolkit.createCustomCursor(img, hotSpot, "Delete");
 		}
 		getPanel().setCursor(cursor);
 	}
