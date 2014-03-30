@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -12,12 +11,9 @@ import javax.swing.Icon;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
-import universe.preferences.JFLAPPreferences;
-
 import model.formaldef.components.alphabets.grouping.GroupingPair;
 import model.grammar.ArrowIcon;
-import model.grammar.Terminal;
-import model.symbols.Symbol;
+import model.grammar.Variable;
 
 public interface JFLAPConstants {
 
@@ -89,4 +85,6 @@ public interface JFLAPConstants {
 
 	public static final double DEFAULT_LS_ANGLE = 15.0, DEFAULT_LS_DISTANCE = 15.0, DEFAULT_LS_HUE = 10.0, DEFAULT_LS_INCREM = 1.0, DEFAULT_LS_WIDTH = 1.0;
 	public static final int DEFAULT_TM_BUFFER = 5;
+	
+	public static final Variable JFF_START_SYMBOL= new Variable("S");
 }
