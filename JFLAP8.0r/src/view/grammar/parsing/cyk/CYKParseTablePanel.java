@@ -6,9 +6,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -22,8 +22,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-import debug.JFLAPDebug;
 
 import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
@@ -339,7 +337,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			String value = (String) aValue;
 
-			Set<Symbol> attemptSet = new HashSet<Symbol>(Symbolizers.symbolize(
+			Set<Symbol> attemptSet = new TreeSet<Symbol>(Symbolizers.symbolize(
 					value, myParser.getGrammar()));
 			int newColumn = getColumnFromParser(rowIndex, columnIndex);
 			int newRow = getRowFromParser(rowIndex, columnIndex);
@@ -442,6 +440,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 	 * of table cells (notifying the header renderer when necessary).
 	 */
 	private class EmptySetCellRenderer extends DefaultTableCellRenderer {
+
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -460,7 +459,7 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 					l.setText("{}");
 				return l;
 			}
-			if (!value.equals(new HashSet<Symbol>())) {
+			if (!((Set)value).isEmpty()){
 				replaceSetCharacters(l);
 				return l;
 			}
