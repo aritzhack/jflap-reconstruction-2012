@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import debug.JFLAPDebug;
+import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.brute.UnrestrictedBruteParser;
 import model.change.events.AdvancedChangeEvent;
@@ -57,9 +59,11 @@ public class BruteParseTablePanel extends RunningView {
 
 		private UnrestrictedBruteParser parser;
 		private HashMap<Integer, Object[]> myData;
+		private int myLevel;
 
 		public BruteTableModel(UnrestrictedBruteParser parser) {
 			this.parser = parser;
+			myLevel = 0;
 			myData = new HashMap<Integer, Object[]>();
 			parser.addListener(this);
 		}
@@ -78,7 +82,7 @@ public class BruteParseTablePanel extends RunningView {
 
 		@Override
 		public int getRowCount() {
-			return parser.getLevel();
+			return myLevel;
 		}
 
 		@Override
@@ -93,10 +97,14 @@ public class BruteParseTablePanel extends RunningView {
 		public void stateChanged(ChangeEvent e) {
 			if (e instanceof AdvancedChangeEvent) {
 				AdvancedChangeEvent event = (AdvancedChangeEvent) e;
+				if (event.getType() == InputUsingAlgorithm.INPUT_SET)
+					myLevel = 0;
 				if (event.getType() == UnrestrictedBruteParser.LEVEL_CHANGED) {
-					myData.put((Integer) event.getArg(0),
-							new Object[] { event.getArg(1), event.getArg(2) });
-					fireTableRowsInserted(myData.size()-1, myData.size()-1);
+						myLevel = ((Integer) event.getArg(0) == 0) ? myLevel + 1 : parser.getLevel();
+						myData.put(myLevel,
+								new Object[] { event.getArg(1), event.getArg(2) });
+						fireTableRowsInserted(myData.size()-1, myData.size()-1);
+					
 				}
 			}
 		}
