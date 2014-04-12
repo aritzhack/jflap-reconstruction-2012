@@ -108,6 +108,14 @@ public class RegularExpression extends FormalDefinition {
 	@Override
 	public void componentChanged(AdvancedChangeEvent event) {
 		super.componentChanged(event);
+//		if(event.getSource() instanceof InputAlphabet){
+//			if(event.getType() == ITEM_MODIFIED){
+//				Symbol from = (Symbol) event.getArg(0);
+//				Symbol to = (Symbol) event.getArg(1);
+//				myExpression.applySymbolMod(from.getString(), to.getString());
+//			}
+//		}
+		distributeChange(event);
 	}
 	
 	@Override

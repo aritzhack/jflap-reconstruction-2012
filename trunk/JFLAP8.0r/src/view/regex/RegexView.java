@@ -10,7 +10,7 @@ import view.formaldef.BasicFormalDefinitionView;
 
 public class RegexView extends BasicFormalDefinitionView<RegularExpression>{
 
-	private static final Dimension REGEX_SIZE = new Dimension(500, 300);
+	private static final Dimension REGEX_SIZE = new Dimension(700, 300);
 
 	public RegexView(RegularExpression model, UndoKeeper keeper,
 			boolean editable) {

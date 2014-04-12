@@ -3,14 +3,14 @@ package view.regex;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
 
-import javax.swing.JLabel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import debug.JFLAPDebug;
-import errors.BooleanWrapper;
+import model.automata.InputAlphabet;
+import model.change.events.AdvancedChangeEvent;
+import model.formaldef.components.ChangeTypes;
 import model.regex.RegularExpression;
 import model.regex.RegularExpressionException;
 import model.symbols.SymbolString;
@@ -22,6 +22,7 @@ import util.view.magnify.MagnifiableLabel;
 import util.view.magnify.MagnifiablePanel;
 import util.view.magnify.MagnifiableTextField;
 import view.EditingPanel;
+import errors.BooleanWrapper;
 
 public class RegexPanel extends EditingPanel {
 
@@ -49,32 +50,32 @@ public class RegexPanel extends EditingPanel {
 		regexPanel.add(myField, BorderLayout.CENTER);
 
 		add(regexPanel, BorderLayout.CENTER);
-		add(new JLabel("Edit the regular expression above. "
+		add(new MagnifiableLabel("Edit the regular expression above. "
 				+ JFLAPPreferences.getEmptySubLiteral()
-				+ " is the empty string sub."), BorderLayout.SOUTH);
+				+ " is the empty string sub.", JFLAPPreferences.getDefaultTextSize()), BorderLayout.SOUTH);
 		initListener();
 	}
+	
+	
 
 	private void initListener() {
-		// myField.addFocusListener(new FocusAdapter() {
-		// @Override
-		// public void focusLost(FocusEvent e) {
-		// super.focusLost(e);
-		// JFLAPDebug.print("losing focus");
-		// Object obj = e.getSource();
-		// if (obj.equals(myField))
-		// myField.dispatchEvent(new KeyEvent(myField,
-		// KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
-		// 0, KeyEvent.VK_ENTER, '0'));
-		// }
-		//
-		// });
-
 		myField.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update();
+			}
+		});
+		
+		myExpression.addListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(e.getSource() instanceof InputAlphabet){
+//					if(((AdvancedChangeEvent) e).getType() == ChangeTypes.ITEM_MODIFIED){
+						myField.setText(myExpression.getExpressionString());
+//					}
+				}
 			}
 		});
 	}

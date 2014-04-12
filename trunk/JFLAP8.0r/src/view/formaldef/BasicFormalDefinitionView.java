@@ -17,6 +17,4 @@ public abstract class BasicFormalDefinitionView<T extends FormalDefinition> exte
 		return getModel();
 	}
 
-
-
 }
