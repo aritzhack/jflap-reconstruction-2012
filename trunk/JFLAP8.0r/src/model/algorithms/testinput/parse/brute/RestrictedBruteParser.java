@@ -59,7 +59,7 @@ public class RestrictedBruteParser extends UnrestrictedBruteParser {
 			if (Grammar.isTerminal(s))
 				discrete.get(discrete.size() - 1).add(s);
 		}
-		if (!endBookend)
+		if (!endBookend && !discrete.isEmpty())
 			discrete.remove(discrete.size() - 1);
 
 		int cp = 0;

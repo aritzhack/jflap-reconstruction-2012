@@ -30,7 +30,7 @@ public abstract class LanguageGenerator {
 		if(g == null) return null;
 		
 		if(new ContextFreeChecker().matchesGrammar(g) && !isGrammarFinite(g))
-			return new ContextFreeLanguageGenerator(g);
+			return new ContextFreeLanguageGenerator(g.copy());
 		return new BruteLanguageGenerator(g);
 	}
 	
