@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -932,7 +932,7 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 	private class TransitionRemoveEvent extends RemoveEvent<S> {
 
-		Point2D[] myPoints;
+		Map<S, Point2D> myPoints;
 
 		public TransitionRemoveEvent(Collection<S> transitions) {
 			this((S[]) transitions.toArray(new Transition[0]));
@@ -940,12 +940,10 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 
 		public TransitionRemoveEvent(S... transitions) {
 			super(myAutomaton.getTransitions(), transitions);
-			myPoints = new Point2D[transitions.length];
+			myPoints = new HashMap<S, Point2D>();
 
-			for (int i = 0; i < transitions.length; i++) {
-				myPoints[i] = myGraph.getControlPt(
-						transitions[i].getFromState(),
-						transitions[i].getToState());
+			for (S trans : transitions){
+				myPoints.put(trans, myGraph.getControlPt(trans).toBasicPoint());
 			}
 		}
 
@@ -958,11 +956,9 @@ public class AutomatonEditorPanel<T extends Automaton<S>, S extends Transition<S
 		@Override
 		public boolean undo() {
 			boolean undo = super.undo();
-			int i = 0;
-			for (S trans : getToRemove()) {
-				moveCtrlPoint(trans.getFromState(), trans.getToState(),
-						myPoints[i]);
-				i++;
+
+			for(S trans : myPoints.keySet()){
+				moveCtrlPoint(trans.getFromState(), trans.getToState(), myPoints.get(trans));
 			}
 			clearSelection();
 			return undo;
