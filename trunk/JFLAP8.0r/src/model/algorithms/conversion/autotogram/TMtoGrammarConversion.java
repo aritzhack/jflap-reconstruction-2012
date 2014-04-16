@@ -115,8 +115,8 @@ public class TMtoGrammarConversion
 		Set<TMVariableMapping> mappingSet = new HashSet<TMVariableMapping>();
 		MultiTapeTuringMachine tm = getAutomaton();
 
+		InputAlphabet sigmaAndBlank = createSigmaAndBlank();
 		for (MultiTapeTMTransition transition : tm.getTransitions()) {
-			InputAlphabet sigmaAndBlank = createSigmaAndBlank();
 
 			for (Symbol a : sigmaAndBlank) {
 				for (Symbol p : sigmaAndBlank) {
@@ -126,9 +126,25 @@ public class TMtoGrammarConversion
 				}
 			}
 		}
+		addExtraMappings(mappingSet);
 		return mappingSet;
 	}
 	
+	/**
+	 * Add Vaa and Va0a for all a, in case addVariableMappings doesn't catch them.
+	 */
+	private void addExtraMappings(Set<TMVariableMapping> mappingSet) {
+		MultiTapeTuringMachine tm = getAutomaton();
+		InputAlphabet alph = tm.getInputAlphabet();
+		State q0 = tm.getStartState();
+		
+		for(Symbol a : alph){
+			TMVariableMapping Vaa = new TMVariableMapping(a, a);
+			TMVariableMapping Va0a = new TMVariableMapping(a, q0, a);
+			addAll(mappingSet, Vaa, Va0a);
+		}
+	}
+
 	/**
 	 * Helper method for adding Vaic, Vpq, Vad, Vpjq, and (if j is a final state) Vajq 
 	 * to the mapping set for each transition. i and j are the to and from States (respectively)
@@ -305,13 +321,11 @@ public class TMtoGrammarConversion
 
 		boolean added = addAll(prods, startToT, startToBlankStart, startToStartBlank,
 				squareToLambda);
-
 		State q0 = getOriginalDefinition().getStartState();
 
 		for (Symbol a : getAutomaton().getInputAlphabet()) {
 			Production tToTVaa = new Production(T, T, getVariable(a, a));
 			Production tToVa0a = new Production(T, getVariable(a, q0, a));
-
 			added = added && addAll(prods, tToTVaa, tToVa0a);
 		}
 

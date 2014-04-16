@@ -95,7 +95,6 @@ public class TMtoUGPanel extends AutoToGramConversionPanel<MultiTapeTuringMachin
 
 	@Override
 	public void addAllOtherProductions() {
-		JFLAPDebug.print(getAlgorithm().isComplete());
 		while(!getAlgorithm().isComplete())
 			addOtherProduction();
 	}
