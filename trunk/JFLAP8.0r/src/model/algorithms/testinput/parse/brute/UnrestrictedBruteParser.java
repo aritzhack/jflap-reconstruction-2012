@@ -9,8 +9,6 @@ import java.util.Set;
 
 import javax.swing.event.ChangeEvent;
 
-import debug.JFLAPDebug;
-
 import model.algorithms.testinput.parse.Derivation;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.ParserException;
@@ -38,6 +36,7 @@ import model.symbols.SymbolString;
 
 public class UnrestrictedBruteParser extends Parser {
 	public static final int MAX_REACHED = 2, LEVEL_CHANGED = 4;
+	private static final int MAX_INCREMENT = 100000;
 	private int myCapacity;
 
 	private LinkedList<Derivation> myDerivationsQueue;
@@ -58,6 +57,7 @@ public class UnrestrictedBruteParser extends Parser {
 
 	public UnrestrictedBruteParser(Grammar g) {
 		super(g);
+		myCapacity = 100000;
 		mySmallerSet = Collections.unmodifiableSet(smallerSymbols(g));
 		maxLHSsize = g.getProductionSet().getMaxLHSLength();
 	}
@@ -170,7 +170,7 @@ public class UnrestrictedBruteParser extends Parser {
 		loop: while (!myDerivationsQueue.isEmpty()) {
 			Derivation d = myDerivationsQueue.poll();
 			SymbolString result = d.createResult();
-			
+
 			for (int i = 0; i < result.size(); i++) {
 				for (int j = i; j < Math.min(maxLHSsize + i, result.size()); j++) {
 					SymbolString LHS = result.subList(i, j + 1);
@@ -188,12 +188,12 @@ public class UnrestrictedBruteParser extends Parser {
 						// Even if node=derivation is invalid, it is still
 						// generated.
 						myNodesGenerated++;
-						
+
 						SymbolString sentential = tempDerivation.createResult();
 						if (isPossibleSententialForm(sentential)) {
 							mySententialsSeen.add(sentential);
 							nextLevel.add(tempDerivation);
-						
+
 							if (sentential.equals(getInput())) {
 								// Not sure if this is good, but ensures that
 								// only nodes on
@@ -221,8 +221,11 @@ public class UnrestrictedBruteParser extends Parser {
 		int levelSize = myDerivationsQueue.size();
 		int numProductions = getGrammar().getProductionSet().size();
 		int increment = (int) Math.pow(numProductions, numberOfSteps);
-
+		increment = Math.min(increment, MAX_INCREMENT);
+		
 		myCapacity = myNodesGenerated + levelSize * increment;
+		if(myCapacity < 0)
+			myCapacity = Integer.MAX_VALUE;
 		return true;
 	}
 
@@ -243,8 +246,8 @@ public class UnrestrictedBruteParser extends Parser {
 		int min = getMinimumLength(sent.toArray(new Symbol[0]));
 		return min <= getInput().size();
 	}
-	
-	public int getMinimumLength(Symbol[] sentential){
+
+	public int getMinimumLength(Symbol[] sentential) {
 		return minimumLength(sentential, mySmallerSet);
 	}
 
@@ -335,12 +338,12 @@ public class UnrestrictedBruteParser extends Parser {
 
 	/**
 	 * Removes useless productions for Unrestricted grammars, as a way to
-	 * optimize the grammar as much as possible.
-//	 */
-//	private static Grammar optimize(Grammar g) {
-//		UselessProductionRemover remover = new UselessProductionRemover(g);
-//		remover.stepToCompletion();
-//		return remover.getTransformedDefinition();
-//	}
+	 * optimize the grammar as much as possible. //
+	 */
+	// private static Grammar optimize(Grammar g) {
+	// UselessProductionRemover remover = new UselessProductionRemover(g);
+	// remover.stepToCompletion();
+	// return remover.getTransformedDefinition();
+	// }
 
 }
