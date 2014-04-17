@@ -27,6 +27,9 @@ import model.algorithms.testinput.InputUsingAlgorithm;
 import model.algorithms.testinput.parse.Parser;
 import model.algorithms.testinput.parse.cyk.CYKParser;
 import model.change.events.AdvancedChangeEvent;
+import model.grammar.Grammar;
+import model.grammar.Terminal;
+import model.grammar.Variable;
 import model.symbols.Symbol;
 import model.symbols.SymbolString;
 import model.symbols.symbolizer.Symbolizers;
@@ -336,7 +339,11 @@ public class CYKParseTablePanel extends RunningView implements DoSelectable {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			String value = (String) aValue;
-
+			Grammar g = myParser.getGrammar();
+			Set<Symbol> alph = g.getAllSymbolsInAlphabets();
+			if(!alph.contains(new Terminal(",")) && !alph.contains(new Variable(","))){
+				value = value.replaceAll(",", "");
+			}
 			Set<Symbol> attemptSet = new TreeSet<Symbol>(Symbolizers.symbolize(
 					value, myParser.getGrammar()));
 			int newColumn = getColumnFromParser(rowIndex, columnIndex);
