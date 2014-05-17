@@ -414,29 +414,30 @@ public class PreferenceDialog extends JDialog {
 				JFLAPConstants.PLUS));
 		JRadioButton bar = new JRadioButton(new UnionPrefAction(
 				JFLAPConstants.BAR));
-		JRadioButton u = new JRadioButton(new UnionPrefAction(
-				JFLAPConstants.UNION));
-		JRadioButton logOr = new JRadioButton(new UnionPrefAction(
-				JFLAPConstants.LOGICAL_OR));
+//		JRadioButton u = new JRadioButton(new UnionPrefAction(
+//				JFLAPConstants.UNION));
+//		JRadioButton logOr = new JRadioButton(new UnionPrefAction(
+//				JFLAPConstants.LOGICAL_OR));
 		panel.add(plus);
 		group.add(plus);
 		buttonList.add(plus);
 		panel.add(bar);
 		group.add(bar);
-		panel.add(u);
-		group.add(u);
-		panel.add(logOr);
-		group.add(logOr);
+//		panel.add(u);
+//		group.add(u);
+//		panel.add(logOr);
+//		group.add(logOr);
 
 		String union = JFLAPPreferences.getUnionOperator().getString();
 		if (union.equals(JFLAPConstants.PLUS))
 			plus.doClick();
-		else if (union.equals(JFLAPConstants.BAR))
-			bar.doClick();
-		else if (union.equals(JFLAPConstants.UNION))
-			u.doClick();
+//		else if (union.equals(JFLAPConstants.BAR))
 		else
-			logOr.doClick();
+			bar.doClick();
+//		else if (union.equals(JFLAPConstants.UNION))
+//			u.doClick();
+//		else
+//			logOr.doClick();
 		return panel;
 	}
 
