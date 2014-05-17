@@ -4,13 +4,17 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
-import view.action.automata.MultipleTransducerSimulateAction;
-import view.action.automata.MultipleSimulateAction;
 import view.action.automata.FastSimulateAction;
+import view.action.automata.MultipleSimulateAction;
+import view.action.automata.MultipleTransducerSimulateAction;
 import view.action.automata.SimulateAction;
 import view.action.grammar.LanguageGeneratorAction;
 import view.action.grammar.parse.BruteParseAction;
 import view.action.grammar.parse.CYKParseAction;
+import view.action.grammar.parse.LLParseAction;
+import view.action.grammar.parse.LRParseAction;
+import view.action.grammar.parse.MultipleParseAction;
+import view.action.grammar.parse.UserParseAction;
 import view.action.lsystem.LSystemRenderAction;
 import view.automata.views.AcceptorView;
 import view.automata.views.AutomatonView;
@@ -52,7 +56,11 @@ public class InputMenu extends JMenu implements TabChangeListener {
 
 			if (view instanceof GrammarView) {
 				GrammarView v = (GrammarView) view;
+				this.add(new LLParseAction(v));
+				this.add(new LRParseAction(v));
 				this.add(new BruteParseAction(v));
+				this.add(new MultipleParseAction(v));
+				this.add(new UserParseAction(v));
 				this.add(new CYKParseAction(v));
 				this.add(new LanguageGeneratorAction(v.getDefinition()));
 			}

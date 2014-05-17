@@ -7,6 +7,7 @@ import javax.swing.JMenu;
 import view.action.automata.CombineAutomataAction;
 import view.action.automata.DFAtoREAction;
 import view.action.automata.FSAtoRegGrammarAction;
+import view.action.automata.MinimizeDFAAction;
 import view.action.automata.NFAtoDFAAction;
 import view.action.automata.PDAtoCFGAction;
 import view.action.automata.StayOptionRemoveAction;
@@ -64,6 +65,7 @@ public class ConvertMenu extends JMenu implements TabChangeListener {
 				this.add(new FSAtoRegGrammarAction((FSAView) v));
 				this.add(new DFAtoREAction((FSAView) v));
 				this.add(new TrapStateAction((FSAView) v));
+				this.add(new MinimizeDFAAction((FSAView) v));
 			}
 			if(view instanceof PDAView)
 				this.add(new PDAtoCFGAction((PDAView) v));

@@ -8,6 +8,7 @@ public class BatchTestAction extends AbstractAction {
 
 	public BatchTestAction() {
 		super("Batch test...");
+		this.setEnabled(false);
 	}
 	
 	@Override
