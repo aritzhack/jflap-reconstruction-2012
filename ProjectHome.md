@@ -1,0 +1,1 @@
+JFLAP is a program designed to for the study of FLA theory.
